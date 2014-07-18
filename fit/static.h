@@ -1,0 +1,76 @@
+/*=============================================================================
+    Copyright (c) 2014 Paul Fultz II
+    static.h
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef FIT_GUARD_FUNCTION_STATIC_H
+#define FIT_GUARD_FUNCTION_STATIC_H
+
+/// static
+/// ======
+/// 
+/// Description
+/// -----------
+/// 
+/// The `static_` adaptor is a static function adaptor that allows any default-
+/// constructible function object to be static-initialized.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F>
+///     class static_;
+/// 
+/// Example
+/// -------
+/// 
+///     // In C++03 this class can't be static-initialized, because of the 
+///     // default constructor.
+///     struct times_function
+///     {
+///         double factor;
+///         times2_function() : factor(2)
+///         {}
+///         template<class T>
+///         T operator()(T x) const
+///         {
+///             return x*factor;
+///         }
+///     };
+/// 
+///     static_<times_function> times2 = {};
+/// 
+///     assert(6 == times2(3));
+/// 
+
+#include <fit/returns.h>
+#include <fit/reveal.h>
+
+namespace fit { 
+
+template<class F>
+struct static_
+{
+
+    template<class... Ts>
+    struct failure
+    : failure_for<F(Ts...)>
+    {};
+
+    const F& base_function() const
+    {
+        static F f;
+        return f;
+    }
+
+    template<class... Ts>
+    auto operator()(Ts && ... xs) const
+    FIT_RETURNS(this->base_function()(std::forward<Ts>(xs)...));
+};
+
+
+}
+
+#endif

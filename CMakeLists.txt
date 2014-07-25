@@ -46,6 +46,7 @@ macro(add_test_executable TEST_NAME)
 endmacro(add_test_executable)
 
 add_test_executable(always)
+add_test_executable(args)
 add_test_executable(conditional)
 add_test_executable(compose)
 add_test_executable(fix)

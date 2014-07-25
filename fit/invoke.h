@@ -31,6 +31,7 @@
 
 #include <fit/returns.h>
 #include <tuple>
+#include <fit/detail/seq.h>
 
 namespace fit { 
 
@@ -38,18 +39,6 @@ namespace fit {
 // invoke
 //
 namespace detail {
-
-template<int ...>
-struct seq {};
-
-template<int N, int ...S>
-struct gens : gens<N-1, N-1, S...> {};
-
-template<int ...S>
-struct gens<0, S...> 
-{
-  typedef seq<S...> type;
-};
 
 template<class Sequence>
 constexpr typename gens<std::tuple_size<Sequence>::value>::type 

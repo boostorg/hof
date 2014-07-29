@@ -8,21 +8,21 @@
 #ifndef FIT_GUARD_FUNCTION_VARIADIC_H
 #define FIT_GUARD_FUNCTION_VARIADIC_H
 
-// variadic
-// ========
-// 
-// Description
-// -----------
-// 
-// The `variadic` function adaptor converts the arguments to the function to a
-// tuple or fusion sequence.
-// 
-// Synopsis
-// --------
-// 
-//     template<class F>
-//     variadic_adaptor<F> variadic(F f);
-// 
+/// variadic
+/// ========
+/// 
+/// Description
+/// -----------
+/// 
+/// The `variadic` function adaptor converts the arguments to the function to a
+/// tuple.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F>
+///     variadic_adaptor<F> variadic(F f);
+/// 
 
 #include <fit/detail/ref_tuple.h>
 #include <fit/returns.h>

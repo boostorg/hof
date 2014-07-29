@@ -59,7 +59,7 @@ constexpr args_at<N...> make_args_at(seq<N...>)
 template<int N, class... Ts>
 constexpr auto args(Ts&&... xs) FIT_RETURNS
 (
-    detail::make_args_at(typename detail::gens<N>::type())(detail::make_perfect_ref(std::forward<Ts>(xs))...)
+    detail::make_args_at(typename detail::gens<N>::type())(nullptr, detail::make_perfect_ref(std::forward<Ts>(xs))...)
 );
 
 }

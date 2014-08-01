@@ -14,10 +14,10 @@
 /// Description
 /// -----------
 /// 
-/// The `compose` function adaptor provides funcion composition. It produces a
-/// function object that composes a set of functions, ie the output of one
-/// function becomes the input of the second function. So, `compose(f, g)(0)` is
-/// equivalent to `f(g(0))`.
+/// The `compose` function adaptor provides function composition. It produces
+/// a function object that composes a set of functions, ie the output of one
+/// function becomes the input of the second function. So, `compose(f, g)(0)`
+/// is equivalent to `f(g(0))`.
 /// 
 /// 
 /// Synopsis

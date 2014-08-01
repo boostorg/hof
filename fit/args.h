@@ -19,7 +19,7 @@
 /// -----------
 /// 
 /// The `args` function returns the Nth argument passed to it. It actually
-/// starts at 1, it is not the zero-based index of the argument.
+/// starts at 1, so it is not the zero-based index of the argument.
 /// 
 /// Synopsis
 /// --------

@@ -14,9 +14,10 @@
 /// Description
 /// -----------
 /// 
-/// The `on` function adaptor applies a projection onto the parameters to
-/// another function. This is useful for defining function such for ordering
-/// such that the ordering is based on the one member function.
+/// The `on` function adaptor applies a projection onto the parameters of
+/// another function. This is useful, for example, to define a function for
+/// sorting such that the ordering is based off of the value of one of its
+/// member fields.
 /// 
 /// Synopsis
 /// --------

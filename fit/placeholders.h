@@ -9,6 +9,7 @@
 #define FIT_GUARD_FUNCTION_PLACEHOLDERS_H
 
 #include <fit/lazy.h>
+#include <fit/protect.h>
 
 namespace fit { namespace detail {
     template<int N>
@@ -131,6 +132,69 @@ constexpr const placeholder<6> _6 = {};
 constexpr const placeholder<7> _7 = {};
 constexpr const placeholder<8> _8 = {};
 constexpr const placeholder<9> _9 = {};
+
+
+namespace detail {
+
+
+
+struct unamed_placeholder
+{
+template<class T, class Invoker>
+struct partial_ap
+{
+    T val;
+    partial_ap(const T& x) : val(x)
+    {}
+
+    template<class X>
+    auto operator()(X&& x) const FIT_RETURNS
+    (Invoker()(this->val, std::forward<X>(x)));
+};
+
+template<class Op>
+struct left
+{
+    template<class T, class X>
+    auto operator()(const T& val, X&& x) const FIT_RETURNS
+    (Op()(val, std::forward<X>(x)));
+};
+
+template<class Op>
+struct right
+{
+    template<class T, class X>
+    auto operator()(const T& val, X&& x) const FIT_RETURNS
+    (Op()(std::forward<X>(x), val));
+};
+
+#define FIT_UNAMED_PLACEHOLDER_UNARY_OP(op, name) \
+    constexpr auto operator op () const FIT_RETURNS \
+    ( operators::name() );
+
+FIT_FOREACH_UNARY_OP(FIT_UNAMED_PLACEHOLDER_UNARY_OP)
+
+#define FIT_UNAMED_PLACEHOLDER_ASSIGN_OP(op, name) \
+    template<class T> \
+    constexpr auto operator op (const T& x) const FIT_RETURNS \
+    ( partial_ap<T, left<operators::name>>(x) );
+
+FIT_FOREACH_ASSIGN_OP(FIT_UNAMED_PLACEHOLDER_ASSIGN_OP)
+};
+#define FIT_UNAMED_PLACEHOLDER_BINARY_OP(op, name) \
+    template<class T> \
+    constexpr inline auto operator op (const unamed_placeholder&, const T& x) FIT_RETURNS \
+    ( unamed_placeholder::partial_ap<T, unamed_placeholder::left<operators::name>>(x) ); \
+    template<class T> \
+    constexpr inline auto operator op (const T& x, const unamed_placeholder&) FIT_RETURNS \
+    ( unamed_placeholder::partial_ap<T, unamed_placeholder::right<operators::name>>(x) ); \
+    constexpr inline auto operator op (const unamed_placeholder&, const unamed_placeholder&) FIT_RETURNS \
+    ( operators::name() );
+
+FIT_FOREACH_BINARY_OP(FIT_UNAMED_PLACEHOLDER_BINARY_OP)
+}
+
+constexpr const detail::unamed_placeholder _ = {};
 
 }
 

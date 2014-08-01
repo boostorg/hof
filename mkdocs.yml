@@ -1,0 +1,12 @@
+site_name: Fit
+docs_dir: doc/src
+site_dir: doc/html/
+repo_url: https://github.com/pfultz2/Fit
+use_directory_urls: false
+pages:
+- ['index.md', 'Home']
+- ['adaptors.md', 'User Guide', 'Function Adaptors']
+- ['functions.md', 'User Guide', 'Functions']
+- ['utilities.md', 'User Guide', 'Utilities']
+- ['requirements.md', 'About', 'Requirements']
+- ['zlang.md', 'About', 'ZLang']

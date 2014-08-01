@@ -9,7 +9,7 @@
 #define FIT_GUARD_FUNCTION_CONDITIONAL_H
 
 /// conditional
-/// ======
+/// ===========
 /// 
 /// Description
 /// -----------

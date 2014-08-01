@@ -244,7 +244,7 @@
 <p>The <code>always</code> function returns a function object that will always return
 the value given to it, no matter what parameters are passed to the
 function object. The <code>always_ref</code> version will return a reference, and it
-requires the value based in to be an lvalue.</p>
+requires the value passed in to be an lvalue.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class T&gt;
 /* unspecified */ always(T value);
@@ -254,7 +254,7 @@ template&lt;class T&gt;
 </code></pre>
 <h2 id="example">Example</h2>
 <pre class="prettyprint well"><code>int ten = 10;
-assert( zen::always(ten)(1,2,3,4,5) == 10 );
+assert( always(ten)(1,2,3,4,5) == 10 );
 </code></pre>
 </div>
         </div>

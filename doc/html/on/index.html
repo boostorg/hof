@@ -241,9 +241,10 @@
 
 <h1 id="on">on</h1>
 <h2 id="description">Description</h2>
-<p>The <code>on</code> function adaptor applies a projection onto the parameters to
-another function. This is useful for defining function such for ordering
-such that the ordering is based on the one member function.</p>
+<p>The <code>on</code> function adaptor applies a projection onto the parameters of
+another function. This is useful, for example, to define a function for
+sorting such that the ordering is based off of the value of one of its
+member fields.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class Projection, class F&gt;
 on_adaptor&lt;Projection, F&gt; on(Projection p, F f);

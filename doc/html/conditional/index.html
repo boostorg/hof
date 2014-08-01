@@ -239,8 +239,10 @@
 
 <h1 id="conditional">conditional</h1>
 <h2 id="description">Description</h2>
-<p>The <code>conditional</code> function adaptor combines several functions together. If the
-first function can not be called, then it will try to call the next function.</p>
+<p>The <code>conditional</code> function adaptor combines several functions together. If
+the first function can not be called, then it will try to call the next
+function. This can very useful when overloading functions using template
+constraints(such as with <code>enable_if</code>).</p>
 <p>Note: This is different than the <code>match</code> function adaptor, which can lead
 to ambiguities. Instead, <code>conditional</code> will call the first function that
 is callable, regardless if there is another function that could be called

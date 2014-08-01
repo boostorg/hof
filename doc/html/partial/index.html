@@ -242,10 +242,11 @@
 <h1 id="partial">partial</h1>
 <h2 id="description">Description</h2>
 <p>The <code>partial</code> function adaptor allows partial application of the function.
-If the function can not be called with all the parameters, it will return a
-function. It will continually do this until the function can be called. By
-default, the <code>partial</code> captures all of it variables by value, just like
-bind. <code>std::ref</code> can be used to capture references instead.</p>
+If the function can not be called with all the parameters, it will return
+another function. It will continually do this until the function can
+finally be called. By default, <code>partial</code> captures all of it variables by
+value, just like bind. <code>std::ref</code> can be used to capture references
+instead.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
 partial_adaptor&lt;F&gt; partial(F f);

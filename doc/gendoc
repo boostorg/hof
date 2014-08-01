@@ -2,36 +2,28 @@
 
 function extract 
 {
-    sed -n '/^\/\/\/ /s,/// ,,p' $1
+    sed -n '/^\/\/\/ /s,/// ,,p' ../fit/$1.h > src/$1.md
 }
 
-echo "" > src/adaptors.md
-
-extract ../fit/compose.h >> src/adaptors.md
-extract ../fit/conditional.h >> src/adaptors.md
-extract ../fit/fix.h >> src/adaptors.md
-extract ../fit/fuse.h >> src/adaptors.md
-extract ../fit/implicit.h >> src/adaptors.md
-extract ../fit/invoke.h >> src/adaptors.md
-extract ../fit/lazy.h >> src/adaptors.md
-extract ../fit/match.h >> src/adaptors.md
-extract ../fit/mutable.h >> src/adaptors.md
-extract ../fit/on.h >> src/adaptors.md
-extract ../fit/partial.h >> src/adaptors.md
-extract ../fit/pipable.h >> src/adaptors.md
-extract ../fit/placeholders.h >> src/adaptors.md
-extract ../fit/protect.h >> src/adaptors.md
-extract ../fit/reveal.h >> src/adaptors.md
-extract ../fit/static.h >> src/adaptors.md
-extract ../fit/variadic.h >> src/adaptors.md
-
-echo "" > src/functions.md
-
-extract ../fit/always.h >> src/functions.md
-extract ../fit/identity.h >> src/functions.md
-
-echo "" > src/utilities.md
-
-extract ../fit/args.h >> src/utilities.md
-extract ../fit/is_callable.h >> src/utilities.md
-extract ../fit/returns.h >> src/utilities.md
+extract always
+extract args
+extract compose
+extract conditional
+extract fix
+extract fuse
+extract identity
+extract implicit
+extract invoke
+extract is_callable
+extract lazy
+extract match
+extract mutable
+extract on
+extract partial
+extract pipable
+extract placeholders
+extract protect
+extract returns
+extract reveal
+extract static
+extract variadic

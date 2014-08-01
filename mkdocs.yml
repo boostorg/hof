@@ -5,8 +5,29 @@ repo_url: https://github.com/pfultz2/Fit
 use_directory_urls: false
 pages:
 - ['index.md', 'Home']
-- ['adaptors.md', 'User Guide', 'Function Adaptors']
 - ['functions.md', 'User Guide', 'Functions']
-- ['utilities.md', 'User Guide', 'Utilities']
-- ['requirements.md', 'About', 'Requirements']
-- ['zlang.md', 'About', 'ZLang']
+# Adaptors
+- ['compose.md', 'Adaptors', 'compose']
+- ['conditional.md', 'Adaptors', 'conditional']
+- ['fix.md', 'Adaptors', 'fix']
+- ['fuse.md', 'Adaptors', 'fuse']
+- ['implicit.md', 'Adaptors', 'implicit']
+- ['invoke.md', 'Adaptors', 'invoke']
+- ['lazy.md', 'Adaptors', 'lazy']
+- ['match.md', 'Adaptors', 'match']
+- ['mutable.md', 'Adaptors', 'mutable']
+- ['on.md', 'Adaptors', 'on']
+- ['partial.md', 'Adaptors', 'partial']
+- ['pipable.md', 'Adaptors', 'pipable']
+- ['placeholders.md', 'Adaptors', 'placeholders']
+- ['protect.md', 'Adaptors', 'protect']
+- ['reveal.md', 'Adaptors', 'reveal']
+- ['static.md', 'Adaptors', 'static']
+- ['variadic.md', 'Adaptors', 'variadic']
+# Functions
+- ['always.md', 'Functions', 'always']
+- ['identity.md', 'Functions', 'identity']
+# Utilities
+- ['args.md', 'Utilities', 'args']
+- ['is_callable.md', 'Utilities', 'is_callable']
+- ['returns.md', 'Utilities', 'returns']

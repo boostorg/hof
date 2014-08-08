@@ -32,7 +32,7 @@
 
 #include <fit/always.h>
 #include <fit/returns.h>
-#include <fit/enable_if_convertible.h>
+#include <fit/detail/delegate.h>
 
 #ifndef FIT_FIX_HAS_CONSTEXPR
 #define FIT_FIX_HAS_CONSTEXPR 0

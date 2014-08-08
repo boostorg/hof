@@ -41,7 +41,7 @@
 
 #include <utility>
 #include <fit/always.h>
-#include <fit/enable_if_convertible.h>
+#include <fit/detail/delegate.h>
 #include <fit/returns.h>
 
 namespace fit {

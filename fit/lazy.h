@@ -44,7 +44,7 @@
 #include <fit/always.h>
 #include <fit/static.h>
 #include <fit/invoke.h>
-#include <fit/enable_if_convertible.h>
+#include <fit/detail/delegate.h>
 #include <tuple>
 #include <functional>
 #include <type_traits>

@@ -9,21 +9,10 @@
 #define FIT_GUARD_FUNCTION_REF_TUPLE_H
 
 #include <tuple>
+#include <fit/detail/remove_rvalue_reference.h>
 
 namespace fit {
 namespace detail {
-
-template<class T>
-struct remove_rvalue_reference
-{
-    typedef T type;
-};
-
-template<class T>
-struct remove_rvalue_reference<T&&>
-{
-    typedef T type;
-};
 
 template<class... Ts>
 constexpr auto make_ref_tuple(Ts&&... x)

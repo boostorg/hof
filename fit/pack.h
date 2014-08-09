@@ -29,7 +29,7 @@ struct decay_elem_f
     };
 
     template<class T>
-    typename unwrap_reference<typename std::decay<T>::type>::type 
+    constexpr typename unwrap_reference<typename std::decay<T>::type>::type 
     operator()(T&& x) const
     {
         return std::forward<T>(x);
@@ -48,24 +48,27 @@ struct pack_holder
 template<class Seq, class... Ts>
 struct pack_base;
 
-template<int N, class T, class Pack>
-constexpr auto pack_get(const Pack& p) FIT_RETURNS
-(
-    static_cast<const pack_holder<N, T>&>(p).value
-);
+
+template<int N, class T, class Pack, class... Ts>
+constexpr T pack_get(const Pack& p, Ts&&...)
+{
+    // C style cast(rather than static_cast) is needed for gcc
+    return (T)(static_cast<const pack_holder<N, T>&>(p).value);
+}
+
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
 : pack_holder<Ns, Ts>...
 {
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, pack_holder<Ns, Ts>)>
-    pack_base(Xs&&... xs) : pack_holder<Ns, Ts>(std::forward<Xs>(xs))...
+    constexpr pack_base(Xs&&... xs) : pack_holder<Ns, Ts>(std::forward<Xs>(xs))...
     {}
 
     template<class F>
     constexpr auto operator()(F f) const FIT_RETURNS
     (
-        f(pack_get<Ns, Ts>(*this)...)
+        f(pack_get<Ns, Ts>(*this, f)...)
     );
 };
 
@@ -74,13 +77,13 @@ struct pack_base<seq<Ns...>, Ts...>
 template<class... Ts>
 constexpr auto pack(Ts&&... xs) FIT_RETURNS
 (
-    detail::pack_base<detail::gens<sizeof...(Ts)>, typename detail::remove_rvalue_reference<Ts>::type...>(std::forward<Ts>(xs)...)
+    detail::pack_base<typename detail::gens<sizeof...(Ts)>::type, typename detail::remove_rvalue_reference<Ts>::type...>(std::forward<Ts>(xs)...)
 );
 
 template<class... Ts>
 constexpr auto pack_forward(Ts&&... xs) FIT_RETURNS
 (
-    detail::pack_base<detail::gens<sizeof...(Ts)>, Ts&&...>(std::forward<Ts>(xs)...)
+    detail::pack_base<typename detail::gens<sizeof...(Ts)>::type, Ts&&...>(std::forward<Ts>(xs)...)
 );
 
 template<class... Ts>

@@ -15,7 +15,7 @@
     typename std::enable_if<std::is_convertible<__VA_ARGS__>::value, int>::type = 0
 
 #define FIT_ENABLE_IF_CONVERTIBLE_UNPACK(...) \
-    typename std::enable_if<std::is_convertible<__VA_ARGS__>::value..., int>::type = 0
+    typename std::enable_if<fit::detail::and_<std::is_convertible<__VA_ARGS__>...>::value, int>::type = 0
 
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
     typename std::enable_if<std::is_constructible<__VA_ARGS__>::value, int>::type = 0
@@ -31,6 +31,15 @@
 namespace fit {
 namespace detail {
 
+template<class T, class... Ts>
+struct and_
+: std::integral_constant<bool, (T::value && and_<Ts...>::value)>
+{};
+
+template<class T>
+struct and_<T>
+: T
+{};
 }
 }
 

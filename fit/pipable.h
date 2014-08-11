@@ -44,144 +44,94 @@
 
 #include <fit/conditional.h>
 #include <fit/static.h>
-#include <fit/variadic.h>
-#include <fit/invoke.h>
+#include <fit/pack.h>
+#include <fit/detail/delegate.h>
 
 namespace fit { 
  
 template<class F>
 struct pipable_adaptor;
 
-// A possible implementation using generic lambdas
-#if 0 // FIT_NO_GENERIC_LAMBDA
+namespace detail {
 
-template<class F>
-struct pipe_closure : F
+template<class F, class Pack>
+struct pipe_closure : F, Pack
 {
-    template<class X>
-    pipe_closure(X&& f) : F(std::forward<X>(f))
+    
+    template<class X, class P>
+    constexpr pipe_closure(X&& f, P&& pack) : F(std::forward<X>(f)), Pack(std::forward<P>(pack))
     {}
 
-    const F& base_function() const
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&...) const
     {
         return *this;
-    }
-};
-
-template<class A, class F>
-decltype(auto) operator|(A&& a, const pipe_closure<F>& p)
-{
-    return p(std::forward<A>(a));
-}
-
-template<class F>
-pipe_closure<F> make_pipe_closure(F&& x)
-{
-    return pipe_closure<F>(std::forward<F>(x));
-}
-
-template<class Derived, class F>
-struct pipe_closure_factory
-{
-    const F& get_function() const
-    {
-        return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
     template<class... Ts>
-    auto operator()(Ts&&... xs) const
-    {
-        return make_pipe_closure([ys = std::forward<Ts>(xs)...](auto&& x)
-        {
-            return this->get_function()(x, std::forward<Ts>(ys)...);
-        });
-    }
-};
-
-
-template<class F>
-using pipable_adaptor_base = pipe_closure_factory<F, pipe_closure_factory<pipable_adaptor<F>, F> >;
-#else
-namespace detail {
-
-template<class F, class Sequence>
-struct pipe_closure : F, Sequence
-{
-    
-    template<class X, class S>
-    constexpr pipe_closure(X&& f, S&& seq) : F(std::forward<X>(f)), Sequence(std::forward<S>(seq))
-    {}
-
-    constexpr const F& base_function() const
-    {
-        return *this;
-    }
-
-    constexpr const Sequence& get_sequence() const
+    constexpr const Pack& get_pack(Ts&&...) const
     {
         return *this;
     }
 
     template<class A>
-    constexpr decltype(auto) operator()(A&& a) const
+    struct invoke
     {
-        return fit::invoke(this->base_function(), std::tuple_cat
-        (
-            std::forward_as_tuple(std::forward<A>(a)),
-            this->get_sequence()
-        ));
-    }
+        A a;
+        const pipe_closure * self;
+        template<class X>
+        invoke(X&& x, const pipe_closure * self) : a(std::forward<X>(x)), self(self)
+        {}
+
+        template<class... Ts>
+        auto operator()(Ts&&... xs) const FIT_RETURNS
+        (self->base_function(xs...)(std::forward<A>(a), std::forward<Ts>(xs)...));
+    };
+
+    template<class A>
+    constexpr auto operator()(A&& a) const FIT_RETURNS
+    (this->get_pack(a)(invoke<A&&>(std::forward<A>(a), this)));
 };
+
+template<class F, class Pack>
+constexpr auto make_pipe_closure(F f, Pack&& p) FIT_RETURNS
+(
+    pipe_closure<F, typename std::remove_reference<Pack>::type>(f, std::forward<Pack>(p))
+);
 
 
 template<class Derived, class F>
-struct pipe_closure_factory
+struct pipe_pack
 {
-    constexpr const F& get_function() const
+    template<class... Ts>
+    constexpr const F& get_function(Ts&&...) const
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
-    template<class T>
-    pipe_closure<F, T> 
-    constexpr operator()(T&& t) const
-    {
-        typedef typename std::remove_cv<typename std::remove_reference<T>::type>::type type;
-        return pipe_closure<F, type>(this->get_function(), std::forward<T>(t)) ;
-    }
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (make_pipe_closure(this->get_function(xs...), fit::pack_forward(std::forward<Ts>(xs)...)));
 };
     
-template<class F>
-using pipable_adaptor_base = conditional_adaptor<F, variadic_adaptor<detail::pipe_closure_factory<pipable_adaptor<F>, F> > >;
 template<class A, class F, class Sequence>
-constexpr decltype(auto) operator|(A&& a, const pipe_closure<F, Sequence>& p)
-{
-    return p(std::forward<A>(a));
-}
-#endif
+constexpr auto operator|(A&& a, const pipe_closure<F, Sequence>& p) FIT_RETURNS
+(p(std::forward<A>(a)));
+
 }
 
 template<class F>
 struct pipable_adaptor 
-: detail::pipable_adaptor_base<F>
+: conditional_adaptor<F, detail::pipe_pack<pipable_adaptor<F>, F> >
 {
-    typedef detail::pipable_adaptor_base<F> base;
+    typedef conditional_adaptor<F, detail::pipe_pack<pipable_adaptor<F>, F> > base;
 
-    constexpr pipable_adaptor()
-    {}
-
-    template<class X>
-    constexpr pipable_adaptor(X&& x) : base(std::forward<X>(x), {})
-    {}
+    FIT_INHERIT_CONSTRUCTOR(pipable_adaptor, base);
 
     constexpr const F& base_function() const
     {
         return *this;
     }
-
-    // MSVC Workaround
-    // pipable_adaptor(const pipable_adaptor& rhs) : base(static_cast<const base&>(rhs))
-    // {}
 };
 
 
@@ -193,10 +143,8 @@ constexpr pipable_adaptor<F> pipable(F f)
 
 // Operators for static_ adaptor
 template<class A, class F>
-decltype(auto) operator|(A&& a, static_<F> f)
-{
-    return f.base_function().base_function()(std::forward<A>(a));
-}
+auto operator|(A&& a, static_<F> f) FIT_RETURNS
+(f.base_function().base_function()(std::forward<A>(a)));
 }
 
 #endif

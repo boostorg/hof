@@ -80,6 +80,33 @@ struct pack_base<seq<> >
     (f());
 };
 
+template<class P1, class P2>
+struct pack_join_base;
+
+template<int... Ns1, class... Ts1, int... Ns2, class... Ts2>
+struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2...>>
+{
+    static constexpr long total_size = sizeof...(Ts1) + sizeof...(Ts2);
+    typedef pack_base<typename detail::gens<total_size>::type, Ts1..., Ts2...> result_type;
+
+    template<class P1, class P2>
+    static constexpr result_type call(P1&& p1, P2&& p2)
+    {
+        // TODO: static_assert that the pack is an rvalue if its only moveable
+        return result_type(
+            pack_get<Ns1, Ts1>(std::forward<P1>(p1))..., 
+            pack_get<Ns2, Ts2>(std::forward<P2>(p2))...);
+    }
+};
+
+template<class P1, class P2>
+struct pack_join 
+: pack_join_base<
+    typename std::remove_cv<typename std::remove_reference<P1>::type>::type, 
+    typename std::remove_cv<typename std::remove_reference<P2>::type>::type
+>
+{};
+
 }
 
 template<class... Ts>
@@ -99,6 +126,12 @@ constexpr auto pack_decay(Ts&&... xs) FIT_RETURNS
 (
     pack(detail::decay_elem(std::forward<Ts>(xs))...)
 );
+
+template<class P1, class P2>
+constexpr typename detail::pack_join<P1, P2>::result_type pack_join(P1&& p1, P2&& p2)
+{
+    return detail::pack_join<P1, P2>::call(std::forward<P1>(p1), std::forward<P2>(p2));
+}
 
 
 }

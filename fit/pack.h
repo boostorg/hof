@@ -72,6 +72,14 @@ struct pack_base<seq<Ns...>, Ts...>
     );
 };
 
+template<>
+struct pack_base<seq<> >
+{
+    template<class F>
+    constexpr auto operator()(F f) const FIT_RETURNS
+    (f());
+};
+
 }
 
 template<class... Ts>

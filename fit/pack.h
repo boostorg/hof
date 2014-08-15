@@ -13,6 +13,10 @@
 #include <fit/detail/remove_rvalue_reference.h>
 #include <fit/returns.h>
 
+#ifndef FIT_HAS_RVALUE_THIS
+#define FIT_HAS_RVALUE_THIS 1
+#endif
+
 namespace fit { namespace detail {
 
 struct decay_elem_f
@@ -49,13 +53,12 @@ template<class Seq, class... Ts>
 struct pack_base;
 
 
-template<int N, class T, class Pack, class... Ts>
-constexpr T pack_get(const Pack& p, Ts&&...)
+template<int N, class T, class... Ts>
+constexpr T&& pack_get(const pack_holder<N, T>& p, Ts&&...)
 {
     // C style cast(rather than static_cast) is needed for gcc
-    return (T)(static_cast<const pack_holder<N, T>&>(p).value);
+    return (T&&)(p.value);
 }
-
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
@@ -64,7 +67,7 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, pack_holder<Ns, Ts>)>
     constexpr pack_base(Xs&&... xs) : pack_holder<Ns, Ts>(std::forward<Xs>(xs))...
     {}
-
+  
     template<class F>
     constexpr auto operator()(F f) const FIT_RETURNS
     (

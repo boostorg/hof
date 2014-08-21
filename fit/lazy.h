@@ -45,7 +45,7 @@
 #include <fit/static.h>
 #include <fit/invoke.h>
 #include <fit/detail/delegate.h>
-#include <tuple>
+#include <fit/pack.h>
 #include <functional>
 #include <type_traits>
 
@@ -105,31 +105,41 @@ struct id_transformer
 
 static constexpr const conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer> pick_transformer = {};
 
-template<class T, class... Ts>
-constexpr auto lazy_transform(T&& x, Ts&&... xs) FIT_RETURNS
+template<class T, class Pack>
+constexpr auto lazy_transform(T&& x, Pack&& p) FIT_RETURNS
 (
-    fit::detail::pick_transformer(std::forward<T>(x))(std::forward<Ts>(xs)...)
+    p(fit::detail::pick_transformer(std::forward<T>(x)))
 );
 
-template<class F, class T, int ...N, class... Ts>
-constexpr auto lazy_invoke_impl(F f, T && t, seq<N...>, Ts&&... xs) FIT_RETURNS
-(
-    f(fit::detail::lazy_transform(FIT_AUTO_FORWARD(std::get<N>(t)), std::forward<Ts>(xs)...)...)
-);
-
-template<class F, class Sequence, class... Ts>
-constexpr auto lazy_invoke(F f, Sequence && t, Ts&&... xs) FIT_RETURNS
-(
-    detail::lazy_invoke_impl(f, std::forward<Sequence>(t), detail::make_sequence_gens(t), std::forward<Ts>(xs)...)
-);
-
-template<class F, class Sequence>
-struct lazy_invoker : F
+template<class F, class Pack>
+struct lazy_unpack
 {
-    Sequence seq;
-    template<class X, class Seq>
-    constexpr lazy_invoker(X&& x, Seq&& seq) 
-    : F(std::forward<X>(x)), seq(std::forward<Seq>(seq))
+    const Pack& p;
+    const F& f;
+
+    constexpr lazy_unpack(const F& f, const Pack& p) 
+    : f(f), p(p)
+    {}
+
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        f(lazy_transform(std::forward<Ts>(xs), p)...)
+    );
+};
+
+template<class F, class Pack>
+constexpr lazy_unpack<F, Pack> make_lazy_unpack(const F& f, const Pack& p)
+{
+    return lazy_unpack<F, Pack>(f, p);
+}
+
+template<class F, class Pack>
+struct lazy_invoker : F, Pack
+{
+    template<class X, class P>
+    constexpr lazy_invoker(X&& x, P&& pack) 
+    : F(std::forward<X>(x)), Pack(std::forward<P>(pack))
     {}
 
     template<class... Ts>
@@ -139,22 +149,24 @@ struct lazy_invoker : F
     }
 
     template<class... Ts>
-    constexpr const Sequence& get_sequence(Ts&&... xs) const
+    constexpr const Pack& get_pack(Ts&&... xs) const
     {
-        return seq;
+        return always_ref(*this)(xs...);
     }
 
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        fit::detail::lazy_invoke(this->base_function(xs...), this->get_sequence(xs...), std::forward<Ts>(xs)...)
+        this->get_pack(xs...)(
+            fit::detail::make_lazy_unpack(this->base_function(xs...), pack_forward(std::forward<Ts>(xs)...))
+        )
     );
 };
 
-template<class F, class Sequence>
-constexpr lazy_invoker<F, Sequence> make_lazy_invoker(F f, const Sequence& seq)
+template<class F, class Pack>
+constexpr lazy_invoker<F, Pack> make_lazy_invoker(F f, Pack pack)
 {
-    return lazy_invoker<F, Sequence>(f, seq);
+    return lazy_invoker<F, Pack>(std::move(f), std::move(pack));
 }
 }
 
@@ -171,10 +183,10 @@ struct lazy_adaptor : F
     }
 
     template<class... Ts>
-    constexpr auto operator()(const Ts&... xs) const FIT_RETURNS
+    constexpr auto operator()(Ts... xs) const FIT_RETURNS
     (
         fit::detail::make_lazy_invoker(this->base_function(xs...), 
-            std::tuple<Ts...>(xs...))
+            pack(std::move(xs)...))
     );
     
 };

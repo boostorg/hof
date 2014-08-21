@@ -58,13 +58,13 @@ template<class F, class Pack=void >
 struct partial_adaptor;
 
 template<class F>
-partial_adaptor<F> partial(F f)
+constexpr partial_adaptor<F> partial(F f)
 {
     return partial_adaptor<F>(f);
 }
 
 template<class F, class Pack>
-partial_adaptor<F, Pack> partial(F f, Pack pack)
+constexpr partial_adaptor<F, Pack> partial(F f, Pack pack)
 {
     return partial_adaptor<F, Pack>(f, std::move(pack));
 }
@@ -74,25 +74,27 @@ namespace detail {
 template<class Derived, class F, class Pack>
 struct partial_adaptor_invoke
 {
-    const F& get_function() const
+    template<class... Ts>
+    constexpr const F& get_function(Ts&&...) const
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
-    const Pack& get_pack() const
+    template<class... Ts>
+    constexpr const Pack& get_pack(Ts&&...) const
     {
         return static_cast<const Pack&>(static_cast<const Derived&>(*this));
     }
 
     template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         fit::pack_join
         (
-            this->get_pack(), 
+            this->get_pack(xs...), 
             fit::pack_forward(std::forward<Ts>(xs)...)
         )
-        (this->get_function())
+        (this->get_function(xs...))
     );
 };
 
@@ -100,40 +102,43 @@ struct partial_adaptor_invoke
 template<class Derived, class F, class Pack>
 struct partial_adaptor_join
 {
-    const F& get_function() const
+    template<class... Ts>
+    constexpr const F& get_function(Ts&&...) const
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
-    const Pack& get_pack() const
+    template<class... Ts>
+    constexpr const Pack& get_pack(Ts&&...) const
     {
         return static_cast<const Pack&>(static_cast<const Derived&>(*this));
     }
 
     template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         partial
         (
-            this->get_function(), 
-            fit::pack_join(this->get_pack(), fit::pack_decay(std::forward<Ts>(xs)...))
+            this->get_function(xs...), 
+            fit::pack_join(this->get_pack(xs...), fit::pack_decay(std::forward<Ts>(xs)...))
         )
     );
 };
 template<class Derived, class F>
 struct partial_adaptor_pack
 {
-    const F& get_function() const
+    template<class... Ts>
+    constexpr const F& get_function(Ts&&...) const
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
     template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         partial
         (
-            this->get_function(), 
+            this->get_function(xs...), 
             fit::pack_decay(std::forward<Ts>(xs)...)
         )
     );
@@ -164,23 +169,25 @@ template<class F, class Pack>
 struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
 {
     typedef typename detail::partial_adaptor_base<F, Pack>::type base;
-    const F& base_function() const
+    
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&...) const
     {
         return *this;
     }
 
-    const Pack& get_pack() const
+    constexpr const Pack& get_pack() const
     {
         return *this;
     }
 
     using base::operator();
 
-    partial_adaptor()
+    constexpr partial_adaptor()
     {}
 
     template<class X, class S>
-    partial_adaptor(X&& x, S&& seq) : F(std::forward<X>(x)), Pack(std::forward<S>(seq))
+    constexpr partial_adaptor(X&& x, S&& seq) : F(std::forward<X>(x)), Pack(std::forward<S>(seq))
     {}
 };
 
@@ -188,18 +195,20 @@ template<class F>
 struct partial_adaptor<F, void> : detail::partial_adaptor_base<F, void>::type
 {
     typedef typename detail::partial_adaptor_base<F, void>::type base;
-    const F& base_function() const
+    
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&...) const
     {
         return *this;
     }
 
     using base::operator();
 
-    partial_adaptor()
+    constexpr partial_adaptor()
     {}
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    partial_adaptor(X&& x) : base(std::forward<X>(x))
+    constexpr partial_adaptor(X&& x) : base(std::forward<X>(x))
     {}
 
 
@@ -210,11 +219,11 @@ struct partial_adaptor<pipable_adaptor<F>, void>
 : partial_adaptor<F, void>
 {
     typedef partial_adaptor<F, void> base;
-    partial_adaptor()
+    constexpr partial_adaptor()
     {}
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    partial_adaptor(X&& x) : base(std::forward<X>(x))
+    constexpr partial_adaptor(X&& x) : base(std::forward<X>(x))
     {}
 };
 

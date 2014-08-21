@@ -11,6 +11,12 @@ fit::static_<fit::pipable_adaptor<void_class> > void_pipable = {};
 
 fit::static_<fit::pipable_adaptor<mono_class> > mono_pipable = {};
 
+constexpr const fit::pipable_adaptor<void_class> void_pipable_constexpr = {};
+
+constexpr const fit::pipable_adaptor<binary_class> binary_pipable_constexpr = {};
+
+constexpr const fit::pipable_adaptor<unary_class> unary_pipable_constexpr = {};
+
 // TODO: Test constexpr
 
 FIT_TEST_CASE()
@@ -32,3 +38,15 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == (mono_pipable(2)));
     FIT_TEST_CHECK(3 == (2| mono_pipable));
 }
+
+FIT_TEST_CASE()
+{
+    void_pipable_constexpr(1);
+    1 | void_pipable_constexpr;
+    static_assert(3 == (1 | binary_pipable_constexpr(2)), "Constexpr pipable failed");
+    static_assert(3 == (binary_pipable_constexpr(1, 2)), "Constexpr pipable failed");
+    static_assert(3 == (3 | unary_pipable_constexpr), "Constexpr pipable failed");
+    static_assert(3 == (3 | unary_pipable_constexpr()), "Constexpr pipable failed");
+    static_assert(3 == (unary_pipable_constexpr(3)), "Constexpr pipable failed");
+}
+

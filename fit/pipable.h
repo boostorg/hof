@@ -80,11 +80,11 @@ struct pipe_closure : F, Pack
         A a;
         const pipe_closure * self;
         template<class X>
-        invoke(X&& x, const pipe_closure * self) : a(std::forward<X>(x)), self(self)
+        constexpr invoke(X&& x, const pipe_closure * self) : a(std::forward<X>(x)), self(self)
         {}
 
         template<class... Ts>
-        auto operator()(Ts&&... xs) const FIT_RETURNS
+        constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
         (self->base_function(xs...)(std::forward<A>(a), std::forward<Ts>(xs)...));
     };
 
@@ -114,8 +114,8 @@ struct pipe_pack
     (make_pipe_closure(this->get_function(xs...), fit::pack_forward(std::forward<Ts>(xs)...)));
 };
     
-template<class A, class F, class Sequence>
-constexpr auto operator|(A&& a, const pipe_closure<F, Sequence>& p) FIT_RETURNS
+template<class A, class F, class Pack>
+constexpr auto operator|(A&& a, const pipe_closure<F, Pack>& p) FIT_RETURNS
 (p(std::forward<A>(a)));
 
 }
@@ -133,6 +133,10 @@ struct pipable_adaptor
         return *this;
     }
 };
+
+template<class A, class F>
+constexpr auto operator|(A&& a, const pipable_adaptor<F>& p) FIT_RETURNS
+(p(std::forward<A>(a)));
 
 
 template<class F>

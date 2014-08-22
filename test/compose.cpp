@@ -56,8 +56,8 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    static_assert(!std::is_copy_constructible<increment_movable>::value && std::is_move_constructible<increment_movable>::value, "Not movable");
-    static_assert(!std::is_copy_constructible<decrement_movable>::value && std::is_move_constructible<decrement_movable>::value, "Not movable");
+    STATIC_ASSERT_MOVE_ONLY(increment_movable);
+    STATIC_ASSERT_MOVE_ONLY(decrement_movable);
     int r = fit::compose(increment_movable(), decrement_movable(), increment_movable())(3);
     FIT_TEST_CHECK(r == 4);
 }

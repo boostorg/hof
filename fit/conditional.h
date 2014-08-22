@@ -72,7 +72,7 @@ struct conditional_kernel : F1, F2
     constexpr conditional_kernel() {}
 
     template<class A, class B>
-    constexpr conditional_kernel(A f1, B f2) : F1(f1), F2(f2)
+    constexpr conditional_kernel(A&& f1, B&& f2) : F1(std::forward<A>(f1)), F2(std::forward<B>(f2))
     {}
 
     template<class... Ts>
@@ -109,12 +109,12 @@ struct conditional_kernel : F1, F2
 
 template<class F, class... Fs>
 struct conditional_adaptor : detail::conditional_kernel<F, conditional_adaptor<Fs...> >
-{
+{    
     constexpr conditional_adaptor() {}
 
     template<class X, class... Xs>
     constexpr conditional_adaptor(X && f1, Xs && ... fs) 
-    : detail::conditional_kernel<F, conditional_adaptor<Fs...> >(std::forward<X>(f1), std::forward<Xs>(fs)...)
+    : detail::conditional_kernel<F, conditional_adaptor<Fs...> >(std::forward<X>(f1), conditional_adaptor<Fs...>(std::forward<Xs>(fs)...))
     {}
 
 };
@@ -134,7 +134,7 @@ struct conditional_adaptor<F> : F
 template<class... Fs>
 constexpr conditional_adaptor<Fs...> conditional(Fs... fs)
 {
-    return conditional_adaptor<Fs...>(fs...);
+    return conditional_adaptor<Fs...>(std::move(fs)...);
 }
 
 }

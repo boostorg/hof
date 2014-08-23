@@ -94,7 +94,7 @@ struct implicit_invoke
     }
 };
 
-template<template <class> class F, class Pack>
+template<template <class...> class F, class Pack>
 constexpr implicit_invoke<F, Pack> make_implicit_invoke(Pack&& p)
 {
     return implicit_invoke<F, Pack>(std::forward<Pack>(p));
@@ -103,7 +103,7 @@ constexpr implicit_invoke<F, Pack> make_implicit_invoke(Pack&& p)
 }
 
 
-template<template <class> class F>
+template<template <class...> class F>
 struct implicit
 {
     template<class... Ts>

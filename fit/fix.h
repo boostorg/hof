@@ -52,12 +52,7 @@ namespace detail{
 template<class Derived, class F>
 struct fix_adaptor_base : F
 {
-    FIT_FIX_CONSTEXPR fix_adaptor_base()
-    {}
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
-    FIT_FIX_CONSTEXPR fix_adaptor_base(X x) : F(x)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(fix_adaptor_base, F);
 
     template<class... Ts>
     FIT_FIX_CONSTEXPR const F& base_function(Ts&&... xs) const
@@ -83,18 +78,13 @@ template<class F>
 struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
 {
     typedef detail::fix_adaptor_base<fix_adaptor<F>, F> base;
-    FIT_FIX_CONSTEXPR fix_adaptor()
-    {}
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    FIT_FIX_CONSTEXPR fix_adaptor(X x) : base(x)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
 };
 
 template<class F>
 FIT_FIX_CONSTEXPR fix_adaptor<F> fix(F f)
 {
-    return fix_adaptor<F>(f);
+    return fix_adaptor<F>(std::move(f));
 }
 }
 

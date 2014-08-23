@@ -5,8 +5,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef ZEN_GUARD_FUNCTION_OVERLOAD_H
-#define ZEN_GUARD_FUNCTION_OVERLOAD_H
+#ifndef FIT_GUARD_FUNCTION_OVERLOAD_H
+#define FIT_GUARD_FUNCTION_OVERLOAD_H
 
 /// match
 /// =====
@@ -110,36 +110,5 @@ typename match_adaptor<Fs...>::type match(Fs...x)
 }
 
 }
-
-#ifdef ZEN_TEST
-#include <fit/test.h>
-
-namespace fit { namespace match_test {
-struct int_class
-{
-    int operator()(int) const
-    {
-        return 1;
-    }
-};
-
-struct foo
-{};
-
-struct foo_class
-{
-    foo operator()(foo) const
-    {
-        return foo();
-    }
-};
-
-fit::static_<fit::match_adaptor<int_class, foo_class> > fun = {};
-
-static_assert(boost::is_same<int, decltype(fun(1))>::value, "Failed match");
-static_assert(boost::is_same<foo, decltype(fun(foo()))>::value, "Failed match");
-}}
-
-#endif
 
 #endif

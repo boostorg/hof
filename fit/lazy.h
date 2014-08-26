@@ -173,9 +173,8 @@ constexpr lazy_invoker<F, Pack> make_lazy_invoker(F f, Pack pack)
 template<class F>
 struct lazy_adaptor : F
 {
-    template<class X>
-    constexpr lazy_adaptor(X&& x, FIT_ENABLE_IF_CONVERTIBLE(X, F)) : F(std::forward<X>(x))
-    {}
+    FIT_INHERIT_CONSTRUCTOR(lazy_adaptor, F);
+
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
@@ -185,23 +184,39 @@ struct lazy_adaptor : F
     template<class... Ts>
     constexpr auto operator()(Ts... xs) const FIT_RETURNS
     (
-        fit::detail::make_lazy_invoker(this->base_function(xs...), 
+        fit::detail::make_lazy_invoker((F&&)this->base_function(xs...), 
             pack(std::move(xs)...))
     );
+
+    // TODO: Overloads to use with ref qualifiers
+
+    // template<class... Ts>
+    // constexpr auto operator()(Ts... xs) const& FIT_RETURNS
+    // (
+    //     fit::detail::make_lazy_invoker(this->base_function(xs...), 
+    //         pack(std::move(xs)...))
+    // );
+
+    // template<class... Ts>
+    // constexpr auto operator()(Ts... xs) && FIT_RETURNS
+    // (
+    //     fit::detail::make_lazy_invoker((F&&)this->base_function(xs...), 
+    //         pack(std::move(xs)...))
+    // );
     
 };
 
 template<class F>
 constexpr lazy_adaptor<F> lazy(F f)
 {
-    return lazy_adaptor<F>(f);
+    return lazy_adaptor<F>(std::move(f));
 }
 
 }
 
 namespace std {
-    template<class F, class Sequence>
-    struct is_bind_expression<fit::detail::lazy_invoker<F, Sequence>>
+    template<class F, class Pack>
+    struct is_bind_expression<fit::detail::lazy_invoker<F, Pack>>
     : std::true_type
     {};
 }

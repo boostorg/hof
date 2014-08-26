@@ -1,4 +1,5 @@
 #include <fit/lazy.h>
+#include <memory>
 #include "test.h"
 
 // TODO: Test constexpr
@@ -120,4 +121,30 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK( (fit::lazy(fv_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())(std::placeholders::_1))(x), (global_result == 11L)) );
     FIT_TEST_CHECK( (fit::lazy(fv_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())( std::placeholders::_2))(x, y), (global_result == 21L)) );
     FIT_TEST_CHECK( (fit::lazy(fv_1())( fit::lazy(f_0())())(), (global_result == 17041L)) );
+}
+
+struct id
+{
+    int operator()(int i) const
+    {
+        return i;
+    }
+};
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::lazy(id())(3)() == 3);
+}
+
+struct deref
+{
+    int operator()(const std::unique_ptr<int>& i) const
+    {
+        return *i;
+    }
+};
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::lazy(deref())(std::unique_ptr<int>(new int(3)))() == 3);
 }

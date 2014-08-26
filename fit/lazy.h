@@ -100,7 +100,7 @@ struct id_transformer
 {
     template<class T>
     constexpr auto operator()(const T& x) const 
-    FIT_RETURNS(always(x));
+    FIT_RETURNS(always_ref(x));
 };
 
 static constexpr const conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer> pick_transformer = {};

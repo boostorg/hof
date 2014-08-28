@@ -60,6 +60,7 @@
 #include <fit/is_callable.h>
 #include <fit/reveal.h>
 #include <fit/returns.h>
+#include <fit/detail/delegate.h>
 #include <type_traits>
 
 namespace fit {
@@ -71,7 +72,9 @@ struct conditional_kernel : F1, F2
 {
     constexpr conditional_kernel() {}
 
-    template<class A, class B>
+    template<class A, class B,
+        FIT_ENABLE_IF_CONVERTIBLE(A, F1),
+        FIT_ENABLE_IF_CONVERTIBLE(B, F2)>
     constexpr conditional_kernel(A&& f1, B&& f2) : F1(std::forward<A>(f1)), F2(std::forward<B>(f2))
     {}
 
@@ -109,26 +112,23 @@ struct conditional_kernel : F1, F2
 
 template<class F, class... Fs>
 struct conditional_adaptor : detail::conditional_kernel<F, conditional_adaptor<Fs...> >
-{    
+{
+    typedef detail::conditional_kernel<F, conditional_adaptor<Fs...> > base;
+
     constexpr conditional_adaptor() {}
 
-    template<class X, class... Xs>
-    constexpr conditional_adaptor(X && f1, Xs && ... fs) 
-    : detail::conditional_kernel<F, conditional_adaptor<Fs...> >(std::forward<X>(f1), conditional_adaptor<Fs...>(std::forward<Xs>(fs)...))
+    template<class X, class... Xs, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, conditional_adaptor<Fs...>), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(conditional_adaptor<Fs...>, Xs...)>
+    constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
+    : base(std::forward<X>(f1), conditional_adaptor<Fs...>(std::forward<Xs>(fs)...))
     {}
-
 };
 
 template<class F>
 struct conditional_adaptor<F> : F
 {
-    constexpr conditional_adaptor() {}
-
-    template<class X>
-    constexpr conditional_adaptor(X && f1) 
-    : F(std::forward<X>(f1))
-    {}
-
+    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, F);
 };
 
 template<class... Fs>

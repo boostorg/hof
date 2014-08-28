@@ -53,23 +53,23 @@
 ///     static_assert(std::is_same<foo, decltype(fun()(foo()))>::value, "Failed match");
 /// 
 
+#include <fit/detail/delegate.h>
 
 namespace fit {
 
-namespace detail {
-template<class...Fs> struct match_adaptor_base;
+template<class...Fs> struct match_adaptor;
  
 template<class F, class...Fs>
-struct match_adaptor_base<F, Fs...> : F, match_adaptor_base<Fs...>
+struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
 {
-    typedef match_adaptor_base<Fs...> base;
+    typedef match_adaptor<Fs...> base;
 
-    match_adaptor_base()
+    constexpr match_adaptor()
     {}
 
-    template<class T, class... Ts>
-    match_adaptor_base(T head, Ts... tail)
-    : F(head), base(tail...)
+    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
+    constexpr match_adaptor(X&& f1, Xs&& ... fs) 
+    : F(std::forward<X>(f1)), base(std::forward<Xs>(fs)...)
     {}
 
     using F::operator();
@@ -77,36 +77,18 @@ struct match_adaptor_base<F, Fs...> : F, match_adaptor_base<Fs...>
 };
 
 template<class F>
-struct match_adaptor_base<F> : F
+struct match_adaptor<F> : F
 {
     typedef F base;
     using F::operator();
 
-    match_adaptor_base()
-    {}
-
-    template<class T>
-    match_adaptor_base(T f) : F(f)
-    {}
-};
-}
-
-template<class...Fs> 
-struct match_adaptor : detail::match_adaptor_base<Fs...>
-{
-    typedef detail::match_adaptor_base<Fs...> base;
-    match_adaptor()
-    {}
-
-    template<class... T>
-    match_adaptor(T... x) : base(x...)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(match_adaptor, F);
 };
 
 template<class...Fs>
-typename match_adaptor<Fs...>::type match(Fs...x)
+constexpr match_adaptor<Fs...> match(Fs...fs)
 { 
-    return match_adaptor<Fs...>(x...); 
+    return match_adaptor<Fs...>(std::move(fs)...); 
 }
 
 }

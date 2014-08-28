@@ -76,7 +76,7 @@ struct on_adaptor : Projection, F
 template<class Projection, class F>
 constexpr on_adaptor<Projection, F> on(Projection p, F f)
 {
-    return on_adaptor<Projection, F>(p, f);
+    return on_adaptor<Projection, F>(std::move(p), std::move(f));
 }
 
 }

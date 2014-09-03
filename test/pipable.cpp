@@ -11,13 +11,14 @@ fit::static_<fit::pipable_adaptor<void_class> > void_pipable = {};
 
 fit::static_<fit::pipable_adaptor<mono_class> > mono_pipable = {};
 
+fit::static_<fit::pipable_adaptor<move_class> > move_pipable = {};
+
 constexpr const fit::pipable_adaptor<void_class> void_pipable_constexpr = {};
 
 constexpr const fit::pipable_adaptor<binary_class> binary_pipable_constexpr = {};
 
 constexpr const fit::pipable_adaptor<unary_class> unary_pipable_constexpr = {};
 
-// TODO: Test constexpr
 
 FIT_TEST_CASE()
 {
@@ -37,6 +38,15 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == (i2));
     FIT_TEST_CHECK(3 == (mono_pipable(2)));
     FIT_TEST_CHECK(3 == (2| mono_pipable));
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(3 == (move_class()(1, 2)));
+    FIT_TEST_CHECK(3 == (move_pipable(1, 2)));
+    FIT_TEST_CHECK(3 == (1 | move_pipable(2)));
+    FIT_TEST_CHECK(3 == (1 | fit::pipable(move_class())(2)));
+    FIT_TEST_CHECK(3 == (fit::pipable(move_class())(1, 2)));
 }
 
 FIT_TEST_CASE()

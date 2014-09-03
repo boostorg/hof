@@ -11,6 +11,8 @@ fit::static_<fit::partial_adaptor<void_class> > void_partial = {};
 
 fit::static_<fit::partial_adaptor<mono_class> > mono_partial = {};
 
+fit::static_<fit::partial_adaptor<move_class> > move_partial = {};
+
 constexpr const fit::partial_adaptor<binary_class> binary_partial_constexpr = {};
 
 constexpr const fit::partial_adaptor<unary_class> unary_partial_constexpr = {};
@@ -40,6 +42,15 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == mutable_partial(i2, 2));
     FIT_TEST_CHECK(3 == i2);
     
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(3 == (move_class()(1, 2)));
+    FIT_TEST_CHECK(3 == (move_partial(1, 2)));
+    FIT_TEST_CHECK(3 == (move_partial(1)(2)));
+    FIT_TEST_CHECK(3 == (fit::partial(move_class())(1)(2)));
+    FIT_TEST_CHECK(3 == (fit::partial(move_class())(1, 2)));
 }
 
 FIT_TEST_CASE()

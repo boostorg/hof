@@ -60,13 +60,13 @@ struct partial_adaptor;
 template<class F>
 constexpr partial_adaptor<F> partial(F f)
 {
-    return partial_adaptor<F>(f);
+    return partial_adaptor<F>(std::move(f));
 }
 
 template<class F, class Pack>
 constexpr partial_adaptor<F, Pack> partial(F f, Pack pack)
 {
-    return partial_adaptor<F, Pack>(f, std::move(pack));
+    return partial_adaptor<F, Pack>(std::move(f), std::move(pack));
 }
 
 namespace detail {
@@ -94,7 +94,7 @@ struct partial_adaptor_invoke
             this->get_pack(xs...), 
             fit::pack_forward(std::forward<Ts>(xs)...)
         )
-        (this->get_function(xs...))
+        ((F&&)this->get_function(xs...))
     );
 };
 
@@ -119,7 +119,7 @@ struct partial_adaptor_join
     (
         partial
         (
-            this->get_function(xs...), 
+            (F&&)this->get_function(xs...), 
             fit::pack_join(this->get_pack(xs...), fit::pack_decay(std::forward<Ts>(xs)...))
         )
     );
@@ -138,7 +138,7 @@ struct partial_adaptor_pack
     (
         partial
         (
-            this->get_function(xs...), 
+            (F&&)this->get_function(xs...), 
             fit::pack_decay(std::forward<Ts>(xs)...)
         )
     );

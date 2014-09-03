@@ -96,7 +96,7 @@ struct pipe_closure : F, Pack
 template<class F, class Pack>
 constexpr auto make_pipe_closure(F f, Pack&& p) FIT_RETURNS
 (
-    pipe_closure<F, typename std::remove_reference<Pack>::type>(f, std::forward<Pack>(p))
+    pipe_closure<F, typename std::remove_reference<Pack>::type>(std::move(f), std::forward<Pack>(p))
 );
 
 
@@ -111,7 +111,7 @@ struct pipe_pack
 
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-    (make_pipe_closure(this->get_function(xs...), fit::pack_forward(std::forward<Ts>(xs)...)));
+    (make_pipe_closure((F&&)this->get_function(xs...), fit::pack_forward(std::forward<Ts>(xs)...)));
 };
     
 template<class A, class F, class Pack>
@@ -142,7 +142,7 @@ constexpr auto operator|(A&& a, const pipable_adaptor<F>& p) FIT_RETURNS
 template<class F>
 constexpr pipable_adaptor<F> pipable(F f)
 {
-    return pipable_adaptor<F>(f);
+    return pipable_adaptor<F>(std::move(f));
 }
 
 // Operators for static_ adaptor

@@ -12,6 +12,18 @@ Synopsis
     template<class F, class Sequence>
     auto invoke(F f, const Sequence& seq);
 
+Requirements
+------------
+
+F must be:
+
+    FunctionObject
+    MoveConstructible
+
+Sequence must be a:
+
+    TupleSequence
+
 Example
 -------
 

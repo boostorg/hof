@@ -13,7 +13,20 @@ Synopsis
 --------
 
     template<class Projection, class F>
-    on_adaptor<Projection, F> on(Projection p, F f);
+    constexpr on_adaptor<Projection, F> on(Projection p, F f);
+
+Requirements
+------------
+
+Projection must be:
+
+    UnaryFunctionObject
+    MoveConstructible
+
+F must be:
+
+    FunctionObject
+    MoveConstructible
 
 Example
 -------

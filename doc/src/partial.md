@@ -15,7 +15,15 @@ Synopsis
 --------
 
     template<class F>
-    partial_adaptor<F> partial(F f);
+    constexpr partial_adaptor<F> partial(F f);
+
+Requirements
+------------
+
+F must be:
+
+    FunctionObject
+    MoveConstructible
 
 Example
 -------

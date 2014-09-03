@@ -6,6 +6,7 @@
 #include <iostream>
 #include <functional>
 #include <vector>
+#include <memory>
 
 #define FIT_PP_CAT(x, y) FIT_PP_PRIMITIVE_CAT(x, y)
 #define FIT_PP_PRIMITIVE_CAT(x, y) x ## y
@@ -33,6 +34,7 @@ void name::operator()() const
 
 
 #define STATIC_ASSERT_SAME(...) static_assert(std::is_same<__VA_ARGS__>::value, "Types are not the same")
+#define STATIC_ASSERT_MOVE_ONLY(T) static_assert(!std::is_copy_constructible<T>::value && std::is_move_constructible<T>::value, "Not movable")
 #define FIT_TEST_CASE() FIT_DETAIL_TEST_CASE(FIT_PP_CAT(test_, __LINE__))
 #define FIT_STATIC_TEST_CASE() struct FIT_PP_CAT(test_, __LINE__)
 
@@ -113,6 +115,19 @@ struct explicit_class
     R operator()(T x)
     {
         return static_cast<R>(x);
+    }
+};
+
+struct move_class
+{
+    std::unique_ptr<int> i;
+    move_class() : i(new int(0))
+    {}
+
+    template<class T, class U>
+    constexpr T operator()(T x, U y) const
+    {
+        return x+y+*i;
     }
 };
 

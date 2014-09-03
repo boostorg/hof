@@ -22,6 +22,18 @@
 ///     template<class F, class Sequence>
 ///     auto invoke(F f, const Sequence& seq);
 /// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
+/// Sequence must be a:
+/// 
+///     TupleSequence
+/// 
 /// Example
 /// -------
 /// 
@@ -48,7 +60,7 @@ make_sequence_gens(const Sequence&)
 }
 
 template<class F, class T, int ...N>
-constexpr auto invoke_impl(F f, T && t, seq<N...>) FIT_RETURNS
+constexpr auto invoke_impl(F&& f, T && t, seq<N...>) FIT_RETURNS
 (
     f(FIT_AUTO_FORWARD(std::get<N>(t))...)
 );
@@ -56,9 +68,9 @@ constexpr auto invoke_impl(F f, T && t, seq<N...>) FIT_RETURNS
 }
 
 template<class F, class Sequence>
-constexpr auto invoke(F f, Sequence && t) FIT_RETURNS
+constexpr auto invoke(F&& f, Sequence && t) FIT_RETURNS
 (
-    detail::invoke_impl(f, std::forward<Sequence>(t), detail::make_sequence_gens(t))
+    detail::invoke_impl(std::forward<F>(f), std::forward<Sequence>(t), detail::make_sequence_gens(t))
 );
 
 

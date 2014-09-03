@@ -11,6 +11,16 @@ fit::static_<fit::partial_adaptor<void_class> > void_partial = {};
 
 fit::static_<fit::partial_adaptor<mono_class> > mono_partial = {};
 
+fit::static_<fit::partial_adaptor<move_class> > move_partial = {};
+
+constexpr const fit::partial_adaptor<binary_class> binary_partial_constexpr = {};
+
+constexpr const fit::partial_adaptor<unary_class> unary_partial_constexpr = {};
+
+constexpr const fit::partial_adaptor<void_class> void_partial_constexpr = {};
+
+constexpr const fit::partial_adaptor<mono_class> mono_partial_constexpr = {};
+
 FIT_TEST_CASE()
 {
     fit::partial_adaptor<void_class>()(1);
@@ -32,4 +42,26 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == mutable_partial(i2, 2));
     FIT_TEST_CHECK(3 == i2);
     
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(3 == (move_class()(1, 2)));
+    FIT_TEST_CHECK(3 == (move_partial(1, 2)));
+    FIT_TEST_CHECK(3 == (move_partial(1)(2)));
+    FIT_TEST_CHECK(3 == (fit::partial(move_class())(1)(2)));
+    FIT_TEST_CHECK(3 == (fit::partial(move_class())(1, 2)));
+}
+
+FIT_TEST_CASE()
+{
+    void_partial_constexpr(1);
+    void_partial_constexpr()(1);
+    static_assert(3 == binary_partial_constexpr(1)(2), "Constexpr partial failed");
+    static_assert(3 == binary_partial_constexpr(1, 2), "Constexpr partial failed");
+    static_assert(3 == unary_partial_constexpr()(3), "Constexpr partial failed");
+    static_assert(3 == unary_partial_constexpr(3), "Constexpr partial failed");
+    static_assert(3 == mono_partial_constexpr(2), "Constexpr partial failed");
+    static_assert(3 == mono_partial_constexpr()(2), "Constexpr partial failed");
+
 }

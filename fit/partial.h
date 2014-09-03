@@ -25,7 +25,15 @@
 /// --------
 /// 
 ///     template<class F>
-///     partial_adaptor<F> partial(F f);
+///     constexpr partial_adaptor<F> partial(F f);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
 /// 
 /// Example
 /// -------
@@ -54,169 +62,189 @@ namespace fit {
 
 // TODO: Get rid of sequence parameter
 // Forward declare partial_adaptor, since it will be used below
-template<class F, class Sequence=std::tuple<> >
+template<class F, class Pack=void >
 struct partial_adaptor;
 
 template<class F>
-partial_adaptor<F> partial(F f)
+constexpr partial_adaptor<F> partial(F f)
 {
-    return partial_adaptor<F>(f);
+    return partial_adaptor<F>(std::move(f));
 }
 
-template<class F, class Sequence>
-partial_adaptor<F, Sequence> partial(F f, Sequence seq)
+template<class F, class Pack>
+constexpr partial_adaptor<F, Pack> partial(F f, Pack pack)
 {
-    return partial_adaptor<F, Sequence>(f, seq);
+    return partial_adaptor<F, Pack>(std::move(f), std::move(pack));
 }
 
 namespace detail {
 
-template<class Derived, class F, class Sequence>
+template<class Derived, class F, class Pack>
 struct partial_adaptor_invoke
 {
-    const F& get_function() const
+    template<class... Ts>
+    constexpr const F& get_function(Ts&&...) const
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
-    const Sequence& get_sequence() const
+    template<class... Ts>
+    constexpr const Pack& get_pack(Ts&&...) const
     {
-        return static_cast<const Sequence&>(static_cast<const Derived&>(*this));
+        return static_cast<const Pack&>(static_cast<const Derived&>(*this));
     }
 
-    template<class T>
-    auto operator()(const T& x) const FIT_RETURNS
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        this->get_function()(std::tuple_cat
+        fit::pack_join
         (
-            this->get_sequence(),
-            x
-        ))
+            this->get_pack(xs...), 
+            fit::pack_forward(std::forward<Ts>(xs)...)
+        )
+        ((F&&)this->get_function(xs...))
     );
 };
 
-struct decay_elem_f
-{
-    template <class T>
-    struct unwrap_reference
-    {
-        typedef T type;
-    };
-    template <class T>
-    struct unwrap_reference<std::reference_wrapper<T>>
-    {
-        typedef T& type;
-    };
 
-    template<class T>
-    typename unwrap_reference<typename std::decay<T>::type>::type 
-    operator()(T&& x) const
-    {
-        return std::forward<T>(x);
-    }
-};
-static decay_elem_f decay_elem = {};
-
-template<class... T>
-auto make_as_decay_tuple(T&&... x) FIT_RETURNS
-(
-    make_ref_tuple(decay_elem(std::forward<T>(x))...)
-);
-
-template<class Derived, class F, class Sequence>
+template<class Derived, class F, class Pack>
 struct partial_adaptor_join
 {
-    const F& get_function() const
+    template<class... Ts>
+    constexpr const F& get_function(Ts&&...) const
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
-    const Sequence& get_sequence() const
+    template<class... Ts>
+    constexpr const Pack& get_pack(Ts&&...) const
     {
-        return static_cast<const Sequence&>(static_cast<const Derived&>(*this));
+        return static_cast<const Pack&>(static_cast<const Derived&>(*this));
     }
 
-    template<class... T>
-    auto operator()(T&&... x) const FIT_RETURNS
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         partial
         (
-            this->get_function(), 
-            std::tuple_cat
-            (
-                this->get_sequence(),
-                make_as_decay_tuple(std::forward<T>(x)...)
-            )
+            (F&&)this->get_function(xs...), 
+            fit::pack_join(this->get_pack(xs...), fit::pack_decay(std::forward<Ts>(xs)...))
         )
     );
 };
-template<class F, class Sequence>
-using partial_adaptor_base = conditional_adaptor
-<
-    variadic_adaptor<partial_adaptor_invoke<partial_adaptor<F, Sequence>, fuse_adaptor<F>, Sequence> >,
-    partial_adaptor_join<partial_adaptor<F, Sequence>, F, Sequence> 
->;
+template<class Derived, class F>
+struct partial_adaptor_pack
+{
+    template<class... Ts>
+    constexpr const F& get_function(Ts&&...) const
+    {
+        return static_cast<const F&>(static_cast<const Derived&>(*this));
+    }
+
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        partial
+        (
+            (F&&)this->get_function(xs...), 
+            fit::pack_decay(std::forward<Ts>(xs)...)
+        )
+    );
+};
+template<class F, class Pack>
+struct partial_adaptor_base 
+{
+    typedef conditional_adaptor
+    <
+        partial_adaptor_invoke<partial_adaptor<F, Pack>, F, Pack>,
+        partial_adaptor_join<partial_adaptor<F, Pack>, F, Pack> 
+    > type;
+};
+
+template<class F>
+struct partial_adaptor_base<F, void>
+{
+    typedef conditional_adaptor
+    <
+        F,
+        partial_adaptor_pack<partial_adaptor<F, void>, F> 
+    > type;
+};
+
 }
 
-template<class F, class Sequence>
-struct partial_adaptor : detail::partial_adaptor_base<F, Sequence>, fuse_adaptor<F>, Sequence
+template<class F, class Pack>
+struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
 {
-    typedef detail::partial_adaptor_base<F, Sequence> base;
-    const F& base_function() const
+    typedef typename detail::partial_adaptor_base<F, Pack>::type base;
+    
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&...) const
     {
         return *this;
     }
 
-    const Sequence& get_sequence() const
+    constexpr const Pack& get_pack() const
     {
         return *this;
     }
 
-    using detail::partial_adaptor_base<F, Sequence>::operator();
+    using base::operator();
 
-    partial_adaptor()
-    {}
-
-    template<class X>
-    partial_adaptor(X&& x) : fuse_adaptor<F>(std::forward<X>(x))
+    constexpr partial_adaptor()
     {}
 
     template<class X, class S>
-    partial_adaptor(X&& x, S&& seq) : fuse_adaptor<F>(std::forward<X>(x)), Sequence(std::forward<S>(seq))
+    constexpr partial_adaptor(X&& x, S&& seq) : F(std::forward<X>(x)), Pack(std::forward<S>(seq))
     {}
+};
+
+template<class F>
+struct partial_adaptor<F, void> : detail::partial_adaptor_base<F, void>::type
+{
+    typedef typename detail::partial_adaptor_base<F, void>::type base;
+    
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&...) const
+    {
+        return *this;
+    }
+
+    using base::operator();
+
+    constexpr partial_adaptor()
+    {}
+
+    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
+    constexpr partial_adaptor(X&& x) : base(std::forward<X>(x))
+    {}
+
+
 };
 // Make partial_adaptor work with pipable_adaptor by removing its pipableness
 template<class F>
-struct partial_adaptor<pipable_adaptor<F>, std::tuple<>>
-: partial_adaptor<F, std::tuple<>>
+struct partial_adaptor<pipable_adaptor<F>, void>
+: partial_adaptor<F, void>
 {
-    typedef partial_adaptor<F, std::tuple<>> base;
-    partial_adaptor()
+    typedef partial_adaptor<F, void> base;
+    constexpr partial_adaptor()
     {}
 
-    template<class X>
-    partial_adaptor(X&& x) : base(std::forward<X>(x))
-    {}
-
-    template<class X, class S>
-    partial_adaptor(X&& x, S&& seq) : base(std::forward<X>(x), std::forward<S>(seq))
+    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
+    constexpr partial_adaptor(X&& x) : base(std::forward<X>(x))
     {}
 };
 
 template<class F>
-struct partial_adaptor<static_<pipable_adaptor<F>>, std::tuple<>>
-: partial_adaptor<F, std::tuple<>>
+struct partial_adaptor<static_<pipable_adaptor<F>>, void>
+: partial_adaptor<F, void>
 {
-    typedef partial_adaptor<F, std::tuple<>> base;
+    typedef partial_adaptor<F, void> base;
     partial_adaptor()
     {}
 
-    template<class X>
+    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
     partial_adaptor(X&& x) : base(std::forward<X>(x))
-    {}
-
-    template<class X, class S>
-    partial_adaptor(X&& x, S&& seq) : base(std::forward<X>(x), std::forward<S>(seq))
     {}
 };
 }

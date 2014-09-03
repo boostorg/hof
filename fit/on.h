@@ -23,7 +23,20 @@
 /// --------
 /// 
 ///     template<class Projection, class F>
-///     on_adaptor<Projection, F> on(Projection p, F f);
+///     constexpr on_adaptor<Projection, F> on(Projection p, F f);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// Projection must be:
+/// 
+///     UnaryFunctionObject
+///     MoveConstructible
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
 /// 
 /// Example
 /// -------
@@ -41,7 +54,7 @@
 
 #include <utility>
 #include <fit/always.h>
-#include <fit/enable_if_convertible.h>
+#include <fit/detail/delegate.h>
 #include <fit/returns.h>
 
 namespace fit {
@@ -76,7 +89,7 @@ struct on_adaptor : Projection, F
 template<class Projection, class F>
 constexpr on_adaptor<Projection, F> on(Projection p, F f)
 {
-    return on_adaptor<Projection, F>(p, f);
+    return on_adaptor<Projection, F>(std::move(p), std::move(f));
 }
 
 }

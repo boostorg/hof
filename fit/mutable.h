@@ -29,28 +29,35 @@
 ///     template<class F>
 ///     mutable_adaptor<F> mutable_(F f)
 /// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     MutableFunctionObject
+///     MoveConstructible
+/// 
 
 #include <fit/returns.h>
+#include <fit/detail/delegate.h>
 
 namespace fit {
 
 template<class F>
 struct mutable_adaptor
 {
-	mutable F f;
+    mutable F f;
 
-	template<class X>
-	mutable_adaptor(X x) : f(x)
-	{}
+    FIT_DELGATE_CONSTRUCTOR(mutable_adaptor, F, f);
 
-	template<class... Ts>
-	auto operator()(Ts&&... xs) const FIT_RETURNS(f(std::forward<Ts>(xs)...));
+    template<class... Ts>
+    auto operator()(Ts&&... xs) const FIT_RETURNS(f(std::forward<Ts>(xs)...));
 };
 
 template<class F>
 mutable_adaptor<F> mutable_(F f)
 {
-	return mutable_adaptor<F>(f);
+    return mutable_adaptor<F>(std::move(f));
 }
 
 }

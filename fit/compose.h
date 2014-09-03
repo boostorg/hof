@@ -23,8 +23,16 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F1, class F2, ...>
-///     compose_adaptor<F1, F2, ...> compose(F1 f1, F2 f2, ...);
+///     template<class... Fs>
+///     constexpr compose_adaptor<Fs...> compose(Fs... fs);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// Fs must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
 /// 
 /// Example
 /// -------
@@ -53,6 +61,7 @@
 
 #include <fit/returns.h>
 #include <fit/always.h>
+#include <fit/detail/delegate.h>
 #include <tuple>
 
 namespace fit { namespace detail {
@@ -67,7 +76,8 @@ struct compose_kernel
     {}
 
     template<class A, class B>
-    constexpr compose_kernel(A f1, B f2) : f1(f1), f2(f2)
+    constexpr compose_kernel(A&& f1, B&& f2) 
+    : f1(std::forward<A>(f1)), f2(std::forward<B>(f2))
     {}
 
 
@@ -84,13 +94,12 @@ struct compose_adaptor : detail::compose_kernel<F, compose_adaptor<Fs...>>
 {
     typedef compose_adaptor<Fs...> tail;
     typedef detail::compose_kernel<F, tail> base;
-    // std::tuple<Fs...> fs;
-    // static const long N = sizeof...(Fs);
+
     constexpr compose_adaptor() {}
 
-    template<class X, class... Xs>
-    constexpr compose_adaptor(X f1, Xs ... fs) 
-    : base(f1, tail(fs...))
+    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
+    constexpr compose_adaptor(X&& f1, Xs&& ... fs) 
+    : base(std::forward<X>(f1), tail(std::forward<Xs>(fs)...))
     {}
 };
 
@@ -99,9 +108,9 @@ struct compose_adaptor<F> : F
 {
     constexpr compose_adaptor() {}
 
-    template<class X>
-    constexpr compose_adaptor(X f1) 
-    : F(f1)
+    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
+    constexpr compose_adaptor(X&& f1) 
+    : F(std::forward<X>(f1))
     {}
 
 };
@@ -109,7 +118,7 @@ struct compose_adaptor<F> : F
 template<class... Fs>
 constexpr compose_adaptor<Fs...> compose(Fs... fs)
 {
-    return compose_adaptor<Fs...>(fs...);
+    return compose_adaptor<Fs...>(std::move(fs)...);
 }
 
 }

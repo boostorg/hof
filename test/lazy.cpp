@@ -1,4 +1,5 @@
 #include <fit/lazy.h>
+#include <memory>
 #include "test.h"
 
 // TODO: Test constexpr
@@ -9,11 +10,11 @@ FIT_TEST_CASE()
 
     static_assert(std::is_reference<decltype(fit::detail::ref_transformer()(std::ref(i))(0,0,0))>::value, "Reference wrapper failed");
     static_assert(std::is_reference<decltype(fit::detail::pick_transformer(std::ref(i))(0,0,0))>::value, "Reference wrapper failed");
-    static_assert(std::is_reference<decltype(fit::detail::lazy_transform(std::ref(i), 0,0,0))>::value, "Reference wrapper failed");
+    static_assert(std::is_reference<decltype(fit::detail::lazy_transform(std::ref(i), fit::pack(0,0,0)))>::value, "Reference wrapper failed");
 
     FIT_TEST_CHECK(&fit::detail::ref_transformer()(std::ref(i))(0,0,0) == &i);
     FIT_TEST_CHECK(&fit::detail::pick_transformer(std::ref(i))(0,0,0) == &i);
-    FIT_TEST_CHECK(&fit::detail::lazy_transform(std::ref(i), 0,0,0) == &i);
+    FIT_TEST_CHECK(&fit::detail::lazy_transform(std::ref(i), fit::pack(0,0,0)) == &i);
 }
 
 FIT_TEST_CASE()
@@ -22,7 +23,7 @@ FIT_TEST_CASE()
 
     FIT_TEST_CHECK(fit::detail::id_transformer()(i)(0,0,0) == i);
     FIT_TEST_CHECK(fit::detail::pick_transformer(i)(0,0,0) == i);
-    FIT_TEST_CHECK(fit::detail::lazy_transform(i, 0,0,0) == i);
+    FIT_TEST_CHECK(fit::detail::lazy_transform(i, fit::pack(0,0,0)) == i);
 }
 
 FIT_TEST_CASE()
@@ -32,7 +33,7 @@ FIT_TEST_CASE()
 
     FIT_TEST_CHECK(fit::detail::bind_transformer()(fi)(0,0,0) == id(5));
     FIT_TEST_CHECK(fit::detail::pick_transformer(fi)(0,0,0) == id(5));
-    FIT_TEST_CHECK(fit::detail::lazy_transform(fi, 0,0,0) == id(5));
+    FIT_TEST_CHECK(fit::detail::lazy_transform(fi, fit::pack(0,0,0)) == id(5));
 }
 
 struct f_0 {
@@ -73,7 +74,7 @@ void operator()(long a) const
 };
 
 struct fv_2 {
-void operator()(long a, long b)
+void operator()(long a, long b) const
 {
     global_result = a + 10 * b;
 }
@@ -120,4 +121,30 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK( (fit::lazy(fv_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())(std::placeholders::_1))(x), (global_result == 11L)) );
     FIT_TEST_CHECK( (fit::lazy(fv_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())( std::placeholders::_2))(x, y), (global_result == 21L)) );
     FIT_TEST_CHECK( (fit::lazy(fv_1())( fit::lazy(f_0())())(), (global_result == 17041L)) );
+}
+
+struct id
+{
+    int operator()(int i) const
+    {
+        return i;
+    }
+};
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::lazy(id())(3)() == 3);
+}
+
+struct deref
+{
+    int operator()(const std::unique_ptr<int>& i) const
+    {
+        return *i;
+    }
+};
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::lazy(deref())(std::unique_ptr<int>(new int(3)))() == 3);
 }

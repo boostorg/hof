@@ -27,6 +27,14 @@
 ///     template<template <class...> class F>
 ///     class implicit<F>;
 /// 
+/// Requirements
+/// ------------
+/// 
+/// F must be a template class, that is a:
+/// 
+///     FunctionObject
+///     DefaultConstructible
+/// 
 /// Example
 /// -------
 /// 
@@ -57,59 +65,59 @@
 /// 
 
 #include <fit/invoke.h>
-#include <fit/detail/ref_tuple.h>
+#include <fit/pack.h>
 
 namespace fit { namespace detail {
 
-template<class F, class Seq, class X, class=void>
+template<class F, class Pack, class X, class=void>
 struct is_implicit_callable
 : std::false_type
 {};
 
-template<class F, class Seq, class X>
-struct is_implicit_callable<F, Seq, X, typename std::enable_if<
-    std::is_convertible<decltype(invoke(std::declval<F>(), std::declval<Seq>())), X>::value
+template<class F, class Pack, class X>
+struct is_implicit_callable<F, Pack, X, typename std::enable_if<
+    std::is_convertible<decltype(std::declval<Pack>()(std::declval<F>())), X>::value
 >::type>
 : std::true_type
 {};
 
-template<template <class...> class F, class Sequence>
+template<template <class...> class F, class Pack>
 struct implicit_invoke
 {
-    Sequence seq;
+    Pack p;
 
-    constexpr implicit_invoke(Sequence seq) : seq(seq)
+    constexpr implicit_invoke(Pack p) : p(p)
     {}
 
-    template<class X, class=typename std::enable_if<is_implicit_callable<F<X>, Sequence, X>::value>::type>
+    template<class X, class=typename std::enable_if<is_implicit_callable<F<X>, Pack, X>::value>::type>
     constexpr operator X() const
     {
-        return invoke(F<X>(), seq);
+        return p(F<X>());
     }
 
-    template<template <class...> class F2, class Sequence2>
-    constexpr operator implicit_invoke<F2, Sequence2>() const
+    template<template <class...> class F2, class Pack2>
+    constexpr operator implicit_invoke<F2, Pack2>() const
     {
-        return implicit_invoke<F2, Sequence2>(seq);
+        return implicit_invoke<F2, Pack2>(p);
     }
 };
 
-template<template <class> class F, class Sequence>
-constexpr implicit_invoke<F, Sequence> make_implicit_invoke(Sequence&& seq)
+template<template <class...> class F, class Pack>
+constexpr implicit_invoke<F, Pack> make_implicit_invoke(Pack&& p)
 {
-    return implicit_invoke<F, Sequence>(std::forward<Sequence>(seq));
+    return implicit_invoke<F, Pack>(std::forward<Pack>(p));
 }
 
 }
 
 
-template<template <class> class F>
+template<template <class...> class F>
 struct implicit
 {
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const
     {
-        return detail::make_implicit_invoke<F>(detail::make_ref_tuple(std::forward<Ts>(xs)...));
+        return detail::make_implicit_invoke<F>(fit::pack(std::forward<Ts>(xs)...));
     }
 
 };

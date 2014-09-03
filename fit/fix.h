@@ -15,13 +15,25 @@
 /// -----------
 /// 
 /// The `fix` function adaptor implements a fixed-point combinator. This can be
-/// used to write recursive functions.
+/// used to write recursive functions. 
+/// 
+/// Note: Compilers are too eager to instantiate templates when using
+/// constexpr, which causes the compiler to reach its internal instantiation
+/// limit. So, unfortunately, `fix` cannot be used for `constexpr functions.
 /// 
 /// Synopsis
 /// --------
 /// 
 ///     template<class F>
 ///     fix_adaptor<F> fix(F f);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
 /// 
 /// Example
 /// -------
@@ -32,7 +44,7 @@
 
 #include <fit/always.h>
 #include <fit/returns.h>
-#include <fit/enable_if_convertible.h>
+#include <fit/detail/delegate.h>
 
 #ifndef FIT_FIX_HAS_CONSTEXPR
 #define FIT_FIX_HAS_CONSTEXPR 0
@@ -52,12 +64,7 @@ namespace detail{
 template<class Derived, class F>
 struct fix_adaptor_base : F
 {
-    FIT_FIX_CONSTEXPR fix_adaptor_base()
-    {}
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
-    FIT_FIX_CONSTEXPR fix_adaptor_base(X x) : F(x)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(fix_adaptor_base, F);
 
     template<class... Ts>
     FIT_FIX_CONSTEXPR const F& base_function(Ts&&... xs) const
@@ -83,18 +90,13 @@ template<class F>
 struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
 {
     typedef detail::fix_adaptor_base<fix_adaptor<F>, F> base;
-    FIT_FIX_CONSTEXPR fix_adaptor()
-    {}
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    FIT_FIX_CONSTEXPR fix_adaptor(X x) : base(x)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
 };
 
 template<class F>
 FIT_FIX_CONSTEXPR fix_adaptor<F> fix(F f)
 {
-    return fix_adaptor<F>(f);
+    return fix_adaptor<F>(std::move(f));
 }
 }
 

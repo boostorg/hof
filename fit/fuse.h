@@ -23,6 +23,14 @@
 ///     template<class F>
 ///     fuse_adaptor<F> fuse(F f);
 /// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
 /// Example
 /// -------
 /// 

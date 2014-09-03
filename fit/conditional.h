@@ -22,7 +22,24 @@
 /// Note: This is different than the `match` function adaptor, which can lead
 /// to ambiguities. Instead, `conditional` will call the first function that
 /// is callable, regardless if there is another function that could be called
-/// as well. So, for example:
+/// as well. 
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class... Fs>
+///     constexpr conditional_adaptor<Fs...> conditional(Fs... fs);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// Fs must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
+/// Example
+/// -------
 /// 
 ///     struct for_ints
 ///     {
@@ -49,13 +66,6 @@
 /// 
 /// So, the order of the functions in the `conditional_adaptor` are very important
 /// to how the function is chosen.
-/// 
-/// Synopsis
-/// --------
-/// 
-///     template<class F1, class F2, ...>
-///     conditional_adaptor<F1, F2, ...> conditional(F1 f1, F2 f2, ...);
-/// 
 
 #include <fit/is_callable.h>
 #include <fit/reveal.h>

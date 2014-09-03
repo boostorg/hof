@@ -21,7 +21,15 @@
 /// --------
 /// 
 ///     template<class F>
-///     variadic_adaptor<F> variadic(F f);
+///     constexpr variadic_adaptor<F> variadic(F f);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
 /// 
 
 #include <fit/detail/ref_tuple.h>

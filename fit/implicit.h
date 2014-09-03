@@ -27,6 +27,14 @@
 ///     template<template <class...> class F>
 ///     class implicit<F>;
 /// 
+/// Requirements
+/// ------------
+/// 
+/// F must be a template class, that is a:
+/// 
+///     FunctionObject
+///     DefaultConstructible
+/// 
 /// Example
 /// -------
 /// 

@@ -26,6 +26,14 @@
 ///     template<class F>
 ///     reveal_adaptor<F> reveal(F f);
 /// 
+/// Requirements
+/// ------------
+/// 
+/// Fs must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
 
 #include <fit/returns.h>
 #include <fit/is_callable.h>
@@ -109,7 +117,7 @@ struct reveal_adaptor: F
 template<class F>
 reveal_adaptor<F> reveal(F f)
 {
-    return reveal_adaptor<F>(f);
+    return reveal_adaptor<F>(std::move(f));
 }
 
 }

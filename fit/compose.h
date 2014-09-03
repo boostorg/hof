@@ -23,8 +23,16 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F1, class F2, ...>
-///     compose_adaptor<F1, F2, ...> compose(F1 f1, F2 f2, ...);
+///     template<class... Fs>
+///     constexpr compose_adaptor<Fs...> compose(Fs... fs);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// Fs must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
 /// 
 /// Example
 /// -------

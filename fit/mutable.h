@@ -29,6 +29,14 @@
 ///     template<class F>
 ///     mutable_adaptor<F> mutable_(F f)
 /// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
 
 #include <fit/returns.h>
 #include <fit/detail/delegate.h>

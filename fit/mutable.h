@@ -34,7 +34,7 @@
 /// 
 /// F must be:
 /// 
-///     FunctionObject
+///     MutableFunctionObject
 ///     MoveConstructible
 /// 
 

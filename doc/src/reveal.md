@@ -16,3 +16,11 @@ Synopsis
     template<class F>
     reveal_adaptor<F> reveal(F f);
 
+Requirements
+------------
+
+Fs must be:
+
+    FunctionObject
+    MoveConstructible
+

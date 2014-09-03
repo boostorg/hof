@@ -13,10 +13,17 @@ Synopsis
 --------
 
     template<class T>
-    /* unspecified */ always(T value);
+    constexpr /* unspecified */ always(T value);
 
     template<class T>
-    /* unspecified */ always_ref(T value);
+    constexpr /* unspecified */ always_ref(T& value);
+
+Requirements
+------------
+
+T must be:
+
+    CopyConstructible
 
 Example
 -------

@@ -19,7 +19,15 @@ Synopsis
 --------
 
     template<class F>
-    lazy_adaptor<F> lazy(F f);
+    constexpr lazy_adaptor<F> lazy(F f);
+
+Requirements
+------------
+
+F must be:
+
+    FunctionObject
+    MoveConstructible
 
 Example
 -------

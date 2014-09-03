@@ -19,3 +19,11 @@ Synopsis
     template<class F>
     mutable_adaptor<F> mutable_(F f)
 
+Requirements
+------------
+
+F must be:
+
+    MutableFunctionObject
+    MoveConstructible
+

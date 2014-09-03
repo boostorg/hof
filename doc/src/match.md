@@ -12,8 +12,16 @@ on order.
 Synopsis
 --------
 
-    template<class F1, class F2, ...>
-    match_adaptor<F1, F2, ...> match(F1 f1, F2 f2, ...);
+    template<class... Fs>
+    constexpr match_adaptor<Fs...> match(Fs...fs);
+
+Requirements
+------------
+
+Fs must be:
+
+    FunctionObject
+    MoveConstructible
 
 Example
 -------

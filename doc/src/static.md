@@ -17,6 +17,14 @@ Synopsis
     template<class F>
     class static_;
 
+Requirements
+------------
+
+F must be:
+
+    FunctionObject
+    DefaultConstructible
+
 Example
 -------
 

@@ -14,7 +14,15 @@ Synopsis
 --------
 
     template<class F>
-    pipable_adaptor<F> pipable(F f);
+    constexpr pipable_adaptor<F> pipable(F f);
+
+Requirements
+------------
+
+F must be:
+
+    FunctionObject
+    MoveConstructible
 
 Example
 -------

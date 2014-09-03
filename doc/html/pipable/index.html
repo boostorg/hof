@@ -232,6 +232,8 @@
         
             <li><a href="#synopsis">Synopsis</a></li>
         
+            <li><a href="#requirements">Requirements</a></li>
+        
             <li><a href="#example">Example</a></li>
         
     
@@ -248,7 +250,12 @@ nested function calls. Functions that are made pipable can still be called
 the traditional way without piping in the first parameter.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
-pipable_adaptor&lt;F&gt; pipable(F f);
+constexpr pipable_adaptor&lt;F&gt; pipable(F f);
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<p>F must be:</p>
+<pre class="prettyprint well"><code>FunctionObject
+MoveConstructible
 </code></pre>
 <h2 id="example">Example</h2>
 <pre class="prettyprint well"><code>struct sum

@@ -232,6 +232,10 @@
         
             <li><a href="#synopsis">Synopsis</a></li>
         
+            <li><a href="#requirements">Requirements</a></li>
+        
+            <li><a href="#example">Example</a></li>
+        
     
     </ul>
 </div></div>
@@ -246,7 +250,17 @@ constraints(such as with <code>enable_if</code>).</p>
 <p>Note: This is different than the <code>match</code> function adaptor, which can lead
 to ambiguities. Instead, <code>conditional</code> will call the first function that
 is callable, regardless if there is another function that could be called
-as well. So, for example:</p>
+as well. </p>
+<h2 id="synopsis">Synopsis</h2>
+<pre class="prettyprint well"><code>template&lt;class... Fs&gt;
+constexpr conditional_adaptor&lt;Fs...&gt; conditional(Fs... fs);
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<p>Fs must be:</p>
+<pre class="prettyprint well"><code>FunctionObject
+MoveConstructible
+</code></pre>
+<h2 id="example">Example</h2>
 <pre class="prettyprint well"><code>struct for_ints
 {
     void operator()(int) const
@@ -271,10 +285,6 @@ called on floats, so it is chosen by <code>conditional</code> first, even though
 <code>for_floats</code> is a better match.</p>
 <p>So, the order of the functions in the <code>conditional_adaptor</code> are very important
 to how the function is chosen.</p>
-<h2 id="synopsis">Synopsis</h2>
-<pre class="prettyprint well"><code>template&lt;class F1, class F2, ...&gt;
-conditional_adaptor&lt;F1, F2, ...&gt; conditional(F1 f1, F2 f2, ...);
-</code></pre>
 </div>
         </div>
 

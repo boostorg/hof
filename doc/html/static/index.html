@@ -232,6 +232,8 @@
         
             <li><a href="#synopsis">Synopsis</a></li>
         
+            <li><a href="#requirements">Requirements</a></li>
+        
             <li><a href="#example">Example</a></li>
         
     
@@ -250,6 +252,11 @@ context, then a <code>constexpr</code> constructor needs to be used rather than
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
 class static_;
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<p>F must be:</p>
+<pre class="prettyprint well"><code>FunctionObject
+DefaultConstructible
 </code></pre>
 <h2 id="example">Example</h2>
 <pre class="prettyprint well"><code>// In C++ this class can't be static-initialized, because of the non-

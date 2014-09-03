@@ -232,6 +232,8 @@
         
             <li><a href="#synopsis">Synopsis</a></li>
         
+            <li><a href="#requirements">Requirements</a></li>
+        
     
     </ul>
 </div></div>
@@ -249,6 +251,11 @@ copied, so relying on some internal shared state can be error-prone.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
 mutable_adaptor&lt;F&gt; mutable_(F f)
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<p>F must be:</p>
+<pre class="prettyprint well"><code>MutableFunctionObject
+MoveConstructible
 </code></pre>
 </div>
         </div>

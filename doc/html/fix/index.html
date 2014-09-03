@@ -232,6 +232,8 @@
         
             <li><a href="#synopsis">Synopsis</a></li>
         
+            <li><a href="#requirements">Requirements</a></li>
+        
             <li><a href="#example">Example</a></li>
         
     
@@ -242,10 +244,18 @@
 <h1 id="fix">fix</h1>
 <h2 id="description">Description</h2>
 <p>The <code>fix</code> function adaptor implements a fixed-point combinator. This can be
-used to write recursive functions.</p>
+used to write recursive functions. </p>
+<p>Note: Compilers are too eager to instantiate templates when using
+constexpr, which causes the compiler to reach its internal instantiation
+limit. So, unfortunately, <code>fix</code> cannot be used for `constexpr functions.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
 fix_adaptor&lt;F&gt; fix(F f);
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<p>F must be:</p>
+<pre class="prettyprint well"><code>FunctionObject
+MoveConstructible
 </code></pre>
 <h2 id="example">Example</h2>
 <pre class="prettyprint well"><code>int r = fit::fix([](auto s, auto x) -&gt; decltype(x) { return x == 0 ? 1 : x * s(x-1); })(5);

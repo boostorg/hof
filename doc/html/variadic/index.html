@@ -232,6 +232,8 @@
         
             <li><a href="#synopsis">Synopsis</a></li>
         
+            <li><a href="#requirements">Requirements</a></li>
+        
     
     </ul>
 </div></div>
@@ -243,7 +245,12 @@
 tuple.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
-variadic_adaptor&lt;F&gt; variadic(F f);
+constexpr variadic_adaptor&lt;F&gt; variadic(F f);
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<p>F must be:</p>
+<pre class="prettyprint well"><code>FunctionObject
+MoveConstructible
 </code></pre>
 </div>
         </div>

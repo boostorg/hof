@@ -232,6 +232,8 @@
         
             <li><a href="#synopsis">Synopsis</a></li>
         
+            <li><a href="#requirements">Requirements</a></li>
+        
     
     </ul>
 </div></div>
@@ -247,6 +249,11 @@ error, instead of a substitution failure.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
 reveal_adaptor&lt;F&gt; reveal(F f);
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<p>Fs must be:</p>
+<pre class="prettyprint well"><code>FunctionObject
+MoveConstructible
 </code></pre>
 </div>
         </div>

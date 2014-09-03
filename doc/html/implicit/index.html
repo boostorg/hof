@@ -232,6 +232,8 @@
         
             <li><a href="#synopsis">Synopsis</a></li>
         
+            <li><a href="#requirements">Requirements</a></li>
+        
             <li><a href="#example">Example</a></li>
         
     
@@ -250,6 +252,11 @@ constructible.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;template &lt;class...&gt; class F&gt;
 class implicit&lt;F&gt;;
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<p>F must be a template class, that is a:</p>
+<pre class="prettyprint well"><code>FunctionObject
+DefaultConstructible
 </code></pre>
 <h2 id="example">Example</h2>
 <pre class="prettyprint well"><code>template&lt;class T&gt;

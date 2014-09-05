@@ -30,4 +30,5 @@ pages:
 # Utilities
 - ['args.md', 'Utilities', 'args']
 - ['is_callable.md', 'Utilities', 'is_callable']
+- ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']
 - ['returns.md', 'Utilities', 'returns']

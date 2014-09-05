@@ -13,6 +13,7 @@ extract fix
 extract fuse
 extract identity
 extract implicit
+extract indirect
 extract invoke
 extract is_callable
 extract lambda

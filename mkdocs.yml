@@ -12,6 +12,7 @@ pages:
 - ['fix.md', 'Adaptors', 'fix']
 - ['fuse.md', 'Adaptors', 'fuse']
 - ['implicit.md', 'Adaptors', 'implicit']
+- ['indirect.md', 'Adaptors', 'indirect']
 - ['invoke.md', 'Adaptors', 'invoke']
 - ['lazy.md', 'Adaptors', 'lazy']
 - ['match.md', 'Adaptors', 'match']

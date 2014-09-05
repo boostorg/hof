@@ -15,6 +15,7 @@ extract identity
 extract implicit
 extract invoke
 extract is_callable
+extract lambda
 extract lazy
 extract match
 extract mutable

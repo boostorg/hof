@@ -30,8 +30,8 @@ Example
 
     struct sum
     {
-        template<class T>
-        T sum(T x, T y)
+        template<class T, class U>
+        T operator()(T x, U y) const
         {
             return x+y;
         }

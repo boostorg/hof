@@ -33,3 +33,4 @@ pages:
 - ['is_callable.md', 'Utilities', 'is_callable']
 - ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']
 - ['returns.md', 'Utilities', 'returns']
+- ['returns.md', 'Utilities', 'tap']

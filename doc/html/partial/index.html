@@ -191,6 +191,10 @@
                                 <a href="../returns/">returns</a>
                             </li>
                         
+                            <li >
+                                <a href="../tap/">tap</a>
+                            </li>
+                        
                         </ul>
                     </li>
                 
@@ -269,8 +273,8 @@ MoveConstructible
 <h2 id="example">Example</h2>
 <pre class="prettyprint well"><code>struct sum
 {
-    template&lt;class T&gt;
-    T sum(T x, T y)
+    template&lt;class T, class U&gt;
+    T operator()(T x, U y) const
     {
         return x+y;
     }

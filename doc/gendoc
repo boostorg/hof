@@ -28,4 +28,5 @@ extract protect
 extract returns
 extract reveal
 extract static
+extract tap
 extract variadic

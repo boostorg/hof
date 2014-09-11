@@ -44,7 +44,7 @@
 ///     };
 /// 
 ///     int r = indirect(std::make_unique<sum>())(3,2);
-///     assert(r, 5);
+///     assert(r == 5);
 /// 
 
 #include <fit/detail/delegate.h>

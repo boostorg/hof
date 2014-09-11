@@ -47,7 +47,7 @@
 ///     const pipable<sum_f> sum = {};
 ///     // Prints 3
 ///     int r = 1 | sum(2) | tap([](int i) { std::cout << i; }) | sum(2);
-///     assert(r, 5);
+///     assert(r == 5);
 /// 
 
 #include <fit/pipable.h>

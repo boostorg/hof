@@ -39,7 +39,7 @@
 /// -------
 /// 
 ///     int r = fit::fix([](auto s, auto x) -> decltype(x) { return x == 0 ? 1 : x * s(x-1); })(5);
-///     assert(r, 5*4*3*2*1);
+///     assert(r == 5*4*3*2*1);
 /// 
 
 #include <fit/always.h>

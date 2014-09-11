@@ -11,9 +11,9 @@ struct sum_f
 };
 
 const constexpr fit::pipable_adaptor<sum_f> sum = {};
-
+// TODO: Test constexpr
 FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(3, 1 | sum(2));
+    FIT_TEST_CHECK(3 == (1 | sum(2)));
     // FIT_TEST_CHECK(5, 1 | sum(2) | fit::tap([](int i) { FIT_TEST_CHECK(3, i); }) | sum(2));
 }

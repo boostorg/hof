@@ -263,10 +263,10 @@
 used to write recursive functions. </p>
 <p>Note: Compilers are too eager to instantiate templates when using
 constexpr, which causes the compiler to reach its internal instantiation
-limit. So, unfortunately, <code>fix</code> cannot be used for `constexpr functions.</p>
+limit. So, unfortunately, <code>fix</code> cannot be used for <code>constexpr</code> functions.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
-fix_adaptor&lt;F&gt; fix(F f);
+constexpr fix_adaptor&lt;F&gt; fix(F f);
 </code></pre>
 <h2 id="requirements">Requirements</h2>
 <p>F must be:</p>
@@ -275,7 +275,7 @@ MoveConstructible
 </code></pre>
 <h2 id="example">Example</h2>
 <pre class="prettyprint well"><code>int r = fit::fix([](auto s, auto x) -&gt; decltype(x) { return x == 0 ? 1 : x * s(x-1); })(5);
-assert(r, 5*4*3*2*1);
+assert(r == 5*4*3*2*1);
 </code></pre>
 </div>
         </div>

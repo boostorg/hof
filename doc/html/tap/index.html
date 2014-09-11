@@ -284,7 +284,7 @@ pipable constexpr T tap(T&amp;&amp; x, const F&amp; f);
 const pipable&lt;sum_f&gt; sum = {};
 // Prints 3
 int r = 1 | sum(2) | tap([](int i) { std::cout &lt;&lt; i; }) | sum(2);
-assert(r, 5);
+assert(r == 5);
 </code></pre>
 </div>
         </div>

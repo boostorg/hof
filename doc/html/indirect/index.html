@@ -281,7 +281,7 @@ Dereferenceable
 };
 
 int r = indirect(std::make_unique&lt;sum&gt;())(3,2);
-assert(r, 5);
+assert(r == 5);
 </code></pre>
 </div>
         </div>

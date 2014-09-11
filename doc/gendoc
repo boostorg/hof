@@ -14,6 +14,7 @@ extract fuse
 extract identity
 extract implicit
 extract indirect
+extract infix
 extract invoke
 extract is_callable
 extract lambda

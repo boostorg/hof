@@ -36,5 +36,5 @@ Example
     
     constexpr infix_adaptor<plus_f> plus = {};
     int r = 3 <plus> 2;
-    assert(r, 5);
+    assert(r == 5);
 

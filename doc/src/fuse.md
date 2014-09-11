@@ -34,5 +34,5 @@ Example
     };
 
     int r = fuse(sum())(std::make_tuple(3,2));
-    assert(r, 5);
+    assert(r == 5);
 

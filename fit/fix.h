@@ -19,13 +19,13 @@
 /// 
 /// Note: Compilers are too eager to instantiate templates when using
 /// constexpr, which causes the compiler to reach its internal instantiation
-/// limit. So, unfortunately, `fix` cannot be used for `constexpr functions.
+/// limit. So, unfortunately, `fix` cannot be used for `constexpr` functions.
 /// 
 /// Synopsis
 /// --------
 /// 
 ///     template<class F>
-///     fix_adaptor<F> fix(F f);
+///     constexpr fix_adaptor<F> fix(F f);
 /// 
 /// Requirements
 /// ------------
@@ -94,7 +94,7 @@ struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
 };
 
 template<class F>
-FIT_FIX_CONSTEXPR fix_adaptor<F> fix(F f)
+constexpr fix_adaptor<F> fix(F f)
 {
     return fix_adaptor<F>(std::move(f));
 }

@@ -2,7 +2,16 @@
 #include <memory>
 #include "test.h"
 
-// TODO: Test constexpr
+template<int N>
+struct test_placeholder
+{};
+
+namespace std {
+    template<int N>
+    struct is_placeholder<test_placeholder<N>>
+    : std::integral_constant<int, N>
+    {};
+}
 
 FIT_TEST_CASE()
 {
@@ -37,21 +46,21 @@ FIT_TEST_CASE()
 }
 
 struct f_0 {
-long operator()() const
+constexpr long operator()() const
 {
     return 17041L;
 }
 };
 
 struct f_1 {
-long operator()(long a) const
+constexpr long operator()(long a) const
 {
     return a;
 }
 };
 
 struct f_2 {
-long operator()(long a, long b) const
+constexpr long operator()(long a, long b) const
 {
     return a + 10 * b;
 }
@@ -115,6 +124,12 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK( fit::lazy(f_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())(std::placeholders::_1))(x) == 11L );
     FIT_TEST_CHECK( fit::lazy(f_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())( std::placeholders::_2))(x, y) == 21L );
     FIT_TEST_CHECK( fit::lazy(f_1())( fit::lazy(f_0())())() == 17041L );
+
+    static_assert( fit::lazy(f_1())( fit::lazy(f_1())(test_placeholder<1>()))(x) == 1L, "Constexpr lazy failed" );
+    static_assert( fit::lazy(f_1())( fit::lazy(f_2())(test_placeholder<1>(), test_placeholder<2>()))(x, y) == 21L, "Constexpr lazy failed" );
+    static_assert( fit::lazy(f_2())( fit::lazy(f_1())(test_placeholder<1>()), fit::lazy(f_1())(test_placeholder<1>()))(x) == 11L, "Constexpr lazy failed" );
+    static_assert( fit::lazy(f_2())( fit::lazy(f_1())(test_placeholder<1>()), fit::lazy(f_1())( test_placeholder<2>()))(x, y) == 21L, "Constexpr lazy failed" );
+    static_assert( fit::lazy(f_1())( fit::lazy(f_0())())() == 17041L, "Constexpr lazy failed" );
 
     FIT_TEST_CHECK( (fit::lazy(fv_1())( fit::lazy(f_1())(std::placeholders::_1))(x), (global_result == 1L)) );
     FIT_TEST_CHECK( (fit::lazy(fv_1())( fit::lazy(f_2())(std::placeholders::_1, std::placeholders::_2))(x, y), (global_result == 21L)) );

@@ -10,15 +10,16 @@
 
 #include <tuple>
 #include <fit/detail/remove_rvalue_reference.h>
+#include <fit/returns.h>
 
 namespace fit {
 namespace detail {
 
 template<class... Ts>
-constexpr auto make_ref_tuple(Ts&&... x)
-{
-    return std::tuple<typename remove_rvalue_reference<Ts>::type...>(std::forward<Ts>(x)...);
-}
+constexpr auto make_ref_tuple(Ts&&... x) FIT_RETURNS
+(
+    std::tuple<typename remove_rvalue_reference<Ts>::type...>(std::forward<Ts>(x)...)
+);
 }
 }
 

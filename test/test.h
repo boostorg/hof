@@ -101,8 +101,10 @@ struct mono_class
 
 struct tuple_class
 {
+    // Note: Taking the tuple by value causes the compiler to ICE on gcc 4.7
+    // when called in a constexpr context.
     template<class T>
-    constexpr int operator()(T t) const
+    constexpr int operator()(const T& t) const
     {
         return std::get<0>(t) + 1;
     }

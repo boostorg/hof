@@ -5,6 +5,10 @@
 
 FIT_TEST_CASE()
 {
+    auto p1 = fit::pack(1, 2);
+    auto p2 = p1;
+    FIT_TEST_CHECK(p2(binary_class()) == p1(binary_class()));
+    
     static_assert(fit::pack(1, 2)(binary_class()) == 3, "static pack test failed");
     FIT_TEST_CHECK(fit::pack(1, 2)(binary_class()) == 3 );
 

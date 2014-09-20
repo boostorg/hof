@@ -176,6 +176,30 @@ constexpr lazy_invoker<F, Pack> make_lazy_invoker(F f, Pack pack)
 {
     return lazy_invoker<F, Pack>(std::move(f), std::move(pack));
 }
+
+template<class F>
+struct lazy_nullary_invoker : F
+{
+    FIT_INHERIT_CONSTRUCTOR(lazy_nullary_invoker, F);
+
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&... xs) const
+    {
+        return always_ref(*this)(xs...);
+    }
+
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        this->base_function(xs...)()
+    );
+};
+
+template<class F>
+constexpr lazy_nullary_invoker<F> make_lazy_nullary_invoker(F f)
+{
+    return lazy_nullary_invoker<F>(std::move(f));
+}
 }
 
 template<class F>
@@ -189,11 +213,18 @@ struct lazy_adaptor : F
         return always_ref(*this)(xs...);
     }
 
-    template<class... Ts>
-    constexpr auto operator()(Ts... xs) const FIT_RETURNS
+    template<class T, class... Ts>
+    constexpr auto operator()(T x, Ts... xs) const FIT_RETURNS
     (
-        fit::detail::make_lazy_invoker((F&&)this->base_function(xs...), 
-            pack(std::move(xs)...))
+        fit::detail::make_lazy_invoker((F&&)this->base_function(x, xs...), 
+            pack(std::move(x), std::move(xs)...))
+    );
+
+    // Workaround for gcc 4.7
+    template<class Unused=int>
+    constexpr auto operator()() const FIT_RETURNS
+    (
+        fit::detail::make_lazy_nullary_invoker((F&&)this->base_function(Unused()))
     );
 
     // TODO: Overloads to use with ref qualifiers
@@ -225,6 +256,11 @@ constexpr lazy_adaptor<F> lazy(F f)
 namespace std {
     template<class F, class Pack>
     struct is_bind_expression<fit::detail::lazy_invoker<F, Pack>>
+    : std::true_type
+    {};
+
+    template<class F>
+    struct is_bind_expression<fit::detail::lazy_nullary_invoker<F>>
     : std::true_type
     {};
 }

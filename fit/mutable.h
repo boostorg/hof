@@ -50,8 +50,10 @@ struct mutable_adaptor
 
     FIT_DELGATE_CONSTRUCTOR(mutable_adaptor, F, f);
 
+    FIT_RETURNS_CLASS(mutable_adaptor);
+
     template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS(f(std::forward<Ts>(xs)...));
+    auto operator()(Ts&&... xs) const FIT_RETURNS(FIT_CONST_THIS->f(std::forward<Ts>(xs)...));
 };
 
 template<class F>

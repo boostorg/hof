@@ -94,15 +94,17 @@ struct partial_adaptor_invoke
         return static_cast<const Pack&>(static_cast<const Derived&>(*this));
     }
 
+    FIT_RETURNS_CLASS(partial_adaptor_invoke);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         fit::pack_join
         (
-            this->get_pack(xs...), 
+            FIT_CONST_THIS->get_pack(xs...), 
             fit::pack_forward(std::forward<Ts>(xs)...)
         )
-        ((F&&)this->get_function(xs...))
+        ((F&&)FIT_CONST_THIS->get_function(xs...))
     );
 };
 
@@ -122,13 +124,15 @@ struct partial_adaptor_join
         return static_cast<const Pack&>(static_cast<const Derived&>(*this));
     }
 
+    FIT_RETURNS_CLASS(partial_adaptor_join);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         partial
         (
-            (F&&)this->get_function(xs...), 
-            fit::pack_join(this->get_pack(xs...), fit::pack_decay(std::forward<Ts>(xs)...))
+            (F&&)FIT_CONST_THIS->get_function(xs...), 
+            fit::pack_join(FIT_CONST_THIS->get_pack(xs...), fit::pack_decay(std::forward<Ts>(xs)...))
         )
     );
 };
@@ -141,12 +145,14 @@ struct partial_adaptor_pack
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
+    FIT_RETURNS_CLASS(partial_adaptor_pack);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         partial
         (
-            (F&&)this->get_function(xs...), 
+            (F&&)FIT_CONST_THIS->get_function(xs...), 
             fit::pack_decay(std::forward<Ts>(xs)...)
         )
     );

@@ -114,9 +114,11 @@ struct conditional_kernel : F1, F2
         return *this;
     }
 
+    FIT_RETURNS_CLASS(conditional_kernel);
+
     template<class... Ts>
     constexpr auto operator()(Ts && ... x) const
-    FIT_RETURNS(this->select_function<Ts&&...>()(std::forward<Ts>(x)...));
+    FIT_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(std::forward<Ts>(x)...));
 };
 }
 

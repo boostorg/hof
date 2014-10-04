@@ -9,7 +9,11 @@
 #define FIT_GUARD_RETURNS_H
 
 #ifndef FIT_HAS_COMPLETE_DECLTYPE
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
 #define FIT_HAS_COMPLETE_DECLTYPE 0
+#else
+#define FIT_HAS_COMPLETE_DECLTYPE 1
+#endif
 #endif
 
 #include <utility>
@@ -18,7 +22,11 @@
 #define FIT_RETURNS(...) -> decltype(__VA_ARGS__) { return __VA_ARGS__; } static_assert(true, "")
 #define FIT_THIS this
 #define FIT_CONST_THIS this
-#define FIT_RETURNS_CLASS(...)
+#define FIT_RETURNS_CLASS(...) \
+void fit_returns_class_check() \
+{ \
+    static_assert(std::is_same<typename std::remove_cv<__VA_ARGS__>::type, decltype(*this)>::value, "Fit class type doesn't match"); \
+}
 #else
 #include <fit/detail/pp.h>
 

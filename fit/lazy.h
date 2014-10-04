@@ -162,11 +162,13 @@ struct lazy_invoker : F, Pack
         return always_ref(*this)(xs...);
     }
 
+    FIT_RETURNS_CLASS(lazy_invoker);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        this->get_pack(xs...)(
-            fit::detail::make_lazy_unpack(this->base_function(xs...), pack_forward(std::forward<Ts>(xs)...))
+        FIT_CONST_THIS->get_pack(xs...)(
+            fit::detail::make_lazy_unpack(FIT_CONST_THIS->base_function(xs...), pack_forward(std::forward<Ts>(xs)...))
         )
     );
 };
@@ -188,10 +190,12 @@ struct lazy_nullary_invoker : F
         return always_ref(*this)(xs...);
     }
 
+    FIT_RETURNS_CLASS(lazy_nullary_invoker);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        this->base_function(xs...)()
+        FIT_CONST_THIS->base_function(xs...)()
     );
 };
 
@@ -213,10 +217,12 @@ struct lazy_adaptor : F
         return always_ref(*this)(xs...);
     }
 
+    FIT_RETURNS_CLASS(lazy_adaptor);
+
     template<class T, class... Ts>
     constexpr auto operator()(T x, Ts... xs) const FIT_RETURNS
     (
-        fit::detail::make_lazy_invoker((F&&)this->base_function(x, xs...), 
+        fit::detail::make_lazy_invoker((F&&)FIT_CONST_THIS->base_function(x, xs...), 
             pack(std::move(x), std::move(xs)...))
     );
 
@@ -224,7 +230,7 @@ struct lazy_adaptor : F
     template<class Unused=int>
     constexpr auto operator()() const FIT_RETURNS
     (
-        fit::detail::make_lazy_nullary_invoker((F&&)this->base_function(Unused()))
+        fit::detail::make_lazy_nullary_invoker((F&&)FIT_CONST_THIS->base_function(Unused()))
     );
 
     // TODO: Overloads to use with ref qualifiers

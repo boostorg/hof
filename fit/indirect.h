@@ -64,10 +64,12 @@ struct indirect_adaptor : F
         return always_ref(*this)(xs...);
     }
 
+    FIT_RETURNS_CLASS(indirect_adaptor);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (*this->base_function(xs...))(std::forward<Ts>(xs)...)
+        (*FIT_CONST_THIS->base_function(xs...))(std::forward<Ts>(xs)...)
     );
 };
 

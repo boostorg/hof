@@ -72,16 +72,18 @@ struct postfix_adaptor : F
         return always_ref(*this)(xs...);
     }
 
+    FIT_RETURNS_CLASS(postfix_adaptor);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (this->base_function(xs...))(std::move(this->x), std::forward<Ts>(xs)...)
+        (FIT_CONST_THIS->base_function(xs...))(std::move(FIT_CONST_THIS->x), std::forward<Ts>(xs)...)
     );
 
     template<class A>
     constexpr auto operator>(A&& a) const FIT_RETURNS
     (
-        (this->base_function(a))(std::move(this->x), std::forward<A>(a))
+        (FIT_CONST_THIS->base_function(a))(std::move(FIT_CONST_THIS->x), std::forward<A>(a))
     );
 };
 
@@ -103,10 +105,12 @@ struct infix_adaptor : F
         return always_ref(*this)(xs...);
     }
 
+    FIT_RETURNS_CLASS(infix_adaptor);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (this->base_function(xs...))(std::forward<Ts>(xs)...)
+        (FIT_CONST_THIS->base_function(xs...))(std::forward<Ts>(xs)...)
     );
 };
 

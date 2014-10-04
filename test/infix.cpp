@@ -15,5 +15,5 @@ const constexpr fit::infix_adaptor<sum_f> sum = {};
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(3 == (1 <sum> 2));
-    static_assert(3 == (1 <sum> 2), "Constexpr infix failed");
+    FIT_STATIC_TEST_CHECK(3 == (1 <sum> 2));
 }

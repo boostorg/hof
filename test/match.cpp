@@ -58,8 +58,8 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fun(1) == 1);
     FIT_TEST_CHECK(fun(foo()) == 2);
 
-    static_assert(fun(1) == 1, "Failed match");
-    static_assert(fun(foo()) == 2, "Failed match");
+    FIT_STATIC_TEST_CHECK(fun(1) == 1);
+    FIT_STATIC_TEST_CHECK(fun(foo()) == 2);
 };
 
 

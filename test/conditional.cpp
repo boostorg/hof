@@ -53,9 +53,9 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(f(t2()) == 2);
     FIT_TEST_CHECK(f(t3()) == 3);
 
-    static_assert(f_constexpr(t1()) == 1, "static conditional failed");
-    static_assert(f_constexpr(t2()) == 2, "static conditional failed");
-    static_assert(f_constexpr(t3()) == 3, "static conditional failed");
+    FIT_STATIC_TEST_CHECK(f_constexpr(t1()) == 1);
+    FIT_STATIC_TEST_CHECK(f_constexpr(t2()) == 2);
+    FIT_STATIC_TEST_CHECK(f_constexpr(t3()) == 3);
 }
 
 FIT_TEST_CASE()

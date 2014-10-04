@@ -57,11 +57,11 @@ FIT_TEST_CASE()
 {
     void_partial_constexpr(1);
     void_partial_constexpr()(1);
-    static_assert(3 == binary_partial_constexpr(1)(2), "Constexpr partial failed");
-    static_assert(3 == binary_partial_constexpr(1, 2), "Constexpr partial failed");
-    static_assert(3 == unary_partial_constexpr()(3), "Constexpr partial failed");
-    static_assert(3 == unary_partial_constexpr(3), "Constexpr partial failed");
-    static_assert(3 == mono_partial_constexpr(2), "Constexpr partial failed");
-    static_assert(3 == mono_partial_constexpr()(2), "Constexpr partial failed");
+    FIT_STATIC_TEST_CHECK(3 == binary_partial_constexpr(1)(2));
+    FIT_STATIC_TEST_CHECK(3 == binary_partial_constexpr(1, 2));
+    FIT_STATIC_TEST_CHECK(3 == unary_partial_constexpr()(3));
+    FIT_STATIC_TEST_CHECK(3 == unary_partial_constexpr(3));
+    FIT_STATIC_TEST_CHECK(3 == mono_partial_constexpr(2));
+    FIT_STATIC_TEST_CHECK(3 == mono_partial_constexpr()(2));
 
 }

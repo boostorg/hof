@@ -8,6 +8,14 @@
 #include <vector>
 #include <memory>
 
+#ifndef FIT_HAS_STATIC_TEST_CHECK
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_HAS_STATIC_TEST_CHECK 0
+#else
+#define FIT_HAS_STATIC_TEST_CHECK 1
+#endif
+#endif
+
 #define FIT_PP_CAT(x, y) FIT_PP_PRIMITIVE_CAT(x, y)
 #define FIT_PP_PRIMITIVE_CAT(x, y) x ## y
 
@@ -41,7 +49,13 @@ void name::operator()() const
 #define FIT_TEST_TEMPLATE(...) typedef std::integral_constant<int, sizeof(__VA_ARGS__)> FIT_PP_CAT(test_template_, __LINE__)
 
 #define FIT_TEST_CHECK(...) if (!(__VA_ARGS__)) std::cout << "*****FAILED: " << #__VA_ARGS__ << "@" << __FILE__ << ": " << __LINE__ << std::endl
+#define FIT_STRINGIZE(...) #__VA_ARGS__
 
+#if FIT_HAS_STATIC_TEST_CHECK
+#define FIT_STATIC_TEST_CHECK(...) static_assert(__VA_ARGS__, FIT_STRINGIZE(__VA_ARGS__))
+#else
+#define FIT_STATIC_TEST_CHECK(...)
+#endif
 struct binary_class
 {
     template<class T, class U>

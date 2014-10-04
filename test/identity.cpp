@@ -3,6 +3,6 @@
 
 FIT_TEST_CASE()
 {
-	static_assert(fit::identity(10) == 10, "Constexpr failed");
+	FIT_STATIC_TEST_CHECK(fit::identity(10) == 10);
 	FIT_TEST_CHECK(fit::identity(10) == 10);
 }

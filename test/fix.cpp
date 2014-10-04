@@ -33,7 +33,7 @@ FIT_TEST_CASE()
     const int r1 = factorial(5);
     FIT_TEST_CHECK(r1 == 5*4*3*2*1);
 #if FIT_FIX_HAS_CONSTEXPR
-    static_assert(r1 == 5*4*3*2*1, "Fix constexpr failed");
+    FIT_STATIC_TEST_CHECK(r1 == 5*4*3*2*1);
 #endif
 #if FIT_HAS_GENERIC_LAMBDA
     int r2 = fit::fix([](auto s, auto x) -> decltype(x) { return x == 0 ? 1 : x * s(x-1); })(5);

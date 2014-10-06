@@ -83,7 +83,7 @@ struct fix_adaptor_base : F
     template<class... Ts>
     FIT_FIX_CONSTEXPR auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        this->base_function(xs...)(FIT_CONST_THIS->derived_function(xs...), std::forward<Ts>(xs)...)
+        FIT_CONST_THIS->base_function(xs...)(FIT_CONST_THIS->derived_function(xs...), std::forward<Ts>(xs)...)
     );
 };
 }

@@ -45,7 +45,7 @@ struct ff
 
 fit::static_<fit::conditional_adaptor<f1, f2, f3, ff> > f = {}; 
 
-constexpr const auto f_constexpr = fit::conditional_adaptor<f1, f2, f3, ff>();
+FIT_STATIC_AUTO f_constexpr = fit::conditional_adaptor<f1, f2, f3, ff>();
 
 FIT_TEST_CASE()
 {

@@ -13,13 +13,13 @@ fit::static_<fit::partial_adaptor<mono_class> > mono_partial = {};
 
 fit::static_<fit::partial_adaptor<move_class> > move_partial = {};
 
-constexpr const fit::partial_adaptor<binary_class> binary_partial_constexpr = {};
+constexpr fit::partial_adaptor<binary_class> binary_partial_constexpr = {};
 
-constexpr const fit::partial_adaptor<unary_class> unary_partial_constexpr = {};
+constexpr fit::partial_adaptor<unary_class> unary_partial_constexpr = {};
 
-constexpr const fit::partial_adaptor<void_class> void_partial_constexpr = {};
+constexpr fit::partial_adaptor<void_class> void_partial_constexpr = {};
 
-constexpr const fit::partial_adaptor<mono_class> mono_partial_constexpr = {};
+constexpr fit::partial_adaptor<mono_class> mono_partial_constexpr = {};
 
 FIT_TEST_CASE()
 {

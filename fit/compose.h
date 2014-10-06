@@ -62,6 +62,7 @@
 #include <fit/returns.h>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/join.h>
 #include <tuple>
 
 namespace fit { namespace detail {
@@ -80,19 +81,20 @@ struct compose_kernel
     : f1(std::forward<A>(f1)), f2(std::forward<B>(f2))
     {}
 
+    FIT_RETURNS_CLASS(compose_kernel);
 
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        this->f1(this->f2(std::forward<Ts>(xs)...))
+        FIT_CONST_THIS->f1(FIT_CONST_THIS->f2(std::forward<Ts>(xs)...))
     );
 };
 }
 
 template<class F, class... Fs>
-struct compose_adaptor : detail::compose_kernel<F, compose_adaptor<Fs...>>
+struct compose_adaptor : detail::compose_kernel<F, FIT_JOIN(compose_adaptor, Fs...)>
 {
-    typedef compose_adaptor<Fs...> tail;
+    typedef FIT_JOIN(compose_adaptor, Fs...) tail;
     typedef detail::compose_kernel<F, tail> base;
 
     constexpr compose_adaptor() {}
@@ -116,9 +118,9 @@ struct compose_adaptor<F> : F
 };
 
 template<class... Fs>
-constexpr compose_adaptor<Fs...> compose(Fs... fs)
+constexpr FIT_JOIN(compose_adaptor, Fs...) compose(Fs... fs)
 {
-    return compose_adaptor<Fs...>(std::move(fs)...);
+    return FIT_JOIN(compose_adaptor, Fs...)(std::move(fs)...);
 }
 
 }

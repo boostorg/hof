@@ -13,11 +13,11 @@ fit::static_<fit::pipable_adaptor<mono_class> > mono_pipable = {};
 
 fit::static_<fit::pipable_adaptor<move_class> > move_pipable = {};
 
-constexpr const fit::pipable_adaptor<void_class> void_pipable_constexpr = {};
+constexpr fit::pipable_adaptor<void_class> void_pipable_constexpr = {};
 
-constexpr const fit::pipable_adaptor<binary_class> binary_pipable_constexpr = {};
+constexpr fit::pipable_adaptor<binary_class> binary_pipable_constexpr = {};
 
-constexpr const fit::pipable_adaptor<unary_class> unary_pipable_constexpr = {};
+constexpr fit::pipable_adaptor<unary_class> unary_pipable_constexpr = {};
 
 
 FIT_TEST_CASE()

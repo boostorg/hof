@@ -6,7 +6,7 @@
 
 fit::static_<fit::fuse_adaptor<unary_class> > unary_fuse = {};
 
-constexpr const auto unary_fuse_constexpr = fit::fuse_adaptor<unary_class>();
+FIT_STATIC_AUTO unary_fuse_constexpr = fit::fuse_adaptor<unary_class>();
 
 FIT_TEST_CASE()
 {

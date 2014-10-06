@@ -40,9 +40,18 @@ void name::operator()() const
 
 }}
 
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_STATIC_AUTO constexpr auto
+#else
+#define FIT_STATIC_AUTO const constexpr auto
+#endif
 
 #define STATIC_ASSERT_SAME(...) static_assert(std::is_same<__VA_ARGS__>::value, "Types are not the same")
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define STATIC_ASSERT_MOVE_ONLY(T)
+#else
 #define STATIC_ASSERT_MOVE_ONLY(T) static_assert(!std::is_copy_constructible<T>::value && std::is_move_constructible<T>::value, "Not movable")
+#endif
 #define FIT_TEST_CASE() FIT_DETAIL_TEST_CASE(FIT_PP_CAT(test_, __LINE__))
 #define FIT_STATIC_TEST_CASE() struct FIT_PP_CAT(test_, __LINE__)
 

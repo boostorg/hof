@@ -84,7 +84,8 @@ struct on_adaptor : Projection, F
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        FIT_CONST_THIS->base_function(xs...)(FIT_CONST_THIS->base_projection(xs...)(xs)...)
+        FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))(
+            FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...))(xs)...)
     );
 };
 

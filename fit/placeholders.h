@@ -88,6 +88,7 @@ FIT_FOREACH_ASSIGN_OP(FIT_BINARY_OP)
         (op(std::forward<T>(x))); \
     };
 
+
 FIT_FOREACH_UNARY_OP(FIT_UNARY_OP)
 
 }
@@ -123,15 +124,15 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
 
 FIT_FOREACH_BINARY_OP(FIT_PLACEHOLDER_BINARY_OP)
 
-constexpr const placeholder<1> _1 = {};
-constexpr const placeholder<2> _2 = {};
-constexpr const placeholder<3> _3 = {};
-constexpr const placeholder<4> _4 = {};
-constexpr const placeholder<5> _5 = {};
-constexpr const placeholder<6> _6 = {};
-constexpr const placeholder<7> _7 = {};
-constexpr const placeholder<8> _8 = {};
-constexpr const placeholder<9> _9 = {};
+static constexpr placeholder<1> _1 = {};
+static constexpr placeholder<2> _2 = {};
+static constexpr placeholder<3> _3 = {};
+static constexpr placeholder<4> _4 = {};
+static constexpr placeholder<5> _5 = {};
+static constexpr placeholder<6> _6 = {};
+static constexpr placeholder<7> _7 = {};
+static constexpr placeholder<8> _8 = {};
+static constexpr placeholder<9> _9 = {};
 
 
 namespace detail {
@@ -147,9 +148,11 @@ struct partial_ap
     partial_ap(const T& x) : val(x)
     {}
 
+    FIT_RETURNS_CLASS(partial_ap);
+
     template<class X>
     auto operator()(X&& x) const FIT_RETURNS
-    (Invoker()(this->val, std::forward<X>(x)));
+    (Invoker()(FIT_CONST_THIS->val, std::forward<X>(x)));
 };
 
 template<class Op>
@@ -194,7 +197,7 @@ FIT_FOREACH_ASSIGN_OP(FIT_UNAMED_PLACEHOLDER_ASSIGN_OP)
 FIT_FOREACH_BINARY_OP(FIT_UNAMED_PLACEHOLDER_BINARY_OP)
 }
 
-constexpr const detail::unamed_placeholder _ = {};
+static constexpr detail::unamed_placeholder _ = {};
 
 }
 

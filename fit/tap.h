@@ -65,7 +65,7 @@ struct tap_f
 
 }
 
-const constexpr pipable_adaptor<detail::tap_f> tap = {};
+static constexpr pipable_adaptor<detail::tap_f> tap = {};
 
 
 }

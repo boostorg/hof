@@ -4,7 +4,7 @@
 
 #include <memory>
 
-FIT_STATIC_TEST_CASE()
+namespace test1
 {
     struct int_class
     {
@@ -29,7 +29,7 @@ FIT_STATIC_TEST_CASE()
 
     static_assert(std::is_same<int, decltype(fun(1))>::value, "Failed match");
     static_assert(std::is_same<foo, decltype(fun(foo()))>::value, "Failed match");
-};
+}
 
 struct int_class
 {
@@ -50,7 +50,7 @@ struct foo_class
     }
 };
 
-constexpr const fit::match_adaptor<int_class, foo_class> fun = {};
+static constexpr fit::match_adaptor<int_class, foo_class> fun = {};
 
 FIT_TEST_CASE()
 {

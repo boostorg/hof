@@ -10,7 +10,7 @@ struct sum_f
     }
 };
 
-const constexpr fit::infix_adaptor<sum_f> sum = {};
+static constexpr fit::infix_adaptor<sum_f> sum = {};
 
 FIT_TEST_CASE()
 {

@@ -111,7 +111,7 @@ struct id_transformer
     FIT_RETURNS(always_ref(x));
 };
 
-static constexpr const conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer> pick_transformer = {};
+static constexpr conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer> pick_transformer = {};
 
 template<class T, class Pack>
 constexpr auto lazy_transform(T&& x, Pack&& p) FIT_RETURNS
@@ -167,8 +167,8 @@ struct lazy_invoker : F, Pack
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        FIT_CONST_THIS->get_pack(xs...)(
-            fit::detail::make_lazy_unpack(FIT_CONST_THIS->base_function(xs...), pack_forward(std::forward<Ts>(xs)...))
+        FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...))(
+            fit::detail::make_lazy_unpack(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), pack_forward(std::forward<Ts>(xs)...))
         )
     );
 };
@@ -195,7 +195,7 @@ struct lazy_nullary_invoker : F
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        FIT_CONST_THIS->base_function(xs...)()
+        FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))()
     );
 };
 
@@ -205,6 +205,7 @@ constexpr lazy_nullary_invoker<F> make_lazy_nullary_invoker(F f)
     return lazy_nullary_invoker<F>(std::move(f));
 }
 }
+
 
 template<class F>
 struct lazy_adaptor : F
@@ -222,16 +223,18 @@ struct lazy_adaptor : F
     template<class T, class... Ts>
     constexpr auto operator()(T x, Ts... xs) const FIT_RETURNS
     (
-        fit::detail::make_lazy_invoker((F&&)FIT_CONST_THIS->base_function(x, xs...), 
+        fit::detail::make_lazy_invoker(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->base_function(x, xs...)), 
             pack(std::move(x), std::move(xs)...))
     );
 
     // Workaround for gcc 4.7
     template<class Unused=int>
-    constexpr auto operator()() const FIT_RETURNS
-    (
-        fit::detail::make_lazy_nullary_invoker((F&&)FIT_CONST_THIS->base_function(Unused()))
-    );
+    constexpr detail::lazy_nullary_invoker<F> operator()() const
+    {
+        return fit::detail::make_lazy_nullary_invoker((F&&)(
+            this->base_function(Unused())
+        ));
+    }
 
     // TODO: Overloads to use with ref qualifiers
 

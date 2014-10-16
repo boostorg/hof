@@ -10,7 +10,7 @@ struct sum_f
     }
 };
 
-const constexpr fit::pipable_adaptor<sum_f> sum = {};
+static constexpr fit::pipable_adaptor<sum_f> sum = {};
 // TODO: Test constexpr
 FIT_TEST_CASE()
 {

@@ -71,7 +71,7 @@ struct fuse_adaptor : F
     constexpr auto operator()(T && x) const
     FIT_RETURNS
     (
-        fit::invoke(FIT_CONST_THIS->base_function(x), std::forward<T>(x))
+        fit::invoke(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), std::forward<T>(x))
     );
 };
 

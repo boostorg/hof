@@ -101,10 +101,10 @@ struct partial_adaptor_invoke
     (
         fit::pack_join
         (
-            FIT_CONST_THIS->get_pack(xs...), 
+            FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), 
             fit::pack_forward(std::forward<Ts>(xs)...)
         )
-        ((F&&)FIT_CONST_THIS->get_function(xs...))
+        (FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)))
     );
 };
 
@@ -131,8 +131,8 @@ struct partial_adaptor_join
     (
         partial
         (
-            (F&&)FIT_CONST_THIS->get_function(xs...), 
-            fit::pack_join(FIT_CONST_THIS->get_pack(xs...), fit::pack_decay(std::forward<Ts>(xs)...))
+            FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
+            fit::pack_join(FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), fit::pack_decay(std::forward<Ts>(xs)...))
         )
     );
 };
@@ -152,7 +152,7 @@ struct partial_adaptor_pack
     (
         partial
         (
-            (F&&)FIT_CONST_THIS->get_function(xs...), 
+            FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
             fit::pack_decay(std::forward<Ts>(xs)...)
         )
     );

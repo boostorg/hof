@@ -8,8 +8,16 @@
 #ifndef FIT_GUARD_RETURNS_H
 #define FIT_GUARD_RETURNS_H
 
+#ifndef FIT_HAS_MANGLE_OVERLOAD
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_HAS_MANGLE_OVERLOAD 0
+#else
+#define FIT_HAS_MANGLE_OVERLOAD 1
+#endif
+#endif
+
 #ifndef FIT_HAS_COMPLETE_DECLTYPE
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+#if !FIT_HAS_MANGLE_OVERLOAD || (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
 #define FIT_HAS_COMPLETE_DECLTYPE 0
 #else
 #define FIT_HAS_COMPLETE_DECLTYPE 1
@@ -18,7 +26,10 @@
 
 #include <utility>
 
-#if FIT_HAS_COMPLETE_DECLTYPE
+#define FIT_EAT(...)
+#define FIT_REM(...) __VA_ARGS__
+
+#if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
 #define FIT_RETURNS(...) -> decltype(__VA_ARGS__) { return __VA_ARGS__; } static_assert(true, "")
 #define FIT_THIS this
 #define FIT_CONST_THIS this
@@ -27,6 +38,13 @@ void fit_returns_class_check() \
 { \
     static_assert(std::is_same<typename std::remove_cv<__VA_ARGS__>::type, decltype(*this)>::value, "Fit class type doesn't match"); \
 }
+
+#define FIT_MANGLE_CAST(...) FIT_REM
+
+#define FIT_RETURNS_C_CAST(...) (__VA_ARGS__) FIT_REM
+#define FIT_RETURNS_REINTERPRET_CAST(...) reinterpret_cast<__VA_ARGS__>
+#define FIT_RETURNS_STATIC_CAST(...) static_cast<__VA_ARGS__>
+#define FIT_RETURNS_CONSTRUCT(...) __VA_ARGS__
 #else
 #include <fit/detail/pp.h>
 
@@ -50,6 +68,7 @@ void fit_returns_class_check() \
 
 #define FIT_RETURNS(...) -> FIT_RETURNS_DECLTYPE(__VA_ARGS__) { FIT_RETURNS_RETURN(__VA_ARGS__); } static_assert(true, "")
 
+
 namespace fit { namespace detail {
 template<class Assumed, class T>
 struct check_this
@@ -58,6 +77,52 @@ struct check_this
 };
 
 }}
+
+#endif
+
+
+#if FIT_HAS_MANGLE_OVERLOAD
+
+#define FIT_MANGLE_CAST(...) FIT_REM
+
+#define FIT_RETURNS_C_CAST(...) (__VA_ARGS__) FIT_REM
+#define FIT_RETURNS_REINTERPRET_CAST(...) reinterpret_cast<__VA_ARGS__>
+#define FIT_RETURNS_STATIC_CAST(...) static_cast<__VA_ARGS__>
+#define FIT_RETURNS_CONSTRUCT(...) __VA_ARGS__
+
+#else
+
+#define FIT_RETURNS_DERAIL_MANGLE_CAST(...) FIT_PP_IIF(FIT_PP_IS_PAREN(FIT_RETURNS_DECLTYPE_CONTEXT(())))(\
+    FIT_REM, \
+    std::declval<__VA_ARGS__>() FIT_EAT \
+)
+#define FIT_MANGLE_CAST FIT_PP_RAIL(FIT_RETURNS_DERAIL_MANGLE_CAST)
+
+
+#define FIT_RETURNS_DERAIL_C_CAST(...) FIT_PP_IIF(FIT_PP_IS_PAREN(FIT_RETURNS_DECLTYPE_CONTEXT(())))(\
+    (__VA_ARGS__) FIT_REM, \
+    std::declval<__VA_ARGS__>() FIT_EAT \
+)
+#define FIT_RETURNS_C_CAST FIT_PP_RAIL(FIT_RETURNS_DERAIL_C_CAST)
+
+
+#define FIT_RETURNS_DERAIL_REINTERPRET_CAST(...) FIT_PP_IIF(FIT_PP_IS_PAREN(FIT_RETURNS_DECLTYPE_CONTEXT(())))(\
+    reinterpret_cast<__VA_ARGS__>, \
+    std::declval<__VA_ARGS__>() FIT_EAT \
+)
+#define FIT_RETURNS_REINTERPRET_CAST FIT_PP_RAIL(FIT_RETURNS_DERAIL_REINTERPRET_CAST)
+
+#define FIT_RETURNS_DERAIL_STATIC_CAST(...) FIT_PP_IIF(FIT_PP_IS_PAREN(FIT_RETURNS_DECLTYPE_CONTEXT(())))(\
+    static_cast<__VA_ARGS__>, \
+    std::declval<__VA_ARGS__>() FIT_EAT \
+)
+#define FIT_RETURNS_STATIC_CAST FIT_PP_RAIL(FIT_RETURNS_DERAIL_STATIC_CAST)
+
+#define FIT_RETURNS_DERAIL_CONSTRUCT(...) FIT_PP_IIF(FIT_PP_IS_PAREN(FIT_RETURNS_DECLTYPE_CONTEXT(())))(\
+    __VA_ARGS__, \
+    std::declval<__VA_ARGS__>() FIT_EAT \
+)
+#define FIT_RETURNS_CONSTRUCT FIT_PP_RAIL(FIT_RETURNS_DERAIL_CONSTRUCT)
 
 #endif
 

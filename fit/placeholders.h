@@ -111,6 +111,8 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
 
 };
 
+#if FIT_HAS_MANGLE_OVERLOAD
+
 #define FIT_PLACEHOLDER_BINARY_OP(op, name) \
     template<class T, int N> \
     constexpr inline auto operator op (const placeholder<N>&, T&& x) FIT_RETURNS \
@@ -121,6 +123,24 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
     template<int N, int M> \
     constexpr inline auto operator op (const placeholder<N>&, const placeholder<M>&) FIT_RETURNS \
     ( fit::lazy(operators::name())(detail::simple_placeholder<N>(), detail::simple_placeholder<M>()) );
+
+#else
+
+#define FIT_PLACEHOLDER_BINARY_OP(op, name) \
+    template<class T, class U> \
+    struct result_ ## name \
+    { typedef decltype(fit::lazy(operators::name())(std::declval<T>(), std::declval<U>())) type; }; \
+    template<class T, int N> \
+    constexpr inline typename result_ ## name<detail::simple_placeholder<N>, T>::type operator op (const placeholder<N>&, T&& x) \
+    { return fit::lazy(operators::name())(detail::simple_placeholder<N>(), std::forward<T>(x)); } \
+    template<class T, int N> \
+    constexpr inline typename result_ ## name<T, detail::simple_placeholder<N>>::type operator op (T&& x, const placeholder<N>&) \
+    { return fit::lazy(operators::name())(std::forward<T>(x), detail::simple_placeholder<N>()); } \
+    template<int N, int M> \
+    constexpr inline typename result_ ## name<detail::simple_placeholder<N>, detail::simple_placeholder<M>>::type operator op (const placeholder<N>&, const placeholder<M>&) \
+    { return fit::lazy(operators::name())(detail::simple_placeholder<N>(), detail::simple_placeholder<M>()); }
+
+#endif
 
 FIT_FOREACH_BINARY_OP(FIT_PLACEHOLDER_BINARY_OP)
 

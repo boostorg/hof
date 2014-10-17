@@ -32,6 +32,6 @@ pages:
 - ['args.md', 'Utilities', 'args']
 - ['is_callable.md', 'Utilities', 'is_callable']
 - ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']
-- ['placeholders.md', 'Adaptors', 'placeholders']
+- ['placeholders.md', 'Utilities', 'placeholders']
 - ['returns.md', 'Utilities', 'returns']
 - ['tap.md', 'Utilities', 'tap']

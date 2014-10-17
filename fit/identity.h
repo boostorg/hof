@@ -44,7 +44,7 @@ struct identity_base
 
 }
 
-constexpr const detail::identity_base identity = {};
+constexpr detail::identity_base identity = {};
 
 }
 

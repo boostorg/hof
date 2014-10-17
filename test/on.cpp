@@ -20,7 +20,7 @@ struct select_x
 FIT_TEST_CASE()
 {
     constexpr auto add = fit::_ + fit::_;
-    static_assert(fit::on(select_x(), fit::_ + fit::_)(foo(1), foo(2)) == 3, "Constexpr projection failed");
+    FIT_STATIC_TEST_CHECK(fit::on(select_x(), fit::_ + fit::_)(foo(1), foo(2)) == 3);
     FIT_TEST_CHECK(fit::on(std::mem_fn(&foo::x), fit::_ + fit::_)(foo(1), foo(2)) == 3);
 }
 

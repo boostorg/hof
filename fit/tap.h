@@ -59,14 +59,13 @@ struct tap_f
     template<class T, class F>
     constexpr T operator()(T&& x, const F& f) const
     {
-        f(x);
-        return std::forward<T>(x);
+        return f(x), std::forward<T>(x);
     }
 };
 
 }
 
-const constexpr pipable_adaptor<detail::tap_f> tap = {};
+static constexpr pipable_adaptor<detail::tap_f> tap = {};
 
 
 }

@@ -95,10 +95,11 @@ struct reveal_adaptor: F
         return *this;
     }
 
+    FIT_RETURNS_CLASS(reveal_adaptor);
     
     template<class... Ts>
     constexpr auto operator()(Ts && ... xs) const
-    FIT_RETURNS(this->base_function()(std::forward<Ts>(xs)...));
+    FIT_RETURNS(FIT_CONST_THIS->base_function()(std::forward<Ts>(xs)...));
 
     struct fail {};
 

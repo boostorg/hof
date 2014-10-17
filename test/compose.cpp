@@ -51,7 +51,7 @@ FIT_TEST_CASE()
 {
     int r = fit::compose(increment(), decrement(), increment())(3);
     FIT_TEST_CHECK(r == 4);
-    static_assert(fit::compose(increment(), decrement(), increment())(3) == 4, "static compose failed");
+    FIT_STATIC_TEST_CHECK(fit::compose(increment(), decrement(), increment())(3) == 4);
 }
 
 FIT_TEST_CASE()

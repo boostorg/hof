@@ -51,10 +51,12 @@ struct variadic_adaptor : F
         return always_ref(*this)(xs...);
     }
 
+    FIT_RETURNS_CLASS(variadic_adaptor);
+
     template<class... Ts>
     constexpr auto operator()(Ts && ... xs) const FIT_RETURNS
     (
-        this->base_function(xs...)(detail::make_ref_tuple(std::forward<Ts>(xs)...))
+        FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))(detail::make_ref_tuple(std::forward<Ts>(xs)...))
     );
 };
 

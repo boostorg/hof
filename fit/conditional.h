@@ -71,6 +71,7 @@
 #include <fit/reveal.h>
 #include <fit/returns.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/join.h>
 #include <type_traits>
 
 namespace fit {
@@ -114,24 +115,28 @@ struct conditional_kernel : F1, F2
         return *this;
     }
 
+    FIT_RETURNS_CLASS(conditional_kernel);
+
     template<class... Ts>
     constexpr auto operator()(Ts && ... x) const
-    FIT_RETURNS(this->select_function<Ts&&...>()(std::forward<Ts>(x)...));
+    FIT_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(std::forward<Ts>(x)...));
 };
 }
 
 template<class F, class... Fs>
-struct conditional_adaptor : detail::conditional_kernel<F, conditional_adaptor<Fs...> >
+struct conditional_adaptor 
+: detail::conditional_kernel<F, FIT_JOIN(conditional_adaptor, Fs...) >
 {
-    typedef detail::conditional_kernel<F, conditional_adaptor<Fs...> > base;
+    typedef FIT_JOIN(conditional_adaptor, Fs...) kernel_base;
+    typedef detail::conditional_kernel<F, kernel_base > base;
 
     constexpr conditional_adaptor() {}
 
     template<class X, class... Xs, 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, conditional_adaptor<Fs...>), 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(conditional_adaptor<Fs...>, Xs...)>
+        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, kernel_base), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(kernel_base, Xs...)>
     constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
-    : base(std::forward<X>(f1), conditional_adaptor<Fs...>(std::forward<Xs>(fs)...))
+    : base(std::forward<X>(f1), kernel_base(std::forward<Xs>(fs)...))
     {}
 };
 
@@ -142,9 +147,9 @@ struct conditional_adaptor<F> : F
 };
 
 template<class... Fs>
-constexpr conditional_adaptor<Fs...> conditional(Fs... fs)
+constexpr FIT_JOIN(conditional_adaptor, Fs...) conditional(Fs... fs)
 {
-    return conditional_adaptor<Fs...>(std::move(fs)...);
+    return FIT_JOIN(conditional_adaptor, Fs...)(std::move(fs)...);
 }
 
 }

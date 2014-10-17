@@ -66,6 +66,7 @@
 
 #include <fit/invoke.h>
 #include <fit/pack.h>
+#include <fit/returns.h>
 
 namespace fit { namespace detail {
 
@@ -115,10 +116,10 @@ template<template <class...> class F>
 struct implicit
 {
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const
-    {
-        return detail::make_implicit_invoke<F>(fit::pack(std::forward<Ts>(xs)...));
-    }
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        detail::make_implicit_invoke<F>(fit::pack(std::forward<Ts>(xs)...))
+    );
 
 };
 

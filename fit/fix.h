@@ -78,10 +78,13 @@ struct fix_adaptor_base : F
         return static_cast<const Derived&>(always_ref(*this)(xs...));
     }
 
+    FIT_RETURNS_CLASS(fix_adaptor_base);
+
     template<class... Ts>
     FIT_FIX_CONSTEXPR auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        this->base_function(xs...)(this->derived_function(xs...), std::forward<Ts>(xs)...)
+        FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))
+            (FIT_MANGLE_CAST(const Derived&)(FIT_CONST_THIS->derived_function(xs...)), std::forward<Ts>(xs)...)
     );
 };
 }

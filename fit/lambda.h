@@ -38,10 +38,13 @@ template<class F>
 struct lambda_wrapper
 {
     static_assert(std::is_empty<F>::value, "Lambdas must be empty");
+
+    FIT_RETURNS_CLASS(lambda_wrapper);
+
     template<class... Ts>
     auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        reinterpret_cast<const F&>(*this)(std::forward<Ts>(xs)...)
+        FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(std::forward<Ts>(xs)...)
     );
 };
 

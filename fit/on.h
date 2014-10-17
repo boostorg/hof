@@ -79,10 +79,13 @@ struct on_adaptor : Projection, F
     : Projection(std::forward<P>(p)), F(std::forward<G>(f))
     {}
 
+    FIT_RETURNS_CLASS(on_adaptor);
+
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        this->base_function(xs...)(this->base_projection(xs...)(xs)...)
+        FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))(
+            FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...))(xs)...)
     );
 };
 

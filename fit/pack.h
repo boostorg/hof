@@ -60,6 +60,48 @@ constexpr T&& pack_get(const pack_holder<N, T>& p, Ts&&...)
     return (T&&)(p.value);
 }
 
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+template<class Seq, class... Ts>
+struct pack_holder_base;
+
+template<int... Ns, class... Ts>
+struct pack_holder_base<seq<Ns...>, Ts...>
+: pack_holder<Ns, Ts>...
+{
+    template<class... Xs>
+    constexpr pack_holder_base(Xs&&... xs) : pack_holder<Ns, Ts>(std::forward<Xs>(xs))...
+    {}
+};
+
+template<int... Ns, class... Ts>
+struct pack_base<seq<Ns...>, Ts...>
+: pack_holder_base<seq<Ns...>, Ts...>
+{
+    typedef pack_holder_base<seq<Ns...>, Ts...> base;
+    template<class X1, class X2, class... Xs>
+    constexpr pack_base(X1&& x1, X2&& x2, Xs&&... xs) 
+    : base(std::forward<X1>(x1), std::forward<X2>(x2), std::forward<Xs>(xs)...)
+    {}
+
+    template<class X1, typename std::enable_if<(!std::is_convertible<X1, pack_base>::value), int>::type = 0>
+    constexpr pack_base(X1&& x1) 
+    : base(std::forward<X1>(x1))
+    {}
+
+    constexpr pack_base()
+    {}
+
+    FIT_RETURNS_CLASS(pack_base);
+  
+    template<class F>
+    constexpr auto operator()(F f) const FIT_RETURNS
+    (
+        f(pack_get<Ns, Ts>(*FIT_CONST_THIS, f)...)
+    );
+};
+
+#else
+
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
 : pack_holder<Ns, Ts>...
@@ -74,6 +116,8 @@ struct pack_base<seq<Ns...>, Ts...>
         f(pack_get<Ns, Ts>(*this, f)...)
     );
 };
+
+#endif
 
 template<>
 struct pack_base<seq<> >

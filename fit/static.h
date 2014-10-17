@@ -77,9 +77,11 @@ struct static_
         return f;
     }
 
+    FIT_RETURNS_CLASS(static_);
+;
     template<class... Ts>
     auto operator()(Ts && ... xs) const
-    FIT_RETURNS(this->base_function()(std::forward<Ts>(xs)...));
+    FIT_RETURNS(FIT_CONST_THIS->base_function()(std::forward<Ts>(xs)...));
 };
 
 

@@ -8,6 +8,60 @@
 #ifndef FIT_GUARD_FUNCTION_PLACEHOLDERS_H
 #define FIT_GUARD_FUNCTION_PLACEHOLDERS_H
 
+/// placeholders
+/// ============
+/// 
+/// Description
+/// -----------
+/// 
+/// The placeholders provide `std::bind` compatible placeholders, that
+/// additionally provide basic C++ operators that creates bind expressions.
+/// Each bind expression supports `constexpr` function evaluation.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     placeholder<1> _1 = {};
+///     placeholder<2> _2 = {};
+///     placeholder<3> _3 = {};
+///     placeholder<4> _4 = {};
+///     placeholder<5> _5 = {};
+///     placeholder<6> _6 = {};
+///     placeholder<7> _7 = {};
+///     placeholder<8> _8 = {};
+///     placeholder<9> _9 = {};
+/// 
+/// 
+/// Example
+/// -------
+/// 
+///     auto sum = _1 + _2;
+///     assert(3 == sum(1, 2));
+/// 
+/// 
+/// unamed placeholder
+/// ==================
+/// 
+/// Description
+/// -----------
+/// 
+/// The unamed placeholder can be used to build simple functions from C++
+/// operators. 
+/// 
+/// Note: The function produced by the unamed placeholder is not a bind expression.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     /* unspecified */ _ = {};
+/// 
+/// Example
+/// -------
+/// 
+///     auto sum = _ + _;
+///     assert(3 == sum(1, 2));
+/// 
+
 #include <fit/lazy.h>
 #include <fit/protect.h>
 
@@ -88,6 +142,7 @@ FIT_FOREACH_ASSIGN_OP(FIT_BINARY_OP)
         (op(std::forward<T>(x))); \
     };
 
+
 FIT_FOREACH_UNARY_OP(FIT_UNARY_OP)
 
 }
@@ -110,6 +165,8 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
 
 };
 
+#if FIT_HAS_MANGLE_OVERLOAD
+
 #define FIT_PLACEHOLDER_BINARY_OP(op, name) \
     template<class T, int N> \
     constexpr inline auto operator op (const placeholder<N>&, T&& x) FIT_RETURNS \
@@ -121,17 +178,35 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
     constexpr inline auto operator op (const placeholder<N>&, const placeholder<M>&) FIT_RETURNS \
     ( fit::lazy(operators::name())(detail::simple_placeholder<N>(), detail::simple_placeholder<M>()) );
 
+#else
+
+#define FIT_PLACEHOLDER_BINARY_OP(op, name) \
+    template<class T, class U> \
+    struct result_ ## name \
+    { typedef decltype(fit::lazy(operators::name())(std::declval<T>(), std::declval<U>())) type; }; \
+    template<class T, int N> \
+    constexpr inline typename result_ ## name<detail::simple_placeholder<N>, T>::type operator op (const placeholder<N>&, T&& x) \
+    { return fit::lazy(operators::name())(detail::simple_placeholder<N>(), std::forward<T>(x)); } \
+    template<class T, int N> \
+    constexpr inline typename result_ ## name<T, detail::simple_placeholder<N>>::type operator op (T&& x, const placeholder<N>&) \
+    { return fit::lazy(operators::name())(std::forward<T>(x), detail::simple_placeholder<N>()); } \
+    template<int N, int M> \
+    constexpr inline typename result_ ## name<detail::simple_placeholder<N>, detail::simple_placeholder<M>>::type operator op (const placeholder<N>&, const placeholder<M>&) \
+    { return fit::lazy(operators::name())(detail::simple_placeholder<N>(), detail::simple_placeholder<M>()); }
+
+#endif
+
 FIT_FOREACH_BINARY_OP(FIT_PLACEHOLDER_BINARY_OP)
 
-constexpr const placeholder<1> _1 = {};
-constexpr const placeholder<2> _2 = {};
-constexpr const placeholder<3> _3 = {};
-constexpr const placeholder<4> _4 = {};
-constexpr const placeholder<5> _5 = {};
-constexpr const placeholder<6> _6 = {};
-constexpr const placeholder<7> _7 = {};
-constexpr const placeholder<8> _8 = {};
-constexpr const placeholder<9> _9 = {};
+static constexpr placeholder<1> _1 = {};
+static constexpr placeholder<2> _2 = {};
+static constexpr placeholder<3> _3 = {};
+static constexpr placeholder<4> _4 = {};
+static constexpr placeholder<5> _5 = {};
+static constexpr placeholder<6> _6 = {};
+static constexpr placeholder<7> _7 = {};
+static constexpr placeholder<8> _8 = {};
+static constexpr placeholder<9> _9 = {};
 
 
 namespace detail {
@@ -147,9 +222,11 @@ struct partial_ap
     partial_ap(const T& x) : val(x)
     {}
 
+    FIT_RETURNS_CLASS(partial_ap);
+
     template<class X>
     auto operator()(X&& x) const FIT_RETURNS
-    (Invoker()(this->val, std::forward<X>(x)));
+    (Invoker()(FIT_CONST_THIS->val, std::forward<X>(x)));
 };
 
 template<class Op>
@@ -194,7 +271,7 @@ FIT_FOREACH_ASSIGN_OP(FIT_UNAMED_PLACEHOLDER_ASSIGN_OP)
 FIT_FOREACH_BINARY_OP(FIT_UNAMED_PLACEHOLDER_BINARY_OP)
 }
 
-constexpr const detail::unamed_placeholder _ = {};
+static constexpr detail::unamed_placeholder _ = {};
 
 }
 

@@ -9,7 +9,7 @@
 #define FIT_GUARD_FUNCTION_COMPOSE_H
 
 /// compose
-/// ======
+/// =======
 /// 
 /// Description
 /// -----------

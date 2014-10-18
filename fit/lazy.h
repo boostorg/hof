@@ -122,8 +122,8 @@ constexpr auto lazy_transform(T&& x, Pack&& p) FIT_RETURNS
 template<class F, class Pack>
 struct lazy_unpack
 {
-    const Pack& p;
     const F& f;
+    const Pack& p;
 
     constexpr lazy_unpack(const F& f, const Pack& p) 
     : f(f), p(p)

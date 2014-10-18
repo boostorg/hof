@@ -7,6 +7,7 @@ pages:
 - ['index.md', 'Home']
 - ['overview.md', 'User Guide', 'Overview']
 # Adaptors
+- ['by.md', 'Adaptors', 'by']
 - ['compose.md', 'Adaptors', 'compose']
 - ['conditional.md', 'Adaptors', 'conditional']
 - ['fix.md', 'Adaptors', 'fix']
@@ -18,7 +19,6 @@ pages:
 - ['lazy.md', 'Adaptors', 'lazy']
 - ['match.md', 'Adaptors', 'match']
 - ['mutable.md', 'Adaptors', 'mutable']
-- ['by.md', 'Adaptors', 'by']
 - ['partial.md', 'Adaptors', 'partial']
 - ['pipable.md', 'Adaptors', 'pipable']
 - ['protect.md', 'Adaptors', 'protect']

@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2014 Paul Fultz II
-    on.h
+    by.h
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
@@ -8,13 +8,13 @@
 #ifndef FIT_GUARD_FUNCTION_ON_H
 #define FIT_GUARD_FUNCTION_ON_H
 
-/// on
+/// by
 /// ==
 /// 
 /// Description
 /// -----------
 /// 
-/// The `on` function adaptor applies a projection onto the parameters of
+/// The `by` function adaptor applies a projection onto the parameters of
 /// another function. This is useful, for example, to define a function for
 /// sorting such that the ordering is based off of the value of one of its
 /// member fields.
@@ -23,7 +23,7 @@
 /// --------
 /// 
 ///     template<class Projection, class F>
-///     constexpr on_adaptor<Projection, F> on(Projection p, F f);
+///     constexpr on_adaptor<Projection, F> by(Projection p, F f);
 /// 
 /// Requirements
 /// ------------
@@ -47,7 +47,7 @@
 ///         {}
 ///         int x;
 ///     };
-///     assert(fit::on(std::mem_fn(&foo::x), _ + _)(foo(1), foo(2)) == 3);
+///     assert(fit::by(std::mem_fn(&foo::x), _ + _)(foo(1), foo(2)) == 3);
 /// 
 
 
@@ -90,7 +90,7 @@ struct on_adaptor : Projection, F
 };
 
 template<class Projection, class F>
-constexpr on_adaptor<Projection, F> on(Projection p, F f)
+constexpr on_adaptor<Projection, F> by(Projection p, F f)
 {
     return on_adaptor<Projection, F>(std::move(p), std::move(f));
 }

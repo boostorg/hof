@@ -18,7 +18,7 @@ pages:
 - ['lazy.md', 'Adaptors', 'lazy']
 - ['match.md', 'Adaptors', 'match']
 - ['mutable.md', 'Adaptors', 'mutable']
-- ['on.md', 'Adaptors', 'on']
+- ['by.md', 'Adaptors', 'by']
 - ['partial.md', 'Adaptors', 'partial']
 - ['pipable.md', 'Adaptors', 'pipable']
 - ['protect.md', 'Adaptors', 'protect']

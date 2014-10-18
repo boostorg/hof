@@ -21,7 +21,7 @@ extract lambda
 extract lazy
 extract match
 extract mutable
-extract on
+extract by
 extract partial
 extract pipable
 extract placeholders

@@ -1,4 +1,4 @@
-#include <fit/on.h>
+#include <fit/by.h>
 #include <fit/placeholders.h>
 #include "test.h"
 
@@ -20,8 +20,8 @@ struct select_x
 FIT_TEST_CASE()
 {
     constexpr auto add = fit::_ + fit::_;
-    FIT_STATIC_TEST_CHECK(fit::on(select_x(), fit::_ + fit::_)(foo(1), foo(2)) == 3);
-    FIT_TEST_CHECK(fit::on(std::mem_fn(&foo::x), fit::_ + fit::_)(foo(1), foo(2)) == 3);
+    FIT_STATIC_TEST_CHECK(fit::by(select_x(), add)(foo(1), foo(2)) == 3);
+    FIT_TEST_CHECK(fit::by(std::mem_fn(&foo::x), add)(foo(1), foo(2)) == 3);
 }
 
 struct select_x_1
@@ -44,5 +44,5 @@ struct sum_1
 
 FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::on(select_x_1(), sum_1())(foo(1), foo(2)) == 7);
+    FIT_TEST_CHECK(fit::by(select_x_1(), sum_1())(foo(1), foo(2)) == 7);
 }

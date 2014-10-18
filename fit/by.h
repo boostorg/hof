@@ -23,7 +23,7 @@
 /// --------
 /// 
 ///     template<class Projection, class F>
-///     constexpr on_adaptor<Projection, F> by(Projection p, F f);
+///     constexpr by_adaptor<Projection, F> by(Projection p, F f);
 /// 
 /// Requirements
 /// ------------
@@ -60,7 +60,7 @@
 namespace fit {
 
 template<class Projection, class F>
-struct on_adaptor : Projection, F
+struct by_adaptor : Projection, F
 {
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
@@ -75,11 +75,11 @@ struct on_adaptor : Projection, F
     }
 
     template<class P, class G, FIT_ENABLE_IF_CONVERTIBLE(P, Projection), FIT_ENABLE_IF_CONVERTIBLE(G, F)>
-    constexpr on_adaptor(P&& p, G&& f) 
+    constexpr by_adaptor(P&& p, G&& f) 
     : Projection(std::forward<P>(p)), F(std::forward<G>(f))
     {}
 
-    FIT_RETURNS_CLASS(on_adaptor);
+    FIT_RETURNS_CLASS(by_adaptor);
 
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
@@ -90,9 +90,9 @@ struct on_adaptor : Projection, F
 };
 
 template<class Projection, class F>
-constexpr on_adaptor<Projection, F> by(Projection p, F f)
+constexpr by_adaptor<Projection, F> by(Projection p, F f)
 {
-    return on_adaptor<Projection, F>(std::move(p), std::move(f));
+    return by_adaptor<Projection, F>(std::move(p), std::move(f));
 }
 
 }

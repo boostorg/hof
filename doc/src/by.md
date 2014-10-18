@@ -1,10 +1,10 @@
-on
+by
 ==
 
 Description
 -----------
 
-The `on` function adaptor applies a projection onto the parameters of
+The `by` function adaptor applies a projection onto the parameters of
 another function. This is useful, for example, to define a function for
 sorting such that the ordering is based off of the value of one of its
 member fields.
@@ -13,7 +13,7 @@ Synopsis
 --------
 
     template<class Projection, class F>
-    constexpr on_adaptor<Projection, F> on(Projection p, F f);
+    constexpr on_adaptor<Projection, F> by(Projection p, F f);
 
 Requirements
 ------------
@@ -37,5 +37,5 @@ Example
         {}
         int x;
     };
-    assert(fit::on(std::mem_fn(&foo::x), _ + _)(foo(1), foo(2)) == 3);
+    assert(fit::by(std::mem_fn(&foo::x), _ + _)(foo(1), foo(2)) == 3);
 

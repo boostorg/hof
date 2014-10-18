@@ -13,7 +13,7 @@ Synopsis
 --------
 
     template<class Projection, class F>
-    constexpr on_adaptor<Projection, F> by(Projection p, F f);
+    constexpr by_adaptor<Projection, F> by(Projection p, F f);
 
 Requirements
 ------------

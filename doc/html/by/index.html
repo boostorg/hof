@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-        <title>on - Fit</title>
+        <title>by - Fit</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -122,7 +122,7 @@
                             </li>
                         
                             <li class="active">
-                                <a href="./">on</a>
+                                <a href="./">by</a>
                             </li>
                         
                             <li >
@@ -242,7 +242,7 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#on">on</a></li>
+        <li class="main active"><a href="#by">by</a></li>
         
             <li><a href="#description">Description</a></li>
         
@@ -257,15 +257,15 @@
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="on">on</h1>
+<h1 id="by">by</h1>
 <h2 id="description">Description</h2>
-<p>The <code>on</code> function adaptor applies a projection onto the parameters of
+<p>The <code>by</code> function adaptor applies a projection onto the parameters of
 another function. This is useful, for example, to define a function for
 sorting such that the ordering is based off of the value of one of its
 member fields.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class Projection, class F&gt;
-constexpr on_adaptor&lt;Projection, F&gt; on(Projection p, F f);
+constexpr on_adaptor&lt;Projection, F&gt; by(Projection p, F f);
 </code></pre>
 <h2 id="requirements">Requirements</h2>
 <p>Projection must be:</p>
@@ -283,7 +283,7 @@ MoveConstructible
     {}
     int x;
 };
-assert(fit::on(std::mem_fn(&amp;foo::x), _ + _)(foo(1), foo(2)) == 3);
+assert(fit::by(std::mem_fn(&amp;foo::x), _ + _)(foo(1), foo(2)) == 3);
 </code></pre>
 </div>
         </div>

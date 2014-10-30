@@ -4,8 +4,11 @@ site_dir: doc/html/
 repo_url: https://github.com/pfultz2/Fit
 use_directory_urls: false
 pages:
-- ['index.md', 'Home']
-- ['overview.md', 'User Guide', 'Overview']
+- ['overview.md', 'Home']
+# About
+- ['requirements.md', 'About', 'Requirements']
+- ['acknowledgements.md', 'About', 'Acknowledgements']
+- ['license.md', 'About', 'License']
 # Adaptors
 - ['by.md', 'Adaptors', 'by']
 - ['compose.md', 'Adaptors', 'compose']

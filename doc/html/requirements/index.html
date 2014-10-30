@@ -44,7 +44,7 @@
             
 
             <!-- Main title -->
-            <a class="navbar-brand" href="..">Fit</a>
+            <a class="navbar-brand" href="../overview/">Fit</a>
         </div>
 
         <!-- Expanded navigation -->
@@ -55,28 +55,7 @@
                 
                 
                     <li >
-                        <a href="..">Home</a>
-                    </li>
-                
-                
-                
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                        
-                            <li >
-                                <a href="../adaptors/">Function Adaptors</a>
-                            </li>
-                        
-                            <li >
-                                <a href="../functions/">Functions</a>
-                            </li>
-                        
-                            <li >
-                                <a href="../utilities/">Utilities</a>
-                            </li>
-                        
-                        </ul>
+                        <a href="../overview/">Home</a>
                     </li>
                 
                 
@@ -87,6 +66,145 @@
                         
                             <li class="active">
                                 <a href="./">Requirements</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../acknowledgements/">Acknowledgements</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../license/">License</a>
+                            </li>
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Adaptors <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            <li >
+                                <a href="../by/">by</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../compose/">compose</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../conditional/">conditional</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../fix/">fix</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../fuse/">fuse</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../implicit/">implicit</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../indirect/">indirect</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../infix/">infix</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../invoke/">invoke</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../lazy/">lazy</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../match/">match</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../mutable/">mutable</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../partial/">partial</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../pipable/">pipable</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../protect/">protect</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../reveal/">reveal</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../static/">static</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../variadic/">variadic</a>
+                            </li>
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Functions <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            <li >
+                                <a href="../always/">always</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../identity/">identity</a>
+                            </li>
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Utilities <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            <li >
+                                <a href="../args/">args</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../is_callable/">is_callable</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../lambda/">FIT_STATIC_LAMBDA</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../placeholders/">placeholders</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../returns/">returns</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../tap/">tap</a>
                             </li>
                         
                         </ul>
@@ -102,12 +220,12 @@
                 
                 
                 <li >
-                    <a rel="next" href="../utilities/">
+                    <a rel="next" href="../overview/">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
-                <li class="disabled">
-                    <a rel="prev" >
+                <li >
+                    <a rel="prev" href="../acknowledgements/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -132,11 +250,15 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
+        <li class="main active"><a href="#requirements">Requirements</a></li>
+        
+    
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-<p>C++14</p>
+<h1 id="requirements">Requirements</h1>
+<p>This requires a C++11 compiler. There a no third-party dependencies. This has been tested on clang 3.4 and gcc 4.6-4.9.</p>
 </div>
         </div>
 

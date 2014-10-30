@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-        <title>Overview - Fit</title>
+        <title>Home - Fit</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -44,7 +44,7 @@
             
 
             <!-- Main title -->
-            <a class="navbar-brand" href="..">Fit</a>
+            <a class="navbar-brand" href="./">Fit</a>
         </div>
 
         <!-- Expanded navigation -->
@@ -54,18 +54,26 @@
                 <ul class="nav navbar-nav">
                 
                 
-                    <li >
-                        <a href="..">Home</a>
+                    <li class="active">
+                        <a href="./">Home</a>
                     </li>
                 
                 
                 
-                    <li class="dropdown active">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
-                            <li class="active">
-                                <a href="./">Overview</a>
+                            <li >
+                                <a href="../requirements/">Requirements</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../acknowledgements/">Acknowledgements</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../license/">License</a>
                             </li>
                         
                         </ul>
@@ -211,13 +219,13 @@
             <ul class="nav navbar-nav navbar-right">
                 
                 
-                <li >
-                    <a rel="next" href="..">
+                <li class="disabled">
+                    <a rel="next" >
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../by/">
+                    <a rel="prev" href="../requirements/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -250,6 +258,12 @@
             <div class="col-md-9" role="main">
 
 <h1 id="overview">Overview</h1>
+<p>Fit is an header-only C++ library that provides utilities for functions and function objects. Fit is divided into three components:</p>
+<ul>
+<li>Function Adaptors: These take functions and return a new function that provides an additional capability to the previous function.</li>
+<li>Functions: These return functions that acheive a specific purpose.</li>
+<li>Utilities: These are gneral utilities that are useful when defining or using functions</li>
+</ul>
 </div>
         </div>
 

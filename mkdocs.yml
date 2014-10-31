@@ -6,6 +6,7 @@ use_directory_urls: false
 pages:
 - ['index.md', 'Home']
 # About
+- ['quickstart.md', 'About', 'Quick Start']
 - ['requirements.md', 'About', 'Requirements']
 - ['acknowledgements.md', 'About', 'Acknowledgements']
 - ['license.md', 'About', 'License']

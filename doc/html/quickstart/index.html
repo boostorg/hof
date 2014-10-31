@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-        <title>Requirements - Fit</title>
+        <title>Quick Start - Fit</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -64,12 +64,12 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
-                            <li >
-                                <a href="../quickstart/">Quick Start</a>
+                            <li class="active">
+                                <a href="./">Quick Start</a>
                             </li>
                         
-                            <li class="active">
-                                <a href="./">Requirements</a>
+                            <li >
+                                <a href="../requirements/">Requirements</a>
                             </li>
                         
                             <li >
@@ -224,12 +224,12 @@
                 
                 
                 <li >
-                    <a rel="next" href="../quickstart/">
+                    <a rel="next" href="..">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../acknowledgements/">
+                    <a rel="prev" href="../requirements/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -254,15 +254,124 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#requirements">Requirements</a></li>
+        <li class="main active"><a href="#quick-start">Quick Start</a></li>
+        
+            <li><a href="#function-objects">Function Objects</a></li>
+        
+            <li><a href="#adaptors">Adaptors</a></li>
+        
+            <li><a href="#lambdas">Lambdas</a></li>
+        
+            <li><a href="#overloading">Overloading</a></li>
+        
+            <li><a href="#recursive">Recursive</a></li>
         
     
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="requirements">Requirements</h1>
-<p>This requires a C++11 compiler. There a no third-party dependencies. This has been tested on clang 3.4 and gcc 4.6-4.9.</p>
+<h1 id="quick-start">Quick Start</h1>
+<h2 id="function-objects">Function Objects</h2>
+<p>In C++, a function object is just a class that overrides the call operator like this:</p>
+<pre class="prettyprint well"><code>// A sum function object
+struct sum_f
+{
+    template&lt;class T, class U&gt;
+    auto operator()(T x, U y) const
+    {
+        return x + y;
+    }
+};
+</code></pre>
+<p>There are few things to note about this. First, the call operator member function is always declared <code>const</code>, which is generally required to be used with Fit.(Note: The <code>mutable_</code> adaptor can be used to make a mutable function object have a <code>const</code> call operator, but this should generally be avoided). Secondly, the <code>sum_f</code> class must be constructed first before it can be called:</p>
+<pre class="prettyprint well"><code>auto three = sum_f()(1, 2);
+</code></pre>
+<p>We can make it behave like a regular function if we construct the class as a global variable. However, we want to statically initialize it(ie initialize it at compile-time) to avoid the static initializaion order fiasco. We can do that using <code>constexpr</code> like this:</p>
+<pre class="prettyprint well"><code>const constexpr sum_f sum = {};
+</code></pre>
+<h2 id="adaptors">Adaptors</h2>
+<p>Now we have defined the function as a function object we can add new "enhancements" to the function. We could make the function pipable using the pipable adaptor:</p>
+<pre class="prettyprint well"><code>const constexpr pipable_adaptor&lt;sum_f&gt; sum = {};
+</code></pre>
+<p>So it be called like this:</p>
+<pre class="prettyprint well"><code>auto three = 1 | sum(2);
+</code></pre>
+<p>Or we could make it an infix named operator as well using the infix adaptor:</p>
+<pre class="prettyprint well"><code>const constexpr infix_adaptor&lt;sum_f&gt; sum = {};
+</code></pre>
+<p>And it could be called like this:</p>
+<pre class="prettyprint well"><code>auto three = 1 &lt;sum&gt; 2;
+</code></pre>
+<p>Additionally each of the adaptors have a corresponing function version without <code>_adaptor</code> suffix. So we could pass <code>sum</code> as a variable to the adaptors to make new functions. So we can do things like partial application and function composition if we wanted to:</p>
+<pre class="prettyprint well"><code>auto add_1 = partial(sum)(1);
+auto add_2 = compose(add_1, add_1);
+auto four = add_2(1);
+</code></pre>
+<h2 id="lambdas">Lambdas</h2>
+<p>Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be default-initialized. so we can use the <code>FIT_STATIC_LAMBDA</code> to initialize them at compile time:</p>
+<pre class="prettyprint well"><code>const constexpr auto sum = FIT_STATIC_LAMBDA(auto x, auto y)
+{
+    return x + y;
+};
+</code></pre>
+<p>And we can apply the same adaptors as well:</p>
+<pre class="prettyprint well"><code>// Pipable sum
+const constexpr auto sum = pipable(FIT_STATIC_LAMBDA(auto x, auto y)
+{
+    return x + y;
+});
+</code></pre>
+<h2 id="overloading">Overloading</h2>
+<p>Now, Fit provides two ways of doing overloading. The <code>match</code> adaptor will do call the a function based on C++ overload resolution, which tries to find the best match, like this:</p>
+<pre class="prettyprint well"><code>const constexpr auto print = match(
+    FIT_STATIC_LAMBDA(int x)
+    {
+        std::cout &lt;&lt; "Integer: " &lt;&lt; x &lt;&lt; std::endl;
+    },
+    FIT_STATIC_LAMBDA(const std::string&amp; x)
+    {
+        std::cout &lt;&lt; "String: " &lt;&lt; x &lt;&lt; std::endl;
+    }
+);
+</code></pre>
+<p>However, when trying to do overloading involving something more generic, it can lead to ambiguities. So the <code>conditional</code> adaptor will pick the first function that is callable, so it allows ordering the functions based on which one is more important. So we if we wanted to write a function to print types primitive types as well as ranges we could write something like this:</p>
+<pre class="prettyprint well"><code>#define REQUIRES(...) typename std::enable_if&lt;(__VA_ARGS__), int&gt;::type = 0
+
+const constexpr auto print = conditional(
+    FIT_STATIC_LAMBDA(auto x, REQUIRES(std::is_fundamental&lt;decltype(x)&gt;()))
+    {
+        std::cout &lt;&lt; x &lt;&lt; std::endl;
+    },
+    FIT_STATIC_LAMBDA(const std::string&amp; x)
+    {
+        std::cout &lt;&lt; x &lt;&lt; std::endl;
+    },
+    FIT_STATIC_LAMBDA(const auto&amp; range)
+    {
+        for(const auto&amp; x:range) 
+            std::cout &lt;&lt; x &lt;&lt; std::endl;
+    }
+);
+</code></pre>
+<p>We constraint the first lambda to just fundamental types using <code>REQUIRES</code>. The last lambda we assume it is range(we should check if it is a range but that is beyond the scope of this guide), and it is only called if the first two lambdas cannot be called(ie the type is not a fundamental nor a string).</p>
+<h2 id="recursive">Recursive</h2>
+<p>Additionally, we could go a step further and make the <code>print</code> function recursive. We can use the <code>fix</code> adaptor, which implements a fix point combinator. So the first parameter of the function will be the function itself:</p>
+<pre class="prettyprint well"><code>const constexpr auto print = conditional(
+    FIT_STATIC_LAMBDA(auto, auto x, REQUIRES(std::is_fundamental&lt;decltype(x)&gt;()))
+    {
+        std::cout &lt;&lt; x &lt;&lt; std::endl;
+    },
+    FIT_STATIC_LAMBDA(auto, const std::string&amp; x)
+    {
+        std::cout &lt;&lt; x &lt;&lt; std::endl;
+    },
+    FIT_STATIC_LAMBDA(auto self, const auto&amp; range)
+    {
+        for(const auto&amp; x:range) self(x);
+    }
+);
+</code></pre>
 </div>
         </div>
 

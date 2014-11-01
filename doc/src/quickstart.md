@@ -47,7 +47,7 @@ Additionally each of the adaptors have a corresponding function version without 
 
     auto add_1 = partial(sum)(1);
     auto add_2 = compose(add_1, add_1);
-    auto four = add_2(1);
+    auto three = add_2(1);
 
 Lambdas
 -------

@@ -306,7 +306,7 @@ struct sum_f
 <p>Additionally each of the adaptors have a corresponding function version without the <code>_adaptor</code> suffix. So we could pass <code>sum</code> as a variable to the adaptors to make new functions. So we can do things like partial application and function composition if we wanted to:</p>
 <pre class="prettyprint well"><code>auto add_1 = partial(sum)(1);
 auto add_2 = compose(add_1, add_1);
-auto four = add_2(1);
+auto three = add_2(1);
 </code></pre>
 <h2 id="lambdas">Lambdas</h2>
 <p>Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be statically initialized at compile time. So we can use the <code>FIT_STATIC_LAMBDA</code> to initialize them at compile time:</p>

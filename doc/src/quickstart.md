@@ -110,7 +110,7 @@ Recursive
 
 Additionally, we could go a step further and make the `print` function recursive. We can use the `fix` adaptor, which implements a fix point combinator. So the first parameter of the function will be the function itself:
 
-    const constexpr auto print = conditional(
+    const constexpr auto print = fix(conditional(
         FIT_STATIC_LAMBDA(auto, auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
         {
             std::cout << x << std::endl;
@@ -123,5 +123,5 @@ Additionally, we could go a step further and make the `print` function recursive
         {
             for(const auto& x:range) self(x);
         }
-    );
+    ));
 

@@ -5,5 +5,5 @@ Fit is an header-only C++ library that provides utilities for functions and func
 
 * Function Adaptors: These take functions and return a new function that provides an additional capability to the previous function.
 * Functions: These return functions that acheive a specific purpose.
-* Utilities: These are gneral utilities that are useful when defining or using functions
+* Utilities: These are general utilities that are useful when defining or using functions
 

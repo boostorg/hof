@@ -357,7 +357,7 @@ const constexpr auto print = conditional(
 <p>We constraint the first lambda to just fundamental types using <code>REQUIRES</code>. The last lambda we assume it is a range(we should check if it is a range but that is beyond the scope of this guide), and it is only called if the first two lambdas cannot be called(ie the type is not a fundamental nor a string).</p>
 <h2 id="recursive">Recursive</h2>
 <p>Additionally, we could go a step further and make the <code>print</code> function recursive. We can use the <code>fix</code> adaptor, which implements a fix point combinator. So the first parameter of the function will be the function itself:</p>
-<pre class="prettyprint well"><code>const constexpr auto print = conditional(
+<pre class="prettyprint well"><code>const constexpr auto print = fix(conditional(
     FIT_STATIC_LAMBDA(auto, auto x, REQUIRES(std::is_fundamental&lt;decltype(x)&gt;()))
     {
         std::cout &lt;&lt; x &lt;&lt; std::endl;
@@ -370,7 +370,7 @@ const constexpr auto print = conditional(
     {
         for(const auto&amp; x:range) self(x);
     }
-);
+));
 </code></pre>
 </div>
         </div>

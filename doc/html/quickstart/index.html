@@ -294,7 +294,7 @@ struct sum_f
 <p>Now we have defined the function as a function object we can add new "enhancements" to the function. We could make the function pipable using the pipable adaptor:</p>
 <pre class="prettyprint well"><code>const constexpr pipable_adaptor&lt;sum_f&gt; sum = {};
 </code></pre>
-<p>So it be called like this:</p>
+<p>So it could be called like this:</p>
 <pre class="prettyprint well"><code>auto three = 1 | sum(2);
 </code></pre>
 <p>Or we could make it an infix named operator as well using the infix adaptor:</p>
@@ -303,13 +303,13 @@ struct sum_f
 <p>And it could be called like this:</p>
 <pre class="prettyprint well"><code>auto three = 1 &lt;sum&gt; 2;
 </code></pre>
-<p>Additionally each of the adaptors have a corresponing function version without <code>_adaptor</code> suffix. So we could pass <code>sum</code> as a variable to the adaptors to make new functions. So we can do things like partial application and function composition if we wanted to:</p>
+<p>Additionally each of the adaptors have a corresponding function version without the <code>_adaptor</code> suffix. So we could pass <code>sum</code> as a variable to the adaptors to make new functions. So we can do things like partial application and function composition if we wanted to:</p>
 <pre class="prettyprint well"><code>auto add_1 = partial(sum)(1);
 auto add_2 = compose(add_1, add_1);
 auto four = add_2(1);
 </code></pre>
 <h2 id="lambdas">Lambdas</h2>
-<p>Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be default-initialized. so we can use the <code>FIT_STATIC_LAMBDA</code> to initialize them at compile time:</p>
+<p>Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be statically initialized at compile time. So we can use the <code>FIT_STATIC_LAMBDA</code> to initialize them at compile time:</p>
 <pre class="prettyprint well"><code>const constexpr auto sum = FIT_STATIC_LAMBDA(auto x, auto y)
 {
     return x + y;
@@ -323,7 +323,7 @@ const constexpr auto sum = pipable(FIT_STATIC_LAMBDA(auto x, auto y)
 });
 </code></pre>
 <h2 id="overloading">Overloading</h2>
-<p>Now, Fit provides two ways of doing overloading. The <code>match</code> adaptor will do call the a function based on C++ overload resolution, which tries to find the best match, like this:</p>
+<p>Now, Fit provides two ways of doing overloading. The <code>match</code> adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:</p>
 <pre class="prettyprint well"><code>const constexpr auto print = match(
     FIT_STATIC_LAMBDA(int x)
     {
@@ -335,7 +335,7 @@ const constexpr auto sum = pipable(FIT_STATIC_LAMBDA(auto x, auto y)
     }
 );
 </code></pre>
-<p>However, when trying to do overloading involving something more generic, it can lead to ambiguities. So the <code>conditional</code> adaptor will pick the first function that is callable, so it allows ordering the functions based on which one is more important. So we if we wanted to write a function to print types primitive types as well as ranges we could write something like this:</p>
+<p>However, when trying to do overloading involving something more generic, it can lead to ambiguities. So the <code>conditional</code> adaptor will pick the first function that is callable. This allows ordering the functions based on which one is more important. So if we wanted to write a function to print all the values in a type including primitive types as well as ranges, we could write something like this:</p>
 <pre class="prettyprint well"><code>#define REQUIRES(...) typename std::enable_if&lt;(__VA_ARGS__), int&gt;::type = 0
 
 const constexpr auto print = conditional(
@@ -354,7 +354,7 @@ const constexpr auto print = conditional(
     }
 );
 </code></pre>
-<p>We constraint the first lambda to just fundamental types using <code>REQUIRES</code>. The last lambda we assume it is range(we should check if it is a range but that is beyond the scope of this guide), and it is only called if the first two lambdas cannot be called(ie the type is not a fundamental nor a string).</p>
+<p>We constraint the first lambda to just fundamental types using <code>REQUIRES</code>. The last lambda we assume it is a range(we should check if it is a range but that is beyond the scope of this guide), and it is only called if the first two lambdas cannot be called(ie the type is not a fundamental nor a string).</p>
 <h2 id="recursive">Recursive</h2>
 <p>Additionally, we could go a step further and make the <code>print</code> function recursive. We can use the <code>fix</code> adaptor, which implements a fix point combinator. So the first parameter of the function will be the function itself:</p>
 <pre class="prettyprint well"><code>const constexpr auto print = conditional(

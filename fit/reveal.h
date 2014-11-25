@@ -37,6 +37,7 @@
 
 #include <fit/returns.h>
 #include <fit/is_callable.h>
+#include <fit/detail/move.h>
 
 namespace fit { 
 
@@ -99,7 +100,7 @@ struct reveal_adaptor: F
     
     template<class... Ts>
     constexpr auto operator()(Ts && ... xs) const
-    FIT_RETURNS(FIT_CONST_THIS->base_function()(std::forward<Ts>(xs)...));
+    FIT_RETURNS(FIT_CONST_THIS->base_function()(fit::forward<Ts>(xs)...));
 
     struct fail {};
 
@@ -110,7 +111,7 @@ struct reveal_adaptor: F
     >::type operator()(Ts && ... xs) const
     {
         typedef typename failure_for<F(Ts&&...)>::type type_error;
-        return this->base_function()(std::forward<Ts>(xs)...);
+        return this->base_function()(fit::forward<Ts>(xs)...);
     }
 
 };
@@ -118,7 +119,7 @@ struct reveal_adaptor: F
 template<class F>
 reveal_adaptor<F> reveal(F f)
 {
-    return reveal_adaptor<F>(std::move(f));
+    return reveal_adaptor<F>(fit::move(f));
 }
 
 }

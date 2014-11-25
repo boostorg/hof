@@ -45,6 +45,7 @@
 #include <fit/always.h>
 #include <fit/returns.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/move.h>
 
 #ifndef FIT_FIX_HAS_CONSTEXPR
 #define FIT_FIX_HAS_CONSTEXPR 0
@@ -84,7 +85,7 @@ struct fix_adaptor_base : F
     FIT_FIX_CONSTEXPR auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))
-            (FIT_MANGLE_CAST(const Derived&)(FIT_CONST_THIS->derived_function(xs...)), std::forward<Ts>(xs)...)
+            (FIT_MANGLE_CAST(const Derived&)(FIT_CONST_THIS->derived_function(xs...)), fit::forward<Ts>(xs)...)
     );
 };
 }
@@ -99,7 +100,7 @@ struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
 template<class F>
 constexpr fix_adaptor<F> fix(F f)
 {
-    return fix_adaptor<F>(std::move(f));
+    return fix_adaptor<F>(fit::move(f));
 }
 }
 

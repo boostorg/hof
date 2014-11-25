@@ -44,7 +44,7 @@ struct lambda_wrapper
     template<class... Ts>
     auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(std::forward<Ts>(xs)...)
+        FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(fit::forward<Ts>(xs)...)
     );
 };
 
@@ -53,6 +53,7 @@ struct lambda_wrapper_factor
     template<class F>
     constexpr lambda_wrapper<F> operator += (F*)
     {
+        static_assert(std::is_literal_type<lambda_wrapper<F>>::value, "Lambda wrapper not a literal type");
         return {};
     }
 };

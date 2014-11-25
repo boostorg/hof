@@ -30,6 +30,7 @@
 /// 
 
 #include <utility>
+#include <fit/detail/forward.h>
 
 namespace fit { namespace detail {
 
@@ -38,7 +39,7 @@ struct identity_base
     template<class T>
     constexpr T operator()(T&& x) const
     {
-        return std::forward<T>(x);
+        return fit::forward<T>(x);
     }
 };
 

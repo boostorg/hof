@@ -106,7 +106,7 @@ struct implicit_invoke
 template<template <class...> class F, class Pack>
 constexpr implicit_invoke<F, Pack> make_implicit_invoke(Pack&& p)
 {
-    return implicit_invoke<F, Pack>(std::forward<Pack>(p));
+    return implicit_invoke<F, Pack>(fit::forward<Pack>(p));
 }
 
 }
@@ -118,7 +118,7 @@ struct implicit
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        detail::make_implicit_invoke<F>(fit::pack(std::forward<Ts>(xs)...))
+        detail::make_implicit_invoke<F>(fit::pack(fit::forward<Ts>(xs)...))
     );
 
 };

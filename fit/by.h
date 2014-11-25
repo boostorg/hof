@@ -56,6 +56,7 @@
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
 #include <fit/returns.h>
+#include <fit/detail/move.h>
 
 namespace fit {
 
@@ -76,7 +77,7 @@ struct by_adaptor : Projection, F
 
     template<class P, class G, FIT_ENABLE_IF_CONVERTIBLE(P, Projection), FIT_ENABLE_IF_CONVERTIBLE(G, F)>
     constexpr by_adaptor(P&& p, G&& f) 
-    : Projection(std::forward<P>(p)), F(std::forward<G>(f))
+    : Projection(fit::forward<P>(p)), F(fit::forward<G>(f))
     {}
 
     FIT_RETURNS_CLASS(by_adaptor);
@@ -92,7 +93,7 @@ struct by_adaptor : Projection, F
 template<class Projection, class F>
 constexpr by_adaptor<Projection, F> by(Projection p, F f)
 {
-    return by_adaptor<Projection, F>(std::move(p), std::move(f));
+    return by_adaptor<Projection, F>(fit::move(p), fit::move(f));
 }
 
 }

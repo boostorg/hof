@@ -52,6 +52,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/returns.h>
 #include <fit/always.h>
+#include <fit/detail/move.h>
 
 namespace fit {
  
@@ -63,7 +64,7 @@ struct postfix_adaptor : F
 
     template<class X, class XF>
     constexpr postfix_adaptor(X&& x, XF&& f) 
-    : F(std::forward<XF>(f)), x(std::forward<X>(x))
+    : F(fit::forward<XF>(f)), x(fit::forward<X>(x))
     {}
 
     template<class... Ts>
@@ -77,20 +78,20 @@ struct postfix_adaptor : F
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_MANGLE_CAST(T&&)(std::move(FIT_CONST_THIS->x)), std::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<Ts>(xs)...)
     );
 
     template<class A>
     constexpr auto operator>(A&& a) const FIT_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_MANGLE_CAST(T&&)(std::move(FIT_CONST_THIS->x)), std::forward<A>(a))
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<A>(a))
     );
 };
 
 template<class T, class F>
 constexpr postfix_adaptor<T, F> make_postfix_adaptor(T&& x, F f)
 {
-    return postfix_adaptor<T, F>(std::forward<T>(x), std::move(f));
+    return postfix_adaptor<T, F>(fit::forward<T>(x), fit::move(f));
 }
 }
 
@@ -110,18 +111,18 @@ struct infix_adaptor : F
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(std::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
     );
 };
 
 template<class T, class F>
 constexpr auto operator<(T&& x, const infix_adaptor<F>& i) FIT_RETURNS
-(detail::make_postfix_adaptor(std::forward<T>(x), std::move(i.base_function(x))));
+(detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(i.base_function(x))));
 
 template<class F>
 constexpr infix_adaptor<F> infix(F f)
 {
-    return infix_adaptor<F>(std::move(f));
+    return infix_adaptor<F>(fit::move(f));
 }
 
 

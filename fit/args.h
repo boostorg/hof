@@ -42,14 +42,14 @@ struct perfect_ref
 {
     typedef T&& type;
     T&& value;
-    constexpr perfect_ref(T&& x) : value(std::forward<T>(x))
+    constexpr perfect_ref(T&& x) : value(fit::forward<T>(x))
     {}
 };
 
 template<class T>
 constexpr perfect_ref<T> make_perfect_ref(T&& x)
 {
-    return { std::forward<T>(x) };
+    return { fit::forward<T>(x) };
 }
 
 template<int N>
@@ -65,7 +65,7 @@ struct args_at
 {
     template<class T, class... Ts>
     constexpr auto operator()(ignore<N>..., T x, Ts...) const 
-    FIT_RETURNS(std::forward<typename T::type>(x.value));
+    FIT_RETURNS(fit::forward<typename T::type>(x.value));
 };
 
 template<int... N>
@@ -80,7 +80,7 @@ constexpr args_at<N...> make_args_at(seq<N...>)
 template<int N, class... Ts>
 constexpr auto args(Ts&&... xs) FIT_RETURNS
 (
-    detail::make_args_at(typename detail::gens<N>::type())(nullptr, detail::make_perfect_ref(std::forward<Ts>(xs))...)
+    detail::make_args_at(typename detail::gens<N>::type())(nullptr, detail::make_perfect_ref(fit::forward<Ts>(xs))...)
 );
 
 }

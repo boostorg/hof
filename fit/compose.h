@@ -64,6 +64,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
 #include <tuple>
+#include <fit/detail/move.h>
 
 namespace fit { namespace detail {
 
@@ -78,7 +79,7 @@ struct compose_kernel
 
     template<class A, class B>
     constexpr compose_kernel(A&& f1, B&& f2) 
-    : f1(std::forward<A>(f1)), f2(std::forward<B>(f2))
+    : f1(fit::forward<A>(f1)), f2(fit::forward<B>(f2))
     {}
 
     FIT_RETURNS_CLASS(compose_kernel);
@@ -86,7 +87,7 @@ struct compose_kernel
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        FIT_CONST_THIS->f1(FIT_CONST_THIS->f2(std::forward<Ts>(xs)...))
+        FIT_CONST_THIS->f1(FIT_CONST_THIS->f2(fit::forward<Ts>(xs)...))
     );
 };
 }
@@ -101,7 +102,7 @@ struct compose_adaptor : detail::compose_kernel<F, FIT_JOIN(compose_adaptor, Fs.
 
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
     constexpr compose_adaptor(X&& f1, Xs&& ... fs) 
-    : base(std::forward<X>(f1), tail(std::forward<Xs>(fs)...))
+    : base(fit::forward<X>(f1), tail(fit::forward<Xs>(fs)...))
     {}
 };
 
@@ -112,7 +113,7 @@ struct compose_adaptor<F> : F
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
     constexpr compose_adaptor(X&& f1) 
-    : F(std::forward<X>(f1))
+    : F(fit::forward<X>(f1))
     {}
 
 };
@@ -120,7 +121,7 @@ struct compose_adaptor<F> : F
 template<class... Fs>
 constexpr FIT_JOIN(compose_adaptor, Fs...) compose(Fs... fs)
 {
-    return FIT_JOIN(compose_adaptor, Fs...)(std::move(fs)...);
+    return FIT_JOIN(compose_adaptor, Fs...)(fit::move(fs)...);
 }
 
 }

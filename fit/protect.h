@@ -33,6 +33,7 @@
 /// 
 
 #include <utility>
+#include <fit/detail/forward.h>
 
 namespace fit {
 
@@ -40,7 +41,7 @@ template<class F>
 struct protect_adaptor : F
 {
     template<class... Ts>
-    constexpr protect_adaptor(Ts&&... xs) : F(std::forward<Ts>(xs)...)
+    constexpr protect_adaptor(Ts&&... xs) : F(fit::forward<Ts>(xs)...)
     {}
 };
 

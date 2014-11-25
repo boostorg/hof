@@ -70,7 +70,7 @@ constexpr auto invoke_impl(F&& f, T && t, seq<N...>) FIT_RETURNS
 template<class F, class Sequence>
 constexpr auto invoke(F&& f, Sequence && t) FIT_RETURNS
 (
-    detail::invoke_impl(std::forward<F>(f), std::forward<Sequence>(t), detail::make_sequence_gens(t))
+    detail::invoke_impl(fit::forward<F>(f), fit::forward<Sequence>(t), detail::make_sequence_gens(t))
 );
 
 

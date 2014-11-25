@@ -1,5 +1,6 @@
 #include <fit/mutable.h>
 #include <fit/lazy.h>
+#include <fit/detail/move.h>
 #include <memory>
 #include "test.h"
 
@@ -50,7 +51,7 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
     auto mut_fun = mutable_move_fun();
-    auto by_5 = fit::lazy(fit::mutable_(std::move(mut_fun)))(5);
+    auto by_5 = fit::lazy(fit::mutable_(fit::move(mut_fun)))(5);
     FIT_TEST_CHECK(by_5() == 6);
     FIT_TEST_CHECK(by_5() == 11);
 }

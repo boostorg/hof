@@ -1,5 +1,6 @@
 #include <fit/conditional.h>
 #include <fit/static.h>
+#include <fit/lambda.h>
 #include <memory>
 #include "test.h"
 
@@ -65,5 +66,28 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(f_move_local(t_move1()) == 1);
     FIT_TEST_CHECK(f_move_local(t_move2()) == 2);
     FIT_TEST_CHECK(f_move_local(t_move3()) == 3);
+}
+
+
+static constexpr auto lam = fit::conditional(
+    FIT_STATIC_LAMBDA(t1)
+    {
+        return 1;
+    },
+    FIT_STATIC_LAMBDA(t2)
+    {
+        return 2;
+    },
+    FIT_STATIC_LAMBDA(t3)
+    {
+        return 3;
+    }
+);
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(lam(t1()) == 1);
+    FIT_TEST_CHECK(lam(t2()) == 2);
+    FIT_TEST_CHECK(lam(t3()) == 3);
 }
 }

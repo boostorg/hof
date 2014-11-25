@@ -38,17 +38,10 @@
 
 #include <utility>
 #include <type_traits>
+#include <fit/detail/holder.h>
 
 namespace fit {
 
-namespace detail {
-
-template<class T>
-struct holder
-{
-    typedef void type;
-};
-}
 
 template<class F, class=void>
 struct is_callable

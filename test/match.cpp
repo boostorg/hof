@@ -1,5 +1,6 @@
 #include <fit/match.h>
 #include <fit/static.h>
+#include <fit/lambda.h>
 #include "test.h"
 
 #include <memory>
@@ -60,6 +61,52 @@ FIT_TEST_CASE()
 
     FIT_STATIC_TEST_CHECK(fun(1) == 1);
     FIT_STATIC_TEST_CHECK(fun(foo()) == 2);
+};
+
+FIT_TEST_CASE()
+{
+    
+    constexpr auto lam = fit::match(
+        FIT_STATIC_LAMBDA(int) { return 1; },
+        FIT_STATIC_LAMBDA(foo) { return 2; }
+    );
+    
+    FIT_TEST_CHECK(lam(1) == 1);
+    FIT_TEST_CHECK(lam(foo()) == 2);
+};
+
+FIT_TEST_CASE()
+{
+    int i = 0;
+    auto lam = fit::match(
+        [&](int) { return i+1; },
+        [&](foo) { return i+2; }
+    );
+    STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(lam));
+    
+    FIT_TEST_CHECK(lam(1) == 1);
+    FIT_TEST_CHECK(lam(foo()) == 2);
+};
+
+
+FIT_TEST_CASE()
+{
+    struct not_default_constructible
+    {
+        int i;
+        not_default_constructible(int x) : i(x)
+        {}
+    };
+    STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(not_default_constructible);
+    not_default_constructible ndc = not_default_constructible(0);
+    auto lam = fit::match(
+        [&](int) { return ndc.i+1; },
+        [&](foo) { return ndc.i+2; }
+    );
+    STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(lam));
+    
+    FIT_TEST_CHECK(lam(1) == 1);
+    FIT_TEST_CHECK(lam(foo()) == 2);
 };
 
 

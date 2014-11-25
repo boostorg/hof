@@ -40,6 +40,7 @@
 
 #include <fit/returns.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/move.h>
 
 namespace fit {
 
@@ -53,13 +54,13 @@ struct mutable_adaptor
     FIT_RETURNS_CLASS(mutable_adaptor);
 
     template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS(FIT_CONST_THIS->f(std::forward<Ts>(xs)...));
+    auto operator()(Ts&&... xs) const FIT_RETURNS(FIT_CONST_THIS->f(fit::forward<Ts>(xs)...));
 };
 
 template<class F>
 mutable_adaptor<F> mutable_(F f)
 {
-    return mutable_adaptor<F>(std::move(f));
+    return mutable_adaptor<F>(fit::move(f));
 }
 
 }

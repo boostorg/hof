@@ -125,6 +125,7 @@
 #endif
 
 #include <utility>
+#include <fit/detail/forward.h>
 
 #define FIT_EAT(...)
 #define FIT_REM(...) __VA_ARGS__
@@ -226,6 +227,6 @@ struct check_this
 
 #endif
 
-#define FIT_AUTO_FORWARD(x) std::forward<decltype(x)>(x)
+#define FIT_AUTO_FORWARD(x) fit::forward<decltype(x)>(x)
 
 #endif

@@ -128,7 +128,7 @@ namespace operators {
     { \
         template<class T, class U> \
         constexpr auto operator()(T&& x, U&& y) const FIT_RETURNS \
-        (std::forward<T>(x) op std::forward<U>(y)); \
+        (fit::forward<T>(x) op fit::forward<U>(y)); \
     };
 
 FIT_FOREACH_BINARY_OP(FIT_BINARY_OP)
@@ -139,7 +139,7 @@ FIT_FOREACH_ASSIGN_OP(FIT_BINARY_OP)
     { \
         template<class T> \
         constexpr auto operator()(T&& x) const FIT_RETURNS \
-        (op(std::forward<T>(x))); \
+        (op(fit::forward<T>(x))); \
     };
 
 
@@ -159,7 +159,7 @@ FIT_FOREACH_UNARY_OP(FIT_PLACEHOLDER_UNARY_OP)
 #define FIT_PLACEHOLDER_ASSIGN_OP(op, name) \
     template<class T> \
     constexpr auto operator op (T&& x) const FIT_RETURNS \
-    ( fit::lazy(operators::name())(detail::simple_placeholder<N>(), std::forward<T>(x)) );
+    ( fit::lazy(operators::name())(detail::simple_placeholder<N>(), fit::forward<T>(x)) );
 
 FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
 
@@ -170,10 +170,10 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
 #define FIT_PLACEHOLDER_BINARY_OP(op, name) \
     template<class T, int N> \
     constexpr inline auto operator op (const placeholder<N>&, T&& x) FIT_RETURNS \
-    ( fit::lazy(operators::name())(detail::simple_placeholder<N>(), std::forward<T>(x)) ); \
+    ( fit::lazy(operators::name())(detail::simple_placeholder<N>(), fit::forward<T>(x)) ); \
     template<class T, int N> \
     constexpr inline auto operator op (T&& x, const placeholder<N>&) FIT_RETURNS \
-    ( fit::lazy(operators::name())(std::forward<T>(x), detail::simple_placeholder<N>()) ); \
+    ( fit::lazy(operators::name())(fit::forward<T>(x), detail::simple_placeholder<N>()) ); \
     template<int N, int M> \
     constexpr inline auto operator op (const placeholder<N>&, const placeholder<M>&) FIT_RETURNS \
     ( fit::lazy(operators::name())(detail::simple_placeholder<N>(), detail::simple_placeholder<M>()) );
@@ -186,10 +186,10 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
     { typedef decltype(fit::lazy(operators::name())(std::declval<T>(), std::declval<U>())) type; }; \
     template<class T, int N> \
     constexpr inline typename result_ ## name<detail::simple_placeholder<N>, T>::type operator op (const placeholder<N>&, T&& x) \
-    { return fit::lazy(operators::name())(detail::simple_placeholder<N>(), std::forward<T>(x)); } \
+    { return fit::lazy(operators::name())(detail::simple_placeholder<N>(), fit::forward<T>(x)); } \
     template<class T, int N> \
     constexpr inline typename result_ ## name<T, detail::simple_placeholder<N>>::type operator op (T&& x, const placeholder<N>&) \
-    { return fit::lazy(operators::name())(std::forward<T>(x), detail::simple_placeholder<N>()); } \
+    { return fit::lazy(operators::name())(fit::forward<T>(x), detail::simple_placeholder<N>()); } \
     template<int N, int M> \
     constexpr inline typename result_ ## name<detail::simple_placeholder<N>, detail::simple_placeholder<M>>::type operator op (const placeholder<N>&, const placeholder<M>&) \
     { return fit::lazy(operators::name())(detail::simple_placeholder<N>(), detail::simple_placeholder<M>()); }
@@ -226,7 +226,7 @@ struct partial_ap
 
     template<class X>
     auto operator()(X&& x) const FIT_RETURNS
-    (Invoker()(FIT_CONST_THIS->val, std::forward<X>(x)));
+    (Invoker()(FIT_CONST_THIS->val, fit::forward<X>(x)));
 };
 
 template<class Op>
@@ -234,7 +234,7 @@ struct left
 {
     template<class T, class X>
     auto operator()(const T& val, X&& x) const FIT_RETURNS
-    (Op()(val, std::forward<X>(x)));
+    (Op()(val, fit::forward<X>(x)));
 };
 
 template<class Op>
@@ -242,7 +242,7 @@ struct right
 {
     template<class T, class X>
     auto operator()(const T& val, X&& x) const FIT_RETURNS
-    (Op()(std::forward<X>(x), val));
+    (Op()(fit::forward<X>(x), val));
 };
 
 #define FIT_UNAMED_PLACEHOLDER_UNARY_OP(op, name) \

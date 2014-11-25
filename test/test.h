@@ -7,6 +7,7 @@
 #include <functional>
 #include <vector>
 #include <memory>
+#include <fit/detail/forward.h>
 
 #ifndef FIT_HAS_STATIC_TEST_CHECK
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
@@ -51,6 +52,11 @@ void name::operator()() const
 #define STATIC_ASSERT_MOVE_ONLY(T)
 #else
 #define STATIC_ASSERT_MOVE_ONLY(T) static_assert(!std::is_copy_constructible<T>::value && std::is_move_constructible<T>::value, "Not movable")
+#endif
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(T)
+#else
+#define STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(T) static_assert(!std::is_default_constructible<T>::value, "Default constructible")
 #endif
 #define FIT_TEST_CASE() FIT_DETAIL_TEST_CASE(FIT_PP_CAT(test_, __LINE__))
 #define FIT_STATIC_TEST_CASE() struct FIT_PP_CAT(test_, __LINE__)
@@ -101,7 +107,7 @@ struct unary_class
     template<class T>
     constexpr T&& operator()(T&& x) const
     {
-        return std::forward<T>(x);
+        return fit::forward<T>(x);
     }
 
 };

@@ -81,12 +81,12 @@ namespace detail {
 template<class F1, class F2>
 struct conditional_kernel : F1, F2
 {
-    constexpr conditional_kernel() {}
+    FIT_INHERIT_DEFAULT(conditional_kernel, F1, F2)
 
     template<class A, class B,
         FIT_ENABLE_IF_CONVERTIBLE(A, F1),
         FIT_ENABLE_IF_CONVERTIBLE(B, F2)>
-    constexpr conditional_kernel(A&& f1, B&& f2) : F1(std::forward<A>(f1)), F2(std::forward<B>(f2))
+    constexpr conditional_kernel(A&& f1, B&& f2) : F1(fit::forward<A>(f1)), F2(fit::forward<B>(f2))
     {}
 
     template<class... Ts>
@@ -119,7 +119,7 @@ struct conditional_kernel : F1, F2
 
     template<class... Ts>
     constexpr auto operator()(Ts && ... x) const
-    FIT_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(std::forward<Ts>(x)...));
+    FIT_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(fit::forward<Ts>(x)...));
 };
 }
 
@@ -130,13 +130,13 @@ struct conditional_adaptor
     typedef FIT_JOIN(conditional_adaptor, Fs...) kernel_base;
     typedef detail::conditional_kernel<F, kernel_base > base;
 
-    constexpr conditional_adaptor() {}
+    FIT_INHERIT_DEFAULT(conditional_adaptor, base)
 
     template<class X, class... Xs, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, kernel_base), 
         FIT_ENABLE_IF_CONSTRUCTIBLE(kernel_base, Xs...)>
     constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
-    : base(std::forward<X>(f1), kernel_base(std::forward<Xs>(fs)...))
+    : base(fit::forward<X>(f1), kernel_base(fit::forward<Xs>(fs)...))
     {}
 };
 
@@ -149,7 +149,7 @@ struct conditional_adaptor<F> : F
 template<class... Fs>
 constexpr FIT_JOIN(conditional_adaptor, Fs...) conditional(Fs... fs)
 {
-    return FIT_JOIN(conditional_adaptor, Fs...)(std::move(fs)...);
+    return FIT_JOIN(conditional_adaptor, Fs...)(fit::move(fs)...);
 }
 
 }

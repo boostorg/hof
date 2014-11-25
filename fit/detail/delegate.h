@@ -10,6 +10,8 @@
 
 #include <type_traits>
 #include <utility>
+#include <fit/detail/holder.h>
+#include <fit/detail/forward.h>
 
 #ifndef FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
@@ -28,16 +30,21 @@
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
     typename std::enable_if<std::is_constructible<__VA_ARGS__>::value, int>::type = 0
 
+#define FIT_INHERIT_DEFAULT(C, ...) \
+    template<bool FitPrivateBool##__LINE__=true, \
+    typename std::enable_if<FitPrivateBool##__LINE__ and fit::detail::is_default_constructible<__VA_ARGS__>::value, int>::type = 0> \
+    constexpr C() {}
+
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 
 #define FIT_DELGATE_CONSTRUCTOR(C, T, var) \
     template<class... FitXs, typename fit::detail::enable_if_constructible<T, FitXs...>::type = 0> \
-    constexpr C(FitXs&&... fit_xs) : var(std::forward<FitXs>(fit_xs)...) {}
+    constexpr C(FitXs&&... fit_xs) : var(fit::forward<FitXs>(fit_xs)...) {}
     
 #else
 #define FIT_DELGATE_CONSTRUCTOR(C, T, var) \
     template<class... FitXs, FIT_ENABLE_IF_CONSTRUCTIBLE(T, FitXs&&...)> \
-    constexpr C(FitXs&&... fit_xs) : var(std::forward<FitXs>(fit_xs)...) {}
+    constexpr C(FitXs&&... fit_xs) : var(fit::forward<FitXs>(fit_xs)...) {}
 
 #endif
 
@@ -57,6 +64,24 @@ template<bool...> struct bool_seq {};
 template<class... Ts>
 struct and_
 : std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, true)...>>::type
+{};
+
+template<class T, class=void>
+struct is_default_constructible_helper
+: std::false_type
+{};
+
+template<class T>
+struct is_default_constructible_helper<T, typename holder<
+    decltype(T())
+>::type>
+: std::true_type
+{};
+
+
+template<class... Xs>
+struct is_default_constructible
+: and_<is_default_constructible_helper<Xs>...>
 {};
 
 }

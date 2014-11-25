@@ -68,7 +68,7 @@ struct placeholder_transformer
     {
         template<class... Ts>
         constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-        (args<std::is_placeholder<T>::value>(std::forward<Ts>(xs)...));
+        (args<std::is_placeholder<T>::value>(fit::forward<Ts>(xs)...));
     };
 
     template<class T, typename std::enable_if<(std::is_placeholder<T>::value > 0), int>::type = 0>
@@ -116,7 +116,7 @@ static constexpr conditional_adaptor<placeholder_transformer, bind_transformer, 
 template<class T, class Pack>
 constexpr auto lazy_transform(T&& x, Pack&& p) FIT_RETURNS
 (
-    p(fit::detail::pick_transformer(std::forward<T>(x)))
+    p(fit::detail::pick_transformer(fit::forward<T>(x)))
 );
 
 template<class F, class Pack>
@@ -132,7 +132,7 @@ struct lazy_unpack
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        f(lazy_transform(std::forward<Ts>(xs), p)...)
+        f(lazy_transform(fit::forward<Ts>(xs), p)...)
     );
 };
 
@@ -147,7 +147,7 @@ struct lazy_invoker : F, Pack
 {
     template<class X, class P>
     constexpr lazy_invoker(X&& x, P&& pack) 
-    : F(std::forward<X>(x)), Pack(std::forward<P>(pack))
+    : F(fit::forward<X>(x)), Pack(fit::forward<P>(pack))
     {}
 
     template<class... Ts>
@@ -168,7 +168,7 @@ struct lazy_invoker : F, Pack
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...))(
-            fit::detail::make_lazy_unpack(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), pack_forward(std::forward<Ts>(xs)...))
+            fit::detail::make_lazy_unpack(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), pack_forward(fit::forward<Ts>(xs)...))
         )
     );
 };
@@ -176,7 +176,7 @@ struct lazy_invoker : F, Pack
 template<class F, class Pack>
 constexpr lazy_invoker<F, Pack> make_lazy_invoker(F f, Pack pack)
 {
-    return lazy_invoker<F, Pack>(std::move(f), std::move(pack));
+    return lazy_invoker<F, Pack>(fit::move(f), fit::move(pack));
 }
 
 template<class F>
@@ -202,7 +202,7 @@ struct lazy_nullary_invoker : F
 template<class F>
 constexpr lazy_nullary_invoker<F> make_lazy_nullary_invoker(F f)
 {
-    return lazy_nullary_invoker<F>(std::move(f));
+    return lazy_nullary_invoker<F>(fit::move(f));
 }
 }
 
@@ -224,7 +224,7 @@ struct lazy_adaptor : F
     constexpr auto operator()(T x, Ts... xs) const FIT_RETURNS
     (
         fit::detail::make_lazy_invoker(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->base_function(x, xs...)), 
-            pack(std::move(x), std::move(xs)...))
+            pack(fit::move(x), fit::move(xs)...))
     );
 
     // Workaround for gcc 4.7
@@ -242,14 +242,14 @@ struct lazy_adaptor : F
     // constexpr auto operator()(Ts... xs) const& FIT_RETURNS
     // (
     //     fit::detail::make_lazy_invoker(this->base_function(xs...), 
-    //         pack(std::move(xs)...))
+    //         pack(fit::move(xs)...))
     // );
 
     // template<class... Ts>
     // constexpr auto operator()(Ts... xs) && FIT_RETURNS
     // (
     //     fit::detail::make_lazy_invoker((F&&)this->base_function(xs...), 
-    //         pack(std::move(xs)...))
+    //         pack(fit::move(xs)...))
     // );
     
 };
@@ -257,7 +257,7 @@ struct lazy_adaptor : F
 template<class F>
 constexpr lazy_adaptor<F> lazy(F f)
 {
-    return lazy_adaptor<F>(std::move(f));
+    return lazy_adaptor<F>(fit::move(f));
 }
 
 }

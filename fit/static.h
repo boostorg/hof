@@ -81,7 +81,7 @@ struct static_
 ;
     template<class... Ts>
     auto operator()(Ts && ... xs) const
-    FIT_RETURNS(FIT_CONST_THIS->base_function()(std::forward<Ts>(xs)...));
+    FIT_RETURNS(FIT_CONST_THIS->base_function()(fit::forward<Ts>(xs)...));
 };
 
 

@@ -54,6 +54,7 @@
 #include <fit/static.h>
 #include <fit/pack.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/move.h>
 
 namespace fit { 
  
@@ -67,7 +68,7 @@ struct pipe_closure : F, Pack
 {
     
     template<class X, class P>
-    constexpr pipe_closure(X&& f, P&& pack) : F(std::forward<X>(f)), Pack(std::forward<P>(pack))
+    constexpr pipe_closure(X&& f, P&& pack) : F(fit::forward<X>(f)), Pack(fit::forward<P>(pack))
     {}
 
     template<class... Ts>
@@ -88,27 +89,27 @@ struct pipe_closure : F, Pack
         A a;
         const pipe_closure * self;
         template<class X>
-        constexpr invoke(X&& x, const pipe_closure * self) : a(std::forward<X>(x)), self(self)
+        constexpr invoke(X&& x, const pipe_closure * self) : a(fit::forward<X>(x)), self(self)
         {}
 
         FIT_RETURNS_CLASS(invoke);
 
         template<class... Ts>
         constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->self->base_function(xs...))(std::forward<A>(a), std::forward<Ts>(xs)...));
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->self->base_function(xs...))(fit::forward<A>(a), fit::forward<Ts>(xs)...));
     };
 
     FIT_RETURNS_CLASS(pipe_closure);
 
     template<class A>
     constexpr auto operator()(A&& a) const FIT_RETURNS
-    (FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(a))(invoke<A&&>(std::forward<A>(a), FIT_CONST_THIS)));
+    (FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(a))(invoke<A&&>(fit::forward<A>(a), FIT_CONST_THIS)));
 };
 
 template<class F, class Pack>
 constexpr auto make_pipe_closure(F f, Pack&& p) FIT_RETURNS
 (
-    pipe_closure<F, typename std::remove_reference<Pack>::type>(std::move(f), std::forward<Pack>(p))
+    pipe_closure<F, typename std::remove_reference<Pack>::type>(fit::move(f), fit::forward<Pack>(p))
 );
 
 
@@ -125,12 +126,12 @@ struct pipe_pack
 
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-    (make_pipe_closure(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), fit::pack_forward(std::forward<Ts>(xs)...)));
+    (make_pipe_closure(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), fit::pack_forward(fit::forward<Ts>(xs)...)));
 };
     
 template<class A, class F, class Pack>
 constexpr auto operator|(A&& a, const pipe_closure<F, Pack>& p) FIT_RETURNS
-(p(std::forward<A>(a)));
+(p(fit::forward<A>(a)));
 
 }
 
@@ -150,19 +151,19 @@ struct pipable_adaptor
 
 template<class A, class F>
 constexpr auto operator|(A&& a, const pipable_adaptor<F>& p) FIT_RETURNS
-(p(std::forward<A>(a)));
+(p(fit::forward<A>(a)));
 
 
 template<class F>
 constexpr pipable_adaptor<F> pipable(F f)
 {
-    return pipable_adaptor<F>(std::move(f));
+    return pipable_adaptor<F>(fit::move(f));
 }
 
 // Operators for static_ adaptor
 template<class A, class F>
 auto operator|(A&& a, static_<F> f) FIT_RETURNS
-(f.base_function().base_function()(std::forward<A>(a)));
+(f.base_function().base_function()(fit::forward<A>(a)));
 }
 
 #endif

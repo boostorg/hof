@@ -51,6 +51,7 @@
 #include <fit/variadic.h>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/move.h>
 
 namespace fit {
 
@@ -71,7 +72,7 @@ struct fuse_adaptor : F
     constexpr auto operator()(T && x) const
     FIT_RETURNS
     (
-        fit::invoke(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), std::forward<T>(x))
+        fit::invoke(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x))
     );
 };
 
@@ -91,7 +92,7 @@ struct variadic_adaptor<fuse_adaptor<F> > : F
 template<class F>
 constexpr fuse_adaptor<F> fuse(F f)
 {
-    return fuse_adaptor<F>(std::move(f));
+    return fuse_adaptor<F>(fit::move(f));
 }
 
 }

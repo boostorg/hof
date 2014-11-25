@@ -68,13 +68,13 @@ struct partial_adaptor;
 template<class F>
 constexpr partial_adaptor<F> partial(F f)
 {
-    return partial_adaptor<F>(std::move(f));
+    return partial_adaptor<F>(fit::move(f));
 }
 
 template<class F, class Pack>
 constexpr partial_adaptor<F, Pack> partial(F f, Pack pack)
 {
-    return partial_adaptor<F, Pack>(std::move(f), std::move(pack));
+    return partial_adaptor<F, Pack>(fit::move(f), fit::move(pack));
 }
 
 namespace detail {
@@ -102,7 +102,7 @@ struct partial_adaptor_invoke
         fit::pack_join
         (
             FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), 
-            fit::pack_forward(std::forward<Ts>(xs)...)
+            fit::pack_forward(fit::forward<Ts>(xs)...)
         )
         (FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)))
     );
@@ -132,7 +132,7 @@ struct partial_adaptor_join
         partial
         (
             FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
-            fit::pack_join(FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), fit::pack_decay(std::forward<Ts>(xs)...))
+            fit::pack_join(FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), fit::pack_decay(fit::forward<Ts>(xs)...))
         )
     );
 };
@@ -153,7 +153,7 @@ struct partial_adaptor_pack
         partial
         (
             FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
-            fit::pack_decay(std::forward<Ts>(xs)...)
+            fit::pack_decay(fit::forward<Ts>(xs)...)
         )
     );
 };
@@ -201,7 +201,7 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
     {}
 
     template<class X, class S>
-    constexpr partial_adaptor(X&& x, S&& seq) : F(std::forward<X>(x)), Pack(std::forward<S>(seq))
+    constexpr partial_adaptor(X&& x, S&& seq) : F(fit::forward<X>(x)), Pack(fit::forward<S>(seq))
     {}
 };
 
@@ -222,7 +222,7 @@ struct partial_adaptor<F, void> : detail::partial_adaptor_base<F, void>::type
     {}
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    constexpr partial_adaptor(X&& x) : base(std::forward<X>(x))
+    constexpr partial_adaptor(X&& x) : base(fit::forward<X>(x))
     {}
 
 
@@ -237,7 +237,7 @@ struct partial_adaptor<pipable_adaptor<F>, void>
     {}
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    constexpr partial_adaptor(X&& x) : base(std::forward<X>(x))
+    constexpr partial_adaptor(X&& x) : base(fit::forward<X>(x))
     {}
 };
 
@@ -250,7 +250,7 @@ struct partial_adaptor<static_<pipable_adaptor<F>>, void>
     {}
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    partial_adaptor(X&& x) : base(std::forward<X>(x))
+    partial_adaptor(X&& x) : base(fit::forward<X>(x))
     {}
 };
 }

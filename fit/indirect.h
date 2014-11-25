@@ -50,6 +50,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/returns.h>
 #include <fit/always.h>
+#include <fit/detail/move.h>
 
 namespace fit {
 
@@ -69,14 +70,14 @@ struct indirect_adaptor : F
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (*FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(std::forward<Ts>(xs)...)
+        (*FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
     );
 };
 
 template<class F>
 constexpr indirect_adaptor<F> indirect(F f)
 {
-    return indirect_adaptor<F>(std::move(f));
+    return indirect_adaptor<F>(fit::move(f));
 }
 
 

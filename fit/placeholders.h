@@ -123,6 +123,14 @@ namespace fit {
     m(--, decrement)
 
 namespace operators {
+
+struct call
+{
+    template<class F, class... Ts>
+    constexpr auto operator()(F&& f, Ts&&... xs) const FIT_RETURNS
+    (f(fit::forward<Ts>(xs)...));
+};
+
 #define FIT_BINARY_OP(op, name) \
     struct name \
     { \
@@ -150,6 +158,21 @@ FIT_FOREACH_UNARY_OP(FIT_UNARY_OP)
 template<int N>
 struct placeholder
 {
+
+#if FIT_HAS_MANGLE_OVERLOAD
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS 
+    ( fit::lazy(operators::call())(detail::simple_placeholder<N>(), fit::forward<Ts>(xs)...) );
+#else
+    template<class... Ts>
+    struct result_call
+    { typedef decltype(fit::lazy(operators::call())(detail::simple_placeholder<N>(), std::declval<Ts>()...)) type; };
+    template<class... Ts>
+    constexpr typename result_call<Ts...>::type operator()(Ts&&... xs) const 
+    { return fit::lazy(operators::call())(detail::simple_placeholder<N>(), fit::forward<Ts>(xs)...); };
+
+#endif
+
 #define FIT_PLACEHOLDER_UNARY_OP(op, name) \
     constexpr auto operator op () const FIT_RETURNS \
     ( fit::lazy(operators::name())(detail::simple_placeholder<N>()) );

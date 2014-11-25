@@ -25,6 +25,13 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_invoke_2 = fit::_1(3);
+    FIT_STATIC_TEST_CHECK(f_invoke_2(square()) == 9);
+    FIT_TEST_CHECK(f_invoke_2(square()) == 9);
+}
+
+FIT_TEST_CASE()
+{
     const auto x_add = 2 + 1;
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_add = fit::_1 + fit::_2;
     FIT_STATIC_TEST_CHECK(f_add(2, 1) == x_add);

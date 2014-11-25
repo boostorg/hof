@@ -26,6 +26,7 @@ pages:
 - ['partial.md', 'Adaptors', 'partial']
 - ['pipable.md', 'Adaptors', 'pipable']
 - ['protect.md', 'Adaptors', 'protect']
+- ['result.md', 'Adaptors', 'result']
 - ['reveal.md', 'Adaptors', 'reveal']
 - ['static.md', 'Adaptors', 'static']
 - ['variadic.md', 'Adaptors', 'variadic']

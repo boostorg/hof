@@ -26,6 +26,7 @@ extract partial
 extract pipable
 extract placeholders
 extract protect
+extract result
 extract returns
 extract reveal
 extract static

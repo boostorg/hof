@@ -63,6 +63,8 @@
 #define FIT_PP_DEFER(...) __VA_ARGS__ FIT_PP_EMPTY()
 #define FIT_PP_OBSTRUCT(...) __VA_ARGS__ FIT_PP_DEFER(FIT_PP_EMPTY)()
 #define FIT_PP_EXPAND(...) __VA_ARGS__
+#define FIT_PP_EAT(...)
+#define FIT_PP_REM(...) __VA_ARGS__
 
 #define FIT_PP_IIF(c) FIT_PP_PRIMITIVE_CAT(FIT_PP_IIF_, c)
 #define FIT_PP_IIF_0(t, ...) __VA_ARGS__
@@ -81,5 +83,6 @@
     )
 
 #define FIT_PP_RAIL_ID() FIT_PP_RAIL
+
 
 #endif

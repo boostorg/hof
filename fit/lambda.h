@@ -30,6 +30,7 @@
 #include <type_traits>
 #include <utility>
 #include <fit/returns.h>
+#include <fit/reveal.h>
 
 namespace fit {
 
@@ -38,6 +39,11 @@ template<class F>
 struct lambda_wrapper
 {
     static_assert(std::is_empty<F>::value, "Lambdas must be empty");
+
+    template<class... Ts>
+    struct failure
+    : failure_for<F(Ts...)>
+    {};
 
     FIT_RETURNS_CLASS(lambda_wrapper);
 
@@ -61,7 +67,7 @@ struct lambda_wrapper_factor
 struct lambda_addr
 {
     template<class T>
-    friend typename std::remove_reference<T>::type *operator+(lambda_addr, T &&t) 
+    typename std::remove_reference<T>::type *operator=(T &&t) const
     {
         return &t;
     }
@@ -69,7 +75,7 @@ struct lambda_addr
 
 }
 
-#define FIT_STATIC_LAMBDA fit::detail::lambda_wrapper_factor() += true ? nullptr : fit::detail::lambda_addr() + []
+#define FIT_STATIC_LAMBDA fit::detail::lambda_wrapper_factor() += true ? nullptr : fit::detail::lambda_addr() = []
 
 }
 

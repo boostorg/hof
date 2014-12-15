@@ -60,6 +60,30 @@ struct has_failure<T, typename template_holder<
 : std::true_type
 {};
 
+template<class Sig>
+struct failure_check;
+
+template<class F, class... Ts>
+struct failure_check<F(Ts...)>
+{
+    // Use virtual function to reduce backtrace
+    virtual void check()
+    {
+        typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
+    }
+    // typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
+};
+
+template<class... Ts>
+struct failures
+: Ts...
+{};
+
+template<class... Ts>
+struct failure_checks
+{
+    typedef failures<Ts...> type;
+};
 
 template<class Sig, class Enable = void>
 struct failure_for_;
@@ -72,13 +96,13 @@ struct failure_for_<F(Ts...), typename std::enable_if<has_failure<F>::value>::ty
 template<class F, class... Ts>
 struct failure_for_<F(Ts...), typename std::enable_if<!has_failure<F>::value>::type>
 {
-    typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
+    typedef failure_check<F(Ts...)> type;
 };
 }
 
 template<class... Ts>
 struct failure_for
-: detail::failure_for_<Ts>...
+: detail::failure_checks<typename detail::failure_for_<Ts>::type...>
 {};
 
 template<class F>
@@ -106,12 +130,11 @@ struct reveal_adaptor: F
 
     template<class... Ts>
     typename std::enable_if<
-        !is_callable<F(Ts&&...)>::value,
-        typename failure_for<F(Ts&&...)>::type
+        !is_callable<F(Ts&&...)>::value
     >::type operator()(Ts && ... xs) const
     {
-        typedef typename failure_for<F(Ts&&...)>::type type_error;
-        return this->base_function()(fit::forward<Ts>(xs)...);
+        // typedef typename failure_for<F(Ts&&...)>::type type_error;
+        typename failure_for<F(Ts&&...)>::type();
     }
 
 };

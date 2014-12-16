@@ -130,7 +130,7 @@ struct reveal_adaptor: F
     template<class... Ts>
     typename std::enable_if<
         !is_callable<F(Ts&&...)>::value
-    >::type operator()(Ts && ... xs) const
+    >::type operator()(Ts&&...) const
     {
         typename failure_for<F(Ts&&...)>::type();
     }

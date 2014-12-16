@@ -26,57 +26,9 @@
 ///     };
 /// 
 
+#include <fit/function.h>
 
-#include <type_traits>
-#include <utility>
-#include <fit/returns.h>
-#include <fit/reveal.h>
+#define FIT_STATIC_LAMBDA FIT_DETAIL_MAKE_STATIC = []
 
-namespace fit {
-
-namespace detail {
-template<class F>
-struct lambda_wrapper
-{
-    static_assert(std::is_empty<F>::value, "Lambdas must be empty");
-
-    template<class... Ts>
-    struct failure
-    : failure_for<F(Ts...)>
-    {};
-
-    FIT_RETURNS_CLASS(lambda_wrapper);
-
-    template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS
-    (
-        FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(fit::forward<Ts>(xs)...)
-    );
-};
-
-struct lambda_wrapper_factor
-{
-    template<class F>
-    constexpr lambda_wrapper<F> operator += (F*)
-    {
-        static_assert(std::is_literal_type<lambda_wrapper<F>>::value, "Lambda wrapper not a literal type");
-        return {};
-    }
-};
-
-struct lambda_addr
-{
-    template<class T>
-    typename std::remove_reference<T>::type *operator=(T &&t) const
-    {
-        return &t;
-    }
-};
-
-}
-
-#define FIT_STATIC_LAMBDA fit::detail::lambda_wrapper_factor() += true ? nullptr : fit::detail::lambda_addr() = []
-
-}
 
 #endif

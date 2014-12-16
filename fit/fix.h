@@ -44,6 +44,7 @@
 
 #include <fit/always.h>
 #include <fit/returns.h>
+#include <fit/reveal.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
 
@@ -78,6 +79,12 @@ struct fix_adaptor_base : F
     {
         return static_cast<const Derived&>(always_ref(*this)(xs...));
     }
+
+    template<class... Ts>
+    struct failure
+    : failure_for<F(Derived, Ts...)>
+    {};
+
 
     FIT_RETURNS_CLASS(fix_adaptor_base);
 

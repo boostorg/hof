@@ -66,6 +66,16 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
     
+    FIT_TEST_CHECK(fit::reveal(fun)(1) == 1);
+    FIT_TEST_CHECK(fit::reveal(fun)(foo()) == 2);
+
+    FIT_STATIC_TEST_CHECK(fit::reveal(fun)(1) == 1);
+    FIT_STATIC_TEST_CHECK(fit::reveal(fun)(foo()) == 2);
+};
+
+FIT_TEST_CASE()
+{
+    
     constexpr auto lam = fit::match(
         FIT_STATIC_LAMBDA(int) { return 1; },
         FIT_STATIC_LAMBDA(foo) { return 2; }

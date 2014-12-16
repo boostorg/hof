@@ -35,9 +35,11 @@
 ///     MoveConstructible
 /// 
 
+#include <fit/always.h>
 #include <fit/returns.h>
 #include <fit/is_callable.h>
 #include <fit/detail/move.h>
+#include <fit/detail/delegate.h>
 
 namespace fit { 
 
@@ -108,23 +110,20 @@ struct failure_for
 template<class F>
 struct reveal_adaptor: F
 {
-    reveal_adaptor()
-    {}
 
-    template<class X>
-    reveal_adaptor(X x) : F(x)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, F);
 
-    const F& base_function() const
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&... xs) const
     {
-        return *this;
+        return always_ref(*this)(xs...);
     }
 
     FIT_RETURNS_CLASS(reveal_adaptor);
     
     template<class... Ts>
     constexpr auto operator()(Ts && ... xs) const
-    FIT_RETURNS(FIT_CONST_THIS->base_function()(fit::forward<Ts>(xs)...));
+    FIT_RETURNS(FIT_CONST_THIS->base_function(xs...)(fit::forward<Ts>(xs)...));
 
     struct fail {};
 
@@ -133,14 +132,13 @@ struct reveal_adaptor: F
         !is_callable<F(Ts&&...)>::value
     >::type operator()(Ts && ... xs) const
     {
-        // typedef typename failure_for<F(Ts&&...)>::type type_error;
         typename failure_for<F(Ts&&...)>::type();
     }
 
 };
 
 template<class F>
-reveal_adaptor<F> reveal(F f)
+constexpr reveal_adaptor<F> reveal(F f)
 {
     return reveal_adaptor<F>(fit::move(f));
 }

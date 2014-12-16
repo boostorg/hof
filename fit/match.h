@@ -61,6 +61,7 @@
 ///     static_assert(std::is_same<foo, decltype(fun()(foo()))>::value, "Failed match");
 /// 
 
+#include <fit/reveal.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
 
@@ -72,6 +73,11 @@ template<class F, class...Fs>
 struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
 {
     typedef match_adaptor<Fs...> base;
+
+    template<class... Ts>
+    struct failure
+    : failure_for<F(Ts...), Fs(Ts...)...>
+    {};
 
     FIT_INHERIT_DEFAULT(match_adaptor, F, base);
 

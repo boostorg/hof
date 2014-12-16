@@ -49,6 +49,7 @@
 
 #include <fit/detail/delegate.h>
 #include <fit/returns.h>
+#include <fit/reveal.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
 
@@ -64,6 +65,11 @@ struct indirect_adaptor : F
     {
         return always_ref(*this)(xs...);
     }
+
+    template<class... Ts>
+    struct failure
+    : failure_for<decltype(*std::declval<F>())(Ts...)>
+    {};
 
     FIT_RETURNS_CLASS(indirect_adaptor);
 

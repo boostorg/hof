@@ -10,6 +10,7 @@ extract args
 extract compose
 extract conditional
 extract fix
+extract function
 extract fuse
 extract identity
 extract implicit

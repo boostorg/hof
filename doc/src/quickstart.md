@@ -67,17 +67,27 @@ And we can apply the same adaptors as well:
         return x + y;
     });
 
+We can also statically initialize the lambda after the adaptors have been applied by using `FIT_STATIC_FUNCTION`:
+
+    // Pipable sum
+    FIT_STATIC_FUNCTION(sum) = pipable([](auto x, auto y)
+    {
+        return x + y;
+    });
+
+As we will see, this can help make it cleaner when we are defining several lambdas, such as for overloading.
+
 Overloading
 -----------
 
 Now, Fit provides two ways of doing overloading. The `match` adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:
 
-    const constexpr auto print = match(
-        FIT_STATIC_LAMBDA(int x)
+    FIT_STATIC_FUNCTION(print) = match(
+        [](int x)
         {
             std::cout << "Integer: " << x << std::endl;
         },
-        FIT_STATIC_LAMBDA(const std::string& x)
+        [](const std::string& x)
         {
             std::cout << "String: " << x << std::endl;
         }
@@ -87,16 +97,16 @@ However, when trying to do overloading involving something more generic, it can 
 
     #define REQUIRES(...) typename std::enable_if<(__VA_ARGS__), int>::type = 0
 
-    const constexpr auto print = conditional(
-        FIT_STATIC_LAMBDA(auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
+    FIT_STATIC_FUNCTION(print) = conditional(
+        [](auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
         {
             std::cout << x << std::endl;
         },
-        FIT_STATIC_LAMBDA(const std::string& x)
+        [](const std::string& x)
         {
             std::cout << x << std::endl;
         },
-        FIT_STATIC_LAMBDA(const auto& range)
+        [](const auto& range)
         {
             for(const auto& x:range) 
                 std::cout << x << std::endl;
@@ -110,16 +120,16 @@ Recursive
 
 Additionally, we could go a step further and make the `print` function recursive. We can use the `fix` adaptor, which implements a fix point combinator. So the first parameter of the function will be the function itself:
 
-    const constexpr auto print = fix(conditional(
-        FIT_STATIC_LAMBDA(auto, auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
+    FIT_STATIC_FUNCTION(print) = fix(conditional(
+        [](auto, auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
         {
             std::cout << x << std::endl;
         },
-        FIT_STATIC_LAMBDA(auto, const std::string& x)
+        [](auto, const std::string& x)
         {
             std::cout << x << std::endl;
         },
-        FIT_STATIC_LAMBDA(auto self, const auto& range)
+        [](auto self, const auto& range)
         {
             for(const auto& x:range) self(x);
         }

@@ -123,7 +123,7 @@ struct reveal_adaptor: F
     
     template<class... Ts>
     constexpr auto operator()(Ts && ... xs) const
-    FIT_RETURNS(FIT_CONST_THIS->base_function(xs...)(fit::forward<Ts>(xs)...));
+    FIT_RETURNS(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))(fit::forward<Ts>(xs)...));
 
     struct fail {};
 

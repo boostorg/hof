@@ -26,7 +26,13 @@
 ///     });
 /// 
 
-
+#ifndef FIT_HAS_RELAXED_CONSTEXPR
+#if defined(__clang__) && __has_feature(cxx_relaxed_constexpr)
+#define FIT_HAS_RELAXED_CONSTEXPR 1
+#else
+#define FIT_HAS_RELAXED_CONSTEXPR 0
+#endif
+#endif
 
 #include <type_traits>
 #include <utility>
@@ -77,7 +83,10 @@ struct static_addr
 }}
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-
+#if FIT_HAS_RELAXED_CONSTEXPR
+#define FIT_STATIC_FUNCTION(name) const constexpr auto name = FIT_DETAIL_MAKE_STATIC
+#else
 #define FIT_STATIC_FUNCTION(name) static constexpr auto name = FIT_DETAIL_MAKE_STATIC
+#endif
 
 #endif

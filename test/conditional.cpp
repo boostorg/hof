@@ -1,6 +1,7 @@
 #include <fit/conditional.h>
 #include <fit/static.h>
 #include <fit/lambda.h>
+#include <fit/function.h>
 #include <memory>
 #include "test.h"
 
@@ -89,5 +90,27 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(lam(t1()) == 1);
     FIT_TEST_CHECK(lam(t2()) == 2);
     FIT_TEST_CHECK(lam(t3()) == 3);
+}
+
+FIT_STATIC_FUNCTION(static_fun) = fit::conditional(
+    [](t1)
+    {
+        return 1;
+    },
+    [](t2)
+    {
+        return 2;
+    },
+    [](t3)
+    {
+        return 3;
+    }
+);
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(static_fun(t1()) == 1);
+    FIT_TEST_CHECK(static_fun(t2()) == 2);
+    FIT_TEST_CHECK(static_fun(t3()) == 3);
 }
 }

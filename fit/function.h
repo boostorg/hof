@@ -27,8 +27,12 @@
 /// 
 
 #ifndef FIT_HAS_RELAXED_CONSTEXPR
-#if defined(__clang__) && __has_feature(cxx_relaxed_constexpr)
+#ifdef __clang__
+#if __has_feature(cxx_relaxed_constexpr)
 #define FIT_HAS_RELAXED_CONSTEXPR 1
+#else
+#define FIT_HAS_RELAXED_CONSTEXPR 0
+#endif
 #else
 #define FIT_HAS_RELAXED_CONSTEXPR 0
 #endif

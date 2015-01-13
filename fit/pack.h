@@ -11,6 +11,7 @@
 #include <fit/detail/seq.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/remove_rvalue_reference.h>
+#include <fit/detail/unwrap.h>
 #include <fit/returns.h>
 
 #ifndef FIT_HAS_RVALUE_THIS
@@ -21,17 +22,6 @@ namespace fit { namespace detail {
 
 struct decay_elem_f
 {
-    template <class T>
-    struct unwrap_reference
-    {
-        typedef T type;
-    };
-    template <class T>
-    struct unwrap_reference<std::reference_wrapper<T>>
-    {
-        typedef T& type;
-    };
-
     template<class T>
     constexpr typename unwrap_reference<typename std::decay<T>::type>::type 
     operator()(T&& x) const

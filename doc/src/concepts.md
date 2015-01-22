@@ -14,6 +14,23 @@ concept FunctionObject
 };
 ```
 
+Requirements:
+
+The type F satisfies FunctionObject if
+
+    The type F satisfies std::is_object, and 
+
+Given
+
+    f, an object of type const F
+    args..., suitable argument list, which may be empty 
+
+| Expression | Requirements             |
+|------------|--------------------------|
+| f(args...) | performs a function call |
+
+
+
 UnaryFunctionObject
 -------------------
 
@@ -26,6 +43,19 @@ concept UnaryFunctionObject
     auto operator()(T&&) const;
 };
 ```
+
+Requirements:
+
+    FunctionObject
+
+Given
+
+    f, an object of type const F
+    arg, a single argument
+
+| Expression | Requirements             |
+|------------|--------------------------|
+| f(arg)     | performs a function call |
 
 BinaryFunctionObject
 --------------------
@@ -40,6 +70,20 @@ concept UnaryFunctionObject
 };
 ```
 
+Requirements:
+
+    FunctionObject
+
+Given
+
+    f, an object of type const F
+    arg1, a single argument
+    arg2, a single argument
+
+| Expression    | Requirements             |
+|---------------|--------------------------|
+| f(arg1, arg2) | performs a function call |
+
 MutableFunctionObject
 ---------------------
 
@@ -52,4 +96,19 @@ concept FunctionObject
     auto operator()(Ts&&...);
 };
 ```
+
+Requirements:
+
+The type F satisfies FunctionObject if
+
+    The type F satisfies std::is_object, and 
+
+Given
+
+    f, an object of type F
+    args..., suitable argument list, which may be empty 
+
+| Expression | Requirements             |
+|------------|--------------------------|
+| f(args...) | performs a function call |
 

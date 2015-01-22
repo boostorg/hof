@@ -8,6 +8,8 @@
 #ifndef FIT_GUARD_FUNCTION_ALWAYS_H
 #define FIT_GUARD_FUNCTION_ALWAYS_H
 
+#include <fit/detail/unwrap.h>
+
 /// always
 /// ======
 /// 
@@ -56,7 +58,8 @@ struct always_base
     {}
 
     template<class... As>
-    constexpr T operator()(As&&...) const
+    constexpr typename unwrap_reference<T>::type 
+    operator()(As&&...) const
     {
         return this->x;
     }

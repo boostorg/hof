@@ -14,7 +14,7 @@ concept FunctionObject
 };
 ```
 
-##### Requirements:
+#### Requirements:
 
 The type `F` satisfies `FunctionObject` if
 
@@ -25,9 +25,9 @@ Given
 * `f`, an object of type `const F`
 * `args...`, suitable argument list, which may be empty 
 
-| Expression | Requirements             |
-|------------|--------------------------|
-| f(args...) | performs a function call |
+| Expression   | Requirements             |
+|--------------|--------------------------|
+| `f(args...)` | performs a function call |
 
 
 UnaryFunctionObject
@@ -43,7 +43,7 @@ concept UnaryFunctionObject
 };
 ```
 
-##### Requirements:
+#### Requirements:
 
 * `FunctionObject`
 
@@ -54,7 +54,7 @@ Given
 
 | Expression | Requirements             |
 |------------|--------------------------|
-| f(arg)     | performs a function call |
+| `f(arg)`   | performs a function call |
 
 BinaryFunctionObject
 --------------------
@@ -69,7 +69,7 @@ concept UnaryFunctionObject
 };
 ```
 
-##### Requirements:
+#### Requirements:
 
 * `FunctionObject`
 
@@ -79,9 +79,9 @@ Given
 * `arg1`, a single argument
 * `arg2`, a single argument
 
-| Expression    | Requirements             |
-|---------------|--------------------------|
-| f(arg1, arg2) | performs a function call |
+| Expression      | Requirements             |
+|-----------------|--------------------------|
+| `f(arg1, arg2)` | performs a function call |
 
 MutableFunctionObject
 ---------------------
@@ -96,7 +96,7 @@ concept FunctionObject
 };
 ```
 
-##### Requirements:
+#### Requirements:
 
 The type `F` satisfies `FunctionObject` if
 
@@ -107,7 +107,7 @@ Given
 * `f`, an object of type `F`
 * `args...`, suitable argument list, which may be empty 
 
-| Expression | Requirements             |
-|------------|--------------------------|
-| f(args...) | performs a function call |
+| Expression   | Requirements             |
+|--------------|--------------------------|
+| `f(args...)` | performs a function call |
 

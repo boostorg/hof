@@ -18,17 +18,16 @@ Requirements:
 
 The type F satisfies FunctionObject if
 
-    The type F satisfies std::is_object, and 
+* The type F satisfies std::is_object, and 
 
 Given
 
-    f, an object of type const F
-    args..., suitable argument list, which may be empty 
+* f, an object of type const F
+* args..., suitable argument list, which may be empty 
 
 | Expression | Requirements             |
 |------------|--------------------------|
 | f(args...) | performs a function call |
-
 
 
 UnaryFunctionObject
@@ -46,12 +45,12 @@ concept UnaryFunctionObject
 
 Requirements:
 
-    FunctionObject
+* FunctionObject
 
 Given
 
-    f, an object of type const F
-    arg, a single argument
+* f, an object of type const F
+* arg, a single argument
 
 | Expression | Requirements             |
 |------------|--------------------------|
@@ -72,13 +71,13 @@ concept UnaryFunctionObject
 
 Requirements:
 
-    FunctionObject
+* FunctionObject
 
 Given
 
-    f, an object of type const F
-    arg1, a single argument
-    arg2, a single argument
+* f, an object of type const F
+* arg1, a single argument
+* arg2, a single argument
 
 | Expression    | Requirements             |
 |---------------|--------------------------|
@@ -101,12 +100,12 @@ Requirements:
 
 The type F satisfies FunctionObject if
 
-    The type F satisfies std::is_object, and 
+* The type F satisfies std::is_object, and 
 
 Given
 
-    f, an object of type F
-    args..., suitable argument list, which may be empty 
+* f, an object of type F
+* args..., suitable argument list, which may be empty 
 
 | Expression | Requirements             |
 |------------|--------------------------|

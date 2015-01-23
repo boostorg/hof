@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat src/index.md src/quickstart.md src/requirements.md

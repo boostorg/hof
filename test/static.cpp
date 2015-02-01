@@ -1,6 +1,8 @@
 #include <fit/static.h>
 #include "test.h"
 
+// TODO: Test infix
+
 fit::static_<binary_class> binary_static = {};
 
 fit::static_<void_class> void_static = {};

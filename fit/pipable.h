@@ -55,6 +55,7 @@
 #include <fit/pack.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
+#include <fit/function.h>
 
 namespace fit { 
  
@@ -164,6 +165,11 @@ constexpr pipable_adaptor<F> pipable(F f)
 template<class A, class F>
 auto operator|(A&& a, static_<F> f) FIT_RETURNS
 (f.base_function().base_function()(fit::forward<A>(a)));
+
+// Operators for static_function_wrapper adaptor
+template<class A, class F>
+auto operator|(A&& a, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
+(f(fit::forward<A>(a)));
 }
 
 #endif

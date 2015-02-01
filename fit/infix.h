@@ -53,6 +53,7 @@
 #include <fit/returns.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
+#include <fit/function.h>
 
 namespace fit {
  
@@ -106,6 +107,12 @@ struct infix_adaptor : F
         return always_ref(*this)(xs...);
     }
 
+    template<class... Ts>
+    constexpr const F& infix_base_function(Ts&&... xs) const
+    {
+        return always_ref(*this)(xs...);
+    }
+
     FIT_RETURNS_CLASS(infix_adaptor);
 
     template<class... Ts>
@@ -119,12 +126,20 @@ template<class T, class F>
 constexpr auto operator<(T&& x, const infix_adaptor<F>& i) FIT_RETURNS
 (detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(i.base_function(x))));
 
+// TODO: Operators for static_
+
+// Operators for static_function_wrapper adaptor
+template<class T, class F>
+auto operator<(T&& x, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
+(
+    detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(f.base_function().infix_base_function()))
+);
+
 template<class F>
 constexpr infix_adaptor<F> infix(F f)
 {
     return infix_adaptor<F>(fit::move(f));
 }
-
 
 }
 

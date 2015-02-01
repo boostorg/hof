@@ -56,6 +56,12 @@ struct static_function_wrapper
     : failure_for<F(Ts...)>
     {};
 
+    template<class... Ts>
+    const F& base_function(Ts&&...) const
+    {
+        return reinterpret_cast<const F&>(*this);
+    }
+
     FIT_RETURNS_CLASS(static_function_wrapper);
 
     template<class... Ts>

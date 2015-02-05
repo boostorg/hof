@@ -131,7 +131,7 @@
 #define FIT_REM(...) __VA_ARGS__
 
 #if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
-#define FIT_RETURNS(...) -> decltype(__VA_ARGS__) { return __VA_ARGS__; } static_assert(true, "")
+#define FIT_RETURNS(...) -> decltype(__VA_ARGS__) { return __VA_ARGS__; }
 #define FIT_THIS this
 #define FIT_CONST_THIS this
 #define FIT_RETURNS_CLASS(...) \
@@ -167,7 +167,7 @@ void fit_returns_class_check() \
 
 #define FIT_RETURNS_CLASS(...) typedef __VA_ARGS__* fit_this_type; typedef const __VA_ARGS__* fit_const_this_type
 
-#define FIT_RETURNS(...) -> FIT_RETURNS_DECLTYPE(__VA_ARGS__) { FIT_RETURNS_RETURN(__VA_ARGS__); } static_assert(true, "")
+#define FIT_RETURNS(...) -> FIT_RETURNS_DECLTYPE(__VA_ARGS__) { FIT_RETURNS_RETURN(__VA_ARGS__); }
 
 
 namespace fit { namespace detail {

@@ -9,9 +9,6 @@ using the trailing return type. Instead of repeating the expression for
 the return type and using the expression in the function body, this macro
 helps reduce the code duplication from that.
 
-Note: A semicolon must be placed at the end of the `FIT_RETURNS`
-expression.
-
 Note: The expression used to deduce the return the type will also
 constrain the template function as well, which is different behaviour than
 using C++14's return type deduction.

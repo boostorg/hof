@@ -34,6 +34,7 @@ pages:
 # Functions
 - ['always.md', 'Functions', 'always']
 - ['identity.md', 'Functions', 'identity']
+- ['placeholders.md', 'Functions', 'placeholders']
 # Utilities
 - ['args.md', 'Utilities', 'args']
 - ['capture.md', 'Utilities', 'capture']
@@ -41,6 +42,5 @@ pages:
 - ['is_callable.md', 'Utilities', 'is_callable']
 - ['function.md', 'Utilities', 'FIT_STATIC_FUNCTION']
 - ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']
-- ['placeholders.md', 'Utilities', 'placeholders']
 - ['returns.md', 'Utilities', 'returns']
 - ['tap.md', 'Utilities', 'tap']

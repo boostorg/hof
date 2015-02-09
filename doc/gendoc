@@ -7,8 +7,10 @@ function extract
 
 extract always
 extract args
+extract capture
 extract compose
 extract conditional
+extract each_arg
 extract fix
 extract function
 extract fuse

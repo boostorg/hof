@@ -36,6 +36,8 @@ pages:
 - ['identity.md', 'Functions', 'identity']
 # Utilities
 - ['args.md', 'Utilities', 'args']
+- ['capture.md', 'Utilities', 'capture']
+- ['each_arg.md', 'Utilities', 'each_arg']
 - ['is_callable.md', 'Utilities', 'is_callable']
 - ['function.md', 'Utilities', 'FIT_STATIC_FUNCTION']
 - ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']

@@ -26,7 +26,6 @@
 ///     template <class F, class... Ts> 
 ///     constexpr void each_arg(F&& f, Ts&&... a);
 /// 
-/// 
 /// Requirements
 /// ------------
 /// 

@@ -64,20 +64,29 @@ struct always_base
         return this->x;
     }
 };
-}
 
-template<class T>
-constexpr detail::always_base<T> always(T x)
+struct always_f
 {
-    return detail::always_base<T>(x);
-}
+    template<class T>
+    constexpr detail::always_base<T> operator()(T x) const
+    {
+        return detail::always_base<T>(x);
+    }
+};
 
-
-template<class T>
-constexpr detail::always_base<T&> always_ref(T& x)
+struct always_ref_f
 {
-    return detail::always_base<T&>(x);
+    template<class T>
+    constexpr detail::always_base<T&> operator()(T& x) const
+    {
+        return detail::always_base<T&>(x);
+    }
+};
+
 }
+
+const detail::always_f always = {};
+const detail::always_ref_f always_ref = {};
 
 }
 

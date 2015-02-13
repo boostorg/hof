@@ -59,7 +59,7 @@ struct each_arg_f
 };
 }
 
-const detail::each_arg_f each_arg = {};
+static constexpr detail::each_arg_f each_arg = {};
 
 }
 

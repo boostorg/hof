@@ -85,8 +85,8 @@ struct always_ref_f
 
 }
 
-const detail::always_f always = {};
-const detail::always_ref_f always_ref = {};
+static constexpr detail::always_f always = {};
+static constexpr detail::always_ref_f always_ref = {};
 
 }
 

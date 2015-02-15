@@ -1,5 +1,6 @@
 #include <fit/by.h>
 #include <fit/placeholders.h>
+#include <fit/mutable.h>
 #include "test.h"
 
 #include <memory>
@@ -21,7 +22,9 @@ FIT_TEST_CASE()
 {
     constexpr auto add = fit::_ + fit::_;
     FIT_STATIC_TEST_CHECK(fit::by(select_x(), add)(foo(1), foo(2)) == 3);
-    FIT_TEST_CHECK(fit::by(std::mem_fn(&foo::x), add)(foo(1), foo(2)) == 3);
+    // Using mutable_ as a workaround on libc++, since mem_fn does not meet the
+    // requirements of a FunctionObject
+    FIT_TEST_CHECK(fit::by(fit::mutable_(std::mem_fn(&foo::x)), add)(foo(1), foo(2)) == 3);
 }
 
 struct select_x_1

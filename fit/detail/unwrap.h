@@ -9,6 +9,7 @@
 #define FIT_GUARD_UNWRAP_H
 
 #include <type_traits>
+#include <functional>
 
 namespace fit { namespace detail {
 

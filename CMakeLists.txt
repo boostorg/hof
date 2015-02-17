@@ -1,4 +1,12 @@
-cmake_minimum_required (VERSION 2.6)
+if (BIICODE)
+    include(${CMAKE_HOME_DIRECTORY}/biicode.cmake)
+    # Initializes block variables
+    INIT_BIICODE_BLOCK()
+
+    # Include base block dir
+    ADD_BIICODE_TARGETS()
+endif()
+
 project (Fit)
  
 # The version number.

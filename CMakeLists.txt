@@ -1,12 +1,3 @@
-if (BIICODE)
-    include(${CMAKE_HOME_DIRECTORY}/biicode.cmake)
-    # Initializes block variables
-    INIT_BIICODE_BLOCK()
-
-    # Include base block dir
-    ADD_BIICODE_TARGETS()
-endif()
-
 project (Fit)
  
 # The version number.
@@ -38,16 +29,16 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
     endif()
 endforeach()
 
-include(CTest)
-
-include_directories(.)
-
-install (DIRECTORY fit DESTINATION include)
-
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
-macro(add_test_executable TEST_NAME)
-    add_executable (${TEST_NAME} EXCLUDE_FROM_ALL test/${TEST_NAME}.cpp)
+macro(add_test_executable TEST_NAME_)
+    IF(BIICODE)
+        SET(TEST_NAME "${BII_${TEST_NAME_}_TARGET}")
+        set_target_properties(${TEST_NAME} PROPERTIES EXCLUDE_FROM_ALL TRUE)
+    ELSE()
+        SET(TEST_NAME "${TEST_NAME_}_")
+        add_executable (${TEST_NAME} EXCLUDE_FROM_ALL test/${TEST_NAME}.cpp)
+    ENDIF()
     if(WIN32)
         add_test(NAME ${TEST_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${TEST_NAME})
     else()
@@ -56,6 +47,24 @@ macro(add_test_executable TEST_NAME)
     add_dependencies(check ${TEST_NAME})
     set_tests_properties(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
 endmacro(add_test_executable)
+
+
+# Moved down, so everything above is common
+if (BIICODE) 
+    INIT_BIICODE_BLOCK()
+    ADD_BIICODE_TARGETS()
+    foreach (test ${BII_BLOCK_EXES})
+        add_test_executable(${test})
+    endforeach()
+    return() #finish processing, no need to run cmake below
+endif()
+
+include(CTest)
+
+include_directories(.)
+
+install (DIRECTORY fit DESTINATION include)
+
 
 add_test_executable(always)
 add_test_executable(args)

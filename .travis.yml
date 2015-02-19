@@ -1,24 +1,48 @@
 language: cpp
 os:
     - linux
-    - osx
 compiler:
     - clang
     - gcc
 matrix:
-    exclude:
+    include:
         - compiler: gcc
-          os: osx
+          env: GCC_VERSION="4.9"
+        - compiler: gcc
+          env: GCC_VERSION="4.8"
+        - compiler: gcc
+          env: GCC_VERSION="4.7"
+        - compiler: gcc
+          env: GCC_VERSION="4.6"
+        - compiler: clang
+          env: LIBCXX="on"
+        - compiler: clang
+          env: LIBCXX="off"
+
 before_install:
-    - if [ $TRAVIS_OS_NAME == osx ]; then curl http://www.cmake.org/files/v3.0/cmake-3.0.2-Darwin64-universal.tar.gz -o cmake.tar.gz; fi
-    - if [ $TRAVIS_OS_NAME == osx ]; then tar xzf cmake.tar.gz; fi
-    - if [ $TRAVIS_OS_NAME == osx ]; then export PATH=$PATH:"cmake-3.0.2-Darwin64-universal/CMake.app/Contents/bin"; fi
-    - git submodule update --init
+    - export CHECKOUT_PATH=`pwd`;
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    - sudo apt-get update -qq
+    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-${GCC_VERSION}; fi
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
+
+    # Install libc++
+    - if [ "$LIBCXX" = "on" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
+    - if [ "$LIBCXX" = "on" ]; then cd libcxx/lib && bash buildit; fi
+    - if [ "$LIBCXX" = "on" ]; then sudo cp ./libc++.so.1.0 /usr/lib/; fi
+    - if [ "$LIBCXX" = "on" ]; then sudo mkdir /usr/include/c++/v1; fi
+    - if [ "$LIBCXX" = "on" ]; then cd .. && sudo cp -r include/* /usr/include/c++/v1/; fi
+    - if [ "$LIBCXX" = "on" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
+    - if [ "$LIBCXX" = "on" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
+
 env:
     - BUILD_TYPE=Debug
     - BUILD_TYPE=Release
+
 script:
     - mkdir build && cd build
-    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
-    - CTEST_OUTPUT_ON_FAILURE=1 make -j4 check
+    - if [ "$LIBCXX" = "on" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
+    - if [ "$LIBCXX" = "on" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
+    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
+    - CTEST_OUTPUT_ON_FAILURE=1 make -j4 check VERBOSE=1
     - cd .. && rm -rf build/

@@ -13,9 +13,10 @@ matrix:
           env: GCC_VERSION="4.6"
         - compiler: clang
           env: LIBCXX="on"
-          env: GCC_VERSION="4.9"
         - compiler: clang
-          env: LIBCXX="off"
+          env: 
+            - LIBCXX="off"
+            - GCC_VERSION="4.9"
 
 before_install:
     - export CHECKOUT_PATH=`pwd`;

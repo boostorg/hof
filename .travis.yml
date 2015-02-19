@@ -1,9 +1,6 @@
 language: cpp
 os:
     - linux
-compiler:
-    - clang
-    - gcc
 matrix:
     include:
         - compiler: gcc
@@ -16,6 +13,7 @@ matrix:
           env: GCC_VERSION="4.6"
         - compiler: clang
           env: LIBCXX="on"
+          env: GCC_VERSION="4.9"
         - compiler: clang
           env: LIBCXX="off"
 
@@ -23,7 +21,7 @@ before_install:
     - export CHECKOUT_PATH=`pwd`;
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
     - sudo apt-get update -qq
-    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-${GCC_VERSION}; fi
+    - if [ -n "$GCC_VERSION" ]; then sudo apt-get install -qq g++-${GCC_VERSION}; fi
     - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
 
     # Install libc++

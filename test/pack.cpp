@@ -84,3 +84,24 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(), fit::pack_decay(std::unique_ptr<int>(new int(3))))(deref()) == 3);
     // FIT_TEST_CHECK(p(deref()) == 3);
 }
+
+class empty1
+{};
+
+class empty2
+{};
+
+FIT_TEST_CASE()
+{
+    auto p1 = fit::pack(empty1());
+    p1(fit::always(0));
+    static_assert(std::is_empty<decltype(p1)>::value, "Pack not empty");
+
+    auto p2 = fit::pack(empty1(), empty2());
+    p2(fit::always(0));
+    static_assert(std::is_empty<decltype(p2)>::value, "Pack not empty");
+
+    auto p3 = fit::pack(empty1(), empty2(), empty1());
+    p2(fit::always(0));
+    static_assert(std::is_empty<decltype(p3)>::value, "Pack not empty");
+}

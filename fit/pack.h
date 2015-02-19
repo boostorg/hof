@@ -31,12 +31,29 @@ struct decay_elem_f
 };
 static decay_elem_f decay_elem = {};
 
-template<int, class T>
+template<int, class T, class=void>
 struct pack_holder
 {
     T value;
 
+    constexpr const T& get_value() const
+    {
+        return this->value;
+    }
+
     FIT_DELGATE_CONSTRUCTOR(pack_holder, T, value)
+};
+
+template<int N, class T>
+struct pack_holder<N, T, typename std::enable_if<(std::is_empty<T>::value)>::type>
+: private T
+{
+    constexpr const T& get_value() const
+    {
+        return *this;
+    }
+
+    FIT_INHERIT_CONSTRUCTOR(pack_holder, T)
 };
 
 template<class Seq, class... Ts>
@@ -47,7 +64,7 @@ template<int N, class T, class... Ts>
 constexpr T&& pack_get(const pack_holder<N, T>& p, Ts&&...)
 {
     // C style cast(rather than static_cast) is needed for gcc
-    return (T&&)(p.value);
+    return (T&&)(p.get_value());
 }
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7

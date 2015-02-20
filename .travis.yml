@@ -20,7 +20,7 @@ matrix:
 
 before_install:
     - export CHECKOUT_PATH=`pwd`;
-    - echo "yes" | sudo add-apt-repository ppa:kalakris/cmake
+    - sudo add-apt-repository ppa:kalakris/cmake -y
     - sudo apt-get update -qq
     - sudo apt-get install cmake
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y

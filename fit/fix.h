@@ -82,14 +82,18 @@ struct fix_adaptor_base : F
 
     struct fix_failure
     {
-        template<class... Ts>
-        struct of
-        : get_failure<F>::template of<Derived, Ts...>
-        {};
+        template<class Failure>
+        struct apply
+        {
+            template<class... Ts>
+            struct of
+            : Failure::template of<Derived, Ts...>
+            {};
+        };
     };
 
     struct failure
-    : with_failures<fix_failure>
+    : failure_map<fix_failure, F>
     {};
 
 

@@ -116,9 +116,6 @@ struct reveal_failure
         typename std::enable_if<(Id()(false))>::type
     >
     constexpr auto operator()(Ts&&... xs) -> decltype(std::declval<F>()(std::declval<Ts>(xs)...));
-    // {
-    //     return F()(std::forward<Ts>(xs)...);
-    // }
 };
 
 template<class F, class Failure=get_failure<F>, class=void>
@@ -130,36 +127,65 @@ template<class F, class Failure>
 struct traverse_failure<F, Failure, typename holder< 
     typename Failure::children
 >::type> 
-: Failure::children::template apply<F>
+: Failure::children::template overloads<F>
 {};
+
+template<class Failure, class Transform, class=void>
+struct transform_failures 
+: Transform::template apply<Failure>
+{};
+
+template<class Failure, class Transform>
+struct transform_failures<Failure, Transform, typename holder< 
+    typename Failure::children
+>::type> 
+: Failure::children::template transform<Transform>
+{};
+
 }
 
 template<class Failure, class... Failures>
-struct failures 
-{
-    template<class F>
-    struct apply
-    : detail::traverse_failure<F, Failure>, failures<Failures...>::template apply<F>
-    {
-        using detail::traverse_failure<F, Failure>::operator();
-        using failures<Failures...>::template apply<F>::operator();
-    };
-};
-
-template<class Failure>
-struct failures<Failure>
-{
-    template<class F>
-    struct apply
-    : detail::traverse_failure<F, Failure>
-    {};
-};
+struct failures;
 
 template<class... Fs>
 struct with_failures
 {
     using children = failures<Fs...>;
 };
+
+template<class Failure, class... Failures>
+struct failures 
+{
+    template<class Transform>
+    struct transform
+    : with_failures<detail::transform_failures<Failure, Transform>, detail::transform_failures<Failures, Transform>...>
+    {};
+    template<class F>
+    struct overloads
+    : detail::traverse_failure<F, Failure>, failures<Failures...>::template overloads<F>
+    {
+        using detail::traverse_failure<F, Failure>::operator();
+        using failures<Failures...>::template overloads<F>::operator();
+    };
+};
+
+template<class Failure>
+struct failures<Failure>
+{
+    template<class Transform>
+    struct transform
+    : with_failures<detail::transform_failures<Failure, Transform>>
+    {};
+    template<class F>
+    struct overloads
+    : detail::traverse_failure<F, Failure>
+    {};
+};
+
+template<class Transform, class... Fs>
+struct failure_map
+: with_failures<detail::transform_failures<get_failure<Fs>, Transform>...>
+{};
 
 template<class... Fs>
 struct failure_for

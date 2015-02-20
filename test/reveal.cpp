@@ -3,6 +3,7 @@
 #include <fit/conditional.h>
 #include <fit/static.h>
 #include <fit/lambda.h>
+#include <fit/fix.h>
 
 namespace reveal_test {
 

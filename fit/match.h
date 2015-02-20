@@ -74,9 +74,8 @@ struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
 {
     typedef match_adaptor<Fs...> base;
 
-    template<class... Ts>
     struct failure
-    : failure_for<F(Ts...), Fs(Ts...)...>
+    : failure_for<F, Fs...>
     {};
 
     FIT_INHERIT_DEFAULT(match_adaptor, F, base);

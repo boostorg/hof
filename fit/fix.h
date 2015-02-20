@@ -80,9 +80,16 @@ struct fix_adaptor_base : F
         return static_cast<const Derived&>(always_ref(*this)(xs...));
     }
 
-    template<class... Ts>
+    struct fix_failure
+    {
+        template<class... Ts>
+        struct of
+        : get_failure<F>::template of<Derived, Ts...>
+        {};
+    };
+
     struct failure
-    : failure_for<F(Derived, Ts...)>
+    : with_failures<fix_failure>
     {};
 
 

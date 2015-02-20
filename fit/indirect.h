@@ -66,9 +66,8 @@ struct indirect_adaptor : F
         return always_ref(*this)(xs...);
     }
 
-    template<class... Ts>
     struct failure
-    : failure_for<decltype(*std::declval<F>())(Ts...)>
+    : failure_for<decltype(*std::declval<F>())>
     {};
 
     FIT_RETURNS_CLASS(indirect_adaptor);

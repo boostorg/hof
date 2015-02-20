@@ -38,8 +38,10 @@
 #include <fit/always.h>
 #include <fit/returns.h>
 #include <fit/is_callable.h>
+#include <fit/identity.h>
 #include <fit/detail/move.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/holder.h>
 
 namespace fit { 
 
@@ -56,8 +58,8 @@ struct has_failure
 {};
 
 template<class T>
-struct has_failure<T, typename template_holder<
-    T::template failure
+struct has_failure<T, typename holder<
+    typename T::failure
 >::type>
 : std::true_type
 {};
@@ -75,66 +77,103 @@ struct failure_check<F(Ts...)>
     }
     // typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
 };
-
-template<class... Ts>
-struct failures
-: Ts...
-{};
-
-template<class... Ts>
-struct failure_checks
-{
-    typedef failures<Ts...> type;
-};
-
-template<class Sig, class Enable = void>
-struct failure_for_;
-
-template<class F, class... Ts>
-struct failure_for_<F(Ts...), typename std::enable_if<has_failure<F>::value>::type>
-: F::template failure<Ts...>
-{};
-
-template<class F, class... Ts>
-struct failure_for_<F(Ts...), typename std::enable_if<!has_failure<F>::value>::type>
-{
-    typedef failure_check<F(Ts...)> type;
-};
 }
 
-template<class... Ts>
+template<class F, class=void>
+struct get_failure
+{
+    template<class... Ts>
+    struct of
+    {
+        template<class Id>
+        using apply = decltype(Id()(std::declval<F>())(std::declval<Ts>()...));
+    };
+};
+
+template<class F>
+struct get_failure<F, typename std::enable_if<detail::has_failure<F>::value>::type>
+: F::failure
+{};
+
+namespace detail {
+template<class Failure, class... Ts>
+struct apply_failure
+: Failure::template of<Ts...>
+{};
+
+template<class Id, class Failure, class... Ts>
+using enabled = typename apply_failure<Failure, Ts...>::template apply<Id>;
+
+template<class F, class Failure>
+struct reveal_failure
+{
+    // This is just a placeholder to produce a note in the compiler, it is
+    // never called
+    template<
+        class... Ts, 
+        class Id=decltype(identity), 
+        class=enabled<Id, Failure, Ts...>, 
+        typename std::enable_if<(Id()(false))>::type
+    >
+    constexpr auto operator()(Ts&&... xs) -> decltype(std::declval<F>()(std::declval<Ts>(xs)...));
+    // {
+    //     return F()(std::forward<Ts>(xs)...);
+    // }
+};
+
+template<class F, class Failure=get_failure<F>, class=void>
+struct traverse_failure 
+: reveal_failure<F, Failure>
+{};
+
+template<class F, class Failure>
+struct traverse_failure<F, Failure, typename holder< 
+    typename Failure::children
+>::type> 
+: Failure::children::template apply<F>
+{};
+}
+
+template<class Failure, class... Failures>
+struct failures 
+{
+    template<class F>
+    struct apply
+    : detail::traverse_failure<F, Failure>, failures<Failures...>::template apply<F>
+    {
+        using detail::traverse_failure<F, Failure>::operator();
+        using failures<Failures...>::template apply<F>::operator();
+    };
+};
+
+template<class Failure>
+struct failures<Failure>
+{
+    template<class F>
+    struct apply
+    : detail::traverse_failure<F, Failure>
+    {};
+};
+
+template<class... Fs>
+struct with_failures
+{
+    using children = failures<Fs...>;
+};
+
+template<class... Fs>
 struct failure_for
-: detail::failure_checks<typename detail::failure_for_<Ts>::type...>
+: with_failures<get_failure<Fs>...>
 {};
 
 template<class F>
-struct reveal_adaptor: F
+struct reveal_adaptor
+: detail::traverse_failure<F>, F
 {
+    using detail::traverse_failure<F>::operator();
+    using F::operator();
 
     FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, F);
-
-    template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    FIT_RETURNS_CLASS(reveal_adaptor);
-    
-    template<class... Ts>
-    constexpr auto operator()(Ts && ... xs) const
-    FIT_RETURNS(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))(fit::forward<Ts>(xs)...));
-
-    struct fail {};
-
-    template<class... Ts>
-    typename std::enable_if<
-        !is_callable<F(Ts&&...)>::value
-    >::type operator()(Ts&&...) const
-    {
-        typename failure_for<F(Ts&&...)>::type();
-    }
-
 };
 
 template<class F>

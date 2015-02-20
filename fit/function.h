@@ -51,9 +51,8 @@ struct static_function_wrapper
 {
     static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
 
-    template<class... Ts>
     struct failure
-    : failure_for<F(Ts...)>
+    : failure_for<F>
     {};
 
     template<class... Ts>

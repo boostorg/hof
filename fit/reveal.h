@@ -101,9 +101,6 @@ struct apply_failure
 : Failure::template of<Ts...>
 {};
 
-template<class Id, class Failure, class... Ts>
-using enabled = typename apply_failure<Failure, Ts...>::template apply<Id>;
-
 template<class F, class Failure>
 struct reveal_failure
 {
@@ -111,11 +108,10 @@ struct reveal_failure
     // never called
     template<
         class... Ts, 
-        class Id=decltype(identity), 
-        class=enabled<Id, Failure, Ts...>, 
-        typename std::enable_if<(Id()(false))>::type
+        class=typename std::enable_if<(!is_callable<F(Ts...)>::value)>::type
     >
-    constexpr auto operator()(Ts&&... xs) -> decltype(std::declval<F>()(std::declval<Ts>(xs)...));
+    constexpr auto operator()(Ts&&... xs) -> 
+        typename apply_failure<Failure, Ts...>::template apply<decltype(identity)>;
 };
 
 template<class F, class Failure=get_failure<F>, class=void>

@@ -42,6 +42,15 @@
 #include <fit/detail/move.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/holder.h>
+#include <fit/detail/join.h>
+
+#ifndef FIT_HAS_TEMPLATE_ALIAS
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_HAS_TEMPLATE_ALIAS 0
+#else
+#define FIT_HAS_TEMPLATE_ALIAS 1
+#endif
+#endif
 
 namespace fit { 
 
@@ -85,8 +94,13 @@ struct get_failure
     template<class... Ts>
     struct of
     {
+#if FIT_HAS_TEMPLATE_ALIAS
         template<class Id>
         using apply = decltype(Id()(std::declval<F>())(std::declval<Ts>()...));
+#else
+        template<class Id>
+        static auto apply(Id id) -> decltype(id(std::declval<F>())(std::declval<Ts>()...));
+#endif
     };
 };
 
@@ -111,7 +125,11 @@ struct reveal_failure
         class=typename std::enable_if<(!is_callable<F(Ts...)>::value)>::type
     >
     constexpr auto operator()(Ts&&... xs) -> 
+#if FIT_HAS_TEMPLATE_ALIAS
         typename apply_failure<Failure, Ts...>::template apply<decltype(identity)>;
+#else
+        decltype(apply_failure<Failure, Ts...>::apply(identity));
+#endif
 };
 
 template<class F, class Failure=get_failure<F>, class=void>
@@ -146,7 +164,7 @@ struct failures;
 template<class... Fs>
 struct with_failures
 {
-    using children = failures<Fs...>;
+    typedef FIT_JOIN(failures, Fs...) children;
 };
 
 template<class Failure, class... Failures>
@@ -156,12 +174,12 @@ struct failures
     struct transform
     : with_failures<detail::transform_failures<Failure, Transform>, detail::transform_failures<Failures, Transform>...>
     {};
-    template<class F>
+    template<class F, class FailureBase=FIT_JOIN(failures, Failures...)>
     struct overloads
-    : detail::traverse_failure<F, Failure>, failures<Failures...>::template overloads<F>
+    : detail::traverse_failure<F, Failure>, FailureBase::template overloads<F>
     {
         using detail::traverse_failure<F, Failure>::operator();
-        using failures<Failures...>::template overloads<F>::operator();
+        using FailureBase::template overloads<F>::operator();
     };
 };
 

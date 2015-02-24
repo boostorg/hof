@@ -73,20 +73,6 @@ struct has_failure<T, typename holder<
 >::type>
 : std::true_type
 {};
-
-template<class Sig>
-struct failure_check;
-
-template<class F, class... Ts>
-struct failure_check<F(Ts...)>
-{
-    // Use virtual function to reduce backtrace
-    virtual void check()
-    {
-        typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
-    }
-    // typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
-};
 }
 
 template<class F, class=void>

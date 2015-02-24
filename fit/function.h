@@ -80,6 +80,15 @@ struct static_function_wrapper_factor
     }
 };
 
+struct reveal_static_function_wrapper_factor
+{
+    template<class F>
+    constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
+    {
+        return {};
+    }
+};
+
 struct static_addr
 {
     template<class T>
@@ -92,10 +101,11 @@ struct static_addr
 }}
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
+#define FIT_DETAIL_MAKE_REVEAL_STATIC fit::detail::reveal_static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
 #if FIT_HAS_RELAXED_CONSTEXPR
-#define FIT_STATIC_FUNCTION(name) const constexpr auto name = FIT_DETAIL_MAKE_STATIC
+#define FIT_STATIC_FUNCTION(name) const constexpr auto name = FIT_DETAIL_MAKE_REVEAL_STATIC
 #else
-#define FIT_STATIC_FUNCTION(name) static constexpr auto name = FIT_DETAIL_MAKE_STATIC
+#define FIT_STATIC_FUNCTION(name) static constexpr auto name = FIT_DETAIL_MAKE_REVEAL_STATIC
 #endif
 
 #endif

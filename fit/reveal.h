@@ -202,6 +202,13 @@ struct reveal_adaptor
 
     FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, F);
 };
+// Avoid double reveals, it causes problem on gcc 4.6
+template<class F>
+struct reveal_adaptor<reveal_adaptor<F>>
+: reveal_adaptor<F>
+{
+    FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, reveal_adaptor<F>);
+};
 
 template<class F>
 constexpr reveal_adaptor<F> reveal(F f)

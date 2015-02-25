@@ -12,6 +12,7 @@ extract compose
 extract conditional
 extract each_arg
 extract fix
+extract flip
 extract function
 extract fuse
 extract identity

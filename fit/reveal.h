@@ -105,6 +105,9 @@ struct apply_failure
 template<class F, class Failure>
 struct reveal_failure
 {
+    // Add default constructor to make clang 3.4 happy
+    constexpr reveal_failure()
+    {}
     // This is just a placeholder to produce a note in the compiler, it is
     // never called
     template<

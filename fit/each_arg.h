@@ -9,6 +9,7 @@
 #define FIT_GUARD_EACH_ARG_H
 
 #include <fit/detail/forward.h>
+#include <fit/detail/static_constexpr.h>
 #include <initializer_list>
 
 /// each_arg
@@ -59,7 +60,7 @@ struct each_arg_f
 };
 }
 
-static constexpr detail::each_arg_f each_arg = {};
+FIT_STATIC_CONSTEXPR detail::each_arg_f each_arg = {};
 
 }
 

@@ -221,15 +221,15 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
 
 FIT_FOREACH_BINARY_OP(FIT_PLACEHOLDER_BINARY_OP)
 
-static constexpr placeholder<1> _1 = {};
-static constexpr placeholder<2> _2 = {};
-static constexpr placeholder<3> _3 = {};
-static constexpr placeholder<4> _4 = {};
-static constexpr placeholder<5> _5 = {};
-static constexpr placeholder<6> _6 = {};
-static constexpr placeholder<7> _7 = {};
-static constexpr placeholder<8> _8 = {};
-static constexpr placeholder<9> _9 = {};
+FIT_STATIC_CONSTEXPR placeholder<1> _1 = {};
+FIT_STATIC_CONSTEXPR placeholder<2> _2 = {};
+FIT_STATIC_CONSTEXPR placeholder<3> _3 = {};
+FIT_STATIC_CONSTEXPR placeholder<4> _4 = {};
+FIT_STATIC_CONSTEXPR placeholder<5> _5 = {};
+FIT_STATIC_CONSTEXPR placeholder<6> _6 = {};
+FIT_STATIC_CONSTEXPR placeholder<7> _7 = {};
+FIT_STATIC_CONSTEXPR placeholder<8> _8 = {};
+FIT_STATIC_CONSTEXPR placeholder<9> _9 = {};
 
 
 namespace detail {
@@ -294,7 +294,7 @@ FIT_FOREACH_ASSIGN_OP(FIT_UNAMED_PLACEHOLDER_ASSIGN_OP)
 FIT_FOREACH_BINARY_OP(FIT_UNAMED_PLACEHOLDER_BINARY_OP)
 }
 
-static constexpr detail::unamed_placeholder _ = {};
+FIT_STATIC_CONSTEXPR detail::unamed_placeholder _ = {};
 
 }
 

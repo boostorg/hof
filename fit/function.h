@@ -26,22 +26,11 @@
 ///     });
 /// 
 
-#ifndef FIT_HAS_RELAXED_CONSTEXPR
-#ifdef __clang__
-#if __has_feature(cxx_relaxed_constexpr)
-#define FIT_HAS_RELAXED_CONSTEXPR 1
-#else
-#define FIT_HAS_RELAXED_CONSTEXPR 0
-#endif
-#else
-#define FIT_HAS_RELAXED_CONSTEXPR 0
-#endif
-#endif
-
 #include <type_traits>
 #include <utility>
 #include <fit/returns.h>
 #include <fit/reveal.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -102,10 +91,7 @@ struct static_addr
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
 #define FIT_DETAIL_MAKE_REVEAL_STATIC fit::detail::reveal_static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#if FIT_HAS_RELAXED_CONSTEXPR
-#define FIT_STATIC_FUNCTION(name) const constexpr auto name = FIT_DETAIL_MAKE_REVEAL_STATIC
-#else
-#define FIT_STATIC_FUNCTION(name) static constexpr auto name = FIT_DETAIL_MAKE_REVEAL_STATIC
-#endif
+#define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = FIT_DETAIL_MAKE_REVEAL_STATIC
+
 
 #endif

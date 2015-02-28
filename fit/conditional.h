@@ -72,6 +72,8 @@
 #include <fit/returns.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 #include <type_traits>
 
 namespace fit {
@@ -144,11 +146,7 @@ struct conditional_adaptor<F> : F
     {};
 };
 
-template<class... Fs>
-constexpr FIT_JOIN(conditional_adaptor, Fs...) conditional(Fs... fs)
-{
-    return FIT_JOIN(conditional_adaptor, Fs...)(fit::move(fs)...);
-}
+FIT_STATIC_CONSTEXPR detail::make<conditional_adaptor> conditional = {};
 
 }
 

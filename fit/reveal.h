@@ -44,6 +44,8 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/holder.h>
 #include <fit/detail/join.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 #ifndef FIT_HAS_TEMPLATE_ALIAS
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
@@ -213,11 +215,7 @@ struct reveal_adaptor<reveal_adaptor<F>>
     FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, reveal_adaptor<F>);
 };
 
-template<class F>
-constexpr reveal_adaptor<F> reveal(F f)
-{
-    return reveal_adaptor<F>(fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<reveal_adaptor> reveal = {};
 
 }
 

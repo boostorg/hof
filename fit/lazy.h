@@ -54,6 +54,8 @@
 #include <fit/invoke.h>
 #include <fit/detail/delegate.h>
 #include <fit/pack.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 #include <functional>
 #include <type_traits>
 
@@ -254,11 +256,7 @@ struct lazy_adaptor : F
     
 };
 
-template<class F>
-constexpr lazy_adaptor<F> lazy(F f)
-{
-    return lazy_adaptor<F>(fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<lazy_adaptor> lazy = {};
 
 }
 

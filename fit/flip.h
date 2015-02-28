@@ -39,6 +39,8 @@
 
 #include <fit/returns.h>
 #include <fit/reveal.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -79,11 +81,7 @@ struct flip_adaptor : F
     );
 };
 
-template<class F>
-constexpr flip_adaptor<F> flip(F f)
-{
-    return flip_adaptor<F>(fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<flip_adaptor> flip = {};
 
 }
 

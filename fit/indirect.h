@@ -52,6 +52,8 @@
 #include <fit/reveal.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -79,12 +81,7 @@ struct indirect_adaptor : F
     );
 };
 
-template<class F>
-constexpr indirect_adaptor<F> indirect(F f)
-{
-    return indirect_adaptor<F>(fit::move(f));
-}
-
+FIT_STATIC_CONSTEXPR detail::make<indirect_adaptor> indirect = {};
 
 }
 

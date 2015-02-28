@@ -92,6 +92,7 @@ struct result_adaptor<void, F> : F
     };
 };
 
+// TODO: Make this a variable template in C++14
 template<class Result, class F>
 constexpr result_adaptor<Result, F> result(F f)
 {

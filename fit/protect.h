@@ -33,6 +33,7 @@
 /// 
 
 #include <utility>
+#include <fit/reveal.h>
 #include <fit/detail/forward.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_constexpr.h>

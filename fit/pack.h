@@ -31,7 +31,11 @@ struct decay_elem_f
 };
 static decay_elem_f decay_elem = {};
 
-template<int, class T, class=void>
+template<class...>
+struct pack_tag
+{};
+
+template<int, class T, class, class=void>
 struct pack_holder
 {
     T value;
@@ -44,8 +48,8 @@ struct pack_holder
     FIT_DELGATE_CONSTRUCTOR(pack_holder, T, value)
 };
 
-template<int N, class T>
-struct pack_holder<N, T, typename std::enable_if<(std::is_empty<T>::value)>::type>
+template<int N, class T, class Tag>
+struct pack_holder<N, T, Tag, typename std::enable_if<(std::is_empty<T>::value)>::type>
 : private T
 {
     constexpr const T& get_value() const
@@ -60,8 +64,8 @@ template<class Seq, class... Ts>
 struct pack_base;
 
 
-template<int N, class T, class... Ts>
-constexpr T&& pack_get(const pack_holder<N, T>& p, Ts&&...)
+template<int N, class T, class Tag, class... Ts>
+constexpr T&& pack_get(const pack_holder<N, T, Tag>& p, Ts&&...)
 {
     // C style cast(rather than static_cast) is needed for gcc
     return (T&&)(p.get_value());
@@ -73,16 +77,16 @@ struct pack_holder_base;
 
 template<int... Ns, class... Ts>
 struct pack_holder_base<seq<Ns...>, Ts...>
-: pack_holder<Ns, Ts>...
+: private pack_holder<Ns, Ts, pack_tag<Ts...>>...
 {
     template<class... Xs>
-    constexpr pack_holder_base(Xs&&... xs) : pack_holder<Ns, Ts>(fit::forward<Xs>(xs))...
+    constexpr pack_holder_base(Xs&&... xs) : pack_holder<Ns, Ts, pack_tag<Ts...>>(fit::forward<Xs>(xs))...
     {}
 };
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
-: pack_holder_base<seq<Ns...>, Ts...>
+: private pack_holder_base<seq<Ns...>, Ts...>
 {
     typedef pack_holder_base<seq<Ns...>, Ts...> base;
     template<class X1, class X2, class... Xs>
@@ -101,9 +105,9 @@ struct pack_base<seq<Ns...>, Ts...>
     FIT_RETURNS_CLASS(pack_base);
   
     template<class F>
-    constexpr auto operator()(F f) const FIT_RETURNS
+    constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(pack_get<Ns, Ts>(*FIT_CONST_THIS, f)...)
+        f(pack_get<Ns, Ts, pack_tag<Ts...>>(*FIT_CONST_THIS, f)...)
     );
 };
 
@@ -111,16 +115,16 @@ struct pack_base<seq<Ns...>, Ts...>
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
-: pack_holder<Ns, Ts>...
+: private pack_holder<Ns, Ts, pack_tag<Ts...>>...
 {
-    template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, pack_holder<Ns, Ts>)>
-    constexpr pack_base(Xs&&... xs) : pack_holder<Ns, Ts>(fit::forward<Xs>(xs))...
+    template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, pack_holder<Ns, Ts, pack_tag<Ts...>>)>
+    constexpr pack_base(Xs&&... xs) : pack_holder<Ns, Ts, pack_tag<Ts...>>(fit::forward<Xs>(xs))...
     {}
   
     template<class F>
-    constexpr auto operator()(F f) const FIT_RETURNS
+    constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(pack_get<Ns, Ts>(*this, f)...)
+        f(pack_get<Ns, Ts, pack_tag<Ts...>>(*this, f)...)
     );
 };
 
@@ -130,7 +134,7 @@ template<>
 struct pack_base<seq<> >
 {
     template<class F>
-    constexpr auto operator()(F f) const FIT_RETURNS
+    constexpr auto operator()(F&& f) const FIT_RETURNS
     (f());
 };
 

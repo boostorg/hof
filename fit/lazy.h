@@ -53,6 +53,7 @@
 #include <fit/static.h>
 #include <fit/invoke.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/compressed_pair.h>
 #include <fit/pack.h>
 #include <functional>
 #include <type_traits>
@@ -143,23 +144,23 @@ constexpr lazy_unpack<F, Pack> make_lazy_unpack(const F& f, const Pack& p)
 }
 
 template<class F, class Pack>
-struct lazy_invoker : F, Pack
+struct lazy_invoker : detail::compressed_pair<F, Pack>
 {
     template<class X, class P>
     constexpr lazy_invoker(X&& x, P&& pack) 
-    : F(fit::forward<X>(x)), Pack(fit::forward<P>(pack))
+    : detail::compressed_pair<F, Pack>(fit::forward<X>(x), fit::forward<P>(pack))
     {}
 
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->first(xs...);
     }
 
     template<class... Ts>
     constexpr const Pack& get_pack(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->second(xs...);
     }
 
     FIT_RETURNS_CLASS(lazy_invoker);

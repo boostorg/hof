@@ -242,13 +242,13 @@ template<class T, class Invoker>
 struct partial_ap
 {
     T val;
-    partial_ap(const T& x) : val(x)
+    constexpr partial_ap(const T& x) : val(x)
     {}
 
     FIT_RETURNS_CLASS(partial_ap);
 
     template<class X>
-    auto operator()(X&& x) const FIT_RETURNS
+    constexpr auto operator()(X&& x) const FIT_RETURNS
     (Invoker()(FIT_CONST_THIS->val, fit::forward<X>(x)));
 };
 
@@ -256,7 +256,7 @@ template<class Op>
 struct left
 {
     template<class T, class X>
-    auto operator()(const T& val, X&& x) const FIT_RETURNS
+    constexpr auto operator()(const T& val, X&& x) const FIT_RETURNS
     (Op()(val, fit::forward<X>(x)));
 };
 
@@ -264,7 +264,7 @@ template<class Op>
 struct right
 {
     template<class T, class X>
-    auto operator()(const T& val, X&& x) const FIT_RETURNS
+    constexpr auto operator()(const T& val, X&& x) const FIT_RETURNS
     (Op()(fit::forward<X>(x), val));
 };
 
@@ -284,10 +284,10 @@ FIT_FOREACH_ASSIGN_OP(FIT_UNAMED_PLACEHOLDER_ASSIGN_OP)
 #define FIT_UNAMED_PLACEHOLDER_BINARY_OP(op, name) \
     template<class T> \
     constexpr inline auto operator op (const unamed_placeholder&, const T& x) FIT_RETURNS \
-    ( unamed_placeholder::partial_ap<T, unamed_placeholder::left<operators::name>>(x) ); \
+    ( unamed_placeholder::partial_ap<T, unamed_placeholder::right<operators::name>>(x) ); \
     template<class T> \
     constexpr inline auto operator op (const T& x, const unamed_placeholder&) FIT_RETURNS \
-    ( unamed_placeholder::partial_ap<T, unamed_placeholder::right<operators::name>>(x) ); \
+    ( unamed_placeholder::partial_ap<T, unamed_placeholder::left<operators::name>>(x) ); \
     constexpr inline auto operator op (const unamed_placeholder&, const unamed_placeholder&) FIT_RETURNS \
     ( operators::name() );
 

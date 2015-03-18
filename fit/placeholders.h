@@ -242,8 +242,8 @@ template<class T, class Invoker>
 struct partial_ap
 {
     T val;
-    constexpr partial_ap(const T& x) : val(x)
-    {}
+
+    FIT_DELGATE_CONSTRUCTOR(partial_ap, T, val);
 
     FIT_RETURNS_CLASS(partial_ap);
 

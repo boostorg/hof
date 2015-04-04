@@ -23,7 +23,7 @@ Function Objects
 
 In C++, a function object is just a class that overrides the call operator like this:
 
-    // A sum function objects
+    // A sum function object
     struct sum_f
     {
         template<class T, class U>

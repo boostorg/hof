@@ -44,8 +44,8 @@ struct compressed_pair
 : private FirstBase, private SecondBase
 {
     template<class X, class Y, 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(X, First), 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(Y, Second)
+        FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(Second, Y&&)
     >
     constexpr compressed_pair(X&& x, Y&& y) 
     : FirstBase(fit::forward<X>(x)), SecondBase(fit::forward<Y>(y))
@@ -80,8 +80,8 @@ struct non_compressed_pair
     First f;
     Second s;
     template<class X, class Y, 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(X, First), 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(Y, Second)
+        FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(Second, Y&&)
     >
     constexpr non_compressed_pair(X&& x, Y&& y) 
     : f(fit::forward<X>(x)), s(fit::forward<Y>(y))
@@ -130,6 +130,8 @@ struct compressed_pair
 : Base
 {
     FIT_INHERIT_CONSTRUCTOR(compressed_pair, Base)
+    static_assert(!std::is_lvalue_reference<First>::value, "Pair type First must not be a reference");
+    static_assert(!std::is_lvalue_reference<Second>::value, "Pair type Second must not be a reference");
 };
 #else
 using pair_detail::compressed_pair;

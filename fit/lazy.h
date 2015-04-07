@@ -146,22 +146,27 @@ constexpr lazy_unpack<F, Pack> make_lazy_unpack(const F& f, const Pack& p)
 }
 
 template<class F, class Pack>
-struct lazy_invoker : detail::compressed_pair<F, Pack>
+struct lazy_invoker 
+: detail::compressed_pair<F, Pack>
+// : F, Pack
 {
     template<class X, class P>
     constexpr lazy_invoker(X&& x, P&& pack) 
     : detail::compressed_pair<F, Pack>(fit::forward<X>(x), fit::forward<P>(pack))
+    // : F(fit::forward<X>(x)), Pack(fit::forward<P>(pack))
     {}
 
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
+        // return always_ref(*this)(xs...);
         return this->first(xs...);
     }
 
     template<class... Ts>
     constexpr const Pack& get_pack(Ts&&... xs) const
     {
+        // return always_ref(*this)(xs...);
         return this->second(xs...);
     }
 

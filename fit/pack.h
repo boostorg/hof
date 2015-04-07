@@ -18,6 +18,14 @@
 #define FIT_HAS_RVALUE_THIS 1
 #endif
 
+#ifndef FIT_PACK_HAS_EBO
+#ifdef __clang__
+#define FIT_PACK_HAS_EBO 1
+#else
+#define FIT_PACK_HAS_EBO 0
+#endif
+#endif
+
 namespace fit { namespace detail {
 
 struct decay_elem_f
@@ -47,7 +55,7 @@ struct pack_holder
 
     FIT_DELGATE_CONSTRUCTOR(pack_holder, T, value)
 };
-
+#if FIT_PACK_HAS_EBO
 template<int N, class T, class Tag>
 struct pack_holder<N, T, Tag, typename std::enable_if<(std::is_empty<T>::value)>::type>
 : private T
@@ -59,7 +67,7 @@ struct pack_holder<N, T, Tag, typename std::enable_if<(std::is_empty<T>::value)>
 
     FIT_INHERIT_CONSTRUCTOR(pack_holder, T)
 };
-
+#endif
 template<class Seq, class... Ts>
 struct pack_base;
 
@@ -77,7 +85,7 @@ struct pack_holder_base;
 
 template<int... Ns, class... Ts>
 struct pack_holder_base<seq<Ns...>, Ts...>
-: private pack_holder<Ns, Ts, pack_tag<Ts...>>...
+: pack_holder<Ns, Ts, pack_tag<Ts...>>...
 {
     template<class... Xs>
     constexpr pack_holder_base(Xs&&... xs) : pack_holder<Ns, Ts, pack_tag<Ts...>>(fit::forward<Xs>(xs))...
@@ -86,7 +94,7 @@ struct pack_holder_base<seq<Ns...>, Ts...>
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
-: private pack_holder_base<seq<Ns...>, Ts...>
+: pack_holder_base<seq<Ns...>, Ts...>
 {
     typedef pack_holder_base<seq<Ns...>, Ts...> base;
     template<class X1, class X2, class... Xs>
@@ -115,7 +123,7 @@ struct pack_base<seq<Ns...>, Ts...>
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
-: private pack_holder<Ns, Ts, pack_tag<Ts...>>...
+: pack_holder<Ns, Ts, pack_tag<Ts...>>...
 {
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, pack_holder<Ns, Ts, pack_tag<Ts...>>)>
     constexpr pack_base(Xs&&... xs) : pack_holder<Ns, Ts, pack_tag<Ts...>>(fit::forward<Xs>(xs))...

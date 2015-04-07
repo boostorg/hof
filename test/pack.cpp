@@ -90,7 +90,7 @@ class empty1
 
 class empty2
 {};
-
+#if FIT_PACK_HAS_EBO
 FIT_TEST_CASE()
 {
     auto p1 = fit::pack(empty1());
@@ -105,3 +105,4 @@ FIT_TEST_CASE()
     p2(fit::always(0));
     static_assert(std::is_empty<decltype(p3)>::value, "Pack not empty");
 }
+#endif

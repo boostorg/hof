@@ -169,7 +169,10 @@ struct lazy_invoker : detail::compressed_pair<F, Pack>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...))(
-            fit::detail::make_lazy_unpack(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), pack_forward(fit::forward<Ts>(xs)...))
+            fit::detail::make_lazy_unpack(
+                FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), 
+                pack_forward(fit::forward<Ts>(xs)...)
+            )
         )
     );
 };

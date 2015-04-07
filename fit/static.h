@@ -66,9 +66,8 @@ template<class F>
 struct static_
 {
 
-    template<class... Ts>
     struct failure
-    : failure_for<F(Ts...)>
+    : failure_for<F>
     {};
 
     const F& base_function() const

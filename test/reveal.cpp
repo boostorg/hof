@@ -3,6 +3,7 @@
 #include <fit/conditional.h>
 #include <fit/static.h>
 #include <fit/lambda.h>
+#include <fit/fix.h>
 
 namespace reveal_test {
 
@@ -74,6 +75,10 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fit::reveal(static_fun)(t1()) == 1);
     FIT_TEST_CHECK(fit::reveal(static_fun)(t2()) == 2);
     FIT_TEST_CHECK(fit::reveal(static_fun)(t3()) == 3);
+
+    FIT_TEST_CHECK(static_fun(t1()) == 1);
+    FIT_TEST_CHECK(static_fun(t2()) == 2);
+    FIT_TEST_CHECK(static_fun(t3()) == 3);
 
     // fit::reveal(static_fun)(1);
 }

@@ -26,22 +26,11 @@
 ///     });
 /// 
 
-#ifndef FIT_HAS_RELAXED_CONSTEXPR
-#ifdef __clang__
-#if __has_feature(cxx_relaxed_constexpr)
-#define FIT_HAS_RELAXED_CONSTEXPR 1
-#else
-#define FIT_HAS_RELAXED_CONSTEXPR 0
-#endif
-#else
-#define FIT_HAS_RELAXED_CONSTEXPR 0
-#endif
-#endif
-
 #include <type_traits>
 #include <utility>
 #include <fit/returns.h>
 #include <fit/reveal.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -51,9 +40,8 @@ struct static_function_wrapper
 {
     static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
 
-    template<class... Ts>
     struct failure
-    : failure_for<F(Ts...)>
+    : failure_for<F>
     {};
 
     template<class... Ts>
@@ -81,6 +69,15 @@ struct static_function_wrapper_factor
     }
 };
 
+struct reveal_static_function_wrapper_factor
+{
+    template<class F>
+    constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
+    {
+        return {};
+    }
+};
+
 struct static_addr
 {
     template<class T>
@@ -93,10 +90,8 @@ struct static_addr
 }}
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#if FIT_HAS_RELAXED_CONSTEXPR
-#define FIT_STATIC_FUNCTION(name) const constexpr auto name = FIT_DETAIL_MAKE_STATIC
-#else
-#define FIT_STATIC_FUNCTION(name) static constexpr auto name = FIT_DETAIL_MAKE_STATIC
-#endif
+#define FIT_DETAIL_MAKE_REVEAL_STATIC fit::detail::reveal_static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
+#define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = FIT_DETAIL_MAKE_REVEAL_STATIC
+
 
 #endif

@@ -47,6 +47,8 @@
 #include <fit/reveal.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 #ifndef FIT_FIX_HAS_CONSTEXPR
 #define FIT_FIX_HAS_CONSTEXPR 0
@@ -80,9 +82,20 @@ struct fix_adaptor_base : F
         return static_cast<const Derived&>(always_ref(*this)(xs...));
     }
 
-    template<class... Ts>
+    struct fix_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            template<class... Ts>
+            struct of
+            : Failure::template of<Derived, Ts...>
+            {};
+        };
+    };
+
     struct failure
-    : failure_for<F(Derived, Ts...)>
+    : failure_map<fix_failure, F>
     {};
 
 
@@ -104,11 +117,8 @@ struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
     FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
 };
 
-template<class F>
-constexpr fix_adaptor<F> fix(F f)
-{
-    return fix_adaptor<F>(fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<fix_adaptor> fix = {};
+
 }
 
 #endif

@@ -49,6 +49,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/is_callable.h>
 #include <fit/always.h>
+#include <fit/reveal.h>
 
 namespace fit {
 
@@ -58,6 +59,10 @@ struct result_adaptor : F
     FIT_INHERIT_CONSTRUCTOR(result_adaptor, F)
 
     typedef Result result_type;
+
+    struct failure
+    : failure_for<F>
+    {};
 
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
@@ -92,6 +97,7 @@ struct result_adaptor<void, F> : F
     };
 };
 
+// TODO: Make this a variable template in C++14
 template<class Result, class F>
 constexpr result_adaptor<Result, F> result(F f)
 {

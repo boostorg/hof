@@ -65,6 +65,8 @@
 #include <fit/detail/join.h>
 #include <tuple>
 #include <fit/detail/move.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit { namespace detail {
 
@@ -118,11 +120,7 @@ struct compose_adaptor<F> : F
 
 };
 
-template<class... Fs>
-constexpr FIT_JOIN(compose_adaptor, Fs...) compose(Fs... fs)
-{
-    return FIT_JOIN(compose_adaptor, Fs...)(fit::move(fs)...);
-}
+FIT_STATIC_CONSTEXPR detail::make<compose_adaptor> compose = {};
 
 }
 

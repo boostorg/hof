@@ -4,11 +4,12 @@ reveal
 Description
 -----------
 
-The `reveal` function adaptor turns substitution failures into compile errors.
-Sometimes an error in a function that causes a substitution failure, will
-remove the function from valid overloads thus masking the error inside the
-function. The `reveal` adaptor reveals these errors by forcing a compile
-error, instead of a substitution failure.
+The `reveal` function adaptor helps shows the error messages that get
+masked on some compilers. Sometimes an error in a function that causes a
+substitution failure, will remove the function from valid overloads. On
+compilers without a backtrace for substitution failure, this will mask the
+error inside the function. The `reveal` adaptor will expose these error
+message while still keeping the function SFINAE-friendly.
 
 Synopsis
 --------

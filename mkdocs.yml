@@ -16,6 +16,7 @@ pages:
 - ['compose.md', 'Adaptors', 'compose']
 - ['conditional.md', 'Adaptors', 'conditional']
 - ['fix.md', 'Adaptors', 'fix']
+- ['flip.md', 'Adaptors', 'flip']
 - ['fuse.md', 'Adaptors', 'fuse']
 - ['implicit.md', 'Adaptors', 'implicit']
 - ['indirect.md', 'Adaptors', 'indirect']

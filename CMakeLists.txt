@@ -40,7 +40,7 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 macro(add_test_executable TEST_NAME)
     add_executable (${TEST_NAME} EXCLUDE_FROM_ALL test/${TEST_NAME}.cpp)
-    add_test(${TEST_NAME} ${TEST_NAME})
+    add_test(${TEST_NAME} ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
     add_dependencies(check ${TEST_NAME})
     set_tests_properties(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
 endmacro(add_test_executable)

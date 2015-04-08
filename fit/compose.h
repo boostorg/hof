@@ -62,6 +62,7 @@
 #include <fit/returns.h>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/compressed_pair.h>
 #include <fit/detail/join.h>
 #include <tuple>
 #include <fit/detail/move.h>
@@ -70,26 +71,21 @@
 
 namespace fit { namespace detail {
 
-// TODO: Try to use inheritance but make each base class unique
 template<class F1, class F2>
-struct compose_kernel
+struct compose_kernel : detail::compressed_pair<F1, F2>
 {
-    F1 f1;
-    F2 f2;
-    constexpr compose_kernel()
-    {}
+    typedef detail::compressed_pair<F1, F2> base_type;
 
-    template<class A, class B>
-    constexpr compose_kernel(A&& f1, B&& f2) 
-    : f1(fit::forward<A>(f1)), f2(fit::forward<B>(f2))
-    {}
+    FIT_INHERIT_CONSTRUCTOR(compose_kernel, base_type)
 
     FIT_RETURNS_CLASS(compose_kernel);
 
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        FIT_CONST_THIS->f1(FIT_CONST_THIS->f2(fit::forward<Ts>(xs)...))
+        FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...))(
+            FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))(fit::forward<Ts>(xs)...)
+        )
     );
 };
 }

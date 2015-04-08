@@ -9,6 +9,8 @@
 #define FIT_GUARD_COMPRESSED_PAIR_H
 
 #include <fit/detail/delegate.h>
+#include <fit/detail/move.h>
+#include <fit/detail/forward.h>
 #include <fit/always.h>
 
 #ifndef FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND

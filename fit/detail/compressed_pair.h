@@ -38,7 +38,8 @@ template<
     class First, 
     class Second, 
     class FirstBase=pair_holder<0, First, Second>, 
-    class SecondBase=pair_holder<1, Second, First>
+    class SecondBase=pair_holder<1, Second, First>,
+    class=void
 >
 struct compressed_pair 
 : private FirstBase, private SecondBase
@@ -70,10 +71,57 @@ struct compressed_pair
     }
 
 };
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+template<
+    class First, 
+    class Second, 
+    class FirstBase, 
+    class SecondBase
+>
+struct compressed_pair<First, Second, FirstBase, SecondBase, typename std::enable_if<
+    std::is_constructible<First, First&&>::value && std::is_constructible<Second, Second&&>::value &&
+    !(std::is_constructible<First, const First&>::value && std::is_constructible<Second, const Second&>::value)
+>::type>
+: private FirstBase, private SecondBase
+{
+    template<class X, class Y, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(Second, Y&&)
+    >
+    constexpr compressed_pair(X&& x, Y&& y) 
+    : FirstBase(fit::forward<X>(x)), SecondBase(fit::forward<Y>(y))
+    {}
+
+    constexpr compressed_pair(compressed_pair&& rhs) 
+    : FirstBase((FirstBase&&)rhs), SecondBase((SecondBase&&)rhs)
+    {}
+
+    template<class Base, class... Xs>
+    constexpr const Base& get_base(Xs&&... xs) const
+    {
+        return always_ref(*this)(xs...);
+    }
+
+    template<class... Xs>
+    constexpr const First& first(Xs&&... xs) const
+    {
+        return this->get_base<FirstBase>(xs...);
+    }
+
+    template<class... Xs>
+    constexpr const Second& second(Xs&&... xs) const
+    {
+        return this->get_base<SecondBase>(xs...);
+    }
+
+};
+#endif
+
 #if FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND
 template<
     class First, 
-    class Second
+    class Second,
+    class=void
 >
 struct non_compressed_pair 
 {
@@ -100,6 +148,45 @@ struct non_compressed_pair
     }
 
 };
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+template<
+    class First, 
+    class Second
+>
+struct non_compressed_pair<First, Second, typename std::enable_if<
+    std::is_constructible<First, First&&>::value && std::is_constructible<Second, Second&&>::value &&
+    !(std::is_constructible<First, const First&>::value && std::is_constructible<Second, const Second&>::value)
+>::type>
+{
+    First f;
+    Second s;
+    template<class X, class Y, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(Second, Y&&)
+    >
+    constexpr non_compressed_pair(X&& x, Y&& y) 
+    : f(fit::forward<X>(x)), s(fit::forward<Y>(y))
+    {}
+
+    constexpr non_compressed_pair(non_compressed_pair&& rhs) 
+    : f(fit::move(rhs.f)), s(fit::move(rhs.s))
+    {}
+
+    template<class... Xs>
+    constexpr const First& first(Xs&&...) const
+    {
+        return this->f;
+    }
+
+    template<class... Xs>
+    constexpr const Second& second(Xs&&...) const
+    {
+        return this->s;
+    }
+
+};
+#endif
+
 #endif
 }
 

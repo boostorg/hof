@@ -12,6 +12,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/remove_rvalue_reference.h>
 #include <fit/detail/unwrap.h>
+#include <fit/detail/static_constexpr.h>
 #include <fit/returns.h>
 
 #ifndef FIT_HAS_RVALUE_THIS
@@ -173,32 +174,70 @@ struct pack_join
 >
 {};
 
-}
 
-template<class... Ts>
-constexpr auto pack(Ts&&... xs) FIT_RETURNS
-(
-    detail::pack_base<typename detail::gens<sizeof...(Ts)>::type, typename detail::remove_rvalue_reference<Ts>::type...>(fit::forward<Ts>(xs)...)
-);
+struct pack_f
+{
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        pack_base<typename gens<sizeof...(Ts)>::type, typename remove_rvalue_reference<Ts>::type...>(fit::forward<Ts>(xs)...)
+    );
+};
 
-template<class... Ts>
-constexpr auto pack_forward(Ts&&... xs) FIT_RETURNS
-(
-    detail::pack_base<typename detail::gens<sizeof...(Ts)>::type, Ts&&...>(fit::forward<Ts>(xs)...)
-);
+struct pack_forward_f
+{
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        pack_base<typename gens<sizeof...(Ts)>::type, Ts&&...>(fit::forward<Ts>(xs)...)
+    );
+};
 
-template<class... Ts>
-constexpr auto pack_decay(Ts&&... xs) FIT_RETURNS
-(
-    pack(detail::decay_elem(fit::forward<Ts>(xs))...)
-);
+struct pack_decay_f
+{
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        pack_f()(decay_elem(fit::forward<Ts>(xs))...)
+    );
+};
 
 template<class P1, class P2>
-constexpr typename detail::pack_join<P1, P2>::result_type pack_join(P1&& p1, P2&& p2)
+constexpr typename pack_join<P1, P2>::result_type make_pack_join(P1&& p1, P2&& p2)
 {
-    return detail::pack_join<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
+    return pack_join<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
 }
 
+struct pack_join_f
+{
+    template<class P1>
+    constexpr P1 operator()(P1&& p1) const
+    {
+        return fit::forward<P1>(p1);
+    }
+
+    template<class P1, class P2>
+    constexpr typename pack_join<P1, P2>::result_type operator()(P1&& p1, P2&& p2) const
+    {
+        return pack_join<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
+    }
+
+    FIT_RETURNS_CLASS(pack_join_f);
+
+    template<class P1, class P2, class... Ps>
+    constexpr auto operator()(P1&& p1, P2&& p2, Ps&&... ps) const FIT_RETURNS
+    (
+        make_pack_join(fit::forward<P1>(p1), make_pack_join(fit::forward<P2>(p2), fit::forward<Ps>(ps)...))
+    );
+};
+
+}
+
+FIT_STATIC_CONSTEXPR detail::pack_f pack = {};
+FIT_STATIC_CONSTEXPR detail::pack_forward_f pack_forward = {};
+FIT_STATIC_CONSTEXPR detail::pack_decay_f pack_decay = {};
+
+FIT_STATIC_CONSTEXPR detail::pack_join_f pack_join = {};
 
 }
 

@@ -134,7 +134,8 @@
 #define FIT_RETURNS_CLASS(...) \
 void fit_returns_class_check() \
 { \
-    static_assert(std::is_same<typename std::remove_cv<__VA_ARGS__>::type, decltype(*this)>::value, "Fit class type doesn't match"); \
+    static_assert(std::is_same<__VA_ARGS__*, decltype(this)>::value, \
+        "Returns class " #__VA_ARGS__ " type doesn't match"); \
 }
 
 #define FIT_MANGLE_CAST(...) FIT_REM

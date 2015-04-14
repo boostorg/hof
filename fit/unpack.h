@@ -63,7 +63,7 @@ struct unpack_adaptor : F
     template<class T, class... Ts>
     constexpr auto operator()(T&& x, Ts&&... xs) const FIT_RETURNS
     (
-        detail::unpack_join(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<Ts>(xs)...)
+        detail::unpack_join(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x), fit::forward<Ts>(xs)...)
     );
 };
 

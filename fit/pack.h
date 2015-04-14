@@ -208,6 +208,12 @@ constexpr typename pack_join<P1, P2>::result_type make_pack_join(P1&& p1, P2&& p
     return pack_join<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
 }
 
+template<class P1, class P2, class... Ps>
+constexpr auto make_pack_join(P1&& p1, P2&& p2, Ps&&... ps) FIT_RETURNS
+(
+    make_pack_join(fit::forward<P1>(p1), make_pack_join(fit::forward<P2>(p2), fit::forward<Ps>(ps)...))
+);
+
 struct pack_join_f
 {
     template<class P1>
@@ -216,18 +222,10 @@ struct pack_join_f
         return fit::forward<P1>(p1);
     }
 
-    template<class P1, class P2>
-    constexpr typename pack_join<P1, P2>::result_type operator()(P1&& p1, P2&& p2) const
-    {
-        return pack_join<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
-    }
-
-    FIT_RETURNS_CLASS(pack_join_f);
-
-    template<class P1, class P2, class... Ps>
-    constexpr auto operator()(P1&& p1, P2&& p2, Ps&&... ps) const FIT_RETURNS
+    template<class P1, class... Ps>
+    constexpr auto operator()(P1&& p1, Ps&&... ps) const FIT_RETURNS
     (
-        make_pack_join(fit::forward<P1>(p1), make_pack_join(fit::forward<P2>(p2), fit::forward<Ps>(ps)...))
+        make_pack_join(fit::forward<P1>(p1), fit::forward<Ps>(ps)...)
     );
 };
 

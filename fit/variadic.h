@@ -35,6 +35,8 @@
 #include <fit/detail/ref_tuple.h>
 #include <fit/returns.h>
 #include <fit/always.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -60,11 +62,7 @@ struct variadic_adaptor : F
     );
 };
 
-template<class F>
-constexpr variadic_adaptor<F> variadic(F f)
-{
-    return variadic_adaptor<F>(f);
-}
+FIT_STATIC_CONSTEXPR detail::make<variadic_adaptor> variadic = {};
 
 }
 

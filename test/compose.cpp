@@ -56,6 +56,15 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    constexpr auto f = fit::compose(increment(), decrement());
+    static_assert(std::is_empty<decltype(f)>::value, "Compose function not empty");
+    int r = f(3);
+    FIT_TEST_CHECK(r == 3);
+    FIT_STATIC_TEST_CHECK(f(3) == 3);
+}
+
+FIT_TEST_CASE()
+{
     STATIC_ASSERT_MOVE_ONLY(increment_movable);
     STATIC_ASSERT_MOVE_ONLY(decrement_movable);
     int r = fit::compose(increment_movable(), decrement_movable(), increment_movable())(3);
@@ -64,7 +73,9 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    int r = fit::compose([](int i) { return i+1; }, [](int i) { return i-1; }, [](int i) { return i+1; })(3);
+    const auto f = fit::compose([](int i) { return i+1; }, [](int i) { return i-1; }, [](int i) { return i+1; });
+    static_assert(std::is_empty<decltype(f)>::value, "Compose function not empty");
+    int r = f(3);
     FIT_TEST_CHECK(r == 4);
 }
 }

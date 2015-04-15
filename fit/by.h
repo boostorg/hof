@@ -57,6 +57,8 @@
 #include <fit/detail/delegate.h>
 #include <fit/returns.h>
 #include <fit/detail/move.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -90,11 +92,7 @@ struct by_adaptor : Projection, F
     );
 };
 
-template<class Projection, class F>
-constexpr by_adaptor<Projection, F> by(Projection p, F f)
-{
-    return by_adaptor<Projection, F>(fit::move(p), fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<by_adaptor> by = {};
 
 }
 #endif

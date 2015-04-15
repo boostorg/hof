@@ -64,6 +64,8 @@
 #include <fit/reveal.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -74,9 +76,8 @@ struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
 {
     typedef match_adaptor<Fs...> base;
 
-    template<class... Ts>
     struct failure
-    : failure_for<F(Ts...), Fs(Ts...)...>
+    : failure_for<F, Fs...>
     {};
 
     FIT_INHERIT_DEFAULT(match_adaptor, F, base);
@@ -102,11 +103,7 @@ struct match_adaptor<F> : F
     FIT_INHERIT_CONSTRUCTOR(match_adaptor, F);
 };
 
-template<class...Fs>
-constexpr match_adaptor<Fs...> match(Fs...fs)
-{ 
-    return match_adaptor<Fs...>(fit::move(fs)...); 
-}
+FIT_STATIC_CONSTEXPR detail::make<match_adaptor> match = {};
 
 }
 

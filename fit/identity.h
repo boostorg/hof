@@ -31,6 +31,7 @@
 
 #include <utility>
 #include <fit/detail/forward.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit { namespace detail {
 
@@ -45,7 +46,7 @@ struct identity_base
 
 }
 
-static constexpr detail::identity_base identity = {};
+FIT_STATIC_CONSTEXPR detail::identity_base identity = {};
 
 }
 

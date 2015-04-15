@@ -54,6 +54,8 @@
 #include <fit/always.h>
 #include <fit/detail/move.h>
 #include <fit/function.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
  
@@ -135,11 +137,7 @@ auto operator<(T&& x, const fit::detail::static_function_wrapper<F>& f) FIT_RETU
     detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(f.base_function().infix_base_function()))
 );
 
-template<class F>
-constexpr infix_adaptor<F> infix(F f)
-{
-    return infix_adaptor<F>(fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<infix_adaptor> infix = {};
 
 }
 

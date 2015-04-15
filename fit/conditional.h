@@ -72,6 +72,8 @@
 #include <fit/returns.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 #include <type_traits>
 
 namespace fit {
@@ -97,16 +99,6 @@ struct conditional_kernel : F1, F2
         F1,
         F2
     >
-    {};
-
-    template<class... Ts>
-    struct failure
-    : std::conditional
-    <
-        is_callable<F1(Ts...)>::value, 
-        failure_for<F2(Ts...)>, 
-        failure_for<F1(Ts...), F2(Ts...)>
-    >::type
     {};
 
     template<class... Ts>
@@ -138,19 +130,23 @@ struct conditional_adaptor
     constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
     : base(fit::forward<X>(f1), kernel_base(fit::forward<Xs>(fs)...))
     {}
+
+    struct failure
+    : failure_for<F, Fs...>
+    {};
 };
 
 template<class F>
 struct conditional_adaptor<F> : F
 {
     FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, F);
+
+    struct failure
+    : failure_for<F>
+    {};
 };
 
-template<class... Fs>
-constexpr FIT_JOIN(conditional_adaptor, Fs...) conditional(Fs... fs)
-{
-    return FIT_JOIN(conditional_adaptor, Fs...)(fit::move(fs)...);
-}
+FIT_STATIC_CONSTEXPR detail::make<conditional_adaptor> conditional = {};
 
 }
 

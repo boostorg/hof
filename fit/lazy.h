@@ -53,7 +53,10 @@
 #include <fit/static.h>
 #include <fit/invoke.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/compressed_pair.h>
 #include <fit/pack.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 #include <functional>
 #include <type_traits>
 
@@ -143,23 +146,23 @@ constexpr lazy_unpack<F, Pack> make_lazy_unpack(const F& f, const Pack& p)
 }
 
 template<class F, class Pack>
-struct lazy_invoker : F, Pack
+struct lazy_invoker 
+: detail::compressed_pair<F, Pack>
 {
-    template<class X, class P>
-    constexpr lazy_invoker(X&& x, P&& pack) 
-    : F(fit::forward<X>(x)), Pack(fit::forward<P>(pack))
-    {}
+    typedef detail::compressed_pair<F, Pack> base_type;
+
+    FIT_INHERIT_CONSTRUCTOR(lazy_invoker, base_type)
 
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->first(xs...);
     }
 
     template<class... Ts>
     constexpr const Pack& get_pack(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->second(xs...);
     }
 
     FIT_RETURNS_CLASS(lazy_invoker);
@@ -168,7 +171,10 @@ struct lazy_invoker : F, Pack
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...))(
-            fit::detail::make_lazy_unpack(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), pack_forward(fit::forward<Ts>(xs)...))
+            fit::detail::make_lazy_unpack(
+                FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), 
+                pack_forward(fit::forward<Ts>(xs)...)
+            )
         )
     );
 };
@@ -254,11 +260,7 @@ struct lazy_adaptor : F
     
 };
 
-template<class F>
-constexpr lazy_adaptor<F> lazy(F f)
-{
-    return lazy_adaptor<F>(fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<lazy_adaptor> lazy = {};
 
 }
 

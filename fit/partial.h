@@ -55,7 +55,8 @@
 #include <fit/invoke.h>
 #include <fit/pipable.h>
 #include <fit/fuse.h>
-
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 
 namespace fit { 
@@ -65,17 +66,7 @@ namespace fit {
 template<class F, class Pack=void >
 struct partial_adaptor;
 
-template<class F>
-constexpr partial_adaptor<F> partial(F f)
-{
-    return partial_adaptor<F>(fit::move(f));
-}
-
-template<class F, class Pack>
-constexpr partial_adaptor<F, Pack> partial(F f, Pack pack)
-{
-    return partial_adaptor<F, Pack>(fit::move(f), fit::move(pack));
-}
+FIT_STATIC_CONSTEXPR detail::make<partial_adaptor> partial = {};
 
 namespace detail {
 

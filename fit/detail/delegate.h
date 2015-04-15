@@ -38,8 +38,8 @@
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 
 #define FIT_DELGATE_CONSTRUCTOR(C, T, var) \
-    template<class... FitXs, typename fit::detail::enable_if_constructible<T, FitXs...>::type = 0> \
-    constexpr C(FitXs&&... fit_xs) : var(fit::forward<FitXs>(fit_xs)...) {}
+    template<class... FitXs, typename fit::detail::enable_if_constructible<C, T, FitXs...>::type = 0> \
+    constexpr C(FitXs&&... fit_xs) : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {}
     
 #else
 #define FIT_DELGATE_CONSTRUCTOR(C, T, var) \
@@ -55,10 +55,13 @@
 namespace fit {
 namespace detail {
 
-template<class X, class... Xs>
+template<class C, class X, class... Xs>
 struct enable_if_constructible
 : std::enable_if<std::is_constructible<X, Xs&&...>::value, int>
-{};
+{
+    // const fit::detail::pair_holder<1, fit::detail::pack_base<fit::detail::seq<0>, std::unique_ptr<int> >, deref>
+    // static_assert(!std::is_same<X, fit::detail::pack_base<fit::detail::seq<0>, std::unique_ptr<int> > >::value, "");
+};
 
 template<bool...> struct bool_seq {};
 template<class... Ts>

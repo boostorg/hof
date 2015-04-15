@@ -41,6 +41,8 @@
 #include <fit/returns.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -57,11 +59,7 @@ struct mutable_adaptor
     auto operator()(Ts&&... xs) const FIT_RETURNS(FIT_CONST_THIS->f(fit::forward<Ts>(xs)...));
 };
 
-template<class F>
-mutable_adaptor<F> mutable_(F f)
-{
-    return mutable_adaptor<F>(fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<mutable_adaptor> mutable_ = {};
 
 }
 

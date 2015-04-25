@@ -31,6 +31,7 @@ pages:
 - ['result.md', 'Adaptors', 'result']
 - ['reveal.md', 'Adaptors', 'reveal']
 - ['static.md', 'Adaptors', 'static']
+- ['unpack.md', 'Adaptors', 'unpack']
 - ['variadic.md', 'Adaptors', 'variadic']
 # Functions
 - ['always.md', 'Functions', 'always']
@@ -43,5 +44,6 @@ pages:
 - ['is_callable.md', 'Utilities', 'is_callable']
 - ['function.md', 'Utilities', 'FIT_STATIC_FUNCTION']
 - ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']
+- ['pack.md', 'Utilities', 'pack']
 - ['returns.md', 'Utilities', 'returns']
 - ['tap.md', 'Utilities', 'tap']

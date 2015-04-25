@@ -26,6 +26,7 @@ extract lazy
 extract match
 extract mutable
 extract by
+extract pack
 extract partial
 extract pipable
 extract placeholders
@@ -35,4 +36,5 @@ extract returns
 extract reveal
 extract static
 extract tap
+extract unpack
 extract variadic

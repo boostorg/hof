@@ -18,19 +18,21 @@
 /// Description
 /// -----------
 /// 
-/// The `args` function returns the Nth argument passed to it. It actually
-/// starts at 1, so it is not the zero-based index of the argument.
+/// The `args` returns a function object that returns the Nth argument passed
+/// to it. It actually starts at 1, so it is not the zero-based index of the
+/// argument.
 /// 
 /// Synopsis
 /// --------
 /// 
-///     template<int N, class... Ts>
-///     constexpr auto args(Ts&&... xs);
+///     template<class IntegralConstant>
+///     constexpr auto args(IntegralConstant);
+/// 
 /// 
 /// Example
 /// -------
 /// 
-///     assert(args<3>(1,2,3,4,5) == 3);
+///     assert(args(std::integral_constant<int, 3>())(1,2,3,4,5) == 3);
 /// 
 
 namespace fit {
@@ -74,14 +76,36 @@ constexpr args_at<N...> make_args_at(seq<N...>)
     return {};
 }
 
+template<int N, class... Ts>
+constexpr auto get_args(Ts&&... xs) FIT_RETURNS
+(
+    make_args_at(typename gens<N>::type())(nullptr, make_perfect_ref(fit::forward<Ts>(xs))...)
+);
+
+template<class T, T N>
+struct args_f
+{
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) FIT_RETURNS
+    (
+        get_args<N>(fit::forward<Ts>(xs)...)
+    );
+};
+
 }
 
-// TODO: Make this a variable template in C++14
+// Deprecate
 template<int N, class... Ts>
 constexpr auto args(Ts&&... xs) FIT_RETURNS
 (
-    detail::make_args_at(typename detail::gens<N>::type())(nullptr, detail::make_perfect_ref(fit::forward<Ts>(xs))...)
+    detail::get_args<N>(fit::forward<Ts>(xs)...)
 );
+
+template<class IntegralConstant>
+constexpr detail::args_f<int, IntegralConstant::value> args(IntegralConstant)
+{
+    return detail::args_f<int, IntegralConstant::value>();
+}
 
 }
 

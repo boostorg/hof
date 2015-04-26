@@ -3,6 +3,7 @@ docs_dir: doc/src
 site_dir: doc/html/
 repo_url: https://github.com/pfultz2/Fit
 use_directory_urls: false
+extra_javascript: [js/configure.js]
 pages:
 - ['index.md', 'Home']
 # About

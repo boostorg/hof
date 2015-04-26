@@ -8,6 +8,7 @@
 #ifndef FIT_GUARD_FUNCTION_INVOKE_H
 #define FIT_GUARD_FUNCTION_INVOKE_H
 
+/// !!DEPRECATED: Please use unpack instead.
 /// invoke
 /// ======
 /// 

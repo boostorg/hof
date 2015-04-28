@@ -34,8 +34,7 @@ install (DIRECTORY fit DESTINATION include)
 
 # Moved down, so everything above is common
 if (BIICODE) 
-    INIT_BIICODE_BLOCK()
-    ADD_BIICODE_TARGETS()
+    ADD_BII_TARGETS()
     target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
     return() #finish processing, no need to run cmake below
 endif()

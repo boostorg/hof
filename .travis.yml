@@ -39,6 +39,10 @@ before_install:
     - if [ "$LIBCXX" = "on" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
     - if [ "$LIBCXX" = "on" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
 
+    # Install biicode
+    - wget http://apt.biicode.com/install.sh && chmod +x install.sh && ./install.sh
+    - bii setup:cpp
+
 script:
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
@@ -48,3 +52,14 @@ script:
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
     - CTEST_OUTPUT_ON_FAILURE=1 make -j4 check VERBOSE=1
     - cd .. && rm -rf build/
+
+before_deploy: 
+    - rm -rf build/
+    - bii init -L
+
+deploy:
+    - provider: biicode
+    - user: pfultz2
+    - password:
+        - secure: H776oBMLebQCSC0RVFLwRSo9D0jgaG5mtIDKYSp9Ou+Vjr7c0U/TyuAwshP8YNJzdixZ2Xy/33yQzq9U/nGKhQjIkaBrMBqATOAJi4plgp5flM0X4AawsrFJFyT1+pxx8LEYYlN2Xf/G1gC+VK8a1QqZpvj3UEqkduhi+/5Mo70=
+    # - on: master

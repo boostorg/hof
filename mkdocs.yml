@@ -3,6 +3,7 @@ docs_dir: doc/src
 site_dir: doc/html/
 repo_url: https://github.com/pfultz2/Fit
 use_directory_urls: false
+extra_javascript: [js/configure.js]
 pages:
 - ['index.md', 'Home']
 # About
@@ -17,11 +18,9 @@ pages:
 - ['conditional.md', 'Adaptors', 'conditional']
 - ['fix.md', 'Adaptors', 'fix']
 - ['flip.md', 'Adaptors', 'flip']
-- ['fuse.md', 'Adaptors', 'fuse']
 - ['implicit.md', 'Adaptors', 'implicit']
 - ['indirect.md', 'Adaptors', 'indirect']
 - ['infix.md', 'Adaptors', 'infix']
-- ['invoke.md', 'Adaptors', 'invoke']
 - ['lazy.md', 'Adaptors', 'lazy']
 - ['match.md', 'Adaptors', 'match']
 - ['mutable.md', 'Adaptors', 'mutable']
@@ -31,17 +30,19 @@ pages:
 - ['result.md', 'Adaptors', 'result']
 - ['reveal.md', 'Adaptors', 'reveal']
 - ['static.md', 'Adaptors', 'static']
+- ['unpack.md', 'Adaptors', 'unpack']
 - ['variadic.md', 'Adaptors', 'variadic']
 # Functions
 - ['always.md', 'Functions', 'always']
+- ['args.md', 'Functions', 'args']
 - ['identity.md', 'Functions', 'identity']
 - ['placeholders.md', 'Functions', 'placeholders']
 # Utilities
-- ['args.md', 'Utilities', 'args']
 - ['capture.md', 'Utilities', 'capture']
 - ['each_arg.md', 'Utilities', 'each_arg']
 - ['is_callable.md', 'Utilities', 'is_callable']
 - ['function.md', 'Utilities', 'FIT_STATIC_FUNCTION']
 - ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']
+- ['pack.md', 'Utilities', 'pack']
 - ['returns.md', 'Utilities', 'returns']
 - ['tap.md', 'Utilities', 'tap']

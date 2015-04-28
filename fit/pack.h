@@ -8,10 +8,58 @@
 #ifndef FIT_GUARD_FUNCTION_PACK_H
 #define FIT_GUARD_FUNCTION_PACK_H
 
+/// pack
+/// ====
+/// 
+/// Description
+/// -----------
+/// 
+/// The `pack` function returns a higher order function object that takes a
+/// function that will be passed the initial elements. The function object is
+/// a sequence that can be unpacked with `unpack_adaptor` as well. Also,
+/// `pack_join` can be used to join multiple packes together.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     // Capture lvalues by reference and rvalues by value.
+///     template<class... Ts>
+///     constexpr auto pack(Ts&&... xs);
+/// 
+///     // Capture lvalues by reference and rvalue reference by reference
+///     template<class... Ts>
+///     constexpr auto pack_perfect(Ts&&... xs);
+/// 
+///     // Decay everything before capturing
+///     template<class... Ts>
+///     constexpr auto pack_decay(Ts&&... xs);
+/// 
+///     // Join multiple packs together
+///     template<class... Ts>
+///     constexpr auto pack_join(Ts&&... xs);
+/// 
+/// 
+/// Example
+/// -------
+/// 
+///     struct sum
+///     {
+///         template<class T, class U>
+///         T operator()(T x, U y) const
+///         {
+///             return x+y;
+///         }
+///     };
+/// 
+///     int r = pack(3, 2)(sum());
+///     assert(r == 5);
+/// 
+
 #include <fit/detail/seq.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/remove_rvalue_reference.h>
 #include <fit/detail/unwrap.h>
+#include <fit/detail/static_constexpr.h>
 #include <fit/returns.h>
 
 #ifndef FIT_HAS_RVALUE_THIS
@@ -173,32 +221,85 @@ struct pack_join
 >
 {};
 
-}
 
-template<class... Ts>
-constexpr auto pack(Ts&&... xs) FIT_RETURNS
-(
-    detail::pack_base<typename detail::gens<sizeof...(Ts)>::type, typename detail::remove_rvalue_reference<Ts>::type...>(fit::forward<Ts>(xs)...)
-);
+struct pack_f
+{
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        pack_base<typename gens<sizeof...(Ts)>::type, typename remove_rvalue_reference<Ts>::type...>(fit::forward<Ts>(xs)...)
+    );
+};
 
-template<class... Ts>
-constexpr auto pack_forward(Ts&&... xs) FIT_RETURNS
-(
-    detail::pack_base<typename detail::gens<sizeof...(Ts)>::type, Ts&&...>(fit::forward<Ts>(xs)...)
-);
+struct pack_forward_f
+{
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        pack_base<typename gens<sizeof...(Ts)>::type, Ts&&...>(fit::forward<Ts>(xs)...)
+    );
+};
 
-template<class... Ts>
-constexpr auto pack_decay(Ts&&... xs) FIT_RETURNS
-(
-    pack(detail::decay_elem(fit::forward<Ts>(xs))...)
-);
+struct pack_decay_f
+{
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        pack_f()(decay_elem(fit::forward<Ts>(xs))...)
+    );
+};
 
 template<class P1, class P2>
-constexpr typename detail::pack_join<P1, P2>::result_type pack_join(P1&& p1, P2&& p2)
+constexpr typename pack_join<P1, P2>::result_type make_pack_join_dual(P1&& p1, P2&& p2)
 {
-    return detail::pack_join<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
+    return pack_join<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
 }
 
+// Manually compute join return type to make older gcc happy
+template<class... Ts>
+struct join_type;
+
+template<class T>
+struct join_type<T>
+{
+    typedef T type;
+};
+
+template<class T, class... Ts>
+struct join_type<T, Ts...>
+{
+    typedef typename pack_join<T, typename join_type<Ts...>::type>::result_type type;
+};
+
+template<class P1>
+constexpr P1 make_pack_join(P1&& p1)
+{
+    return fit::forward<P1>(p1);
+}
+
+template<class P1, class... Ps>
+constexpr typename join_type<P1, Ps...>::type make_pack_join(P1&& p1, Ps&&... ps)
+{
+    return make_pack_join_dual(fit::forward<P1>(p1), make_pack_join(fit::forward<Ps>(ps)...));
+}
+
+struct pack_join_f
+{
+
+    template<class... Ps>
+    constexpr auto operator()(Ps&&... ps) const FIT_RETURNS
+    (
+        make_pack_join(fit::forward<Ps>(ps)...)
+    );
+};
+
+}
+
+FIT_STATIC_CONSTEXPR detail::pack_f pack = {};
+FIT_STATIC_CONSTEXPR detail::pack_forward_f pack_forward = {};
+FIT_STATIC_CONSTEXPR detail::pack_decay_f pack_decay = {};
+
+FIT_STATIC_CONSTEXPR detail::pack_join_f pack_join = {};
 
 }
 

@@ -8,6 +8,7 @@
 #ifndef FIT_GUARD_FUNCTION_FUSE_H
 #define FIT_GUARD_FUNCTION_FUSE_H
 
+/// !!DEPRECATED: Please use unpack instead.
 /// fuse
 /// ====
 /// 

@@ -71,7 +71,7 @@ struct placeholder_transformer
     {
         template<class... Ts>
         constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-        (args<std::is_placeholder<T>::value>(fit::forward<Ts>(xs)...));
+        (detail::get_args<std::is_placeholder<T>::value>(fit::forward<Ts>(xs)...));
     };
 
     template<class T, typename std::enable_if<(std::is_placeholder<T>::value > 0), int>::type = 0>

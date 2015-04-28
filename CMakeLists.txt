@@ -30,17 +30,22 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
     endif()
 endforeach()
 
+install (DIRECTORY fit DESTINATION include)
+
+# Moved down, so everything above is common
+if (BIICODE) 
+    INIT_BIICODE_BLOCK()
+    ADD_BIICODE_TARGETS()
+    target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
+    return() #finish processing, no need to run cmake below
+endif()
+
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 macro(add_test_executable TEST_NAME_)
-    if(BIICODE)
-        set(TEST_NAME "${BII_${TEST_NAME_}_TARGET}")
-        set_target_properties(${TEST_NAME} PROPERTIES EXCLUDE_FROM_ALL TRUE)
-    else()
-        set(TEST_NAME "${TEST_NAME_}")
-        add_executable (${TEST_NAME} EXCLUDE_FROM_ALL test/${TEST_NAME}.cpp)
-        target_compile_options(${TEST_NAME} PUBLIC ${CXX_EXTRA_FLAGS})
-    endif()
+    set(TEST_NAME "${TEST_NAME_}")
+    add_executable (${TEST_NAME} EXCLUDE_FROM_ALL test/${TEST_NAME}.cpp)
+    target_compile_options(${TEST_NAME} PUBLIC ${CXX_EXTRA_FLAGS})
     if(WIN32)
         add_test(NAME ${TEST_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
     else()
@@ -50,23 +55,9 @@ macro(add_test_executable TEST_NAME_)
     set_tests_properties(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
 endmacro(add_test_executable)
 
-
-# Moved down, so everything above is common
-if (BIICODE) 
-    INIT_BIICODE_BLOCK()
-    ADD_BIICODE_TARGETS()
-    target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
-    foreach (test ${BII_BLOCK_EXES})
-        add_test_executable(${test})
-    endforeach()
-    return() #finish processing, no need to run cmake below
-endif()
-
 include(CTest)
 
 include_directories(.)
-
-install (DIRECTORY fit DESTINATION include)
 
 add_test_executable(always)
 add_test_executable(args)

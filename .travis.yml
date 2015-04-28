@@ -54,7 +54,6 @@ script:
     - cd .. && rm -rf build/
 
 before_deploy: 
-    - rm -rf build/
     - bii init -L
 
 deploy:

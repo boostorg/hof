@@ -74,9 +74,9 @@ Mangling overloads
 Description
 -----------
 
-On older compilers some operations done in the exressions cannot be
+On older compilers some operations done in the expressions cannot be
 properly mangled. These macros help provide workarounds for these
-operations used on these older compilers.
+operations on older compilers.
 
 
 Synopsis

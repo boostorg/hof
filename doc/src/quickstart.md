@@ -20,7 +20,7 @@ There are few things to note about this. First, the call operator member functio
 
     auto three = sum_f()(1, 2);
 
-We can make it behave like a regular function if we construct the class as a global variable. However, we want to statically initialize it(ie initialize it at compile-time) to avoid the static initializaion order fiasco. We can do that using `constexpr` like this:
+We can make it behave like a regular function if we construct the class as a global variable. However, we want to statically initialize it(ie initialize it at compile-time) to avoid the static initialization order fiasco. We can do that using `constexpr` like this:
 
     const constexpr sum_f sum = {};
 

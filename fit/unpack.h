@@ -82,6 +82,7 @@
 #include <fit/capture.h>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/holder.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_constexpr.h>
@@ -89,9 +90,24 @@
 namespace fit {
 
 template<class Sequence, class=void>
-struct unpack_sequence;
+struct unpack_sequence
+{
+    typedef void not_unpackable;
+};
+
 
 namespace detail {
+template<class Sequence, class=void>
+struct is_unpackable_impl
+: std::true_type
+{};
+
+template<class Sequence>
+struct is_unpackable_impl<Sequence, typename detail::holder<
+    typename unpack_sequence<Sequence>::not_unpackable
+>::type>
+: std::false_type
+{};
 
 template<class F, class Sequence>
 constexpr auto unpack_impl(F&& f, Sequence&& s) FIT_RETURNS
@@ -107,6 +123,13 @@ constexpr auto unpack_join(F&& f, Sequences&&... s) FIT_RETURNS
 );
 
 }
+
+template<class Sequence>
+struct is_unpackable
+: detail::is_unpackable_impl<
+    typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type
+>
+{};
 
 template<class F>
 struct unpack_adaptor : F

@@ -66,6 +66,26 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(3 == binary_unpack_constexpr(std::make_tuple(1), std::make_tuple(), std::make_tuple(2), std::make_tuple()));
 }
 
+FIT_TEST_CASE()
+{
+    auto p1 = fit::pack(1, 2);
+    static_assert(fit::is_unpackable<decltype(p1)>::value, "Not unpackable");
+    static_assert(fit::is_unpackable<decltype((p1))>::value, "Not unpackable");
+
+    auto p2 = fit::pack_forward(1, 2);
+    static_assert(fit::is_unpackable<decltype(p2)>::value, "Not unpackable");
+    static_assert(fit::is_unpackable<decltype((p2))>::value, "Not unpackable");
+
+    auto p3 = fit::pack_decay(1, 2);
+    static_assert(fit::is_unpackable<decltype(p3)>::value, "Not unpackable");
+    static_assert(fit::is_unpackable<decltype((p3))>::value, "Not unpackable");
+
+    static_assert(fit::is_unpackable<std::tuple<int>>::value, "Not unpackable");
+    
+    static_assert(!fit::is_unpackable<int>::value, "Unpackable");
+    static_assert(!fit::is_unpackable<void>::value, "Unpackable");
+}
+
 FIT_STATIC_AUTO lambda_unary_unpack = fit::unpack(FIT_STATIC_LAMBDA(int x)
 {
     return x;

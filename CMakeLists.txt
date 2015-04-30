@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.0)
 project (Fit)
  
 # The version number.
@@ -9,7 +9,7 @@ include(CheckCXXCompilerFlag)
 enable_language(CXX)
 
 if(CMAKE_HOST_APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    list(APPEND CXX_EXTRA_FLAGS -stdlib=libc++)
 endif()
 
 set(ENABLE_CXXFLAGS_TO_CHECK 
@@ -25,25 +25,38 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
     string(REPLACE "+" "x" flag_var ${flag_var})
     check_cxx_compiler_flag("${flag}" COMPILER_HAS_CXX_FLAG${flag_var})
     if(COMPILER_HAS_CXX_FLAG${flag_var})
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+        list(APPEND CXX_EXTRA_FLAGS ${flag})
         break()
     endif()
 endforeach()
 
-include(CTest)
-
-include_directories(.)
-
 install (DIRECTORY fit DESTINATION include)
+
+# Moved down, so everything above is common
+if (BIICODE) 
+    ADD_BII_TARGETS()
+    target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
+    return() #finish processing, no need to run cmake below
+endif()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
-macro(add_test_executable TEST_NAME)
+macro(add_test_executable TEST_NAME_)
+    set(TEST_NAME "${TEST_NAME_}")
     add_executable (${TEST_NAME} EXCLUDE_FROM_ALL test/${TEST_NAME}.cpp)
-    add_test(${TEST_NAME} ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    target_compile_options(${TEST_NAME} PUBLIC ${CXX_EXTRA_FLAGS})
+    if(WIN32)
+        add_test(NAME ${TEST_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+    else()
+        add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+    endif()
     add_dependencies(check ${TEST_NAME})
     set_tests_properties(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
 endmacro(add_test_executable)
+
+include(CTest)
+
+include_directories(.)
 
 add_test_executable(always)
 add_test_executable(args)

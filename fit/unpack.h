@@ -98,6 +98,7 @@
 #include <fit/detail/seq.h>
 #include <fit/capture.h>
 #include <fit/always.h>
+#include <fit/reveal.h>
 #include <fit/detail/and.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/holder.h>
@@ -159,6 +160,49 @@ struct unpack_adaptor : F
     {
         return always_ref(*this)(xs...);
     }
+
+    struct unpack_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            struct deducer
+            {
+                template<class... Ts>
+                typename Failure::template of<Ts...> operator()(Ts&&...) const;
+            };
+
+            template<class T, class=typename std::enable_if<(
+                is_unpackable<T>::value
+            )>::type>
+            static auto deduce(T&& x)
+            FIT_RETURNS
+            (
+                detail::unpack_impl(deducer(), fit::forward<T>(x))
+            );
+
+            template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
+                is_unpackable<T>, is_unpackable<Ts>...
+            >::value)>::type>
+            static auto deduce(T&& x, Ts&&... xs) FIT_RETURNS
+            (
+                detail::unpack_join(deducer(), fit::forward<T>(x), fit::forward<Ts>(xs)...)
+            );
+
+            template<class... Ts>
+            struct of
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+            : std::enable_if<true, decltype(apply::deduce(std::declval<Ts>()...))>::type
+#else
+            : decltype(apply::deduce(std::declval<Ts>()...))
+#endif
+            {};
+        };
+    };
+
+    struct failure
+    : failure_map<unpack_failure, F>
+    {};
 
     FIT_RETURNS_CLASS(unpack_adaptor);
 

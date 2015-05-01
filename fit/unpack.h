@@ -98,6 +98,7 @@
 #include <fit/detail/seq.h>
 #include <fit/capture.h>
 #include <fit/always.h>
+#include <fit/detail/and.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/holder.h>
 #include <fit/detail/move.h>
@@ -161,14 +162,18 @@ struct unpack_adaptor : F
 
     FIT_RETURNS_CLASS(unpack_adaptor);
 
-    template<class T>
+    template<class T, class=typename std::enable_if<(
+        is_unpackable<T>::value
+    )>::type>
     constexpr auto operator()(T&& x) const
     FIT_RETURNS
     (
         detail::unpack_impl(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x))
     );
 
-    template<class T, class... Ts>
+    template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
+        is_unpackable<T>, is_unpackable<Ts>...
+    >::value)>::type>
     constexpr auto operator()(T&& x, Ts&&... xs) const FIT_RETURNS
     (
         detail::unpack_join(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x), fit::forward<Ts>(xs)...)

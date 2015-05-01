@@ -10,6 +10,7 @@
 
 #include <type_traits>
 #include <utility>
+#include <fit/detail/and.h>
 #include <fit/detail/holder.h>
 #include <fit/detail/forward.h>
 
@@ -62,12 +63,6 @@ struct enable_if_constructible
     // const fit::detail::pair_holder<1, fit::detail::pack_base<fit::detail::seq<0>, std::unique_ptr<int> >, deref>
     // static_assert(!std::is_same<X, fit::detail::pack_base<fit::detail::seq<0>, std::unique_ptr<int> > >::value, "");
 };
-
-template<bool...> struct bool_seq {};
-template<class... Ts>
-struct and_
-: std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, true)...>>::type
-{};
 
 template<class T, class=void>
 struct is_default_constructible_helper

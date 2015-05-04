@@ -62,7 +62,46 @@
 
 namespace fit {
 
-template<class Projection, class F>
+namespace detail {
+
+template<class R>
+struct eval_helper
+{
+    R result;
+
+    template<class F, class... Ts>
+    constexpr eval_helper(const F& f, Ts&&... xs) : result(f(fit::forward<Ts>(xs)...))
+    {}
+
+    constexpr R get_result()
+    {
+        return fit::forward<R>(result);
+    }
+};
+
+template<>
+struct eval_helper<void>
+{
+    template<class F, class... Ts>
+    constexpr eval_helper(const F& f, Ts&&... xs)
+    {
+        f(fit::forward<Ts>(xs)...);
+    }
+
+    constexpr void get_result()
+    {}
+};
+
+template<class Projection, class F, class... Ts>
+constexpr auto by_eval(const Projection& p, const F& f, Ts&&... xs) FIT_RETURNS
+(
+    eval_helper<decltype(f(p(fit::forward<Ts>(xs))...))>
+        {f, p(fit::forward<Ts>(xs))...}.get_result()
+);
+
+}
+
+template<class Projection, class F=void>
 struct by_adaptor : Projection, F
 {
     template<class... Ts>
@@ -87,8 +126,36 @@ struct by_adaptor : Projection, F
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))(
-            FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...))(xs)...)
+        detail::by_eval(
+            FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...)),
+            FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)),
+            fit::forward<Ts>(xs)...
+        )
+    );
+};
+
+template<class Projection>
+struct by_adaptor<Projection, void> : Projection
+{
+    template<class... Ts>
+    constexpr const Projection& base_projection(Ts&&... xs) const
+    {
+        return always_ref(*this)(xs...);
+    }
+
+    template<class P, FIT_ENABLE_IF_CONVERTIBLE(P, Projection)>
+    constexpr by_adaptor(P&& p) 
+    : Projection(fit::forward<P>(p))
+    {}
+
+    FIT_RETURNS_CLASS(by_adaptor);
+
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        (void)std::initializer_list<int>{(
+            FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...))
+            (fit::forward<Ts>(xs)), 0)...}
     );
 };
 

@@ -49,3 +49,34 @@ FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(fit::by(select_x_1(), sum_1())(foo(1), foo(2)) == 7);
 }
+
+FIT_TEST_CASE()
+{
+    std::string s;
+    auto f = [&](const std::string& x)
+    {
+        s += x;
+    };
+    fit::by(f)("hello", "-", "world");
+    FIT_TEST_CHECK(s == "hello-world");
+    fit::by(f)();
+    FIT_TEST_CHECK(s == "hello-world");
+}
+
+FIT_TEST_CASE()
+{
+    std::string s;
+    auto f = [&](const std::string& x)
+    {
+        s += x;
+        return s;
+    };
+    auto last = [](const std::string& x, const std::string& y, const std::string& z)
+    {
+        FIT_TEST_CHECK(x == "hello");
+        FIT_TEST_CHECK(y == "hello-");
+        FIT_TEST_CHECK(z == "hello-world");
+        return z;
+    };
+    FIT_TEST_CHECK(fit::by(f, last)("hello", "-", "world") == "hello-world");
+}

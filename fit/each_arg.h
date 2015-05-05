@@ -12,6 +12,7 @@
 #include <fit/detail/static_constexpr.h>
 #include <initializer_list>
 
+/// DEPRECATED: Please use `by` instead.
 /// each_arg
 /// ========
 /// 

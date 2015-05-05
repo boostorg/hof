@@ -214,7 +214,7 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
 };
 
 template<class P1, class P2>
-struct pack_join 
+struct pack_join_result 
 : pack_join_base<
     typename std::remove_cv<typename std::remove_reference<P1>::type>::type, 
     typename std::remove_cv<typename std::remove_reference<P2>::type>::type
@@ -250,9 +250,9 @@ struct pack_decay_f
 };
 
 template<class P1, class P2>
-constexpr typename pack_join<P1, P2>::result_type make_pack_join_dual(P1&& p1, P2&& p2)
+constexpr typename pack_join_result<P1, P2>::result_type make_pack_join_dual(P1&& p1, P2&& p2)
 {
-    return pack_join<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
+    return pack_join_result<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
 }
 
 // Manually compute join return type to make older gcc happy
@@ -268,7 +268,7 @@ struct join_type<T>
 template<class T, class... Ts>
 struct join_type<T, Ts...>
 {
-    typedef typename pack_join<T, typename join_type<Ts...>::type>::result_type type;
+    typedef typename pack_join_result<T, typename join_type<Ts...>::type>::result_type type;
 };
 
 template<class P1>

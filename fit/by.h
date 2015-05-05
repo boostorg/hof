@@ -106,12 +106,6 @@ constexpr R eval_ordered(const F& f, Pack&& p)
     return p(f);
 }
 
-// template<class F, class Pack, class T>
-// constexpr auto eval_ordered(const F& f, Pack&& p, T&& x) FIT_RETURNS
-// (
-//     eval_ordered(f, pack_join(p, pack(x())))
-// );
-
 template<class R, class F, class Pack, class T, class... Ts>
 constexpr R eval_ordered(const F& f, Pack&& p, T&& x, Ts&&... xs)
 {
@@ -119,17 +113,21 @@ constexpr R eval_ordered(const F& f, Pack&& p, T&& x, Ts&&... xs)
 }
 #endif
 
-template<class Projection, class F, class... Ts>
-constexpr auto by_eval(const Projection& p, const F& f, Ts&&... xs) FIT_RETURNS
-(
+template<class Projection, class F, class... Ts, 
+    class R=decltype(
+        std::declval<const F&>()(std::declval<const Projection&>()(std::declval<Ts>())...)
+    )>
+constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
+{
+    return
 #if FIT_NO_ORDERD_BRACE_INIT
-    eval_ordered<decltype(f(p(fit::forward<Ts>(xs))...))>
-        (f, pack(), fit::capture_forward(p, fit::forward<Ts>(xs))(apply_f())...)
+    eval_ordered<R>
+        (f, pack(), fit::capture_forward(p, fit::forward<Ts>(xs))(apply_f())...);
 #else
-    eval_helper<decltype(f(p(fit::forward<Ts>(xs))...))>
-        {f, p(fit::forward<Ts>(xs))...}.get_result()
+    eval_helper<R>
+        {f, p(fit::forward<Ts>(xs))...}.get_result();
 #endif
-);
+}
 
 }
 

@@ -6,6 +6,7 @@ function extract
 }
 
 extract always
+extract apply
 extract args
 extract capture
 extract compose

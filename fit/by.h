@@ -79,18 +79,12 @@
 #if FIT_NO_ORDERD_BRACE_INIT
 #include <fit/pack.h>
 #include <fit/capture.h>
+#include <fit/apply.h>
 #endif
 
 namespace fit {
 
 namespace detail {
-
-struct apply_f
-{
-    template<class F, class... Ts>
-    constexpr auto operator()(F&& f, Ts&&... xs) const FIT_RETURNS
-    (f(fit::forward<Ts>(xs)...))
-};
 
 template<class R>
 struct eval_helper
@@ -130,7 +124,7 @@ constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
     return
 #if FIT_NO_ORDERD_BRACE_INIT
     eval_ordered<R>
-        (f, pack(), fit::capture_forward(p, fit::forward<Ts>(xs))(apply_f())...);
+        (f, pack(), fit::capture_forward(p, fit::forward<Ts>(xs))(apply_f)...);
 #else
     eval_helper<R>
         {f, p(fit::forward<Ts>(xs))...}.get_result();

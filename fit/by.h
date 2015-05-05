@@ -75,21 +75,8 @@ struct eval_helper
 
     constexpr R get_result()
     {
-        return fit::forward<R>(result);
+        return (R&&)result;
     }
-};
-
-template<>
-struct eval_helper<void>
-{
-    template<class F, class... Ts>
-    constexpr eval_helper(const F& f, Ts&&... xs)
-    {
-        f(fit::forward<Ts>(xs)...);
-    }
-
-    constexpr void get_result()
-    {}
 };
 
 template<class Projection, class F, class... Ts>

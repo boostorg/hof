@@ -67,53 +67,31 @@
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_constexpr.h>
-
-#ifndef FIT_NO_ORDERD_BRACE_INIT
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 9
-#define FIT_NO_ORDERD_BRACE_INIT 1
-#else
-#define FIT_NO_ORDERD_BRACE_INIT 0
-#endif 
-#endif
-
-#if FIT_NO_ORDERD_BRACE_INIT
-#include <fit/pack.h>
-#include <fit/capture.h>
-#include <fit/apply.h>
-#endif
+#include <fit/apply_eval.h>
 
 namespace fit {
 
 namespace detail {
 
-template<class R>
-struct eval_helper
+template<class T, class Projection>
+struct project_eval
 {
-    R result;
+    T&& x;
+    const Projection& p;
 
-    template<class F, class... Ts>
-    constexpr eval_helper(const F& f, Ts&&... xs) : result(f(fit::forward<Ts>(xs)...))
+    template<class X, class P>
+    constexpr project_eval(X&& x, const P& p) : x(fit::forward<X>(x)), p(p)
     {}
 
-    constexpr R get_result()
-    {
-        return (R&&)result;
-    }
+    constexpr auto operator()() const FIT_RETURNS
+    (p(fit::forward<T>(x)));
 };
 
-#if FIT_NO_ORDERD_BRACE_INIT
-template<class R, class F, class Pack>
-constexpr R eval_ordered(const F& f, Pack&& p)
+template<class T, class Projection>
+constexpr project_eval<T, Projection> make_project_eval(T&& x, const Projection& p)
 {
-    return p(f);
+    return project_eval<T, Projection>(fit::forward<T>(x), p);
 }
-
-template<class R, class F, class Pack, class T, class... Ts>
-constexpr R eval_ordered(const F& f, Pack&& p, T&& x, Ts&&... xs)
-{
-    return eval_ordered<R>(f, pack_join(p, pack(x())), fit::forward<Ts>(xs)...);
-}
-#endif
 
 template<class Projection, class F, class... Ts, 
     class R=decltype(
@@ -121,14 +99,7 @@ template<class Projection, class F, class... Ts,
     )>
 constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
 {
-    return
-#if FIT_NO_ORDERD_BRACE_INIT
-    eval_ordered<R>
-        (f, pack(), fit::capture_forward(p, fit::forward<Ts>(xs))(apply_f)...);
-#else
-    eval_helper<R>
-        {f, p(fit::forward<Ts>(xs))...}.get_result();
-#endif
+    return apply_eval(f, make_project_eval(fit::forward<Ts>(xs), p)...);
 }
 
 }

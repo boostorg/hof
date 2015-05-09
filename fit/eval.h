@@ -8,6 +8,37 @@
 #ifndef FIT_GUARD_EVAL_H
 #define FIT_GUARD_EVAL_H
 
+/// eval
+/// ====
+/// 
+/// Description
+/// -----------
+/// 
+/// The `eval` function will evaluate a "thunk". This can be either a nullary
+/// function or it can be a an unary function that takes the identity function
+/// as the first parameter(which is helpful to delay compile-time checking).
+/// Also, additional parameters can be passed to `eval` to delay compiliation(so
+/// that result can depend on template parameters).
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F, class... Ts>
+///     constexpr auto eval(F&& f, Ts&&...);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     EvaluatableFunctionObject
+/// 
+/// Example
+/// -------
+/// 
+///     assert(fit::eval([]{ return 3; }) == 3);
+/// 
+
 #include <fit/always.h>
 #include <fit/identity.h>
 #include <fit/conditional.h>
@@ -33,7 +64,7 @@ struct id_eval
 
 }
 
-FIT_STATIC_CONSTEXPR fit::conditional_adaptor<detail::id_eval, detail::simple_eval> eval = {};
+FIT_STATIC_CONSTEXPR fit::conditional_adaptor<detail::simple_eval, detail::id_eval> eval = {};
 
 }
 

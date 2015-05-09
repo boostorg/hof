@@ -11,6 +11,7 @@ extract args
 extract capture
 extract compose
 extract conditional
+extract eval
 extract fix
 extract flip
 extract function

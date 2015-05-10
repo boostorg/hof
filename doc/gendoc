@@ -7,6 +7,7 @@ function extract
 
 extract always
 extract apply
+extract apply_eval
 extract args
 extract capture
 extract compose

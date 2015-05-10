@@ -39,7 +39,6 @@ pages:
 - ['placeholders.md', 'Functions', 'placeholders']
 # Utilities
 - ['apply.md', 'Utilities', 'apply']
-- ['apply.md', 'Utilities', 'apply']
 - ['apply_eval.md', 'Utilities', 'apply_eval']
 - ['capture.md', 'Utilities', 'capture']
 - ['eval.md', 'Utilities', 'eval']

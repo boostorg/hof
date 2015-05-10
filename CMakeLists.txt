@@ -59,6 +59,8 @@ include(CTest)
 include_directories(.)
 
 add_test_executable(always)
+add_test_executable(apply)
+add_test_executable(apply_eval)
 add_test_executable(args)
 add_test_executable(by)
 add_test_executable(capture)

@@ -40,6 +40,23 @@ Example
     assert(r == 5);
 
 
+is_unpackable
+=============
+
+This is a trait that can be used to detect whethet the type can be called
+with `unpack`.
+
+Synopsis
+--------
+
+    template<class T>
+    struct is_unpackable;
+
+Example
+-------
+
+    static_assert(fit::is_unpackable<std::tuple<int>>::value, "Failed");
+
 unpack_sequence
 ===============
 

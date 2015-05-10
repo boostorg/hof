@@ -50,6 +50,23 @@
 ///     assert(r == 5);
 /// 
 /// 
+/// is_unpackable
+/// =============
+/// 
+/// This is a trait that can be used to detect whethet the type can be called
+/// with `unpack`.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class T>
+///     struct is_unpackable;
+/// 
+/// Example
+/// -------
+/// 
+///     static_assert(fit::is_unpackable<std::tuple<int>>::value, "Failed");
+/// 
 /// unpack_sequence
 /// ===============
 /// 
@@ -81,7 +98,10 @@
 #include <fit/detail/seq.h>
 #include <fit/capture.h>
 #include <fit/always.h>
+#include <fit/reveal.h>
+#include <fit/detail/and.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/holder.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_constexpr.h>
@@ -89,9 +109,24 @@
 namespace fit {
 
 template<class Sequence, class=void>
-struct unpack_sequence;
+struct unpack_sequence
+{
+    typedef void not_unpackable;
+};
+
 
 namespace detail {
+template<class Sequence, class=void>
+struct is_unpackable_impl
+: std::true_type
+{};
+
+template<class Sequence>
+struct is_unpackable_impl<Sequence, typename detail::holder<
+    typename unpack_sequence<Sequence>::not_unpackable
+>::type>
+: std::false_type
+{};
 
 template<class F, class Sequence>
 constexpr auto unpack_impl(F&& f, Sequence&& s) FIT_RETURNS
@@ -108,6 +143,13 @@ constexpr auto unpack_join(F&& f, Sequences&&... s) FIT_RETURNS
 
 }
 
+template<class Sequence>
+struct is_unpackable
+: detail::is_unpackable_impl<
+    typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type
+>
+{};
+
 template<class F>
 struct unpack_adaptor : F
 {
@@ -119,16 +161,63 @@ struct unpack_adaptor : F
         return always_ref(*this)(xs...);
     }
 
+    struct unpack_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            struct deducer
+            {
+                template<class... Ts>
+                typename Failure::template of<Ts...> operator()(Ts&&...) const;
+            };
+
+            template<class T, class=typename std::enable_if<(
+                is_unpackable<T>::value
+            )>::type>
+            static auto deduce(T&& x)
+            FIT_RETURNS
+            (
+                detail::unpack_impl(deducer(), fit::forward<T>(x))
+            );
+
+            template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
+                is_unpackable<T>, is_unpackable<Ts>...
+            >::value)>::type>
+            static auto deduce(T&& x, Ts&&... xs) FIT_RETURNS
+            (
+                detail::unpack_join(deducer(), fit::forward<T>(x), fit::forward<Ts>(xs)...)
+            );
+
+            template<class... Ts>
+            struct of
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+            : std::enable_if<true, decltype(apply::deduce(std::declval<Ts>()...))>::type
+#else
+            : decltype(apply::deduce(std::declval<Ts>()...))
+#endif
+            {};
+        };
+    };
+
+    struct failure
+    : failure_map<unpack_failure, F>
+    {};
+
     FIT_RETURNS_CLASS(unpack_adaptor);
 
-    template<class T>
+    template<class T, class=typename std::enable_if<(
+        is_unpackable<T>::value
+    )>::type>
     constexpr auto operator()(T&& x) const
     FIT_RETURNS
     (
         detail::unpack_impl(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x))
     );
 
-    template<class T, class... Ts>
+    template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
+        is_unpackable<T>, is_unpackable<Ts>...
+    >::value)>::type>
     constexpr auto operator()(T&& x, Ts&&... xs) const FIT_RETURNS
     (
         detail::unpack_join(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x), fit::forward<Ts>(xs)...)

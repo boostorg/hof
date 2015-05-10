@@ -5,13 +5,13 @@ Description
 -----------
 
 The `is_callable` metafunction checks if the function object is callable with
-the certain parameters. It uses the same signature as `result_of`.
+the certain parameters.
 
 
 Synopsis
 --------
 
-    template<class Sig>
+    template<class F, class... Ts>
     struct is_callable;
 
 Example
@@ -23,5 +23,5 @@ Example
         {
         }
     };
-    static_assert(is_callable<is_callable_class(int)>(), "Not callable");
+    static_assert(is_callable<is_callable_class, int>(), "Not callable");
 

@@ -98,13 +98,14 @@ struct constexpr_check
 
 struct constexpr_check_each
 {
-    constexpr bool operator()() const
+    template<class T>
+    constexpr bool operator()(T x) const
     {
-        return fit::by(constexpr_check())(bool_<true>(), bool_<true>()), true;
+        return fit::by(constexpr_check())(x, x), true;
     }
 };
 
 FIT_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(constexpr_check_each()());
+    FIT_STATIC_TEST_CHECK(constexpr_check_each()(bool_<true>()));
 }

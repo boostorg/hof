@@ -102,6 +102,13 @@ constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
     return apply_eval(f, make_project_eval(fit::forward<Ts>(xs), p)...);
 }
 
+struct swallow
+{
+    template<class... Ts>
+    constexpr swallow(Ts&&... xs)
+    {}
+};
+
 }
 
 template<class Projection, class F=void>
@@ -156,7 +163,7 @@ struct by_adaptor<Projection, void> : Projection
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (void)std::initializer_list<int>{(
+        (void)detail::swallow{(
             FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...))
             (fit::forward<Ts>(xs)), 0)...}
     );

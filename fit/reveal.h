@@ -114,7 +114,7 @@ struct reveal_failure
     // never called
     template<
         class... Ts, 
-        class=typename std::enable_if<(!is_callable<F(Ts...)>::value)>::type
+        class=typename std::enable_if<(!is_callable<F, Ts...>::value)>::type
     >
     constexpr auto operator()(Ts&&... xs) -> 
 #if FIT_HAS_TEMPLATE_ALIAS

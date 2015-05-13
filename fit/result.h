@@ -70,7 +70,7 @@ struct result_adaptor : F
         return always_ref(*this)(xs...);
     }
 
-    template<class... Ts, class=typename std::enable_if<(fit::is_callable<F(Ts...)>::value)>::type>
+    template<class... Ts, class=typename std::enable_if<(fit::is_callable<F, Ts...>::value)>::type>
     constexpr result_type operator()(Ts&&... xs) const
     {
         return this->base_function(xs...)(fit::forward<Ts>(xs)...);
@@ -90,7 +90,7 @@ struct result_adaptor<void, F> : F
         return always_ref(*this)(xs...);
     }
 
-    template<class... Ts, class=typename std::enable_if<(fit::is_callable<F(Ts...)>::value)>::type>
+    template<class... Ts, class=typename std::enable_if<(fit::is_callable<F, Ts...>::value)>::type>
     constexpr result_type operator()(Ts&&... xs) const
     {
         this->base_function(xs...)(fit::forward<Ts>(xs)...);

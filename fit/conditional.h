@@ -95,7 +95,7 @@ struct conditional_kernel : F1, F2
     struct select
     : std::conditional
     <
-        is_callable<F1(Ts...)>::value, 
+        is_callable<F1, Ts...>::value, 
         F1,
         F2
     >

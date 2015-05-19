@@ -93,6 +93,30 @@ constexpr project_eval<T, Projection> make_project_eval(T&& x, const Projection&
     return project_eval<T, Projection>(fit::forward<T>(x), p);
 }
 
+template<class T, class Projection>
+struct project_void_eval
+{
+    T&& x;
+    const Projection& p;
+
+    template<class X, class P>
+    constexpr project_void_eval(X&& x, const P& p) : x(fit::forward<X>(x)), p(p)
+    {}
+
+    struct void_ {};
+
+    constexpr void_ operator()() const
+    {
+        return p(fit::forward<T>(x)), void_();
+    }
+};
+
+template<class T, class Projection>
+constexpr project_void_eval<T, Projection> make_project_void_eval(T&& x, const Projection& p)
+{
+    return project_void_eval<T, Projection>(fit::forward<T>(x), p);
+}
+
 template<class Projection, class F, class... Ts, 
     class R=decltype(
         std::declval<const F&>()(std::declval<const Projection&>()(std::declval<Ts>())...)
@@ -101,6 +125,29 @@ constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
 {
     return apply_eval(f, make_project_eval(fit::forward<Ts>(xs), p)...);
 }
+
+#if FIT_NO_ORDERD_BRACE_INIT
+#define FIT_BY_VOID_RETURN FIT_ALWAYS_VOID_RETURN
+#else
+#if FIT_NO_CONSTEXPR_VOID
+#define FIT_BY_VOID_RETURN fit::detail::swallow
+#else
+#define FIT_BY_VOID_RETURN void
+#endif
+#endif
+
+template<class Projection, class... Ts>
+constexpr FIT_ALWAYS_VOID_RETURN by_void_eval(const Projection& p, Ts&&... xs)
+{
+    return apply_eval(always(), make_project_void_eval(fit::forward<Ts>(xs), p)...);
+}
+
+struct swallow
+{
+    template<class... Ts>
+    constexpr swallow(Ts&&...)
+    {}
+};
 
 }
 
@@ -154,12 +201,19 @@ struct by_adaptor<Projection, void> : Projection
     FIT_RETURNS_CLASS(by_adaptor);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-    (
-        (void)std::initializer_list<int>{(
-            FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...))
-            (fit::forward<Ts>(xs)), 0)...}
-    );
+    constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const
+    {
+#if FIT_NO_ORDERD_BRACE_INIT
+        return detail::by_void_eval(this->base_projection(xs...), fit::forward<Ts>(xs)...);
+#else
+#if FIT_NO_CONSTEXPR_VOID
+        return
+#endif
+        detail::swallow{
+            (this->base_projection(xs...)(fit::forward<Ts>(xs)), 0)...
+        };
+#endif
+    }
 };
 
 FIT_STATIC_CONSTEXPR detail::make<by_adaptor> by = {};

@@ -97,13 +97,24 @@ struct eval_helper
         return (R&&)result;
     }
 };
+
+template<>
+struct eval_helper<void>
+{
+    int x;
+    template<class F, class... Ts>
+    constexpr eval_helper(const F& f, Ts&&... xs) : x(f(fit::forward<Ts>(xs)...), 0)
+    {}
+};
 #endif
 
 struct apply_eval_f
 {
     template<class F, class... Ts, class R=decltype(
         std::declval<const F&>()(fit::eval(std::declval<Ts>())...)
-    )>
+    ),
+    class=typename std::enable_if<(!std::is_void<R>::value)>::type 
+    >
     constexpr R operator()(const F& f, Ts&&... xs) const
     {
         return
@@ -113,6 +124,22 @@ struct apply_eval_f
 #else
         eval_helper<R>
             {f, fit::eval(fit::forward<Ts>(xs))...}.get_result();
+#endif
+    }
+
+    template<class F, class... Ts, class R=decltype(
+        std::declval<const F&>()(fit::eval(std::declval<Ts>())...)
+    ),
+    class=typename std::enable_if<(std::is_void<R>::value)>::type 
+    >
+    constexpr void operator()(const F& f, Ts&&... xs) const
+    {
+#if FIT_NO_ORDERD_BRACE_INIT
+        eval_ordered<R>
+            (f, pack(), fit::forward<Ts>(xs)...);
+#else
+        eval_helper<R>
+            {f, fit::eval(fit::forward<Ts>(xs))...};
 #endif
     }
 };

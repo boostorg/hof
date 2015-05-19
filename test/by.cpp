@@ -90,9 +90,10 @@ struct bool_
 struct constexpr_check
 {
     template<class T>
-    constexpr void operator()(T) const
+    constexpr int operator()(T) const
     {
         static_assert(T::value, "Failed");
+        return 0;
     }
 };
 

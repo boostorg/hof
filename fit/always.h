@@ -45,6 +45,15 @@
 ///     assert( always(ten)(1,2,3,4,5) == 10 );
 /// 
 
+#define FIT_NO_CONSTEXPR_VOID 1
+#ifndef FIT_NO_CONSTEXPR_VOID
+#ifdef __clang__
+#define FIT_NO_CONSTEXPR_VOID 0
+#else
+#define FIT_NO_CONSTEXPR_VOID 1
+#endif
+#endif
+
 namespace fit { namespace detail {
 
 template<class T>
@@ -66,12 +75,42 @@ struct always_base
     }
 };
 
+#if FIT_NO_CONSTEXPR_VOID
+#define FIT_ALWAYS_VOID_RETURN fit::detail::always_base<void>::void_
+#else
+#define FIT_ALWAYS_VOID_RETURN void
+#endif
+
+template<>
+struct always_base<void>
+{
+    
+    constexpr always_base()
+    {}
+
+    struct void_ {};
+
+    template<class... As>
+    constexpr FIT_ALWAYS_VOID_RETURN 
+    operator()(As&&...) const
+    {
+#if FIT_NO_CONSTEXPR_VOID
+        return void_();
+#endif
+    }
+};
+
 struct always_f
 {
     template<class T>
     constexpr detail::always_base<T> operator()(T x) const
     {
         return detail::always_base<T>(x);
+    }
+
+    constexpr detail::always_base<void> operator()() const
+    {
+        return detail::always_base<void>();
     }
 };
 

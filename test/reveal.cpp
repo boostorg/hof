@@ -48,6 +48,8 @@ static constexpr auto lam = fit::conditional(
 
 FIT_TEST_CASE()
 {
+    STATIC_ASSERT_EMPTY(lam);
+    STATIC_ASSERT_EMPTY(fit::reveal(lam));
     FIT_TEST_CHECK(fit::reveal(lam)(t1()) == 1);
     FIT_TEST_CHECK(fit::reveal(lam)(t2()) == 2);
     FIT_TEST_CHECK(fit::reveal(lam)(t3()) == 3);
@@ -72,6 +74,8 @@ FIT_STATIC_FUNCTION(static_fun) = fit::conditional(
 
 FIT_TEST_CASE()
 {
+    STATIC_ASSERT_EMPTY(static_fun);
+    // STATIC_ASSERT_EMPTY(fit::reveal(static_fun));
     FIT_TEST_CHECK(fit::reveal(static_fun)(t1()) == 1);
     FIT_TEST_CHECK(fit::reveal(static_fun)(t2()) == 2);
     FIT_TEST_CHECK(fit::reveal(static_fun)(t3()) == 3);

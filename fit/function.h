@@ -102,9 +102,10 @@ struct reveal_static_function_wrapper_factor
     }
 #else
     template<class F>
-    constexpr const reveal_adaptor<static_function_wrapper<F>>& operator += (F*)
+    constexpr const reveal_adaptor<F>& operator += (F*)
     {
-        return FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<static_function_wrapper<F>>&>(static_const<T>::value));
+        static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
+        return FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<F>&>(static_const<T>::value));
     }
 #endif
 };
@@ -129,7 +130,8 @@ struct static_addr
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
 #define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
 #define FIT_STATIC_FUNCTION(name) \
-struct fit_private_static_function_ ## name {}; static constexpr auto FIT_STATIC_CONST_REF name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
+struct fit_private_static_function_ ## name {}; \
+static constexpr auto FIT_STATIC_CONST_REF name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 
 
 #endif

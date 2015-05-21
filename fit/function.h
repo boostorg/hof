@@ -34,10 +34,19 @@
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
+#ifndef FIT_NO_STATIC_CONST
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_NO_STATIC_CONST 1
+#else
+#define FIT_NO_STATIC_CONST 0
+#endif
+#endif
+
 namespace fit {
 
 namespace detail {
 
+#if !FIT_NO_STATIC_CONST
 template<class T>
 struct static_const
 {
@@ -46,7 +55,7 @@ struct static_const
 
 template<class T>
 constexpr T static_const<T>::value;
-
+#endif
 
 template<class F>
 struct static_function_wrapper
@@ -85,11 +94,19 @@ struct static_function_wrapper_factor
 template<class T>
 struct reveal_static_function_wrapper_factor
 {
+#if FIT_NO_STATIC_CONST
     template<class F>
-    constexpr auto operator += (F*) FIT_RETURNS
-    (
-        FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<static_function_wrapper<F>>&>(static_const<T>::value))
-    );
+    constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
+    {
+        return {};
+    }
+#else
+    template<class F>
+    constexpr const reveal_adaptor<static_function_wrapper<F>>& operator += (F*)
+    {
+        return FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<static_function_wrapper<F>>&>(static_const<T>::value));
+    }
+#endif
 };
 
 struct static_addr
@@ -103,10 +120,16 @@ struct static_addr
 
 }}
 
+#if FIT_NO_STATIC_CONST
+#define FIT_STATIC_CONST_REF
+#else
+#define FIT_STATIC_CONST_REF &
+#endif
+
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
 #define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
 #define FIT_STATIC_FUNCTION(name) \
-struct fit_private_static_function_ ## name {}; static constexpr auto& name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
+struct fit_private_static_function_ ## name {}; static constexpr auto FIT_STATIC_CONST_REF name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 
 
 #endif

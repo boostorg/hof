@@ -25,8 +25,9 @@ int main()
     if (fit_test::fit_sum_lambda(1, 2) != 3) printf("FAILED\n");
     if (fit_test::fit_sum(1, 2) != 3) printf("FAILED\n");
 
-    // Disable this test for now
+#if !FIT_NO_STATIC_CONST
     if (sum_lambda_addr() != f_sum_lambda_addr()) printf("FAILED: Lambda\n");
     if (sum_fo_addr() != f_sum_fo_addr()) printf("FAILED: Function object\n");
+#endif
     return f();
 }

@@ -1,4 +1,5 @@
 
+#include <cstdio>
 #include "static_def.h"
 
 extern int f();

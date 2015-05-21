@@ -34,11 +34,11 @@
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
-#ifndef FIT_NO_STATIC_CONST
+#ifndef FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_NO_STATIC_CONST 1
+#define FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR 1
 #else
-#define FIT_NO_STATIC_CONST 0
+#define FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR 0
 #endif
 #endif
 
@@ -46,7 +46,7 @@ namespace fit {
 
 namespace detail {
 
-#if !FIT_NO_STATIC_CONST
+#if !FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
 template<class T>
 struct static_const
 {
@@ -94,7 +94,7 @@ struct static_function_wrapper_factor
 template<class T>
 struct reveal_static_function_wrapper_factor
 {
-#if FIT_NO_STATIC_CONST
+#if FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
     template<class F>
     constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
     {
@@ -120,7 +120,7 @@ struct static_addr
 
 }}
 
-#if FIT_NO_STATIC_CONST
+#if FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
 #define FIT_STATIC_CONST_REF
 #else
 #define FIT_STATIC_CONST_REF &

@@ -32,6 +32,8 @@
 #include <fit/reveal.h>
 #include <fit/detail/static_constexpr.h>
 
+#define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
+
 namespace fit {
 
 namespace detail {
@@ -80,11 +82,14 @@ struct static_function_wrapper_factor
     }
 };
 
+template<class T>
 struct reveal_static_function_wrapper_factor
 {
     template<class F>
     constexpr auto operator += (F*) FIT_RETURNS
-    ((static_const<reveal_adaptor<static_function_wrapper<F>>>::value));
+    (
+        FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<static_function_wrapper<F>>&>(static_const<T>::value))
+    );
 };
 
 struct static_addr
@@ -99,8 +104,9 @@ struct static_addr
 }}
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#define FIT_DETAIL_MAKE_REVEAL_STATIC fit::detail::reveal_static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#define FIT_STATIC_FUNCTION(name) static constexpr auto& name = FIT_DETAIL_MAKE_REVEAL_STATIC
+#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
+#define FIT_STATIC_FUNCTION(name) \
+struct fit_private_static_function_ ## name {}; static constexpr auto& name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 
 
 #endif

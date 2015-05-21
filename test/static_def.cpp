@@ -25,7 +25,7 @@ int main()
     if (fit_test::fit_sum(1, 2) != 3) printf("FAILED\n");
 
     // Disable this test for now
-    // if (sum_lambda_addr() != f_sum_lambda_addr()) printf("FAILED: Lambda\n");
+    if (sum_lambda_addr() != f_sum_lambda_addr()) printf("FAILED: Lambda\n");
     if (sum_fo_addr() != f_sum_fo_addr()) printf("FAILED: Function object\n");
     return f();
 }

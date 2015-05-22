@@ -9,7 +9,6 @@
 #define FIT_GUARD_FUNCTION_ALWAYS_H
 
 #include <fit/detail/unwrap.h>
-#include <fit/detail/static_constexpr.h>
 #include <fit/detail/static_const.h>
 
 /// always
@@ -86,9 +85,8 @@ struct always_ref_f
 };
 
 }
-
-static constexpr auto& always = static_const<detail::always_f>();
-static constexpr auto& always_ref = static_const<detail::always_ref_f>();
+FIT_DECLARE_STATIC_VAR(always, detail::always_f);
+FIT_DECLARE_STATIC_VAR(always_ref, detail::always_ref_f);
 
 }
 

@@ -62,7 +62,7 @@ struct apply_f
 
 }
 
-static constexpr auto& apply = static_const<detail::apply_f>();
+FIT_DECLARE_STATIC_VAR(apply, detail::apply_f);
 
 }
 

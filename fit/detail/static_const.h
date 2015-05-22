@@ -29,4 +29,12 @@ constexpr const T& static_const()
 
 }
 
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_STATIC_AUTO_REF static auto&
+#else
+#define FIT_STATIC_AUTO_REF static constexpr auto&
+#endif
+
+#define FIT_DECLARE_STATIC_VAR(name, ...) FIT_STATIC_AUTO_REF name = fit::static_const<__VA_ARGS__>()
+
 #endif

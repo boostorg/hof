@@ -119,11 +119,7 @@ struct static_addr
 #if FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR
 #else
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_DETAIL_STATIC_FUNCTION_AUTO static auto&
-#else
-#define FIT_DETAIL_STATIC_FUNCTION_AUTO static constexpr auto&
-#endif
+#define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_AUTO_REF
 #endif
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
@@ -132,6 +128,6 @@ struct static_addr
 struct fit_private_static_function_ ## name {}; \
 FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 
-#define FIT_STATIC_CONSTEXPR_FUNCTION(name) FIT_STATIC_CONSTEXPR auto& name = fit::detail::reveal_static_const_factory()
+#define FIT_STATIC_CONSTEXPR_FUNCTION(name) FIT_STATIC_AUTO_REF name = fit::detail::reveal_static_const_factory()
 
 #endif

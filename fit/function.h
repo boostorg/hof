@@ -31,7 +31,7 @@
 #include <fit/returns.h>
 #include <fit/reveal.h>
 #include <fit/detail/static_constexpr.h>
-#include <fit/detail/static_const.h>
+#include <fit/detail/static_const_var.h>
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
@@ -91,7 +91,7 @@ struct reveal_static_function_wrapper_factor
     constexpr const reveal_adaptor<F>& operator += (F*)
     {
         static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
-        return FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<F>&>(static_const<T>()));
+        return FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<F>&>(static_const_var<T>()));
     }
 #endif
 };
@@ -101,7 +101,7 @@ struct reveal_static_const_factory
     template<class F>
     constexpr const reveal_adaptor<F>& operator=(const F&) const
     {
-        return static_const<reveal_adaptor<F>>();
+        return static_const_var<reveal_adaptor<F>>();
     }
 };
 

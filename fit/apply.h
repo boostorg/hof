@@ -45,7 +45,7 @@
 
 #include <fit/returns.h>
 #include <fit/detail/forward.h>
-#include <fit/detail/static_const.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
 

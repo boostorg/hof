@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2015 Paul Fultz II
-    static_const.h
+    static_const_var.h
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
@@ -22,7 +22,7 @@ constexpr T static_const_storage<T>::value;
 }
 
 template<class T>
-constexpr const T& static_const()
+constexpr const T& static_const_var()
 {
     return detail::static_const_storage<T>::value;
 }
@@ -35,6 +35,6 @@ constexpr const T& static_const()
 #define FIT_STATIC_AUTO_REF static constexpr auto&
 #endif
 
-#define FIT_DECLARE_STATIC_VAR(name, ...) FIT_STATIC_AUTO_REF name = fit::static_const<__VA_ARGS__>()
+#define FIT_DECLARE_STATIC_VAR(name, ...) FIT_STATIC_AUTO_REF name = fit::static_const_var<__VA_ARGS__>()
 
 #endif

@@ -9,7 +9,7 @@
 #define FIT_GUARD_FUNCTION_ALWAYS_H
 
 #include <fit/detail/unwrap.h>
-#include <fit/detail/static_const.h>
+#include <fit/detail/static_const_var.h>
 
 /// always
 /// ======

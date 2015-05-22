@@ -53,7 +53,7 @@
 #include <fit/always.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
 
@@ -81,7 +81,7 @@ struct indirect_adaptor : F
     );
 };
 
-FIT_STATIC_CONSTEXPR detail::make<indirect_adaptor> indirect = {};
+FIT_DECLARE_STATIC_VAR(indirect, detail::make<indirect_adaptor>);
 
 }
 

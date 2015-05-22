@@ -56,7 +56,7 @@
 #include <fit/pipable.h>
 #include <fit/fuse.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 
 namespace fit { 
@@ -66,7 +66,7 @@ namespace fit {
 template<class F, class Pack=void >
 struct partial_adaptor;
 
-FIT_STATIC_CONSTEXPR detail::make<partial_adaptor> partial = {};
+FIT_DECLARE_STATIC_VAR(partial, detail::make<partial_adaptor>);
 
 namespace detail {
 

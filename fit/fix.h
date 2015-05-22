@@ -48,7 +48,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 #ifndef FIT_FIX_HAS_CONSTEXPR
 #define FIT_FIX_HAS_CONSTEXPR 0
@@ -117,7 +117,7 @@ struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
     FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
 };
 
-FIT_STATIC_CONSTEXPR detail::make<fix_adaptor> fix = {};
+FIT_DECLARE_STATIC_VAR(fix, detail::make<fix_adaptor>);
 
 }
 

@@ -57,7 +57,7 @@
 #include <fit/detail/move.h>
 #include <fit/function.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit { 
  
@@ -156,7 +156,7 @@ template<class A, class F>
 constexpr auto operator|(A&& a, const pipable_adaptor<F>& p) FIT_RETURNS
 (p(fit::forward<A>(a)));
 
-FIT_STATIC_CONSTEXPR detail::make<pipable_adaptor> pipable = {};
+FIT_DECLARE_STATIC_VAR(pipable, detail::make<pipable_adaptor>);
 
 // Operators for static_ adaptor
 template<class A, class F>

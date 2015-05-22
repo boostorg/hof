@@ -51,7 +51,7 @@
 /// 
 
 #include <fit/pipable.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit { namespace detail {
 
@@ -66,7 +66,7 @@ struct tap_f
 
 }
 
-FIT_STATIC_CONSTEXPR pipable_adaptor<detail::tap_f> tap = {};
+FIT_DECLARE_STATIC_VAR(tap, pipable_adaptor<detail::tap_f>);
 
 
 }

@@ -67,7 +67,7 @@
 #include <tuple>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit { namespace detail {
 
@@ -116,7 +116,7 @@ struct compose_adaptor<F> : F
 
 };
 
-FIT_STATIC_CONSTEXPR detail::make<compose_adaptor> compose = {};
+FIT_DECLARE_STATIC_VAR(compose, detail::make<compose_adaptor>);
 
 }
 

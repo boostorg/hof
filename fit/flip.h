@@ -40,7 +40,7 @@
 #include <fit/returns.h>
 #include <fit/reveal.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
 
@@ -81,7 +81,7 @@ struct flip_adaptor : F
     );
 };
 
-FIT_STATIC_CONSTEXPR detail::make<flip_adaptor> flip = {};
+FIT_DECLARE_STATIC_VAR(flip, detail::make<flip_adaptor>);
 
 }
 

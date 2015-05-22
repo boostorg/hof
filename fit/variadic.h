@@ -36,7 +36,7 @@
 #include <fit/returns.h>
 #include <fit/always.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
 
@@ -62,7 +62,7 @@ struct variadic_adaptor : F
     );
 };
 
-FIT_STATIC_CONSTEXPR detail::make<variadic_adaptor> variadic = {};
+FIT_DECLARE_STATIC_VAR(variadic, detail::make<variadic_adaptor>);
 
 }
 

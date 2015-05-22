@@ -23,6 +23,7 @@ extract infix
 extract is_callable
 extract lambda
 extract lazy
+extract lift
 extract match
 extract mutable
 extract by

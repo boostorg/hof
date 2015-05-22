@@ -39,12 +39,8 @@ struct name \
 static fit::test::auto_register FIT_PP_CAT(name, _register) = fit::test::auto_register(name()); \
 void name::operator()() const
 
-
 template<class T>
-constexpr bool is_empty(const T&)
-{
-    return std::is_empty<T>::value;
-}
+T bare(const T&);
 
 }}
 
@@ -65,7 +61,7 @@ constexpr bool is_empty(const T&)
 #else
 #define STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(T) static_assert(!std::is_default_constructible<T>::value, "Default constructible")
 #endif
-#define STATIC_ASSERT_EMPTY(x) static_assert(fit::test::is_empty(x), "Not empty");
+#define STATIC_ASSERT_EMPTY(x) static_assert(std::is_empty<decltype(fit::test::bare(x))>::value, "Not empty");
 
 
 #define FIT_TEST_CASE() FIT_DETAIL_TEST_CASE(FIT_PP_CAT(test_, __LINE__))

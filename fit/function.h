@@ -35,11 +35,7 @@
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
 #ifndef FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR 1
-#else
 #define FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR 0
-#endif
 #endif
 
 namespace fit {
@@ -50,7 +46,7 @@ namespace detail {
 template<class T>
 struct static_const
 {
-    static constexpr T value {};
+    static constexpr T value = T();
 };
 
 template<class T>
@@ -122,16 +118,20 @@ struct static_addr
 }}
 
 #if FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
-#define FIT_STATIC_CONST_REF
+#define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR
 #else
-#define FIT_STATIC_CONST_REF &
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_DETAIL_STATIC_FUNCTION_AUTO static auto&
+#else
+#define FIT_DETAIL_STATIC_FUNCTION_AUTO static constexpr auto&
+#endif
 #endif
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
 #define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
 #define FIT_STATIC_FUNCTION(name) \
 struct fit_private_static_function_ ## name {}; \
-static constexpr auto FIT_STATIC_CONST_REF name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
+FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 
 
 #endif

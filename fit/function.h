@@ -31,6 +31,7 @@
 #include <fit/returns.h>
 #include <fit/reveal.h>
 #include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const.h>
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
@@ -41,17 +42,6 @@
 namespace fit {
 
 namespace detail {
-
-#if !FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
-template<class T>
-struct static_const
-{
-    static constexpr T value = T();
-};
-
-template<class T>
-constexpr T static_const<T>::value;
-#endif
 
 template<class F>
 struct static_function_wrapper
@@ -101,7 +91,7 @@ struct reveal_static_function_wrapper_factor
     constexpr const reveal_adaptor<F>& operator += (F*)
     {
         static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
-        return FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<F>&>(static_const<T>::value));
+        return FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<F>&>(static_const<T>()));
     }
 #endif
 };

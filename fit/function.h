@@ -96,6 +96,15 @@ struct reveal_static_function_wrapper_factor
 #endif
 };
 
+struct reveal_static_const_factory
+{
+    template<class F>
+    constexpr const reveal_adaptor<F>& operator=(const F&) const
+    {
+        return static_const<reveal_adaptor<F>>();
+    }
+};
+
 struct static_addr
 {
     template<class T>
@@ -123,5 +132,6 @@ struct static_addr
 struct fit_private_static_function_ ## name {}; \
 FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 
+#define FIT_STATIC_CONSTEXPR_FUNCTION(name) FIT_STATIC_CONSTEXPR auto& name = fit::detail::reveal_static_const_factory()
 
 #endif

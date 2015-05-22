@@ -10,6 +10,7 @@
 
 #include <fit/detail/unwrap.h>
 #include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const.h>
 
 /// always
 /// ======
@@ -86,8 +87,8 @@ struct always_ref_f
 
 }
 
-FIT_STATIC_CONSTEXPR detail::always_f always = {};
-FIT_STATIC_CONSTEXPR detail::always_ref_f always_ref = {};
+static constexpr auto& always = static_const<detail::always_f>();
+static constexpr auto& always_ref = static_const<detail::always_ref_f>();
 
 }
 

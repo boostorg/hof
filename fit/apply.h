@@ -45,7 +45,7 @@
 
 #include <fit/returns.h>
 #include <fit/detail/forward.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const.h>
 
 namespace fit {
 
@@ -62,7 +62,7 @@ struct apply_f
 
 }
 
-FIT_STATIC_CONSTEXPR detail::apply_f apply = {};
+static constexpr auto& apply = static_const<detail::apply_f>();
 
 }
 

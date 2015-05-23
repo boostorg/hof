@@ -64,7 +64,6 @@
 ///     assert(1 == x.i);
 /// 
 
-#include <fit/invoke.h>
 #include <fit/pack.h>
 #include <fit/returns.h>
 

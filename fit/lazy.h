@@ -51,7 +51,6 @@
 #include <fit/conditional.h>
 #include <fit/always.h>
 #include <fit/static.h>
-#include <fit/invoke.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/compressed_pair.h>
 #include <fit/pack.h>

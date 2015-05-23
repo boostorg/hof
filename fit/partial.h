@@ -52,9 +52,7 @@
 
 #include <fit/conditional.h>
 #include <fit/static.h>
-#include <fit/invoke.h>
 #include <fit/pipable.h>
-#include <fit/fuse.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
 

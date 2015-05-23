@@ -51,11 +51,9 @@
 /// 
 
 #include <fit/conditional.h>
-#include <fit/static.h>
 #include <fit/pack.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
-#include <fit/function.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
 
@@ -158,15 +156,26 @@ constexpr auto operator|(A&& a, const pipable_adaptor<F>& p) FIT_RETURNS
 
 FIT_DECLARE_STATIC_VAR(pipable, detail::make<pipable_adaptor>);
 
-// Operators for static_ adaptor
-template<class A, class F>
-auto operator|(A&& a, static_<F> f) FIT_RETURNS
-(f.base_function().base_function()(fit::forward<A>(a)));
+namespace detail {
+
+template<class F>
+struct static_function_wrapper;
 
 // Operators for static_function_wrapper adaptor
 template<class A, class F>
 auto operator|(A&& a, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
 (f(fit::forward<A>(a)));
+
+}
+
+template<class F>
+struct static_;
+
+// Operators for static_ adaptor
+template<class A, class F>
+auto operator|(A&& a, static_<F> f) FIT_RETURNS
+(f.base_function().base_function()(fit::forward<A>(a)));
+
 }
 
 #endif

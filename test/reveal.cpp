@@ -57,7 +57,7 @@ FIT_TEST_CASE()
     // fit::reveal(lam)(1);
 }
 
-FIT_STATIC_FUNCTION(static_fun) = fit::conditional(
+FIT_STATIC_LAMBDA_FUNCTION(static_fun) = fit::conditional(
     [](t1)
     {
         return 1;

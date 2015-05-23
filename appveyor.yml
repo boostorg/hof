@@ -15,10 +15,6 @@ matrix:
 before_build:
  - git submodule update --init --recursive
 
-install:
- - ps: cmake -P .cmake-download-script
- - ps: gem install coveralls-lcov
-
 build_script:
  - cmd: set PATH=C:\Program Files (x86)\CMake\bin;%PATH%
  - cmd: call "C:/Program Files (x86)/Microsoft Visual Studio %VS_VERSION%/Common7/Tools/vsvars32.bat"

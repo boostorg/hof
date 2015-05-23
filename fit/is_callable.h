@@ -42,7 +42,11 @@
 #include <fit/detail/and.h>
 
 #ifndef FIT_NO_EXPRESSION_SFINAE
+#ifdef _MSC_VER
+#define FIT_NO_EXPRESSION_SFINAE 1
+#else
 #define FIT_NO_EXPRESSION_SFINAE 0
+#endif
 #endif
 
 namespace fit {

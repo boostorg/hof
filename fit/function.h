@@ -98,11 +98,19 @@ struct reveal_static_function_wrapper_factor
 
 struct reveal_static_const_factory
 {
+#if FIT_NO_UNIQUE_STATIC_VAR
+    template<class F>
+    constexpr reveal_adaptor<F> operator=(const F&) const
+    {
+        return {};
+    }
+#else
     template<class F>
     constexpr const reveal_adaptor<F>& operator=(const F&) const
     {
         return static_const_var<reveal_adaptor<F>>();
     }
+#endif
 };
 
 struct static_addr
@@ -117,7 +125,7 @@ struct static_addr
 }}
 
 #if FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
-#define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR
+#define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR auto
 #else
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_AUTO_REF
 #endif
@@ -128,6 +136,10 @@ struct static_addr
 struct fit_private_static_function_ ## name {}; \
 FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 
+#if FIT_NO_UNIQUE_STATIC_VAR
+#define FIT_STATIC_CONSTEXPR_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = fit::detail::reveal_static_const_factory()
+#else
 #define FIT_STATIC_CONSTEXPR_FUNCTION(name) FIT_STATIC_AUTO_REF name = fit::detail::reveal_static_const_factory()
+#endif
 
 #endif

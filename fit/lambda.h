@@ -36,8 +36,8 @@
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
-#ifndef FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
-#define FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR 0
+#ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
 #endif
 
 namespace fit {
@@ -81,7 +81,7 @@ struct static_function_wrapper_factor
 template<class T>
 struct reveal_static_function_wrapper_factor
 {
-#if FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
+#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
     template<class F>
     constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
     {
@@ -108,7 +108,7 @@ struct static_addr
 
 }}
 
-#if FIT_NO_UNIQUE_STATIC_FUNCTION_ADDR
+#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR auto
 #else
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_AUTO_REF

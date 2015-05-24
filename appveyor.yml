@@ -15,7 +15,6 @@ build_script:
  - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
  # - cmd: call "C:/Program Files (x86)/Microsoft Visual Studio %VS_VERSION%/Common7/Tools/vsvars32.bat"
  - cmd: cmake --version
- - cmd: cd tests
  - cmd: mkdir build
  - cmd: cd build
  - cmd: cmake .. -Wdev --warn-uninitialized -G"%GENERATOR%"

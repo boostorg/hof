@@ -37,7 +37,11 @@
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
 #ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+#ifdef _MSC_VER
+#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 1
+#else
 #define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
+#endif
 #endif
 
 namespace fit {

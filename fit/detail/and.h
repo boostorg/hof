@@ -12,11 +12,26 @@
 
 namespace fit { namespace detail {
 
+#ifdef _MSC_VER
+template<class... Ts>
+struct and_;
+
+template<class T, class... Ts>
+struct and_<T, Ts...>
+: std::integral_constant<bool, (T::value && and_<Ts...>::value)>
+{};
+
+template<>
+struct and_<>
+: std::true_type
+{};
+#else
 template<bool...> struct bool_seq {};
 template<class... Ts>
 struct and_
 : std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, true)...>>::type
 {};
+#endif
 
 }}
 

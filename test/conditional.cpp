@@ -69,7 +69,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(f_move_local(t_move3()) == 3);
 }
 
-
+#if !FIT_NO_STATIC_LAMBDA
 static constexpr auto lam = fit::conditional(
     FIT_STATIC_LAMBDA(t1)
     {
@@ -113,4 +113,5 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(static_fun(t2()) == 2);
     FIT_TEST_CHECK(static_fun(t3()) == 3);
 }
+#endif
 }

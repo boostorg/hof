@@ -113,6 +113,7 @@ namespace fit {
     m(|=, assign_bit_or) \
     m(^=, assign_xor)
 
+#ifndef _MSC_VER
 #define FIT_FOREACH_UNARY_OP(m) \
     m(!, not_) \
     m(~, compl_) \
@@ -121,6 +122,14 @@ namespace fit {
     m(*, dereference) \
     m(++, increment) \
     m(--, decrement)
+#else
+#define FIT_FOREACH_UNARY_OP(m) \
+    m(!, not_) \
+    m(~, compl_) \
+    m(+, unary_plus) \
+    m(-, unary_subtract) \
+    m(*, dereference)
+#endif
 
 namespace operators {
 

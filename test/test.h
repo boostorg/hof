@@ -101,7 +101,7 @@ struct mutable_class
     };
 
     template<class T, class U>
-    constexpr T operator()(T & x, U y) const
+    T operator()(T & x, U y) const
     {
         return x+=y;
     }

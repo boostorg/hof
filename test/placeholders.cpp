@@ -227,7 +227,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(f_dereference(&x_dereference) == x_dereference);
 
     // TODO: Test FIT_PLACEHOLDER_TEST_CONSTEXPR increment and decrement
-
+#ifndef _MSC_VER
     auto x_increment = 2;
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_increment = ++fit::_1;
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 6   
@@ -243,6 +243,7 @@ FIT_TEST_CASE()
 #endif
     f_decrement(x_decrement);
     FIT_TEST_CHECK(x_decrement == 1);
+#endif
 
     // TODO: Test post increment and decrement
 }
@@ -733,7 +734,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(f_dereference(&x_dereference) == x_dereference);
 
     // TODO: Test constexpr increment and decrement
-
+#ifndef _MSC_VER
     auto x_increment = 2;
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_increment = ++fit::_;
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 6   
@@ -749,6 +750,7 @@ FIT_TEST_CASE()
 #endif
     f_decrement(x_decrement);
     FIT_TEST_CHECK(x_decrement == 1);
+#endif
 
     // TODO: Test post increment and decrement
 }

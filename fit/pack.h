@@ -127,7 +127,7 @@ constexpr T&& pack_get(const pack_holder<N, T, Tag>& p, Ts&&...)
     return (T&&)(p.get_value());
 }
 
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || _MSC_VER
 template<class Seq, class... Ts>
 struct pack_holder_base;
 

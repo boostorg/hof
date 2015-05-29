@@ -14,8 +14,9 @@
 /// Description
 /// -----------
 /// 
-/// The `FIT_STATIC_FUNCTION` macro allows initializing a function object from
-/// lambdas and adaptors at compile-time in a `constexpr` expression.
+/// The `FIT_STATIC_FUNCTION` macro allows initializing a function object from a
+/// `constexpr` expression. It also ensures that the function object will have a
+/// unique address across translation units. This helps to avoid ODR violations.
 /// 
 /// Example
 /// -------

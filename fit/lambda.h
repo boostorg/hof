@@ -59,6 +59,10 @@ namespace detail {
 template<class F>
 struct static_function_wrapper
 {
+    // Default constructor necessary for MSVC
+    constexpr static_function_wrapper()
+    {}
+
     static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
 
     struct failure

@@ -143,6 +143,7 @@ struct pipable_adaptor
 : conditional_adaptor<F, detail::pipe_pack<pipable_adaptor<F>, F> >
 {
     typedef conditional_adaptor<F, detail::pipe_pack<pipable_adaptor<F>, F> > base;
+    typedef pipable_adaptor fit_rewritable_tag;
 
     FIT_INHERIT_CONSTRUCTOR(pipable_adaptor, base);
 

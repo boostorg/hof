@@ -105,7 +105,7 @@ template<class T>
 struct is_rewritable<T, typename detail::holder<
     typename T::fit_rewritable_tag
 >::type>
-: std::true_type
+: std::is_same<typename T::fit_rewritable_tag, T>
 {};
 
 template<class T, class=void>
@@ -117,7 +117,7 @@ template<class T>
 struct is_rewritable1<T, typename detail::holder<
     typename T::fit_rewritable1_tag
 >::type>
-: std::true_type
+: std::is_same<typename T::fit_rewritable1_tag, T>
 {};
 
 

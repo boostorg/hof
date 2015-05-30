@@ -149,7 +149,7 @@ struct lazy_invoker
 : detail::compressed_pair<F, Pack>
 {
     typedef detail::compressed_pair<F, Pack> base_type;
-    typedef void fit_rewritable1_tag;
+    typedef lazy_invoker fit_rewritable1_tag;
 
     FIT_INHERIT_CONSTRUCTOR(lazy_invoker, base_type)
 

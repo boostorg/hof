@@ -181,7 +181,7 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
 {
     typedef typename detail::partial_adaptor_base<F, Pack>::type base;
 
-    typedef void fit_rewritable1_tag;
+    typedef partial_adaptor fit_rewritable1_tag;
     
     template<class... Ts>
     constexpr const F& base_function(Ts&&...) const
@@ -209,7 +209,7 @@ struct partial_adaptor<F, void> : detail::partial_adaptor_base<F, void>::type
 {
     typedef typename detail::partial_adaptor_base<F, void>::type base;
 
-    typedef void fit_rewritable1_tag;
+    typedef partial_adaptor fit_rewritable1_tag;
     
     template<class... Ts>
     constexpr const F& base_function(Ts&&...) const
@@ -235,7 +235,7 @@ struct partial_adaptor<pipable_adaptor<F>, void>
 {
     typedef partial_adaptor<F, void> base;
 
-    typedef void fit_rewritable1_tag;
+    typedef partial_adaptor fit_rewritable1_tag;
 
     constexpr partial_adaptor()
     {}
@@ -251,8 +251,8 @@ struct partial_adaptor<static_<pipable_adaptor<F>>, void>
 {
     typedef partial_adaptor<F, void> base;
 
-    typedef void fit_rewritable1_tag;
-    
+    typedef partial_adaptor fit_rewritable1_tag;
+
     partial_adaptor()
     {}
 

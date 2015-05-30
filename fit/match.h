@@ -75,7 +75,7 @@ template<class F, class...Fs>
 struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
 {
     typedef match_adaptor<Fs...> base;
-    typedef void fit_rewritable_tag;
+    typedef match_adaptor fit_rewritable_tag;
 
     struct failure
     : failure_for<F, Fs...>
@@ -99,6 +99,7 @@ template<class F>
 struct match_adaptor<F> : F
 {
     typedef F base;
+    typedef match_adaptor fit_rewritable_tag;
     using F::operator();
 
     FIT_INHERIT_CONSTRUCTOR(match_adaptor, F);

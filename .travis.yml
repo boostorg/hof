@@ -4,19 +4,30 @@ os:
 matrix:
     include:
         - compiler: gcc
-          env: GCC_VERSION="4.9"
+          env:
+            - GCC_VERSION="4.9"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: gcc
-          env: GCC_VERSION="4.8"
+          env: 
+            - GCC_VERSION="4.8"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: gcc
-          env: GCC_VERSION="4.7"
+          env: 
+            - GCC_VERSION="4.7"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: gcc
-          env: GCC_VERSION="4.6"
+          env: 
+            - GCC_VERSION="4.6"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
-          env: LIBCXX="on"
+          env: 
+            - LIBCXX="on"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env: 
             - LIBCXX="off"
             - GCC_VERSION="4.9"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
 
 before_install:
     - export CHECKOUT_PATH=`pwd`;

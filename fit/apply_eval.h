@@ -54,7 +54,7 @@
 #include <fit/eval.h>
 
 #ifndef FIT_NO_ORDERD_BRACE_INIT
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 9
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 9) || defined(_MSC_VER)
 #define FIT_NO_ORDERD_BRACE_INIT 1
 #else
 #define FIT_NO_ORDERD_BRACE_INIT 0

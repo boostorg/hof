@@ -9,6 +9,12 @@ environment:
   - GENERATOR: "Visual Studio 14 2015 Win64"
     CONFIG: Release
 
+  - GENERATOR: "Visual Studio 14 2015"
+    CONFIG: Debug
+
+  - GENERATOR: "Visual Studio 14 2015"
+    CONFIG: Release
+
 matrix:
   fast_finish: true
 

@@ -169,6 +169,14 @@ template<class A, class F>
 auto operator|(A&& a, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
 (f(fit::forward<A>(a)));
 
+template<class F>
+struct static_default_function;
+
+// Operators for static_default_function adaptor
+template<class A, class F>
+auto operator|(A&& a, const fit::detail::static_default_function<F>& f) FIT_RETURNS
+(f(fit::forward<A>(a)));
+
 }
 
 template<class F>

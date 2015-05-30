@@ -160,6 +160,22 @@ struct rewrite_lambda<T, typename std::enable_if<
     typedef T type;
 };
 
+template<class F>
+struct static_default_function
+{
+    constexpr static_default_function()
+    {}
+
+    FIT_RETURNS_CLASS(static_default_function);
+
+    template<class... Ts>
+    FIT_SFINAE_RESULT(const F&, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    (
+        F()(fit::forward<Ts>(xs)...)
+    );
+};
+
 #endif
 
 template<class T>
@@ -167,7 +183,8 @@ struct reveal_static_function_wrapper_factor
 {
 #if FIT_REWRITE_STATIC_LAMBDA
     template<class F>
-    constexpr reveal_adaptor<typename rewrite_lambda<F>::type> operator += (F*)
+    constexpr static_default_function<reveal_adaptor<typename rewrite_lambda<F>::type>> 
+    operator += (F*)
     {
         return {};
     }

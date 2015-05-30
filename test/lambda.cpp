@@ -42,6 +42,11 @@ FIT_TEST_CASE()
 
 namespace test_static {
 
+FIT_STATIC_LAMBDA_FUNCTION(add_one) = [](int x)
+{
+    return x + 1;
+};
+
 FIT_STATIC_LAMBDA_FUNCTION(sum_partial) = fit::partial([](int x, int y)
 {
     return x + y;

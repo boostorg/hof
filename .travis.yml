@@ -57,8 +57,7 @@ before_install:
     - if [ -n "$GCC_VERSION" ]; then sudo apt-get install -qq g++-${GCC_VERSION}; fi
     - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
     # Install clang
-    # - if [ -n "$CLANG_VERSION" ]; then sudo apt-get install -qq clang-${CLANG_VERSION}; fi
-    - sudo apt-get install -y clang-${CLANG_VERSION}
+    - if [ -n "$CLANG_VERSION" ]; then sudo apt-get install -qq clang-${CLANG_VERSION}; fi
     - if [ "$CXX" = "clang++" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
     - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="clang++" CC="clang"; fi
     # Show compiler info

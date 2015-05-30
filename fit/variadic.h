@@ -33,7 +33,7 @@
 /// 
 
 #include <fit/detail/ref_tuple.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/always.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
@@ -56,7 +56,8 @@ struct variadic_adaptor : F
     FIT_RETURNS_CLASS(variadic_adaptor);
 
     template<class... Ts>
-    constexpr auto operator()(Ts && ... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, id_<std::tuple<typename detail::remove_rvalue_reference<Ts>::type...>>) 
+    operator()(Ts && ... xs) const FIT_SFINAE_RETURNS
     (
         FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))(detail::make_ref_tuple(fit::forward<Ts>(xs)...))
     );

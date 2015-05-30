@@ -103,14 +103,14 @@ struct ref_transformer
 {
     template<class T, typename std::enable_if<is_reference_wrapper<T>::value, int>::type = 0>
     constexpr auto operator()(T x) const 
-    FIT_RETURNS(always_ref(x.get()));
+    FIT_SFINAE_RETURNS(always_ref(x.get()));
 };
 
 struct id_transformer
 {
     template<class T>
     constexpr auto operator()(const T& x) const 
-    FIT_RETURNS(always_ref(x));
+    FIT_SFINAE_RETURNS(always_ref(x));
 };
 
 FIT_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer>);

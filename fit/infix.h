@@ -50,7 +50,7 @@
 /// 
 
 #include <fit/detail/delegate.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
@@ -78,13 +78,15 @@ struct postfix_adaptor : F
     FIT_RETURNS_CLASS(postfix_adaptor);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<Ts>...)
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<Ts>(xs)...)
     );
 
     template<class A>
-    constexpr auto operator>(A&& a) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<A>)
+    operator>(A&& a) const FIT_SFINAE_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<A>(a))
     );

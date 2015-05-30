@@ -69,7 +69,7 @@
 
 #include <fit/is_callable.h>
 #include <fit/reveal.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
 #include <fit/detail/make.h>
@@ -110,8 +110,9 @@ struct conditional_kernel : F1, F2
     FIT_RETURNS_CLASS(conditional_kernel);
 
     template<class... Ts>
-    constexpr auto operator()(Ts && ... x) const
-    FIT_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(fit::forward<Ts>(x)...));
+    constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
+    operator()(Ts && ... x) const
+    FIT_SFINAE_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(fit::forward<Ts>(x)...));
 };
 }
 

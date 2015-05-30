@@ -37,7 +37,7 @@
 ///     assert(r == 3);
 /// 
 
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/reveal.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
@@ -74,7 +74,8 @@ struct flip_adaptor : F
     FIT_RETURNS_CLASS(flip_adaptor);
 
     template<class T, class U, class... Ts>
-    constexpr auto operator()(T&& x, U&& y, Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, id_<U>, id_<T>, id_<Ts>...) 
+    operator()(T&& x, U&& y, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))
             (fit::forward<U>(y), fit::forward<T>(x), fit::forward<Ts>(xs)...)

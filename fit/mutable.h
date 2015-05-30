@@ -38,7 +38,7 @@
 ///     MoveConstructible
 /// 
 
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
@@ -56,7 +56,8 @@ struct mutable_adaptor
     FIT_RETURNS_CLASS(mutable_adaptor);
 
     template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS(FIT_CONST_THIS->f(fit::forward<Ts>(xs)...));
+    FIT_SFINAE_RESULT(F, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS(FIT_CONST_THIS->f(fit::forward<Ts>(xs)...));
 };
 
 FIT_DECLARE_STATIC_VAR(mutable_, detail::make<mutable_adaptor>);

@@ -29,7 +29,7 @@
 #include <fit/function.h>
 #include <type_traits>
 #include <utility>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/reveal.h>
 #include <fit/detail/static_constexpr.h>
 #include <fit/detail/static_const_var.h>
@@ -78,7 +78,8 @@ struct static_function_wrapper
     FIT_RETURNS_CLASS(static_function_wrapper);
 
     template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS
+    FIT_SFINAE_RESULT(const F&, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(fit::forward<Ts>(xs)...)
     );

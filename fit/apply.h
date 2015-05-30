@@ -43,7 +43,7 @@
 ///     assert(fit::apply(sum_f(), 1, 2) == 3);
 /// 
 
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/detail/forward.h>
 #include <fit/detail/static_const_var.h>
 
@@ -54,7 +54,7 @@ namespace detail {
 struct apply_f
 {
     template<class F, class... Ts>
-    constexpr auto operator()(F&& f, Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(F, id_<Ts>...) operator()(F&& f, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         f(fit::forward<Ts>(xs)...)
     );

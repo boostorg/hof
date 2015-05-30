@@ -57,7 +57,7 @@
 ///     assert(6 == times2(3));
 /// 
 
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/reveal.h>
 
 namespace fit { 
@@ -79,8 +79,9 @@ struct static_
     FIT_RETURNS_CLASS(static_);
 ;
     template<class... Ts>
-    auto operator()(Ts && ... xs) const
-    FIT_RETURNS(FIT_CONST_THIS->base_function()(fit::forward<Ts>(xs)...));
+    FIT_SFINAE_RESULT(F, id_<Ts>...) 
+    operator()(Ts && ... xs) const
+    FIT_SFINAE_RETURNS(FIT_CONST_THIS->base_function()(fit::forward<Ts>(xs)...));
 };
 
 

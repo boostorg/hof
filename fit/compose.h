@@ -59,7 +59,7 @@
 ///     assert(r == 4);
 /// 
 
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/compressed_pair.h>
@@ -81,7 +81,8 @@ struct compose_kernel : detail::compressed_pair<F1, F2>
     FIT_RETURNS_CLASS(compose_kernel);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F1&, result_of<const F2&, id_<Ts>...>) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...))(
             FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))(fit::forward<Ts>(xs)...)

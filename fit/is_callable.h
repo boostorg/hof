@@ -40,14 +40,7 @@
 #include <type_traits>
 #include <fit/detail/holder.h>
 #include <fit/detail/and.h>
-
-#ifndef FIT_NO_EXPRESSION_SFINAE
-#ifdef _MSC_VER
-#define FIT_NO_EXPRESSION_SFINAE 1
-#else
-#define FIT_NO_EXPRESSION_SFINAE 0
-#endif
-#endif
+#include <fit/detail/sfinae.h>
 
 namespace fit {
 
@@ -69,7 +62,7 @@ struct cant_be_called_type
 {};
 
 template<class F, class... Ts>
-struct is_callable_wrapper : F
+struct is_callable_wrapper : std::remove_cv<typename std::remove_reference<F>::type>::type
 {
     is_callable_wrapper();
     typedef cant_be_called_type const &(*pointer_to_function)(typename never_care<Ts>::type...);

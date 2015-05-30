@@ -42,7 +42,7 @@
 #include <fit/always.h>
 #include <fit/identity.h>
 #include <fit/conditional.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 
 namespace fit {
 
@@ -51,14 +51,16 @@ namespace detail {
 struct simple_eval
 {
     template<class F, class... Ts>
-    constexpr auto operator()(F&& f, Ts&&...xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(F) 
+    operator()(F&& f, Ts&&...xs) const FIT_SFINAE_RETURNS
     (fit::always_ref(f)(xs...)());
 };
 
 struct id_eval
 {
     template<class F, class... Ts>
-    constexpr auto operator()(F&& f, Ts&&...xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(F, id_<decltype(fit::identity)>) 
+    operator()(F&& f, Ts&&...xs) const FIT_SFINAE_RETURNS
     (fit::always_ref(f)(xs...)(fit::identity));
 };
 

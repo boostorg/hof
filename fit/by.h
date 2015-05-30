@@ -63,7 +63,7 @@
 #include <utility>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
@@ -127,7 +127,8 @@ struct by_adaptor : Projection, F
     FIT_RETURNS_CLASS(by_adaptor);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, result_of<const Projection&, id_<Ts>>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::by_eval(
             FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...)),

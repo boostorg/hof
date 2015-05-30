@@ -96,14 +96,16 @@ struct pipe_closure : F, Pack
         FIT_RETURNS_CLASS(invoke);
 
         template<class... Ts>
-        constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+        constexpr FIT_SFINAE_RESULT(const F&, id_<A>, id_<Ts>...) 
+        operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->self->base_function(xs...))(fit::forward<A>(a), fit::forward<Ts>(xs)...));
     };
 
     FIT_RETURNS_CLASS(pipe_closure);
 
     template<class A>
-    constexpr auto operator()(A&& a) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const Pack&, id_<invoke<A&&>>) 
+    operator()(A&& a) const FIT_SFINAE_RETURNS
     (FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(a))(invoke<A&&>(fit::forward<A>(a), FIT_CONST_THIS)));
 };
 

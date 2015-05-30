@@ -86,7 +86,15 @@ struct partial_adaptor_invoke
     FIT_RETURNS_CLASS(partial_adaptor_invoke);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT
+    (
+        typename result_of<decltype(fit::pack_join), 
+            id_<const Pack&>, 
+            result_of<decltype(fit::pack_forward), id_<Ts>...> 
+        >::type,
+        id_<F&&>
+    ) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         fit::pack_join
         (
@@ -116,7 +124,7 @@ struct partial_adaptor_join
     FIT_RETURNS_CLASS(partial_adaptor_join);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         partial
         (
@@ -137,7 +145,7 @@ struct partial_adaptor_pack
     FIT_RETURNS_CLASS(partial_adaptor_pack);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         partial
         (

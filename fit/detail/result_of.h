@@ -39,14 +39,13 @@ struct id_
     typedef T type;
 };
 
-// template<class F, class... Ts>
-// struct result_of
-// : detail::result_of_impl<F, detail::holder<Ts...>>
-// {};
-
 template<class F, class... Ts>
-using result_of = detail::result_of_impl<F, detail::holder<Ts...>>;
-// using result_of = std::enable_if<is_callable<F, typename Ts::type..., decltype(std::declval<F>()(std::declval<typename Ts::type>()...))>::value>;
+struct result_of
+: detail::result_of_impl<F, detail::holder<Ts...>>
+{};
+
+// template<class F, class... Ts>
+// using result_of = detail::result_of_impl<F, detail::holder<Ts...>>;
 // using result_of = id_<decltype(std::declval<F>()(std::declval<typename Ts::type>()...))>;
 
 }

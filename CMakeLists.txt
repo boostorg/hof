@@ -39,7 +39,7 @@ if (BIICODE)
     return() #finish processing, no need to run cmake below
 endif()
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -VV -C ${CMAKE_CFG_INTDIR})
 
 macro(add_test_executable TEST_NAME_)
     set(TEST_NAME "${TEST_NAME_}")

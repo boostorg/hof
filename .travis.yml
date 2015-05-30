@@ -52,7 +52,7 @@ before_install:
     - sudo apt-add-repository -y "deb http://llvm.org/apt/precise/ llvm-toolchain-precise main"
     - sudo apt-get update -qq
     # Install valgrind
-    sudo apt-get install -qq valgrind
+    - sudo apt-get install -qq valgrind
     # Install gcc
     - if [ -n "$GCC_VERSION" ]; then sudo apt-get install -qq g++-${GCC_VERSION}; fi
     - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi

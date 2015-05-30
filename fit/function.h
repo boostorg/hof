@@ -58,7 +58,7 @@ struct reveal_static_const_factory
 struct reveal_function_factory
 {
     template<class F>
-    constexpr static_default_function<reveal_adaptor<F>> operator += (F*)
+    constexpr reveal_adaptor<F> operator += (F*)
     {
         return {};
     }

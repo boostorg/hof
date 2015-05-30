@@ -127,14 +127,20 @@ struct reveal_failure
 template<class F, class Failure=get_failure<F>, class=void>
 struct traverse_failure 
 : reveal_failure<F, Failure>
-{};
+{
+    constexpr traverse_failure()
+    {}
+};
 
 template<class F, class Failure>
 struct traverse_failure<F, Failure, typename holder< 
     typename Failure::children
 >::type> 
 : Failure::children::template overloads<F>
-{};
+{
+    constexpr traverse_failure()
+    {}
+};
 
 template<class Failure, class Transform, class=void>
 struct transform_failures 
@@ -170,6 +176,8 @@ struct failures
     struct overloads
     : detail::traverse_failure<F, Failure>, FailureBase::template overloads<F>
     {
+        constexpr overloads()
+        {}
         using detail::traverse_failure<F, Failure>::operator();
         using FailureBase::template overloads<F>::operator();
     };
@@ -185,7 +193,10 @@ struct failures<Failure>
     template<class F>
     struct overloads
     : detail::traverse_failure<F, Failure>
-    {};
+    {
+        constexpr overloads()
+        {}
+    };
 };
 
 template<class Transform, class... Fs>

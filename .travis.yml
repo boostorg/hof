@@ -8,23 +8,23 @@ matrix:
             - GCC_VERSION="4.9"
             - CXX_FLAGS="-Wall -Wextra -Werror"
           addons: &gcc49
-          apt:
-            packages:
-              - g++-4.9
-              - valgrind
-            sources:
-              - ubuntu-toolchain-r-test
+            apt:
+              packages:
+                - g++-4.9
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
         - compiler: gcc
           env: 
             - GCC_VERSION="4.8"
             - CXX_FLAGS="-Wall -Wextra -Werror"
           addons: &gcc48
-          apt:
-            packages:
-              - g++-4.8
-              - valgrind
-            sources:
-              - ubuntu-toolchain-r-test
+            apt:
+              packages:
+                - g++-4.8
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
         - compiler: gcc
           env: 
             - GCC_VERSION="4.7"
@@ -34,23 +34,23 @@ matrix:
             - GCC_VERSION="4.6"
             - CXX_FLAGS="-Wall -Wextra -Werror"
           addons: &gcc46
-          apt:
-            packages:
-              - g++-4.8
-              - valgrind
-            sources:
-              - ubuntu-toolchain-r-test
+            apt:
+              packages:
+                - g++-4.8
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
         - compiler: clang
           env: 
             - CLANG_VERSION="3.4"
             - LIBCXX="on"
             - CXX_FLAGS="-Wall -Wextra -Werror"
           addons: &clang34
-          apt:
-            packages:
-              - valgrind
-            sources:
-              - ubuntu-toolchain-r-test
+            apt:
+              packages:
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
         - compiler: clang
           env: 
             - CLANG_VERSION="3.4"
@@ -62,14 +62,14 @@ matrix:
             - CLANG_VERSION="3.6"
             - LIBCXX="on"
             - CXX_FLAGS="-Wall -Wextra -Werror"
-           addons: &clang36
-          apt:
-            packages:
-              - clang-3.6
-              - valgrind
-            sources:
-              - ubuntu-toolchain-r-test
-              - llvm-toolchain-precise
+          addons: &clang36
+            apt:
+              packages:
+                - clang-3.6
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+                - llvm-toolchain-precise
         - compiler: clang
           env: 
             - CLANG_VERSION="3.6"

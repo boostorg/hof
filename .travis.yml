@@ -50,7 +50,7 @@ before_install:
     # Setup sources
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
     - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
-    - sudo apt-add-repository -y "deb http://llvm.org/apt/precise/ llvm-toolchain-precise-$CLANG_VERSION main"
+    - if [ -n "$CLANG_VERSION" ]; then sudo apt-add-repository -y "deb http://llvm.org/apt/precise/ llvm-toolchain-precise-$CLANG_VERSION main"; fi
     - sudo apt-get update -qq
     # Install valgrind
     - sudo apt-get install -qq valgrind

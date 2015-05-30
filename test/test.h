@@ -10,7 +10,7 @@
 #include <fit/detail/forward.h>
 
 #ifndef FIT_HAS_STATIC_TEST_CHECK
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || _MSC_VER
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
 #define FIT_HAS_STATIC_TEST_CHECK 0
 #else
 #define FIT_HAS_STATIC_TEST_CHECK 1

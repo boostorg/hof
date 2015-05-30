@@ -19,7 +19,7 @@ build_script:
  - cmd: cmake --version
  - cmd: mkdir build
  - cmd: cd build
- - cmd: cmake .. -Wdev --warn-uninitialized -G"%GENERATOR%"
+ - cmd: cmake .. -G"%GENERATOR%"
  - cmd: cmake --build . --config %CONFIG% --target check
 
 # test_script:

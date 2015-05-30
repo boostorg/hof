@@ -18,7 +18,9 @@ FIT_STATIC_FUNCTION(sum_partial) = fit::partial(sum_f());
 
 FIT_TEST_CASE()
 {
+#ifndef _MSC_VER
     STATIC_ASSERT_EMPTY(sum_partial);
+#endif
     FIT_TEST_CHECK(3 == sum_partial(1, 2));
     FIT_TEST_CHECK(3 == sum_partial(1)(2));
 

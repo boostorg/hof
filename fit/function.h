@@ -54,15 +54,16 @@ struct reveal_static_const_factory
     }
 #endif
 };
-
+#if FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION
 struct reveal_function_factory
 {
     template<class F>
-    constexpr reveal_adaptor<F> operator += (F*)
+    constexpr static_default_function<reveal_adaptor<F>> operator += (F*)
     {
         return {};
     }
 };
+#endif
 
 }}
 

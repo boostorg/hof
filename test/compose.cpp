@@ -53,7 +53,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(r == 4);
     FIT_STATIC_TEST_CHECK(fit::compose(increment(), decrement(), increment())(3) == 4);
 }
-
+#ifndef _MSC_VER
 FIT_TEST_CASE()
 {
     constexpr auto f = fit::compose(increment(), decrement());
@@ -62,6 +62,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(r == 3);
     FIT_STATIC_TEST_CHECK(f(3) == 3);
 }
+#endif
 
 FIT_TEST_CASE()
 {
@@ -74,7 +75,9 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
     const auto f = fit::compose([](int i) { return i+1; }, [](int i) { return i-1; }, [](int i) { return i+1; });
+#ifndef _MSC_VER
     static_assert(std::is_empty<decltype(f)>::value, "Compose function not empty");
+#endif
     int r = f(3);
     FIT_TEST_CHECK(r == 4);
 }

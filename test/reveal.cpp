@@ -31,7 +31,6 @@ FIT_TEST_CASE()
     // fit::reveal(f)(1);
 }
 
-#if !FIT_NO_STATIC_LAMBDA
 static constexpr auto lam = fit::conditional(
     FIT_STATIC_LAMBDA(t1)
     {
@@ -87,6 +86,5 @@ FIT_TEST_CASE()
 
     // fit::reveal(static_fun)(1);
 }
-#endif
 
 }

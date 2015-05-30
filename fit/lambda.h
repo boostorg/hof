@@ -44,15 +44,13 @@
 #endif
 #endif
 
-#ifndef FIT_NO_STATIC_LAMBDA
+#ifndef FIT_REWRITE_STATIC_LAMBDA
 #ifdef _MSC_VER
-#define FIT_NO_STATIC_LAMBDA 1
-#else
-#define FIT_NO_STATIC_LAMBDA 0
-#endif
-#endif
-
 #define FIT_REWRITE_STATIC_LAMBDA 1
+#else
+#define FIT_REWRITE_STATIC_LAMBDA 0
+#endif
+#endif
 
 namespace fit {
 

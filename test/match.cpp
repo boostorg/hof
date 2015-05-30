@@ -73,7 +73,6 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(fit::reveal(fun)(foo()) == 2);
 };
 
-#if !FIT_NO_STATIC_LAMBDA
 FIT_TEST_CASE()
 {
     
@@ -85,7 +84,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(lam(1) == 1);
     FIT_TEST_CHECK(lam(foo()) == 2);
 };
-#endif
+
 FIT_TEST_CASE()
 {
     int i = 0;

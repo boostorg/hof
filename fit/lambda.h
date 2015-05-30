@@ -105,7 +105,7 @@ template<class T>
 struct is_rewritable<T, typename detail::holder<
     typename T::fit_rewritable_tag
 >::type>
-: std::false_type
+: std::true_type
 {};
 
 template<class T, class=void>
@@ -117,15 +117,12 @@ template<class T>
 struct is_rewritable1<T, typename detail::holder<
     typename T::fit_rewritable1_tag
 >::type>
-: std::false_type
+: std::true_type
 {};
 
 
 template<class T, class=void>
-struct rewrite_lambda
-{
-    typedef T type;
-};
+struct rewrite_lambda;
 
 template<template<class...> class Adaptor, class... Ts>
 struct rewrite_lambda<Adaptor<Ts...>, typename std::enable_if<
@@ -151,6 +148,16 @@ struct rewrite_lambda<T, typename std::enable_if<
 >::type>
 {
     typedef static_function_wrapper<T> type;
+};
+
+template<class T>
+struct rewrite_lambda<T, typename std::enable_if<
+    !std::is_empty<T>::value && 
+    !is_rewritable<T>::value && 
+    !is_rewritable1<T>::value
+>::type>
+{
+    typedef T type;
 };
 
 #endif

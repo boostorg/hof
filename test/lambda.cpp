@@ -49,7 +49,9 @@ FIT_STATIC_LAMBDA_FUNCTION(sum_partial) = fit::partial([](int x, int y)
 
 FIT_TEST_CASE()
 {
+#ifndef _MSC_VER
     STATIC_ASSERT_EMPTY(sum_partial);
+#endif
     FIT_TEST_CHECK(3 == sum_partial(1, 2));
     FIT_TEST_CHECK(3 == sum_partial(1)(2));
 }
@@ -61,7 +63,9 @@ FIT_STATIC_LAMBDA_FUNCTION(add_one_pipable) = fit::pipable([](int x)
 
 FIT_TEST_CASE()
 {
+#ifndef _MSC_VER
     STATIC_ASSERT_EMPTY(add_one_pipable);
+#endif
     FIT_TEST_CHECK(3 == add_one_pipable(2));
     FIT_TEST_CHECK(3 == (2 | add_one_pipable));
 }
@@ -73,7 +77,9 @@ FIT_STATIC_LAMBDA_FUNCTION(sum_infix) = fit::infix([](int x, int y)
 
 FIT_TEST_CASE()
 {
+#ifndef _MSC_VER
     STATIC_ASSERT_EMPTY(sum_infix);
+#endif
     FIT_TEST_CHECK(3 == (1 <sum_infix> 2));
 }
 

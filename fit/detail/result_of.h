@@ -20,7 +20,7 @@
 namespace fit { namespace detail {
 
 template<class F, class Args, class=void>
-struct result_of_impl;
+struct result_of_impl {};
 
 template<class F, class... Ts>
 struct result_of_impl<

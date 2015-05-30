@@ -49,7 +49,7 @@ before_install:
     - sudo sh cmake-3.1.3-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
     # Setup sources
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-    - sudo apt-add-repository -y "deb http://llvm.org/apt/precise/ llvm-toolchain-precise main"
+    - sudo apt-add-repository -y "deb http://llvm.org/apt/precise/ llvm-toolchain-precise-$CLANG_VERSION main"
     - sudo apt-get update -qq
     # Install valgrind
     - sudo apt-get install -qq valgrind

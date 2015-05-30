@@ -30,6 +30,10 @@
 #include <fit/detail/static_constexpr.h>
 #include <fit/detail/static_const_var.h>
 
+#if FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION
+#include <fit/lambda.h>
+#endif
+
 namespace fit {
 
 namespace detail {
@@ -51,12 +55,25 @@ struct reveal_static_const_factory
 #endif
 };
 
+struct reveal_function_factory
+{
+    template<class F>
+    constexpr reveal_adaptor<F> operator += (F*)
+    {
+        return {};
+    }
+};
+
 }}
 
-#if FIT_NO_UNIQUE_STATIC_VAR
+#if FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION
+#define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = \
+    fit::detail::reveal_function_factory() += true ? nullptr : fit::detail::static_addr()
+#elif FIT_NO_UNIQUE_STATIC_VAR
 #define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = fit::detail::reveal_static_const_factory()
 #else
 #define FIT_STATIC_FUNCTION(name) FIT_STATIC_AUTO_REF name = fit::detail::reveal_static_const_factory()
 #endif
+
 
 #endif

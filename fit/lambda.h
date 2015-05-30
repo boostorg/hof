@@ -26,7 +26,6 @@
 ///     };
 /// 
 
-#include <fit/function.h>
 #include <type_traits>
 #include <utility>
 #include <fit/detail/result_of.h>
@@ -36,19 +35,19 @@
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
-#ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
-#ifdef _MSC_VER
-#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 1
-#else
-#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
-#endif
-#endif
-
 #ifndef FIT_REWRITE_STATIC_LAMBDA
 #ifdef _MSC_VER
 #define FIT_REWRITE_STATIC_LAMBDA 1
 #else
 #define FIT_REWRITE_STATIC_LAMBDA 0
+#endif
+#endif
+
+#ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+#if defined(_MSC_VER) || FIT_REWRITE_STATIC_LAMBDA
+#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 1
+#else
+#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
 #endif
 #endif
 
@@ -179,7 +178,7 @@ struct static_default_function
 #endif
 
 template<class T>
-struct reveal_static_function_wrapper_factor
+struct reveal_static_lambda_function_wrapper_factor
 {
 #if FIT_REWRITE_STATIC_LAMBDA
     template<class F>
@@ -222,7 +221,7 @@ struct static_addr
 #endif
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
+#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
 #define FIT_STATIC_LAMBDA_FUNCTION(name) \
 struct fit_private_static_function_ ## name {}; \
 FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)

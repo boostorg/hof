@@ -35,8 +35,17 @@ constexpr const T& static_const_var()
 #define FIT_STATIC_AUTO_REF static constexpr auto&
 #endif
 
+// Temporary workaround for MSVC
+#ifndef FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION
+#ifdef _MSC_VER
+#define FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION 1
+#else
+#define FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION 0
+#endif
+#endif
+
 #ifndef FIT_NO_UNIQUE_STATIC_VAR
-#if( defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
+#if FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION || (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
 #define FIT_NO_UNIQUE_STATIC_VAR 1
 #else
 #define FIT_NO_UNIQUE_STATIC_VAR 0

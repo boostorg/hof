@@ -59,6 +59,7 @@ before_install:
     # Install clang
     - if [ -n "$CLANG_VERSION" ]; then sudo apt-get install -qq clang-${CLANG_VERSION}; fi
     - if [ "$CXX" = "clang++" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
+    - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="clang++" CC="clang"; fi
     # Install libc++
     - if [ "$LIBCXX" = "on" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
     - if [ "$LIBCXX" = "on" ]; then cd libcxx/lib && bash buildit; fi

@@ -94,6 +94,7 @@ struct compose_kernel : detail::compressed_pair<F1, F2>
 template<class F, class... Fs>
 struct compose_adaptor : detail::compose_kernel<F, FIT_JOIN(compose_adaptor, Fs...)>
 {
+    typedef void fit_rewritable_tag;
     typedef FIT_JOIN(compose_adaptor, Fs...) tail;
     typedef detail::compose_kernel<F, tail> base;
 
@@ -108,6 +109,7 @@ struct compose_adaptor : detail::compose_kernel<F, FIT_JOIN(compose_adaptor, Fs.
 template<class F>
 struct compose_adaptor<F> : F
 {
+    typedef void fit_rewritable_tag;
     constexpr compose_adaptor() {}
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>

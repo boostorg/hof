@@ -63,6 +63,7 @@ namespace detail {
 template<class F, class Pack>
 struct capture_invoke : F, Pack
 {
+    typedef void fit_rewritable1_tag;
     template<class X, class Y>
     constexpr capture_invoke(X&& x, Y&& y) : F(fit::forward<X>(x)), Pack(fit::forward<Y>(y))
     {}

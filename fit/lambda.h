@@ -52,6 +52,8 @@
 #endif
 #endif
 
+#define FIT_REWRITE_STATIC_LAMBDA 1
+
 namespace fit {
 
 namespace detail {
@@ -95,10 +97,76 @@ struct static_function_wrapper_factor
     }
 };
 
+#if FIT_REWRITE_STATIC_LAMBDA
+template<class T, class=void>
+struct is_rewritable
+: std::false_type
+{};
+
+template<class T>
+struct is_rewritable<T, typename detail::holder<
+    typename T::fit_rewritable_tag
+>::type>
+: std::false_type
+{};
+
+template<class T, class=void>
+struct is_rewritable1
+: std::false_type
+{};
+
+template<class T>
+struct is_rewritable1<T, typename detail::holder<
+    typename T::fit_rewritable1_tag
+>::type>
+: std::false_type
+{};
+
+
+template<class T, class=void>
+struct rewrite_lambda
+{
+    typedef T type;
+};
+
+template<template<class...> class Adaptor, class... Ts>
+struct rewrite_lambda<Adaptor<Ts...>, typename std::enable_if<
+    is_rewritable<Adaptor<Ts...>>::value
+>::type>
+{
+    typedef Adaptor<typename rewrite_lambda<Ts>::type...> type;
+};
+
+template<template<class...> class Adaptor, class T, class... Ts>
+struct rewrite_lambda<Adaptor<T, Ts...>, typename std::enable_if<
+    is_rewritable1<Adaptor<T, Ts...>>::value
+>::type>
+{
+    typedef Adaptor<typename rewrite_lambda<T>::type, Ts...> type;
+};
+
+template<class T>
+struct rewrite_lambda<T, typename std::enable_if<
+    std::is_empty<T>::value && 
+    !is_rewritable<T>::value && 
+    !is_rewritable1<T>::value
+>::type>
+{
+    typedef static_function_wrapper<T> type;
+};
+
+#endif
+
 template<class T>
 struct reveal_static_function_wrapper_factor
 {
-#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+#if FIT_REWRITE_STATIC_LAMBDA
+    template<class F>
+    constexpr reveal_adaptor<typename rewrite_lambda<F>::type> operator += (F*)
+    {
+        return {};
+    }
+#elif FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
     template<class F>
     constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
     {
@@ -125,7 +193,7 @@ struct static_addr
 
 }}
 
-#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR || FIT_REWRITE_STATIC_LAMBDA
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR auto
 #else
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_AUTO_REF

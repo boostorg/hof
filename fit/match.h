@@ -75,6 +75,7 @@ template<class F, class...Fs>
 struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
 {
     typedef match_adaptor<Fs...> base;
+    typedef void fit_rewritable_tag;
 
     struct failure
     : failure_for<F, Fs...>

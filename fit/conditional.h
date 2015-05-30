@@ -120,6 +120,7 @@ template<class F, class... Fs>
 struct conditional_adaptor 
 : detail::conditional_kernel<F, FIT_JOIN(conditional_adaptor, Fs...) >
 {
+    typedef void fit_rewritable_tag;
     typedef FIT_JOIN(conditional_adaptor, Fs...) kernel_base;
     typedef detail::conditional_kernel<F, kernel_base > base;
 
@@ -140,6 +141,7 @@ struct conditional_adaptor
 template<class F>
 struct conditional_adaptor<F> : F
 {
+    typedef void fit_rewritable_tag;
     FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, F);
 
     struct failure

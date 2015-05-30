@@ -60,7 +60,6 @@ before_install:
     # Install clang
     - if [ -n "$CLANG_VERSION" ]; then sudo apt-get install -qq clang-${CLANG_VERSION}; fi
     - if [ "$CXX" = "clang++" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
-    - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="clang++" CC="clang"; fi
     # Show compiler info
     - $CXX --version
     - which $CXX

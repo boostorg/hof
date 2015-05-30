@@ -202,6 +202,7 @@ template<class F>
 struct reveal_adaptor
 : detail::traverse_failure<F>, F
 {
+    typedef reveal_adaptor fit_rewritable1_tag;
     using detail::traverse_failure<F>::operator();
     using F::operator();
 
@@ -212,6 +213,7 @@ template<class F>
 struct reveal_adaptor<reveal_adaptor<F>>
 : reveal_adaptor<F>
 {
+    typedef reveal_adaptor fit_rewritable1_tag;
     FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, reveal_adaptor<F>);
 };
 

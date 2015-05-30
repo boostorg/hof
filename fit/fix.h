@@ -114,6 +114,7 @@ struct fix_adaptor_base : F
 template<class F>
 struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
 {
+    typedef fix_adaptor fit_rewritable1_tag;
     typedef detail::fix_adaptor_base<fix_adaptor<F>, F> base;
     FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
 };

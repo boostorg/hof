@@ -43,6 +43,7 @@ namespace fit {
 template<class F>
 struct variadic_adaptor : F
 {
+    typedef variadic_adaptor fit_rewritable1_tag;
     template<class... Ts>
     constexpr variadic_adaptor(Ts && ... x) : F(fit::forward<Ts>(x)...)
     {}

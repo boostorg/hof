@@ -107,6 +107,7 @@ constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
 template<class Projection, class F=void>
 struct by_adaptor : Projection, F
 {
+    typedef by_adaptor fit_rewritable_tag;
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
@@ -141,6 +142,7 @@ struct by_adaptor : Projection, F
 template<class Projection>
 struct by_adaptor<Projection, void> : Projection
 {
+    typedef by_adaptor fit_rewritable1_tag;
     template<class... Ts>
     constexpr const Projection& base_projection(Ts&&... xs) const
     {

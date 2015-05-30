@@ -60,6 +60,7 @@ namespace fit {
 template<class F>
 struct indirect_adaptor : F
 {
+    typedef indirect_adaptor fit_rewritable1_tag;
     FIT_INHERIT_CONSTRUCTOR(indirect_adaptor, F);
 
     template<class... Ts>

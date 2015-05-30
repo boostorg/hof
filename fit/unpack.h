@@ -153,6 +153,7 @@ struct is_unpackable
 template<class F>
 struct unpack_adaptor : F
 {
+    typedef unpack_adaptor fit_rewritable1_tag;
     FIT_INHERIT_CONSTRUCTOR(unpack_adaptor, F);
 
     template<class... Ts>

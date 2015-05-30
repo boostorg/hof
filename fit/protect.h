@@ -43,6 +43,7 @@ namespace fit {
 template<class F>
 struct protect_adaptor : F
 {
+    typedef protect_adaptor fit_rewritable1_tag;
     template<class... Ts>
     constexpr protect_adaptor(Ts&&... xs) : F(fit::forward<Ts>(xs)...)
     {}

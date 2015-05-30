@@ -47,6 +47,7 @@ namespace fit {
 template<class F>
 struct flip_adaptor : F
 {
+    typedef flip_adaptor fit_rewritable1_tag;
     FIT_INHERIT_CONSTRUCTOR(flip_adaptor, F);
 
     template<class... Ts>

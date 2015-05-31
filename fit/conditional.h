@@ -73,7 +73,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 #include <type_traits>
 
 namespace fit {
@@ -146,7 +146,7 @@ struct conditional_adaptor<F> : F
     {};
 };
 
-FIT_STATIC_CONSTEXPR detail::make<conditional_adaptor> conditional = {};
+FIT_DECLARE_STATIC_VAR(conditional, detail::make<conditional_adaptor>);
 
 }
 

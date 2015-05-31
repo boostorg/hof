@@ -56,7 +56,7 @@
 #include <fit/detail/compressed_pair.h>
 #include <fit/pack.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 #include <functional>
 #include <type_traits>
 
@@ -114,7 +114,7 @@ struct id_transformer
     FIT_RETURNS(always_ref(x));
 };
 
-static constexpr conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer> pick_transformer = {};
+FIT_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer>);
 
 template<class T, class Pack>
 constexpr auto lazy_transform(T&& x, Pack&& p) FIT_RETURNS
@@ -260,7 +260,7 @@ struct lazy_adaptor : F
     
 };
 
-FIT_STATIC_CONSTEXPR detail::make<lazy_adaptor> lazy = {};
+FIT_DECLARE_STATIC_VAR(lazy, detail::make<lazy_adaptor>);
 
 }
 

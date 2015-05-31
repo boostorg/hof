@@ -41,10 +41,14 @@ We can make it behave like a regular function if we construct the class as a glo
 
     const constexpr sum_f sum = {};
 
+However, when we declare function objects globally, we want to make sure they have the same address across translation units in order to avoid ODR violations. This can be done by declaring the function object using the `FIT_STATIC_FUNCTION` macro:
+
+    FIT_STATIC_FUNCTION(sum) = sum_f();
+
 Adaptors
 --------
 
-Now we have defined the function as a function object we can add new "enhancements" to the function. We could make the function pipable using the pipable adaptor:
+Now we have defined the function as a function object, we can add new "enhancements" to the function. We could make the function pipable using the pipable adaptor:
 
     const constexpr pipable_adaptor<sum_f> sum = {};
 
@@ -84,10 +88,10 @@ And we can apply the same adaptors as well:
         return x + y;
     });
 
-We can also statically initialize the lambda after the adaptors have been applied by using `FIT_STATIC_FUNCTION`:
+We can also use `FIT_STATIC_LAMBDA_FUNCTION` to ensure that `sum` will always have an unique address across translation units, even when using lambdas.
 
     // Pipable sum
-    FIT_STATIC_FUNCTION(sum) = pipable([](auto x, auto y)
+    FIT_STATIC_LAMBDA_FUNCTION(sum) = pipable([](auto x, auto y)
     {
         return x + y;
     });
@@ -99,7 +103,7 @@ Overloading
 
 Now, Fit provides two ways of doing overloading. The `match` adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:
 
-    FIT_STATIC_FUNCTION(print) = match(
+    FIT_STATIC_LAMBDA_FUNCTION(print) = match(
         [](int x)
         {
             std::cout << "Integer: " << x << std::endl;
@@ -114,7 +118,7 @@ However, when trying to do overloading involving something more generic, it can 
 
     #define REQUIRES(...) typename std::enable_if<(__VA_ARGS__), int>::type = 0
 
-    FIT_STATIC_FUNCTION(print) = conditional(
+    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
         [](auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
         {
             std::cout << x << std::endl;
@@ -137,7 +141,7 @@ Recursive
 
 Additionally, we could go a step further and make the `print` function recursive. We can use the `fix` adaptor, which implements a fix point combinator. So the first parameter of the function will be the function itself:
 
-    FIT_STATIC_FUNCTION(print) = fix(conditional(
+    FIT_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
         [](auto, auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
         {
             std::cout << x << std::endl;

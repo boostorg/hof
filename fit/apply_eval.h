@@ -50,7 +50,7 @@
 
 #include <fit/returns.h>
 #include <fit/detail/forward.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 #include <fit/eval.h>
 
 #ifndef FIT_NO_ORDERD_BRACE_INIT
@@ -146,7 +146,7 @@ struct apply_eval_f
 
 }
 
-FIT_STATIC_CONSTEXPR detail::apply_eval_f apply_eval = {};
+FIT_DECLARE_STATIC_VAR(apply_eval, detail::apply_eval_f);
 
 }
 

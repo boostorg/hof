@@ -66,7 +66,7 @@
 #include <fit/returns.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 #include <fit/apply_eval.h>
 
 namespace fit {
@@ -216,7 +216,7 @@ struct by_adaptor<Projection, void> : Projection
     }
 };
 
-FIT_STATIC_CONSTEXPR detail::make<by_adaptor> by = {};
+FIT_DECLARE_STATIC_VAR(by, detail::make<by_adaptor>);
 
 }
 #endif

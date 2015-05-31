@@ -104,7 +104,7 @@
 #include <fit/detail/holder.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
 
@@ -224,7 +224,7 @@ struct unpack_adaptor : F
     );
 };
 
-FIT_STATIC_CONSTEXPR detail::make<unpack_adaptor> unpack = {};
+FIT_DECLARE_STATIC_VAR(unpack, detail::make<unpack_adaptor>);
 
 namespace detail {
 

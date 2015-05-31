@@ -14,8 +14,9 @@
 /// Description
 /// -----------
 /// 
-/// The `FIT_STATIC_FUNCTION` macro allows initializing a function object from
-/// lambdas and adaptors at compile-time in a `constexpr` expression.
+/// The `FIT_STATIC_FUNCTION` macro allows initializing a function object from a
+/// `constexpr` expression. It also ensures that the function object will have a
+/// unique address across translation units. This helps to avoid ODR violations.
 /// 
 /// Example
 /// -------
@@ -26,72 +27,37 @@
 ///     });
 /// 
 
-#include <type_traits>
-#include <utility>
-#include <fit/returns.h>
 #include <fit/reveal.h>
 #include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
 
 namespace detail {
-template<class F>
-struct static_function_wrapper
+
+struct reveal_static_const_factory
 {
-    static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
-
-    struct failure
-    : failure_for<F>
-    {};
-
-    template<class... Ts>
-    const F& base_function(Ts&&...) const
-    {
-        return reinterpret_cast<const F&>(*this);
-    }
-
-    FIT_RETURNS_CLASS(static_function_wrapper);
-
-    template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS
-    (
-        FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(fit::forward<Ts>(xs)...)
-    );
-};
-
-struct static_function_wrapper_factor
-{
+#if FIT_NO_UNIQUE_STATIC_VAR
     template<class F>
-    constexpr static_function_wrapper<F> operator += (F*)
-    {
-        static_assert(std::is_literal_type<static_function_wrapper<F>>::value, "Function wrapper not a literal type");
-        return {};
-    }
-};
-
-struct reveal_static_function_wrapper_factor
-{
-    template<class F>
-    constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
+    constexpr reveal_adaptor<F> operator=(const F&) const
     {
         return {};
     }
-};
-
-struct static_addr
-{
-    template<class T>
-    typename std::remove_reference<T>::type *operator=(T &&t) const
+#else
+    template<class F>
+    constexpr const reveal_adaptor<F>& operator=(const F&) const
     {
-        return &t;
+        return static_const_var<reveal_adaptor<F>>();
     }
+#endif
 };
 
 }}
 
-#define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#define FIT_DETAIL_MAKE_REVEAL_STATIC fit::detail::reveal_static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = FIT_DETAIL_MAKE_REVEAL_STATIC
-
+#if FIT_NO_UNIQUE_STATIC_VAR
+#define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = fit::detail::reveal_static_const_factory()
+#else
+#define FIT_STATIC_FUNCTION(name) FIT_STATIC_AUTO_REF name = fit::detail::reveal_static_const_factory()
+#endif
 
 #endif

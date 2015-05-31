@@ -65,7 +65,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
 
@@ -103,7 +103,7 @@ struct match_adaptor<F> : F
     FIT_INHERIT_CONSTRUCTOR(match_adaptor, F);
 };
 
-FIT_STATIC_CONSTEXPR detail::make<match_adaptor> match = {};
+FIT_DECLARE_STATIC_VAR(match, detail::make<match_adaptor>);
 
 }
 

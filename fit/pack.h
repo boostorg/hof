@@ -59,7 +59,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/remove_rvalue_reference.h>
 #include <fit/detail/unwrap.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 #include <fit/returns.h>
 
 #ifndef FIT_HAS_RVALUE_THIS
@@ -295,11 +295,11 @@ struct pack_join_f
 
 }
 
-FIT_STATIC_CONSTEXPR detail::pack_f pack = {};
-FIT_STATIC_CONSTEXPR detail::pack_forward_f pack_forward = {};
-FIT_STATIC_CONSTEXPR detail::pack_decay_f pack_decay = {};
+FIT_DECLARE_STATIC_VAR(pack, detail::pack_f);
+FIT_DECLARE_STATIC_VAR(pack_forward, detail::pack_forward_f);
+FIT_DECLARE_STATIC_VAR(pack_decay, detail::pack_decay_f);
 
-FIT_STATIC_CONSTEXPR detail::pack_join_f pack_join = {};
+FIT_DECLARE_STATIC_VAR(pack_join, detail::pack_join_f);
 
 }
 

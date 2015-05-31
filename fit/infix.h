@@ -53,9 +53,8 @@
 #include <fit/returns.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
-#include <fit/function.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
  
@@ -130,14 +129,20 @@ constexpr auto operator<(T&& x, const infix_adaptor<F>& i) FIT_RETURNS
 
 // TODO: Operators for static_
 
+namespace detail {
+
+template<class F>
+struct static_function_wrapper;
+
 // Operators for static_function_wrapper adaptor
 template<class T, class F>
 auto operator<(T&& x, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
 (
     detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(f.base_function().infix_base_function()))
 );
+}
 
-FIT_STATIC_CONSTEXPR detail::make<infix_adaptor> infix = {};
+FIT_DECLARE_STATIC_VAR(infix, detail::make<infix_adaptor>);
 
 }
 

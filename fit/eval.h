@@ -64,7 +64,7 @@ struct id_eval
 
 }
 
-FIT_STATIC_CONSTEXPR fit::conditional_adaptor<detail::simple_eval, detail::id_eval> eval = {};
+FIT_DECLARE_STATIC_VAR(eval, fit::conditional_adaptor<detail::simple_eval, detail::id_eval>);
 
 }
 

@@ -36,7 +36,7 @@
 #include <fit/reveal.h>
 #include <fit/detail/forward.h>
 #include <fit/detail/make.h>
-#include <fit/detail/static_constexpr.h>
+#include <fit/detail/static_const_var.h>
 
 namespace fit {
 
@@ -48,7 +48,7 @@ struct protect_adaptor : F
     {}
 };
 
-FIT_STATIC_CONSTEXPR detail::make<protect_adaptor> protect = {};
+FIT_DECLARE_STATIC_VAR(protect, detail::make<protect_adaptor>);
 
 }
 #endif

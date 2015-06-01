@@ -3,32 +3,111 @@ os:
     - linux
 matrix:
     include:
+        # Debug
         - compiler: gcc
-          env: GCC_VERSION="4.9"
-        - compiler: gcc
-          env: GCC_VERSION="4.8"
-        - compiler: gcc
-          env: GCC_VERSION="4.7"
-        - compiler: gcc
-          env: GCC_VERSION="4.6"
-        - compiler: clang
-          env: LIBCXX="on"
-        - compiler: clang
-          env: 
-            - LIBCXX="off"
+          env:
+            - BUILD_TYPE="Debug"
             - GCC_VERSION="4.9"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: gcc
+          env:
+            - BUILD_TYPE="Debug" 
+            - GCC_VERSION="4.8"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: gcc
+          env:
+            - BUILD_TYPE="Debug" 
+            - GCC_VERSION="4.7"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: gcc
+          env:
+            - BUILD_TYPE="Debug" 
+            - GCC_VERSION="4.6"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: clang
+          env:
+            - BUILD_TYPE="Debug" 
+            - CLANG_VERSION="3.4"
+            - LIBCXX="on"
+            - ASAN="off"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: clang
+          env:
+            - BUILD_TYPE="Debug" 
+            - CLANG_VERSION="3.4"
+            - LIBCXX="off"
+            - ASAN="off"
+            - GCC_VERSION="4.9"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: clang
+          env:
+            - BUILD_TYPE="Debug" 
+            - CLANG_VERSION="3.6"
+            - LIBCXX="on"
+            - ASAN="off"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: clang
+          env:
+            - BUILD_TYPE="Debug" 
+            - CLANG_VERSION="3.6"
+            - LIBCXX="off"
+            - ASAN="off"
+            - GCC_VERSION="4.9"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: clang
+          env:
+            - BUILD_TYPE="Debug" 
+            - CLANG_VERSION="3.4"
+            - LIBCXX="on"
+            - ASAN="on"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: clang
+          env:
+            - BUILD_TYPE="Debug" 
+            - CLANG_VERSION="3.4"
+            - LIBCXX="off"
+            - ASAN="on"
+            - GCC_VERSION="4.9"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: clang
+          env:
+            - BUILD_TYPE="Debug" 
+            - CLANG_VERSION="3.6"
+            - LIBCXX="on"
+            - ASAN="on"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
+        - compiler: clang
+          env:
+            - BUILD_TYPE="Debug" 
+            - CLANG_VERSION="3.6"
+            - LIBCXX="off"
+            - ASAN="on"
+            - GCC_VERSION="4.9"
+            - CXX_FLAGS="-Wall -Wextra -Werror"
 
 before_install:
     - export CHECKOUT_PATH=`pwd`;
     # Install cmake
     - wget http://www.cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.sh
     - sudo sh cmake-3.1.3-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
-    # Install gcc
+    # Setup sources
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
+    - if [ -n "$CLANG_VERSION" ]; then sudo apt-add-repository -y "deb http://llvm.org/apt/precise/ llvm-toolchain-precise-$CLANG_VERSION main"; fi
     - sudo apt-get update -qq
+    # Install valgrind
+    - sudo apt-get install -qq valgrind
+    # Install gcc
     - if [ -n "$GCC_VERSION" ]; then sudo apt-get install -qq g++-${GCC_VERSION}; fi
     - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
-
+    # Install clang
+    - if [ -n "$CLANG_VERSION" ]; then sudo apt-get install -qq clang-${CLANG_VERSION}; fi
+    - if [ "$CXX" = "clang++" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
+    # Show compiler info
+    - $CXX --version
+    - which $CXX
+    - $CC --version
+    - which $CC
     # Install libc++
     - if [ "$LIBCXX" = "on" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
     - if [ "$LIBCXX" = "on" ]; then cd libcxx/lib && bash buildit; fi
@@ -42,6 +121,7 @@ script:
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
+    - if [ "$ASAN" == "on"]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     - if [ "$LIBCXX" = "on" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
     - if [ "$LIBCXX" = "on" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..

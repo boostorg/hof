@@ -145,3 +145,20 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == fit::unpack(unary_move())(fit::pack_decay(1)));
     FIT_TEST_CHECK(3 == unary_move_unpack(fit::pack_decay(1)));
 }
+
+struct indirect_sum_f
+{
+    template<class T, class U>
+    auto operator()(T x, U y) const
+    FIT_RETURNS(*x + *y);
+};
+
+#define MAKE_UNIQUE_PTR(x) std::unique_ptr<int>(new int(x)) 
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
+    FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_forward(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
+    FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_decay(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
+    FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(std::make_tuple(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
+}

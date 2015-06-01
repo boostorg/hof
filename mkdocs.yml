@@ -44,6 +44,7 @@ pages:
 - ['eval.md', 'Utilities', 'eval']
 - ['function.md', 'Utilities', 'FIT_STATIC_FUNCTION']
 - ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']
+- ['lift.md', 'Utilities', 'lift']
 - ['is_callable.md', 'Utilities', 'is_callable']
 - ['pack.md', 'Utilities', 'pack']
 - ['returns.md', 'Utilities', 'returns']

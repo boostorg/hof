@@ -30,6 +30,12 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fit::by(fit::mutable_(std::mem_fn(&foo::x)), add)(foo(1), foo(2)) == 3);
 }
 
+FIT_TEST_CASE()
+{
+    auto indirect_add = fit::by(*fit::_, fit::_ + fit::_);
+    FIT_TEST_CHECK(indirect_add(std::unique_ptr<int>(new int(1)), std::unique_ptr<int>(new int(2))) == 3);
+}
+
 struct select_x_1
 {
     std::unique_ptr<int> i;
@@ -82,4 +88,34 @@ FIT_TEST_CASE()
         return z;
     };
     FIT_TEST_CHECK(fit::by(f, last)("hello", "-", "world") == "hello-world");
+}
+
+template<bool B>
+struct bool_
+{
+    static const bool value = B;
+};
+
+struct constexpr_check
+{
+    template<class T>
+    constexpr int operator()(T) const
+    {
+        static_assert(T::value, "Failed");
+        return 0;
+    }
+};
+
+struct constexpr_check_each
+{
+    template<class T>
+    constexpr bool operator()(T x) const
+    {
+        return fit::by(constexpr_check())(x, x), true;
+    }
+};
+
+FIT_TEST_CASE()
+{
+    FIT_STATIC_TEST_CHECK(constexpr_check_each()(bool_<true>()));
 }

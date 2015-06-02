@@ -39,12 +39,12 @@ if (BIICODE)
     return() #finish processing, no need to run cmake below
 endif()
 
-macro(add_test_executable TEST_NAME_)
-    set(TEST_NAME "${TEST_NAME_}")
-    add_custom_target(check COMMAND ${CMAKE_CFG_INTDIR}/${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH})
-    add_executable (${TEST_NAME} test/${TEST_NAME}.cpp)
-    add_dependencies(check ${TEST_NAME})
-endmacro(add_test_executable)
+# macro(add_test_executable TEST_NAME_)
+#     set(TEST_NAME "${TEST_NAME_}")
+#     add_custom_target(check COMMAND ${CMAKE_CFG_INTDIR}/${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH})
+#     add_executable (${TEST_NAME} test/${TEST_NAME}.cpp)
+#     add_dependencies(check ${TEST_NAME})
+# endmacro(add_test_executable)
 
 # add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -VV -C ${CMAKE_CFG_INTDIR})
 
@@ -65,10 +65,12 @@ endmacro(add_test_executable)
 
 include_directories(.)
 
+add_executable(args test/args.cpp)
+
 # add_test_executable(always)
 # add_test_executable(apply)
 # add_test_executable(apply_eval)
-add_test_executable(args)
+# add_test_executable(args)
 # add_test_executable(by)
 # add_test_executable(capture)
 # add_test_executable(compose)

@@ -170,7 +170,9 @@ struct move_class
 
 int main()
 {
-	for(const auto& tc: fit::test::test_cases) tc();
+    printf("Start tests\n");
+    for(const auto& tc: fit::test::test_cases) tc();
+        printf("Finished tests\n");
     return 0;
 }
  

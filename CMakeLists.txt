@@ -41,7 +41,7 @@ endif()
 
 macro(add_test_executable TEST_NAME_)
     set(TEST_NAME "${TEST_NAME_}")
-    add_custom_target(check COMMAND ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH})
+    add_custom_target(check COMMAND ${CMAKE_CFG_INTDIR}/${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH})
     add_executable (${TEST_NAME} test/${TEST_NAME}.cpp)
     add_dependencies(check ${TEST_NAME})
 endmacro(add_test_executable)
@@ -63,7 +63,7 @@ endmacro(add_test_executable)
 
 # include(CTest)
 
-# include_directories(.)
+include_directories(.)
 
 # add_test_executable(always)
 # add_test_executable(apply)

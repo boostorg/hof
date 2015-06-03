@@ -16,6 +16,8 @@ namespace fit { namespace detail {
 template<template<class...> class Adaptor>
 struct make
 {
+	constexpr make()
+	{}
     template<class... Fs>
     constexpr FIT_JOIN(Adaptor, Fs...) operator()(Fs... fs) const
     {

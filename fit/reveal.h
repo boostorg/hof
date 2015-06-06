@@ -19,7 +19,7 @@
 /// substitution failure, will remove the function from valid overloads. On
 /// compilers without a backtrace for substitution failure, this will mask the
 /// error inside the function. The `reveal` adaptor will expose these error
-/// message while still keeping the function SFINAE-friendly.
+/// messages while still keeping the function SFINAE-friendly.
 /// 
 /// Synopsis
 /// --------

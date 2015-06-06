@@ -5,10 +5,10 @@ Description
 -----------
 
 The `eval` function will evaluate a "thunk". This can be either a nullary
-function or it can be a an unary function that takes the identity function
-as the first parameter(which is helpful to delay compile-time checking).
-Also, additional parameters can be passed to `eval` to delay compiliation(so
-that result can depend on template parameters).
+function or it can be a unary function that takes the identity function as
+the first parameter(which is helpful to delay compile-time checking).
+Also, additional parameters can be passed to `eval` to delay
+compiliation(so that result can depend on template parameters).
 
 Synopsis
 --------

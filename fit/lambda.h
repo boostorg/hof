@@ -31,10 +31,10 @@
 /// Description
 /// -----------
 /// 
-/// The `FIT_STATIC_LAMBDA_FUNCTION` macro allows initializes a global function
-/// object that contains non-capturing lambdas. It also ensures that the global
-/// function object has a unique address across translation units. This helps
-/// prevent possible ODR-violations.
+/// The `FIT_STATIC_LAMBDA_FUNCTION` macro allows initializing a global
+/// function object that contains non-capturing lambdas. It also ensures that
+/// the global function object has a unique address across translation units.
+/// This helps prevent possible ODR-violations.
 /// 
 /// Example
 /// -------

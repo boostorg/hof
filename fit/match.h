@@ -16,8 +16,8 @@
 /// 
 /// The `match` function adaptor combines several functions together and
 /// resolves which one should be called by using C++ overload resolution. This
-/// is different than than the `conditional` adaptor which resolves them based
-/// on order.
+/// is different than the `conditional` adaptor which resolves them based on
+/// order.
 /// 
 /// Synopsis
 /// --------

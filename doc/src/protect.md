@@ -5,7 +5,7 @@ Description
 -----------
 
 The `protect` function adaptor can be used to make a bind expression be
-treated a regular function instead.
+treated as a normal function instead.
 
 Synopsis
 --------

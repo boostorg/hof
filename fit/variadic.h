@@ -14,7 +14,7 @@
 /// Description
 /// -----------
 /// 
-/// The `variadic` function adaptor converts the arguments to the function to a
+/// The `variadic` function adaptor converts the arguments of the function to a
 /// tuple.
 /// 
 /// Synopsis

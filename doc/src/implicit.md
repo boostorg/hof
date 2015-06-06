@@ -8,7 +8,7 @@ The `implicit` adaptor is a static function adaptor that uses the type
 that the return value can be converted to in order to determine the type
 of the template parameter. In essence, it will deduce the type for the
 template parameter using the type of variable the result is assigned to.
-Since it is static function adaptor, the function must be default
+Since it is a static function adaptor, the function must be default
 constructible.
 
 Synopsis

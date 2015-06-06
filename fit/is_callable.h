@@ -15,7 +15,7 @@
 /// -----------
 /// 
 /// The `is_callable` metafunction checks if the function object is callable with
-/// the certain parameters.
+/// certain parameters.
 /// 
 /// 
 /// Synopsis

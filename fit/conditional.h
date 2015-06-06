@@ -16,8 +16,8 @@
 /// 
 /// The `conditional` function adaptor combines several functions together. If
 /// the first function can not be called, then it will try to call the next
-/// function. This can very useful when overloading functions using template
-/// constraints(such as with `enable_if`).
+/// function. This can be very useful when overloading functions using
+/// template constraints(such as with `enable_if`).
 /// 
 /// Note: This is different than the `match` function adaptor, which can lead
 /// to ambiguities. Instead, `conditional` will call the first function that

@@ -17,7 +17,7 @@
 /// The `partial` function adaptor allows partial application of the function.
 /// If the function can not be called with all the parameters, it will return
 /// another function. It will continually do this until the function can
-/// finally be called. By default, `partial` captures all of it variables by
+/// finally be called. By default, `partial` captures all of its variables by
 /// value, just like bind. `std::ref` can be used to capture references
 /// instead.
 /// 

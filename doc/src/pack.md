@@ -7,7 +7,7 @@ Description
 The `pack` function returns a higher order function object that takes a
 function that will be passed the initial elements. The function object is
 a sequence that can be unpacked with `unpack_adaptor` as well. Also,
-`pack_join` can be used to join multiple packes together.
+`pack_join` can be used to join multiple packs together.
 
 Synopsis
 --------

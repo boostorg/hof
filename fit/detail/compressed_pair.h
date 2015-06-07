@@ -23,7 +23,7 @@
 
 namespace fit { namespace detail {
 
-template<int, class T, class>
+template<int, class T, class, class=void>
 struct pair_holder : T
 {
     FIT_INHERIT_CONSTRUCTOR(pair_holder, T)
@@ -32,6 +32,19 @@ struct pair_holder : T
     constexpr const T& get_value(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
+    }
+};
+
+template<int I, class T, class U>
+struct pair_holder<I, T, U, typename std::enable_if<(!std::is_class<T>::value)>::type>
+{
+    T x;
+    FIT_DELGATE_CONSTRUCTOR(pair_holder, T, x)
+
+    template<class... Ts>
+    constexpr const T& get_value(Ts&&... xs) const
+    {
+        return always_ref(this->x)(xs...);
     }
 };
 
@@ -63,13 +76,13 @@ struct compressed_pair
     template<class... Xs>
     constexpr const First& first(Xs&&... xs) const
     {
-        return this->get_base<FirstBase>(xs...);
+        return this->get_base<FirstBase>(xs...).get_value(xs...);
     }
 
     template<class... Xs>
     constexpr const Second& second(Xs&&... xs) const
     {
-        return this->get_base<SecondBase>(xs...);
+        return this->get_base<SecondBase>(xs...).get_value(xs...);
     }
 
 };
@@ -107,13 +120,13 @@ struct compressed_pair<First, Second, FirstBase, SecondBase, typename std::enabl
     template<class... Xs>
     constexpr const First& first(Xs&&... xs) const
     {
-        return this->get_base<FirstBase>(xs...);
+        return this->get_base<FirstBase>(xs...).get_value(xs...);
     }
 
     template<class... Xs>
     constexpr const Second& second(Xs&&... xs) const
     {
-        return this->get_base<SecondBase>(xs...);
+        return this->get_base<SecondBase>(xs...).get_value(xs...);
     }
 
 };

@@ -15,6 +15,7 @@ extract conditional
 extract eval
 extract fix
 extract flip
+extract flow
 extract function
 extract identity
 extract implicit

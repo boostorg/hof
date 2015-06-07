@@ -18,6 +18,7 @@ pages:
 - ['conditional.md', 'Adaptors', 'conditional']
 - ['fix.md', 'Adaptors', 'fix']
 - ['flip.md', 'Adaptors', 'flip']
+- ['flow.md', 'Adaptors', 'flow']
 - ['implicit.md', 'Adaptors', 'implicit']
 - ['indirect.md', 'Adaptors', 'indirect']
 - ['infix.md', 'Adaptors', 'infix']

@@ -23,6 +23,22 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_TEST_CHECK(fit::compress(max_f(), 0)() == 0);
+    FIT_TEST_CHECK(fit::compress(max_f(), 0)(5) == 5);
+
+    FIT_STATIC_TEST_CHECK(fit::compress(max_f(), 0)() == 0);
+    FIT_STATIC_TEST_CHECK(fit::compress(max_f(), 0)(5) == 5);
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::compress(max_f())(5) == 5);
+
+    FIT_STATIC_TEST_CHECK(fit::compress(max_f())(5) == 5);
+}
+
+FIT_TEST_CASE()
+{
     FIT_TEST_CHECK(fit::compress(max_f())(2, 3, 4, 5) == 5);
     FIT_TEST_CHECK(fit::compress(max_f())(5, 4, 3, 2) == 5);
     FIT_TEST_CHECK(fit::compress(max_f())(2, 3, 5, 4) == 5);

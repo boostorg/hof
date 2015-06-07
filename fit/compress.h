@@ -26,12 +26,11 @@ struct v_fold
         (*this)(f, f(fit::forward<State>(state), fit::forward<T>(x)), fit::forward<Ts>(xs)...)
     );
 
-    template<class F, class State, class T>
-    constexpr FIT_SFINAE_RESULT(const F&, id_<State>, id_<T>)
-    operator()(const F& f, State&& state, T&& x) const FIT_SFINAE_RETURNS
-    (
-        f(fit::forward<State>(state), fit::forward<T>(x))
-    );
+    template<class F, class State>
+    constexpr State operator()(const F&, State&& state) const 
+    {
+        return fit::forward<State>(state);
+    }
 };
 
 }
@@ -55,14 +54,13 @@ struct compress_adaptor
         return this->second(xs...);
     }
 
-    template<class T, class... Ts>
-    constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const F&>, id_<const State&>, id_<T>, id_<Ts>...)
-    operator()(T&& x, Ts&&... xs) const FIT_SFINAE_RETURNS
+    template<class... Ts>
+    constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const F&>, id_<const State&>, id_<Ts>...)
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::v_fold()(
-            FIT_MANGLE_CAST(const F&)(this->base_function(x, xs...)), 
-            FIT_MANGLE_CAST(const State&)(this->get_state(x, xs...)), 
-            fit::forward<T>(x),
+            FIT_MANGLE_CAST(const F&)(this->base_function(xs...)), 
+            FIT_MANGLE_CAST(const State&)(this->get_state(xs...)), 
             fit::forward<Ts>(xs)...
         )
     )
@@ -81,13 +79,12 @@ struct compress_adaptor<F>
         return always_ref(*this)(xs...);
     }
 
-    template<class T, class... Ts>
-    constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const F&>, id_<T>, id_<Ts>...)
-    operator()(T&& x, Ts&&... xs) const FIT_SFINAE_RETURNS
+    template<class... Ts>
+    constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const F&>, id_<Ts>...)
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::v_fold()(
-            FIT_MANGLE_CAST(const F&)(this->base_function(x, xs...)), 
-            fit::forward<T>(x),
+            FIT_MANGLE_CAST(const F&)(this->base_function(xs...)), 
             fit::forward<Ts>(xs)...
         )
     )

@@ -19,11 +19,12 @@ namespace fit { namespace detail {
 
 struct v_fold
 {
+    FIT_RETURNS_CLASS(v_fold);
     template<class F, class State, class T, class... Ts>
     constexpr FIT_SFINAE_RESULT(const v_fold&, id_<const F&>, result_of<const F&, id_<State>, id_<T>>, id_<Ts>...)
     operator()(const F& f, State&& state, T&& x, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (*this)(f, f(fit::forward<State>(state), fit::forward<T>(x)), fit::forward<Ts>(xs)...)
+        (*FIT_CONST_THIS)(f, f(fit::forward<State>(state), fit::forward<T>(x)), fit::forward<Ts>(xs)...)
     );
 
     template<class F, class State>

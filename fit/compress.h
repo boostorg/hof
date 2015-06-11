@@ -69,7 +69,7 @@ struct compress_adaptor
 
 
 template<class F>
-struct compress_adaptor<F>
+struct compress_adaptor<F, void>
 : F
 {
     FIT_INHERIT_CONSTRUCTOR(compress_adaptor, F)

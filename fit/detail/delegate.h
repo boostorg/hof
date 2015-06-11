@@ -31,12 +31,6 @@
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
     typename std::enable_if<std::is_constructible<__VA_ARGS__>::value, int>::type = 0
 
-#define FIT_ENABLE_IF_DEFAULT_CONSTRUCTIBLE(...) \
-    typename std::enable_if<std::is_default_constructible<__VA_ARGS__>::value, int>::type = 0
-
-#define FIT_ENABLE_IF_DEFAULT_CONSTRUCTIBLE_UNPACK(...) \
-    typename std::enable_if<fit::detail::and_<std::is_default_constructible<__VA_ARGS__>...>::value, int>::type = 0
-
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible<__VA_ARGS__>::value, int>::type = 0> \

@@ -62,7 +62,7 @@ template<
     class=void
 >
 struct compressed_pair 
-: private FirstBase, private SecondBase
+: FirstBase, SecondBase
 {
     template<class X, class Y, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 
@@ -102,7 +102,7 @@ struct compressed_pair<First, Second, FirstBase, SecondBase, typename std::enabl
     std::is_constructible<First, First&&>::value && std::is_constructible<Second, Second&&>::value &&
     !(std::is_constructible<First, const First&>::value && std::is_constructible<Second, const Second&>::value)
 >::type>
-: private FirstBase, private SecondBase
+: FirstBase, SecondBase
 {
     template<class X, class Y, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 

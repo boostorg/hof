@@ -29,7 +29,7 @@ struct pair_holder : T
     FIT_INHERIT_CONSTRUCTOR(pair_holder, T)
 
     template<class... Ts>
-    constexpr const T& get_value(Ts&&... xs) const
+    constexpr const T& get_value(Ts&&...) const
     {
         return *this;
     }
@@ -47,7 +47,7 @@ struct pair_holder<I, T, U, typename std::enable_if<(
     FIT_DELGATE_CONSTRUCTOR(pair_holder, T, x)
 
     template<class... Ts>
-    constexpr const T& get_value(Ts&&... xs) const
+    constexpr const T& get_value(Ts&&...) const
     {
         return this->x;
     }

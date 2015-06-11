@@ -106,7 +106,7 @@ struct pack_holder
 #if FIT_PACK_HAS_EBO
 template<int N, class T, class Tag>
 struct pack_holder<N, T, Tag, typename std::enable_if<(std::is_empty<T>::value)>::type>
-: private T
+: T
 {
     constexpr const T& get_value() const
     {

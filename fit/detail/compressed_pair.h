@@ -31,12 +31,17 @@ struct pair_holder : T
     template<class... Ts>
     constexpr const T& get_value(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return *this;
     }
 };
 
 template<int I, class T, class U>
-struct pair_holder<I, T, U, typename std::enable_if<(!std::is_class<T>::value)>::type>
+struct pair_holder<I, T, U, typename std::enable_if<(
+    !std::is_empty<T>::value 
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+    && !std::is_class<T>::value
+#endif
+)>::type>
 {
     T x;
     FIT_DELGATE_CONSTRUCTOR(pair_holder, T, x)
@@ -44,7 +49,7 @@ struct pair_holder<I, T, U, typename std::enable_if<(!std::is_class<T>::value)>:
     template<class... Ts>
     constexpr const T& get_value(Ts&&... xs) const
     {
-        return always_ref(this->x)(xs...);
+        return this->x;
     }
 };
 

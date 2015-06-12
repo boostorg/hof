@@ -26,7 +26,7 @@ FIT_TEST_CASE()
     static_assert(std::is_same<std::tuple<int, int, int>, decltype(t)>::value, "");
     FIT_TEST_CHECK(t == std::make_tuple(1, 2, 3));
 // GCC 4.7 doesn't have fully constexpr tuple
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 7
     FIT_STATIC_TEST_CHECK(std::make_tuple(1, 2, 3) == fit::construct<std::tuple>()(1, 2, 3));
 #endif
 }

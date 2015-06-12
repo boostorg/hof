@@ -8,6 +8,55 @@
 #ifndef FIT_GUARD_COMPRESS_H
 #define FIT_GUARD_COMPRESS_H
 
+/// compress
+/// ========
+/// 
+/// Description
+/// -----------
+/// 
+/// The `compress` function adaptor uses a binary function to apply a fold
+/// operation to the arguments passed to the function. Additionally, an optional
+/// initial state can be provided, otherwise the first argument is used as the
+/// initial state. 
+/// 
+/// The arguments to the binary function, take first the state and then the
+/// argument.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F, class State>
+///     constexpr compress_adaptor<F, State> compress(F f, State s);
+/// 
+///     template<class F>
+///     constexpr compress_adaptor<F> compress(F f);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// State must be:
+/// 
+///     MoveConstructible
+/// 
+/// F must be:
+/// 
+///     BinaryFunctionObject
+///     MoveConstructible
+/// 
+/// Example
+/// -------
+/// 
+///     struct max_f
+///     {
+///         template<class T, class U>
+///         constexpr T operator()(T x, U y) const
+///         {
+///             return x > y ? x : y;
+///         }
+///     };
+///     assert(fit::compress(max_f())(2, 3, 4, 5) == 5);
+/// 
+
 #include <fit/detail/result_of.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/compressed_pair.h>

@@ -9,8 +9,11 @@
 #define FIT_GUARD_CONSTRUCT_H
 
 #include <fit/detail/forward.h>
+#include <fit/detail/move.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
+
+#include <initializer_list>
 
 namespace fit { namespace detail {
 
@@ -23,6 +26,24 @@ struct construct_f
     constexpr T operator()(Ts&&... xs) const
     {
         return T(fit::forward<Ts>(xs)...);
+    }
+
+    template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&&)>
+    constexpr T operator()(std::initializer_list<X>&& x) const
+    {
+        return T(fit::move(x));
+    }
+
+    template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&)>
+    constexpr T operator()(std::initializer_list<X>& x) const
+    {
+        return T(x);
+    }
+
+    template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, const std::initializer_list<X>&)>
+    constexpr T operator()(const std::initializer_list<X>& x) const
+    {
+        return T(x);
     }
 };
 

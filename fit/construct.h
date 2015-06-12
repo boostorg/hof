@@ -10,6 +10,7 @@
 
 #include <fit/detail/forward.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/join.h>
 
 namespace fit { namespace detail {
 
@@ -30,10 +31,10 @@ struct construct_template_f
 {
     constexpr construct_template_f()
     {}
-    template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(Template<Ts...>, Ts...)>
-    constexpr Template<Ts...> operator()(Ts&&... xs) const
+    template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(FIT_JOIN(Template, Ts...), Ts...)>
+    constexpr FIT_JOIN(Template, Ts...) operator()(Ts&&... xs) const
     {
-        return Template<Ts...>(fit::forward<Ts>(xs)...);
+        return FIT_JOIN(Template, Ts...)(fit::forward<Ts>(xs)...);
     }
 };
 }

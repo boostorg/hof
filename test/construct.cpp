@@ -40,6 +40,17 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    auto t = fit::construct<std::pair>()(1, 2);
+    static_assert(std::is_same<std::pair<int, int>, decltype(t)>::value, "");
+    FIT_TEST_CHECK(t == std::make_pair(1, 2));
+// GCC 4.7 doesn't have fully constexpr pair
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 7
+    FIT_STATIC_TEST_CHECK(std::make_pair(1, 2) == fit::construct<std::pair>()(1, 2));
+#endif
+}
+
+FIT_TEST_CASE()
+{
     auto x = fit::construct<ac>()(1);
     static_assert(std::is_same<ac<int>, decltype(x)>::value, "");
     FIT_TEST_CHECK(x.value == ac<int>(1).value);

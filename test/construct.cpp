@@ -1,6 +1,8 @@
 #include <fit/construct.h>
 #include "test.h"
 
+#include <fit/conditional.h>
+
 #include <tuple>
 #include <type_traits>
 #include <vector>
@@ -47,6 +49,13 @@ FIT_TEST_CASE()
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 7
     FIT_STATIC_TEST_CHECK(std::make_pair(1, 2) == fit::construct<std::pair>()(1, 2));
 #endif
+}
+
+FIT_TEST_CASE()
+{
+    auto f = fit::conditional(fit::construct<std::pair>(), fit::identity);
+    FIT_TEST_CHECK(f(1, 2) == std::make_pair(1, 2));
+    FIT_TEST_CHECK(f(1) == 1);
 }
 
 FIT_TEST_CASE()

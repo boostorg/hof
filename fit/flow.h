@@ -98,7 +98,7 @@ struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor, Fs...)>
     typedef FIT_JOIN(flow_adaptor, Fs...) tail;
     typedef detail::flow_kernel<F, tail> base;
 
-    constexpr flow_adaptor() {}
+    FIT_INHERIT_DEFAULT(flow_adaptor, base)
 
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
     constexpr flow_adaptor(X&& f1, Xs&& ... fs) 
@@ -110,7 +110,7 @@ template<class F>
 struct flow_adaptor<F> : F
 {
     typedef flow_adaptor fit_rewritable_tag;
-    constexpr flow_adaptor() {}
+    FIT_INHERIT_DEFAULT(flow_adaptor, F)
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
     constexpr flow_adaptor(X&& f1) 

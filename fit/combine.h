@@ -9,6 +9,9 @@
 #define FIT_GUARD_COMBINE_H
 
 #include <fit/pack.h>
+#include <fit/always.h>
+#include <fit/detail/result_of.h>
+#include <fit/detail/make.h>
 
 namespace fit { namespace detail {
 
@@ -17,9 +20,9 @@ struct combine_adaptor_base;
 
 template<int... Ns, class F, class... Gs>
 struct combine_adaptor_base<seq<Ns...>, F, Gs...>
-: pake_base<seq<Ns...>, Gs...>, F
+: F, pack_base<seq<Ns...>, Gs...>
 {
-    typedef pake_base<seq<Ns...>, Gs...> base_type;
+    typedef pack_base<seq<Ns...>, Gs...> base_type;
 
     FIT_INHERIT_DEFAULT(combine_adaptor_base, base_type, F)
 
@@ -39,7 +42,8 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
     FIT_RETURNS_CLASS(combine_adaptor_base);
   
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, result_of<const Gs&, id_<Ts>>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))
             (pack_get<Ns, Gs, pack_tag<Gs...>>(*FIT_CONST_THIS, xs)(fit::forward<Ts>(xs))...)
@@ -50,9 +54,9 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
 
 template<class F, class... Gs>
 struct combine_adaptor
-: detail::combine_adaptor_base<typename detail::gens<sizeof...(Ts)>::type, F, Gs...>
+: detail::combine_adaptor_base<typename detail::gens<sizeof...(Gs)>::type, F, Gs...>
 {
-    typedef detail::combine_adaptor_base<typename detail::gens<sizeof...(Ts)>::type, F, Gs...> base_type;
+    typedef detail::combine_adaptor_base<typename detail::gens<sizeof...(Gs)>::type, F, Gs...> base_type;
     FIT_INHERIT_CONSTRUCTOR(combine_adaptor, base_type)
 };
 

@@ -85,10 +85,11 @@ struct construct_template_f
 {
     constexpr construct_template_f()
     {}
-    template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(FIT_JOIN(Template, Ts...), Ts...)>
-    constexpr FIT_JOIN(Template, Ts...) operator()(Ts&&... xs) const
+    template<class... Ts, class Result=FIT_JOIN(Template, Ts...), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
+    constexpr Result operator()(Ts&&... xs) const
     {
-        return FIT_JOIN(Template, Ts...)(fit::forward<Ts>(xs)...);
+        return Result(fit::forward<Ts>(xs)...);
     }
 };
 }

@@ -12,6 +12,7 @@ extract args
 extract capture
 extract compose
 extract conditional
+extract compress
 extract eval
 extract fix
 extract flip
@@ -36,6 +37,7 @@ extract protect
 extract result
 extract returns
 extract reveal
+extract reverse_compress
 extract static
 extract tap
 extract unpack

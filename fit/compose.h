@@ -96,13 +96,13 @@ struct compose_adaptor : detail::compose_kernel<F, FIT_JOIN(compose_adaptor, Fs.
 {
     typedef compose_adaptor fit_rewritable_tag;
     typedef FIT_JOIN(compose_adaptor, Fs...) tail;
-    typedef detail::compose_kernel<F, tail> base;
+    typedef detail::compose_kernel<F, tail> base_type;
 
-    constexpr compose_adaptor() {}
+    FIT_INHERIT_DEFAULT(compose_adaptor, base_type)
 
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
     constexpr compose_adaptor(X&& f1, Xs&& ... fs) 
-    : base(fit::forward<X>(f1), tail(fit::forward<Xs>(fs)...))
+    : base_type(fit::forward<X>(f1), tail(fit::forward<Xs>(fs)...))
     {}
 };
 
@@ -110,7 +110,8 @@ template<class F>
 struct compose_adaptor<F> : F
 {
     typedef compose_adaptor fit_rewritable_tag;
-    constexpr compose_adaptor() {}
+
+    FIT_INHERIT_DEFAULT(compose_adaptor, F)
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
     constexpr compose_adaptor(X&& f1) 

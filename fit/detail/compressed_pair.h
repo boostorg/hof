@@ -23,15 +23,33 @@
 
 namespace fit { namespace detail {
 
-template<int, class T, class>
+template<int, class T, class, class=void>
 struct pair_holder : T
 {
     FIT_INHERIT_CONSTRUCTOR(pair_holder, T)
 
     template<class... Ts>
-    constexpr const T& get_value(Ts&&... xs) const
+    constexpr const T& get_value(Ts&&...) const
     {
-        return always_ref(*this)(xs...);
+        return *this;
+    }
+};
+
+template<int I, class T, class U>
+struct pair_holder<I, T, U, typename std::enable_if<(
+    !std::is_empty<T>::value 
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+    && !std::is_class<T>::value
+#endif
+)>::type>
+{
+    T x;
+    FIT_DELGATE_CONSTRUCTOR(pair_holder, T, x)
+
+    template<class... Ts>
+    constexpr const T& get_value(Ts&&...) const
+    {
+        return this->x;
     }
 };
 
@@ -44,7 +62,7 @@ template<
     class=void
 >
 struct compressed_pair 
-: private FirstBase, private SecondBase
+: FirstBase, SecondBase
 {
     template<class X, class Y, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 
@@ -63,13 +81,13 @@ struct compressed_pair
     template<class... Xs>
     constexpr const First& first(Xs&&... xs) const
     {
-        return this->get_base<FirstBase>(xs...);
+        return this->get_base<FirstBase>(xs...).get_value(xs...);
     }
 
     template<class... Xs>
     constexpr const Second& second(Xs&&... xs) const
     {
-        return this->get_base<SecondBase>(xs...);
+        return this->get_base<SecondBase>(xs...).get_value(xs...);
     }
 
 };
@@ -84,7 +102,7 @@ struct compressed_pair<First, Second, FirstBase, SecondBase, typename std::enabl
     std::is_constructible<First, First&&>::value && std::is_constructible<Second, Second&&>::value &&
     !(std::is_constructible<First, const First&>::value && std::is_constructible<Second, const Second&>::value)
 >::type>
-: private FirstBase, private SecondBase
+: FirstBase, SecondBase
 {
     template<class X, class Y, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 
@@ -107,13 +125,13 @@ struct compressed_pair<First, Second, FirstBase, SecondBase, typename std::enabl
     template<class... Xs>
     constexpr const First& first(Xs&&... xs) const
     {
-        return this->get_base<FirstBase>(xs...);
+        return this->get_base<FirstBase>(xs...).get_value(xs...);
     }
 
     template<class... Xs>
     constexpr const Second& second(Xs&&... xs) const
     {
-        return this->get_base<SecondBase>(xs...);
+        return this->get_base<SecondBase>(xs...).get_value(xs...);
     }
 
 };

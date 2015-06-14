@@ -11,7 +11,15 @@
 #include <fit/returns.h>
 #include <fit/detail/sfinae.h>
 
-#if FIT_NO_EXPRESSION_SFINAE
+#ifndef FIT_HAS_MANUAL_DEDUCTION
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#define FIT_HAS_MANUAL_DEDUCTION 1
+#else
+#define FIT_HAS_MANUAL_DEDUCTION 0
+#endif
+#endif
+
+#if FIT_HAS_MANUAL_DEDUCTION || FIT_NO_EXPRESSION_SFINAE
 
 #include <type_traits>
 #include <fit/is_callable.h>
@@ -49,6 +57,9 @@ struct result_of
 // using result_of = id_<decltype(std::declval<F>()(std::declval<typename Ts::type>()...))>;
 
 }
+#endif
+
+#if FIT_NO_EXPRESSION_SFINAE
 
 #define FIT_SFINAE_RESULT(...) typename fit::result_of<__VA_ARGS__>::type
 #define FIT_SFINAE_RETURNS(...) { return __VA_ARGS__; }
@@ -57,6 +68,22 @@ struct result_of
 
 #define FIT_SFINAE_RESULT(...) auto
 #define FIT_SFINAE_RETURNS FIT_RETURNS
+
+#endif
+
+#if FIT_HAS_MANUAL_DEDUCTION
+
+#define FIT_SFINAE_MANUAL_RESULT(...) typename fit::result_of<__VA_ARGS__>::type
+#if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
+#define FIT_SFINAE_MANUAL_RETURNS(...) { return (__VA_ARGS__); }
+#else
+#define FIT_SFINAE_MANUAL_RETURNS(...) { FIT_RETURNS_RETURN(__VA_ARGS__); }
+#endif
+
+#else
+
+#define FIT_SFINAE_MANUAL_RESULT FIT_SFINAE_RESULT
+#define FIT_SFINAE_MANUAL_RETURNS FIT_SFINAE_RETURNS
 
 #endif
 

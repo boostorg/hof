@@ -36,6 +36,7 @@ pages:
 # Functions
 - ['always.md', 'Functions', 'always']
 - ['args.md', 'Functions', 'args']
+- ['construct.md', 'Functions', 'construct']
 - ['identity.md', 'Functions', 'identity']
 - ['placeholders.md', 'Functions', 'placeholders']
 # Utilities

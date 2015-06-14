@@ -8,11 +8,28 @@
 #ifndef FIT_GUARD_FUNCTION_DETAIL_JOIN_H
 #define FIT_GUARD_FUNCTION_DETAIL_JOIN_H
 
+#include <fit/detail/holder.h>
+
 namespace fit { namespace detail {
 
-template<template <typename...> class T, typename... Args>
-struct join
+template<class... Ts>
+struct join_args
+{};
+
+template<template <class...> class T, class Args, class=void>
+struct join_impl
+{};
+
+template<template <class...> class T, class... Args>
+struct join_impl<T, join_args<Args...>, typename holder<
+    T<Args...>
+>::type>
 { typedef T<Args...> type; };
+
+template<template <class...> class T, class... Args>
+struct join
+: join_impl<T, join_args<Args...>>
+{};
 
 }}
 

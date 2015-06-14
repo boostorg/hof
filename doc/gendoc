@@ -13,6 +13,7 @@ extract capture
 extract compose
 extract conditional
 extract compress
+extract construct
 extract eval
 extract fix
 extract flip

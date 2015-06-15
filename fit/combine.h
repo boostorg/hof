@@ -64,12 +64,7 @@ struct combine_adaptor
 : detail::combine_adaptor_base<typename detail::gens<sizeof...(Gs)>::type, F, Gs...>
 {
     typedef detail::combine_adaptor_base<typename detail::gens<sizeof...(Gs)>::type, F, Gs...> base_type;
-    
-    template<class... Ts>
-    constexpr combine_adaptor(Ts&&... xs) 
-    : base_type(fit::forward<Ts>(xs)...)
-    {}
-    // FIT_INHERIT_CONSTRUCTOR(combine_adaptor, base_type)
+    FIT_INHERIT_CONSTRUCTOR(combine_adaptor, base_type)
 };
 
 FIT_DECLARE_STATIC_VAR(combine, detail::make<combine_adaptor>);

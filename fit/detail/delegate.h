@@ -23,13 +23,13 @@
 #endif
 
 #define FIT_ENABLE_IF_CONVERTIBLE(...) \
-    typename std::enable_if<std::is_convertible<__VA_ARGS__>::value, int>::type = 0
+    class=typename std::enable_if<std::is_convertible<__VA_ARGS__>::value>::type
 
 #define FIT_ENABLE_IF_CONVERTIBLE_UNPACK(...) \
-    typename std::enable_if<fit::detail::and_<std::is_convertible<__VA_ARGS__>...>::value, int>::type = 0
+    class=typename std::enable_if<fit::detail::and_<std::is_convertible<__VA_ARGS__>...>::value>::type
 
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
-    typename std::enable_if<std::is_constructible<__VA_ARGS__>::value, int>::type = 0
+    class=typename std::enable_if<std::is_constructible<__VA_ARGS__>::value>::type
 
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \

@@ -13,7 +13,30 @@
 #include <fit/detail/result_of.h>
 #include <fit/detail/make.h>
 
+#ifndef FIT_USE_COMBINE_FOLD
+#define FIT_USE_COMBINE_FOLD 1
+#endif
+
+#if FIT_USE_COMBINE_FOLD
+#include <fit/compress.h>
+#include <fit/args.h>
+#include <fit/capture.h>
+#include <fit/unpack.h>
+#endif
+
 namespace fit { namespace detail {
+
+#if FIT_USE_COMBINE_FOLD
+struct combine_fold
+{
+    template<class Gp, class Tp, class State, class N>
+    auto operator()(Gp&& gp, Tp&& tp, State&& s, N n) const
+    {
+        return pack_join(fit::forward<State>(s), pack(gp(args(n))(tp(args(n)))));
+    }
+};
+
+#endif
 
 template<class S, class F, class... Gs>
 struct combine_adaptor_base;
@@ -39,14 +62,28 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
         return always_ref(*this)(xs...);
     }
 
+    template<class... Ts>
+    constexpr const base_type& get_pack(Ts&&... xs) const
+    {
+        return always_ref(*this)(xs...);
+    }
+
     FIT_RETURNS_CLASS(combine_adaptor_base);
   
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(const F&, result_of<const Gs&, id_<Ts>>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
+#if FIT_USE_COMBINE_FOLD
+        fit::unpack(this->base_function(xs...))(
+            fit::compress(
+                fit::capture(this->get_pack(xs...), pack_forward(fit::forward<Ts>(xs)...))(detail::combine_fold()), pack()
+            )(std::integral_constant<int, Ns+1>()...)
+        )
+#else
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))
             (pack_get<Ns, Gs, pack_tag<Gs...>>(*FIT_CONST_THIS, xs)(fit::forward<Ts>(xs))...)
+#endif
     );
 };
 

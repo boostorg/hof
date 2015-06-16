@@ -4,52 +4,53 @@ site_dir: doc/html/
 repo_url: https://github.com/pfultz2/Fit
 use_directory_urls: false
 extra_javascript: [js/configure.js]
+theme: readthedocs
 pages:
-- ['index.md', 'Home']
-# About
-- ['quickstart.md', 'About', 'Quick Start']
-- ['concepts.md', 'About', 'Basic Concepts']
-- ['requirements.md', 'About', 'Requirements']
-- ['acknowledgements.md', 'About', 'Acknowledgements']
-- ['license.md', 'About', 'License']
-# Adaptors
-- ['by.md', 'Adaptors', 'by']
-- ['compose.md', 'Adaptors', 'compose']
-- ['conditional.md', 'Adaptors', 'conditional']
-- ['compress.md', 'Adaptors', 'compress']
-- ['fix.md', 'Adaptors', 'fix']
-- ['flip.md', 'Adaptors', 'flip']
-- ['flow.md', 'Adaptors', 'flow']
-- ['implicit.md', 'Adaptors', 'implicit']
-- ['indirect.md', 'Adaptors', 'indirect']
-- ['infix.md', 'Adaptors', 'infix']
-- ['lazy.md', 'Adaptors', 'lazy']
-- ['match.md', 'Adaptors', 'match']
-- ['mutable.md', 'Adaptors', 'mutable']
-- ['partial.md', 'Adaptors', 'partial']
-- ['pipable.md', 'Adaptors', 'pipable']
-- ['protect.md', 'Adaptors', 'protect']
-- ['result.md', 'Adaptors', 'result']
-- ['reveal.md', 'Adaptors', 'reveal']
-- ['reverse_compress.md', 'Adaptors', 'reverse_compress']
-- ['static.md', 'Adaptors', 'static']
-- ['unpack.md', 'Adaptors', 'unpack']
-- ['variadic.md', 'Adaptors', 'variadic']
-# Functions
-- ['always.md', 'Functions', 'always']
-- ['args.md', 'Functions', 'args']
-- ['construct.md', 'Functions', 'construct']
-- ['identity.md', 'Functions', 'identity']
-- ['placeholders.md', 'Functions', 'placeholders']
-# Utilities
-- ['apply.md', 'Utilities', 'apply']
-- ['apply_eval.md', 'Utilities', 'apply_eval']
-- ['capture.md', 'Utilities', 'capture']
-- ['eval.md', 'Utilities', 'eval']
-- ['function.md', 'Utilities', 'FIT_STATIC_FUNCTION']
-- ['lambda.md', 'Utilities', 'FIT_STATIC_LAMBDA']
-- ['lift.md', 'Utilities', 'lift']
-- ['is_callable.md', 'Utilities', 'is_callable']
-- ['pack.md', 'Utilities', 'pack']
-- ['returns.md', 'Utilities', 'returns']
-- ['tap.md', 'Utilities', 'tap']
+- Home: 'index.md'
+- About:
+    - 'Quick Start': 'quickstart.md'
+    - 'Basic Concepts' : 'concepts.md'
+    - 'Requirements': 'requirements.md'
+    - 'Acknowledgements': 'acknowledgements.md'
+    - 'License': 'license.md'
+- Adaptors:
+    - 'by': 'by.md'
+    - 'compose': 'compose.md'
+    - 'conditional': 'conditional.md'
+    - 'compress': 'compress.md'
+    - 'fix': 'fix.md'
+    - 'flip': 'flip.md'
+    - 'flow': 'flow.md'
+    - 'implicit': 'implicit.md'
+    - 'indirect': 'indirect.md'
+    - 'infix': 'infix.md'
+    - 'lazy': 'lazy.md'
+    - 'match': 'match.md'
+    - 'mutable': 'mutable.md'
+    - 'partial': 'partial.md'
+    - 'pipable': 'pipable.md'
+    - 'protect': 'protect.md'
+    - 'result': 'result.md'
+    - 'reveal': 'reveal.md'
+    - 'reverse_compress': 'reverse_compress.md'
+    - 'static': 'static.md'
+    - 'unpack': 'unpack.md'
+    - 'variadic': 'variadic.md'
+- Functions:
+    - 'always': 'always.md'
+    - 'args': 'args.md'
+    - 'construct': 'construct.md'
+    - 'identity': 'identity.md'
+    - 'placeholders': 'placeholders.md'
+- Utilities:
+    - 'apply': 'apply.md'
+    - 'apply_eval': 'apply_eval.md'
+    - 'capture': 'capture.md'
+    - 'eval': 'eval.md'
+    - 'FIT_STATIC_FUNCTION': 'function.md'
+    - 'FIT_STATIC_LAMBDA': 'lambda.md'
+    - 'lift': 'lift.md'
+    - 'is_callable': 'is_callable.md'
+    - 'pack': 'pack.md'
+    - 'returns': 'returns.md'
+    - 'tap': 'tap.md'

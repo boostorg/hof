@@ -18,10 +18,10 @@ struct make
 {
 	constexpr make()
 	{}
-    template<class... Fs>
-    constexpr FIT_JOIN(Adaptor, Fs...) operator()(Fs... fs) const
+    template<class... Fs, class Result=FIT_JOIN(Adaptor, Fs...)>
+    constexpr Result operator()(Fs... fs) const
     {
-        return FIT_JOIN(Adaptor, Fs...)(fit::move(fs)...);
+        return Result(fit::move(fs)...);
     }
 };
 

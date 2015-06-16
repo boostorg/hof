@@ -43,7 +43,7 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
 
 // Result needs to be calulated in a seperate class to avoid confusing the
 // compiler on MSVC
-#if FIT_NO_EXPRESSION_SFINAE 
+#if FIT_NO_EXPRESSION_SFINAE || FIT_HAS_MANUAL_DEDUCTION
     template<class... Ts>
     struct combine_result
     : result_of<const F&,  result_of<const Gs&, id_<Ts>>...>
@@ -51,12 +51,12 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
 #endif
 
     template<class... Ts>
-#if FIT_NO_EXPRESSION_SFINAE 
+#if FIT_NO_EXPRESSION_SFINAE || FIT_HAS_MANUAL_DEDUCTION
     constexpr typename combine_result<Ts...>::type
 #else
     constexpr auto
 #endif
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    operator()(Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))
             (pack_get<Ns, Gs, pack_tag<Gs...>>(*FIT_CONST_THIS, xs)(fit::forward<Ts>(xs))...)

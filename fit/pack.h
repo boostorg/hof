@@ -135,7 +135,8 @@ template<int... Ns, class... Ts>
 struct pack_holder_base<seq<Ns...>, Ts...>
 : pack_holder<Ns, Ts, pack_tag<Ts...>>...
 {
-    template<class... Xs>
+    FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
+    template<class... Xs, class=typename std::enable_if<(sizeof...(Xs) == sizeof...(Ts))> >
     constexpr pack_holder_base(Xs&&... xs) : pack_holder<Ns, Ts, pack_tag<Ts...>>(fit::forward<Xs>(xs))...
     {}
 };
@@ -155,8 +156,7 @@ struct pack_base<seq<Ns...>, Ts...>
     : base(fit::forward<X1>(x1))
     {}
 
-    constexpr pack_base()
-    {}
+    FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
 
     FIT_RETURNS_CLASS(pack_base);
   
@@ -173,6 +173,8 @@ template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
 : pack_holder<Ns, Ts, pack_tag<Ts...>>...
 {
+    FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
+    
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, pack_holder<Ns, Ts, pack_tag<Ts...>>)>
     constexpr pack_base(Xs&&... xs) : pack_holder<Ns, Ts, pack_tag<Ts...>>(fit::forward<Xs>(xs))...
     {}

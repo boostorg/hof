@@ -33,7 +33,7 @@
 
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
-    typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible<__VA_ARGS__>::value, int>::type = 0> \
+    class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible<__VA_ARGS__>::value>::type> \
     constexpr C() {}
 
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE

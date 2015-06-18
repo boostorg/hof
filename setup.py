@@ -15,5 +15,6 @@ files = (path for f in os.listdir(include_dir) for path in [os.path.join(include
 for file in files:
     md = extract_md(file)
     if len(md) > 0:
+        print('Extracting:', file)
         name, ext = os.path.splitext(os.path.basename(file))
         open(os.path.join(doc_dir, name + '.md'), 'w').writelines(extract_md(file))

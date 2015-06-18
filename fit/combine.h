@@ -8,6 +8,40 @@
 #ifndef FIT_GUARD_COMBINE_H
 #define FIT_GUARD_COMBINE_H
 
+/// combine
+/// =======
+/// 
+/// Description
+/// -----------
+/// 
+/// The `combine` function adaptor combines several functions together with
+/// their arguments. It essentially zips each function with an argument before
+/// calling the main function.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F, class... Gs>
+///     constexpr combine_adaptor<F, Gs...> combine(F f, Gs... gs);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// F and Gs must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
+/// Example
+/// -------
+/// 
+///     auto f = fit::combine(
+///         fit::construct<std::tuple>(),
+///         fit::capture(1)(fit::construct<std::pair>()),
+///         fit::capture(2)(fit::construct<std::pair>()));
+///     assert(f(2, 4) == std::make_tuple(std::make_pair(1, 2), std::make_pair(2, 4)));
+/// 
+
 #include <fit/pack.h>
 #include <fit/always.h>
 #include <fit/detail/result_of.h>

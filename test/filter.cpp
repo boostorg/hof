@@ -9,7 +9,7 @@
 
 #include <tuple>
 
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
 #define FIT_HAS_CONSTEXPR_TUPLE 0
 #else
 #define FIT_HAS_CONSTEXPR_TUPLE 1

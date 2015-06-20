@@ -1,0 +1,105 @@
+/*=============================================================================
+    Copyright (c) 2015 Paul Fultz II
+    if_.h
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef FIT_GUARD_IF_H
+#define FIT_GUARD_IF_H
+
+/// if
+/// ==
+/// 
+/// Description
+/// -----------
+/// 
+/// The `if_` function applies a boolen condition to the function.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class IntegralConstant>
+///     constexpr auto if_(IntegralConstant);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// IntegralConstant must be:
+/// 
+///     IntegralConstant
+/// 
+/// Example
+/// -------
+/// 
+///     struct sum_f
+///     {
+///         template<class T, class U>
+///         T operator()(T x, U y) const
+///         {
+///             return x+y;
+///         }
+///     };
+///     assert(fit::if_(sum_f(), 1, 2) == 3);
+/// 
+
+#include <fit/always.h>
+#include <fit/detail/result_of.h>
+#include <fit/detail/forward.h>
+#include <fit/detail/delegate.h>
+#include <fit/detail/move.h>
+#include <fit/detail/static_const_var.h>
+
+namespace fit {
+
+namespace detail {
+
+template<class C, class...>
+struct if_depend
+: C
+{};
+
+template<bool Cond, class F>
+struct if_adaptor : F
+{
+    FIT_INHERIT_CONSTRUCTOR(if_adaptor, F)
+};
+
+template<class F>
+struct if_adaptor<false, F>
+{
+    template<class... Ts>
+    constexpr if_adaptor(Ts&&...)
+    {}
+};
+
+template<bool Cond>
+struct make_if_f
+{
+    constexpr make_if_f()
+    {}
+    template<class F>
+    constexpr if_adaptor<Cond, F> operator()(F f) const
+    {
+        return if_adaptor<Cond, F>(fit::move(f));
+    }
+};
+
+struct if_f
+{
+    constexpr if_f()
+    {}
+    template<class Cond, bool B=Cond::type::value>
+    constexpr make_if_f<B> operator()(Cond) const
+    {
+        return {};
+    }
+};
+
+}
+
+FIT_DECLARE_STATIC_VAR(if_, detail::if_f);
+
+}
+
+#endif

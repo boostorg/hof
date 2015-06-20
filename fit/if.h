@@ -34,13 +34,17 @@
 /// 
 ///     struct sum_f
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
+///         template<class T>
+///         int operator()(T x, T y) const
 ///         {
-///             return x+y;
+///             return fit::conditional(
+///                 fit::if_(std::is_integral<T>())(fit::_ + fit::_),
+///                 fit::always(0)
+///             )(x, y);
 ///         }
 ///     };
-///     assert(fit::if_(sum_f(), 1, 2) == 3);
+///     assert(sum_f()(1, 2) == 3);
+///     assert(sum_f()("", "") == 0);
 /// 
 
 #include <fit/always.h>

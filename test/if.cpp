@@ -2,6 +2,7 @@
 #include "test.h"
 
 #include <fit/conditional.h>
+#include <fit/placeholders.h>
 
 
 struct is_5
@@ -57,3 +58,27 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(test_int<is_not_5>()(5.0));
     FIT_STATIC_TEST_CHECK(test_int<is_not_5>()(6.0));
 }
+
+struct sum_f
+{
+    template<class T>
+    constexpr int operator()(T x, T y) const
+    {
+        return fit::conditional(
+            fit::if_(std::is_integral<T>())(fit::_ + fit::_),
+            fit::always(0)
+        )(x, y);
+    }
+};
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(sum_f()(1, 2) == 3);
+    FIT_TEST_CHECK(sum_f()(1.0, 2.0) == 0);
+    FIT_TEST_CHECK(sum_f()("", "") == 0);
+
+    FIT_STATIC_TEST_CHECK(sum_f()(1, 2) == 3);
+    FIT_STATIC_TEST_CHECK(sum_f()("", "") == 0);
+}
+
+

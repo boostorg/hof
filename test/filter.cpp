@@ -9,6 +9,13 @@
 
 #include <tuple>
 
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+#define FIT_HAS_CONSTEXPR_TUPLE 0
+#else
+#define FIT_HAS_CONSTEXPR_TUPLE 1
+#endif
+
+
 FIT_LIFT_CLASS(make_tuple_f, std::make_tuple);
 
 struct integer_predicate
@@ -40,7 +47,9 @@ struct filter_integers
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(filter_integers()(fit::pack(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
+#if FIT_HAS_CONSTEXPR_TUPLE
     FIT_STATIC_TEST_CHECK(filter_integers()(fit::pack(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
+#endif
 }
 
 

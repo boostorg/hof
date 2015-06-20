@@ -49,6 +49,7 @@ pages:
     - 'eval': 'eval.md'
     - 'FIT_STATIC_FUNCTION': 'function.md'
     - 'FIT_STATIC_LAMBDA': 'lambda.md'
+    - 'if': 'if.md'
     - 'lift': 'lift.md'
     - 'is_callable': 'is_callable.md'
     - 'pack': 'pack.md'

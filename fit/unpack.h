@@ -260,8 +260,8 @@ struct unpack_sequence<std::tuple<Ts...>>
     );
 };
 
-template<class T, class... Ts>
-struct unpack_sequence<detail::pack_base<T, Ts...>>
+template<class... Ts>
+struct unpack_sequence<pack_t<Ts...>>
 {
     template<class F, class P>
     constexpr static auto apply(F&& f, P&& p) FIT_RETURNS

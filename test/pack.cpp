@@ -97,13 +97,6 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2), fit::pack_forward())(binary_class()) == 3 );
 }
 
-
-
-
-
-
-
-
 FIT_TEST_CASE()
 {
     FIT_STATIC_TEST_CHECK((fit::pack(1) + fit::pack(2))(binary_class()) == 3);
@@ -175,10 +168,6 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK((fit::pack_forward(1) + fit::pack_forward() + fit::pack_forward(2) + fit::pack_forward())(binary_class()) == 3);
     FIT_TEST_CHECK((fit::pack_forward(1) + fit::pack_forward() + fit::pack_forward(2) + fit::pack_forward())(binary_class()) == 3 );
 }
-
-
-
-
 
 struct deref
 {

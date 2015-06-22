@@ -39,6 +39,7 @@ pages:
 - Functions:
     - 'always': 'always.md'
     - 'args': 'args.md'
+    - 'at': 'at.md'
     - 'construct': 'construct.md'
     - 'identity': 'identity.md'
     - 'placeholders': 'placeholders.md'

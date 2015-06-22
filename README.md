@@ -15,6 +15,8 @@ Fit is divided into three components:
 * Functions: These return functions that achieve a specific purpose.
 * Utilities: These are general utilities that are useful when defining or using functions
 
+Github: [http://github.com/pfultz2/Fit](http://github.com/pfultz2/Fit)
+Documentation: [http://fit.readthedocs.org](http://fit.readthedocs.org)
 Quick Start
 ===========
 
@@ -159,4 +161,4 @@ Additionally, we could go a step further and make the `print` function recursive
 Requirements
 ============
 
-This requires a C++11 compiler. There a no third-party dependencies. This has been tested on clang 3.4, gcc 4.6-4.9, and Visual Studio 2015 RC.
+This requires a C++11 compiler. There are no third-party dependencies. This has been tested on clang 3.4, gcc 4.6-4.9, and Visual Studio 2015 RC.

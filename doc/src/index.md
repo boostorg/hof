@@ -16,4 +16,5 @@ Fit is divided into three components:
 * Utilities: These are general utilities that are useful when defining or using functions
 
 Github: [http://github.com/pfultz2/Fit](http://github.com/pfultz2/Fit)
+
 Documentation: [http://fit.readthedocs.org](http://fit.readthedocs.org)

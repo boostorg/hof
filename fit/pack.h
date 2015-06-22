@@ -57,6 +57,7 @@
 
 #include <fit/detail/seq.h>
 #include <fit/detail/delegate.h>
+#include <fit/detail/move.h>
 #include <fit/detail/remove_rvalue_reference.h>
 #include <fit/detail/unwrap.h>
 #include <fit/detail/static_const_var.h>
@@ -74,7 +75,12 @@
 #endif
 #endif
 
-namespace fit { namespace detail {
+namespace fit { 
+
+template<class... Ts>
+struct pack_t;
+
+namespace detail {
 
 struct decay_elem_f
 {
@@ -202,8 +208,7 @@ struct pack_join_base;
 template<int... Ns1, class... Ts1, int... Ns2, class... Ts2>
 struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2...>>
 {
-    static constexpr long total_size = sizeof...(Ts1) + sizeof...(Ts2);
-    typedef pack_base<typename detail::gens<total_size>::type, Ts1..., Ts2...> result_type;
+    typedef pack_t<Ts1..., Ts2...> result_type;
 
     template<class P1, class P2>
     static constexpr result_type call(P1&& p1, P2&& p2)
@@ -218,8 +223,8 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
 template<class P1, class P2>
 struct pack_join_result 
 : pack_join_base<
-    typename std::remove_cv<typename std::remove_reference<P1>::type>::type, 
-    typename std::remove_cv<typename std::remove_reference<P2>::type>::type
+    typename std::remove_cv<typename std::remove_reference<P1>::type>::type::base_type, 
+    typename std::remove_cv<typename std::remove_reference<P2>::type>::type::base_type
 >
 {};
 
@@ -229,7 +234,7 @@ struct pack_f
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        pack_base<typename gens<sizeof...(Ts)>::type, typename remove_rvalue_reference<Ts>::type...>(fit::forward<Ts>(xs)...)
+        pack_t<typename remove_rvalue_reference<Ts>::type...>(fit::forward<Ts>(xs)...)
     );
 };
 
@@ -238,7 +243,7 @@ struct pack_forward_f
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        pack_base<typename gens<sizeof...(Ts)>::type, Ts&&...>(fit::forward<Ts>(xs)...)
+        pack_t<Ts&&...>(fit::forward<Ts>(xs)...)
     );
 };
 
@@ -296,6 +301,39 @@ struct pack_join_f
 };
 
 }
+
+template<class... Ts>
+struct pack_t
+: detail::pack_base<typename detail::gens<sizeof...(Ts)>::type, Ts...>
+{
+    typedef detail::pack_base<typename detail::gens<sizeof...(Ts)>::type, Ts...> base_type;
+    FIT_INHERIT_CONSTRUCTOR(pack_t, base_type)
+};
+
+#define FIT_DETAIL_PERFECT_ID(...) __VA_ARGS__
+#define FIT_DETAIL_PERFECT_CONST(...) const __VA_ARGS__&
+#define FIT_DETAIL_PERFECT_RVALUE(...) __VA_ARGS__&&
+#define FIT_DETAIL_PERFECT_UNARY_1(m, ...) \
+    m(const&, FIT_DETAIL_PERFECT_ID, __VA_ARGS__) \
+    m(&&, fit::move, __VA_ARGS__)
+
+#define FIT_DETAIL_PERFECT_UNARY_2(m, ...) \
+    m(const&, FIT_DETAIL_PERFECT_ID, __VA_ARGS__) \
+    m(&&, fit::move, __VA_ARGS__)
+
+#define FIT_DETAIL_PERFECT_BINARY_1(ref, move, m, ...) \
+    FIT_DETAIL_PERFECT_UNARY_2(m, ref, move, __VA_ARGS__)
+
+#define FIT_DETAIL_PERFECT_BINARY(m, ...) FIT_DETAIL_PERFECT_UNARY_1(FIT_DETAIL_PERFECT_BINARY_1, m, __VA_ARGS__)
+
+#define FIT_DETAIL_PERFECT_PACK_JOIN_PLUS(ref1, move1, ref2, move2, _) \
+template<class... Ts, class... Us> \
+constexpr pack_t<Ts..., Us...> operator+(pack_t<Ts...> ref1 p1, pack_t<Us...> ref2 p2) \
+{ \
+    return detail::pack_join_base<typename pack_t<Ts...>::base_type, typename pack_t<Us...>::base_type>::call(move1(p1), move2(p2)); \
+}
+
+FIT_DETAIL_PERFECT_BINARY(FIT_DETAIL_PERFECT_PACK_JOIN_PLUS,)
 
 FIT_DECLARE_STATIC_VAR(pack, detail::pack_f);
 FIT_DECLARE_STATIC_VAR(pack_forward, detail::pack_forward_f);

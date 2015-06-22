@@ -190,6 +190,10 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(std::unique_ptr<int>(new int(3))))(deref()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(std::unique_ptr<int>(new int(3))))(deref()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(), fit::pack_decay(std::unique_ptr<int>(new int(3))))(deref()) == 3);
+
+    FIT_TEST_CHECK((fit::pack() + fit::pack(std::unique_ptr<int>(new int(3))))(deref()) == 3);
+    FIT_TEST_CHECK((fit::pack_forward() + fit::pack_forward(std::unique_ptr<int>(new int(3))))(deref()) == 3);
+    FIT_TEST_CHECK((fit::pack_decay() + fit::pack_decay(std::unique_ptr<int>(new int(3))))(deref()) == 3);
     // FIT_TEST_CHECK(p(deref()) == 3);
 }
 

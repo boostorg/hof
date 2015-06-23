@@ -126,7 +126,6 @@ class empty1
 
 class empty2
 {};
-#if FIT_PACK_HAS_EBO
 FIT_TEST_CASE()
 {
     auto p1 = fit::pack(empty1());
@@ -138,7 +137,18 @@ FIT_TEST_CASE()
     static_assert(std::is_empty<decltype(p2)>::value, "Pack not empty");
 
     auto p3 = fit::pack(empty1(), empty2(), empty1());
-    p2(fit::always(0));
+    p3(fit::always(0));
     static_assert(std::is_empty<decltype(p3)>::value, "Pack not empty");
-}
+
+    auto p4 = fit::pack(empty1(), fit::pack(empty1(), empty2()));
+    p4(fit::always(0));
+#if FIT_PACK_HAS_EBO
+    static_assert(std::is_empty<decltype(p4)>::value, "Pack not empty");
 #endif
+
+    auto p5 = fit::pack(fit::pack(), fit::pack(fit::pack()), empty1(), fit::pack(empty1(), empty2()));
+    p5(fit::always(0));
+#if FIT_PACK_HAS_EBO
+    static_assert(std::is_empty<decltype(p5)>::value, "Pack not empty");
+#endif
+}

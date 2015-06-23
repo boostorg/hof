@@ -90,7 +90,8 @@ struct alias_tag<alias_inherit<T, Tag>>
 template<class T, class Tag=void>
 struct alias_construct
 {
-    constexpr alias_construct()
+    template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(T, Ts...)>
+    constexpr alias_construct(Ts&&...)
     {}
 };
 

@@ -100,8 +100,9 @@ struct pack_holder
     alias<T, Tag>
 >
 #else
-: std::conditional<std::is_empty<T>::value && std::is_pod<T>::value, 
-    alias_construct<T, Tag, 
+// TODO: Check for adaptor types as well
+: std::conditional<std::is_empty<T>::value && std::is_trivial<T>::value, 
+    alias_construct<T, Tag>,
     alias<T, Tag>
 >
 #endif
@@ -196,6 +197,7 @@ FIT_UNARY_PERFECT_FOREACH(FIT_DETAIL_UNPACK_PACK_BASE)
 template<class P1, class P2>
 struct pack_join_base;
 
+// TODO: Extend to join more than two packs at a time
 template<int... Ns1, class... Ts1, int... Ns2, class... Ts2>
 struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2...>>
 {

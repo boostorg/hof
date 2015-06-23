@@ -187,6 +187,12 @@ struct pack_base<seq<> >
     (f());
 };
 
+#define FIT_DETAIL_UNPACK_PACK_BASE(ref, move) \
+template<class F, int... Ns, class... Ts> \
+constexpr auto unpack_pack_base(F&& f, pack_base<seq<Ns...>, Ts...> ref x) \
+FIT_RETURNS(f(alias_value<Ts, pack_tag<Ns, Ts...>>(move(x), f)...))
+FIT_UNARY_PERFECT_FOREACH(FIT_DETAIL_UNPACK_PACK_BASE)
+
 template<class P1, class P2>
 struct pack_join_base;
 

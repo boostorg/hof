@@ -138,7 +138,7 @@ constexpr auto unpack_impl(F&& f, Sequence&& s) FIT_RETURNS
 template<class F, class... Sequences>
 constexpr auto unpack_join(F&& f, Sequences&&... s) FIT_RETURNS
 (
-    unpack_impl(fit::forward<F>(f), fit::pack_join(unpack_impl(fit::pack_forward, fit::forward<Sequences>(s))...))
+    fit::pack_join(unpack_impl(fit::pack_forward, fit::forward<Sequences>(s))...)(fit::forward<F>(f))
 );
 
 }
@@ -266,7 +266,7 @@ struct unpack_sequence<detail::pack_base<T, Ts...>>
     template<class F, class P>
     constexpr static auto apply(F&& f, P&& p) FIT_RETURNS
     (
-        p(fit::forward<F>(f))
+        fit::detail::unpack_pack_base(fit::forward<F>(f), fit::forward<P>(p))
     );
 };
 

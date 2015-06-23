@@ -61,6 +61,7 @@
 #include <fit/detail/unwrap.h>
 #include <fit/detail/static_const_var.h>
 #include <fit/returns.h>
+#include <fit/alias.h>
 
 #ifndef FIT_HAS_RVALUE_THIS
 #define FIT_HAS_RVALUE_THIS 1
@@ -87,44 +88,33 @@ struct decay_elem_f
 };
 static decay_elem_f decay_elem = {};
 
-template<class...>
+template<int N, class...>
 struct pack_tag
 {};
 
-template<int, class T, class, class=void>
+template<class T, class Tag>
 struct pack_holder
-{
-    T value;
-
-    constexpr const T& get_value() const
-    {
-        return this->value;
-    }
-
-    FIT_DELGATE_CONSTRUCTOR(pack_holder, T, value)
-};
 #if FIT_PACK_HAS_EBO
-template<int N, class T, class Tag>
-struct pack_holder<N, T, Tag, typename std::enable_if<(std::is_empty<T>::value)>::type>
-: T
-{
-    constexpr const T& get_value() const
-    {
-        return *this;
-    }
-
-    FIT_INHERIT_CONSTRUCTOR(pack_holder, T)
-};
+: std::conditional<std::is_empty<T>::value, 
+    alias_inherit<T, Tag>, 
+    alias<T, Tag>
+>
+#else
+: std::conditional<std::is_empty<T>::value && std::is_pod<T>::value, 
+    alias_construct<T, Tag, 
+    alias<T, Tag>
+>
 #endif
+{};
+
 template<class Seq, class... Ts>
 struct pack_base;
 
-
-template<int N, class T, class Tag, class... Ts>
-constexpr T&& pack_get(const pack_holder<N, T, Tag>& p, Ts&&...)
+template<class T, class Tag, class X, class... Ts>
+constexpr T&& pack_get(X&& x, Ts&&... xs)
 {
     // C style cast(rather than static_cast) is needed for gcc
-    return (T&&)(p.get_value());
+    return (T&&)(alias_value<T, Tag>(x, xs...));
 }
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
@@ -133,11 +123,12 @@ struct pack_holder_base;
 
 template<int... Ns, class... Ts>
 struct pack_holder_base<seq<Ns...>, Ts...>
-: pack_holder<Ns, Ts, pack_tag<Ts...>>...
+: pack_holder<Ns, Ts, pack_tag<Ts...>>::type...
 {
+    typedef typename pack_holder<Ns, Ts, pack_tag<Ts...>>::type base_type;
     FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
     template<class... Xs, class=typename std::enable_if<(sizeof...(Xs) == sizeof...(Ts))> >
-    constexpr pack_holder_base(Xs&&... xs) : pack_holder<Ns, Ts, pack_tag<Ts...>>(fit::forward<Xs>(xs))...
+    constexpr pack_holder_base(Xs&&... xs) : base_type(fit::forward<Xs>(xs))...
     {}
 };
 
@@ -163,7 +154,7 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(pack_get<Ns, Ts, pack_tag<Ts...>>(*FIT_CONST_THIS, f)...)
+        f(pack_get<Ts, pack_tag<Ns, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 };
 
@@ -171,18 +162,18 @@ struct pack_base<seq<Ns...>, Ts...>
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
-: pack_holder<Ns, Ts, pack_tag<Ts...>>...
+: pack_holder<Ts, pack_tag<Ns, Ts...>>::type...
 {
     FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
     
-    template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, pack_holder<Ns, Ts, pack_tag<Ts...>>)>
-    constexpr pack_base(Xs&&... xs) : pack_holder<Ns, Ts, pack_tag<Ts...>>(fit::forward<Xs>(xs))...
+    template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<Ns, Ts...>>::type)>
+    constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<Ns, Ts...>>::type(fit::forward<Xs>(xs))...
     {}
   
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(pack_get<Ns, Ts, pack_tag<Ts...>>(*this, f)...)
+        f(pack_get<Ts, pack_tag<Ns, Ts...>>(*this, f)...)
     );
 };
 
@@ -210,8 +201,8 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
     {
         // TODO: static_assert that the pack is an rvalue if its only moveable
         return result_type(
-            pack_get<Ns1, Ts1>(fit::forward<P1>(p1))..., 
-            pack_get<Ns2, Ts2>(fit::forward<P2>(p2))...);
+            pack_get<Ts1, pack_tag<Ns1, Ts1...>>(fit::forward<P1>(p1))..., 
+            pack_get<Ts2, pack_tag<Ns2, Ts2...>>(fit::forward<P2>(p2))...);
     }
 };
 

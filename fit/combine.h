@@ -75,7 +75,7 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
 
     FIT_RETURNS_CLASS(combine_adaptor_base);
 
-// Result needs to be calulated in a seperate class to avoid confusing the
+// Result needs to be calculated in a separate class to avoid confusing the
 // compiler on MSVC
 #if FIT_NO_EXPRESSION_SFINAE || FIT_HAS_MANUAL_DEDUCTION
     template<class... Ts>
@@ -93,7 +93,7 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
     operator()(Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))
-            (pack_get<Ns, Gs, pack_tag<Gs...>>(*FIT_CONST_THIS, xs)(fit::forward<Ts>(xs))...)
+            (alias_value<Gs, pack_tag<Ns, Gs...>>(*FIT_CONST_THIS, xs)(fit::forward<Ts>(xs))...)
     );
 };
 

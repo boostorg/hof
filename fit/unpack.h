@@ -237,6 +237,12 @@ make_tuple_gens(const Sequence&)
 }
 
 template<class F, class... Ts, int ...N>
+constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> && t, seq<N...>) FIT_RETURNS
+(
+    f(fit::forward<Ts>(std::get<N>(t))...)
+);
+
+template<class F, class... Ts, int ...N>
 constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
 (
     f(fit::forward<Ts>(std::get<N>(t))...)

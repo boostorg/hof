@@ -92,21 +92,24 @@ template<int N, class...>
 struct pack_tag
 {};
 
+#if FIT_PACK_HAS_EBO
 template<class T, class Tag>
 struct pack_holder
-#if FIT_PACK_HAS_EBO
 : std::conditional<std::is_empty<T>::value, 
     alias_inherit<T, Tag>, 
     alias<T, Tag>
 >
+{};
 #else
 // TODO: Check for adaptor types as well
+template<class T, class Tag>
+struct pack_holder
 : std::conditional<std::is_empty<T>::value && std::is_trivial<T>::value, 
     alias_construct<T, Tag>,
     alias<T, Tag>
 >
-#endif
 {};
+#endif
 
 template<class Seq, class... Ts>
 struct pack_base;
@@ -124,7 +127,7 @@ struct pack_holder_base;
 
 template<int... Ns, class... Ts>
 struct pack_holder_base<seq<Ns...>, Ts...>
-: pack_holder<Ns, Ts, pack_tag<Ts...>>::type...
+: pack_holder<Ns, Ts, pack_tag<Ns, Ts...>>::type...
 {
     typedef typename pack_holder<Ns, Ts, pack_tag<Ts...>>::type base_type;
     FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);

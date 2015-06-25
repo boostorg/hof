@@ -70,7 +70,12 @@ struct alias_tag<alias<T, Tag>>
 
 
 template<class T, class Tag=void>
-struct alias_inherit : T
+struct alias_inherit 
+#if (defined(__GNUC__) && !defined (__clang__))
+: std::conditional<(std::is_class<T>::value), T, alias<T>>::type
+#else
+: T
+#endif
 {
     FIT_INHERIT_CONSTRUCTOR(alias_inherit, T)
 };

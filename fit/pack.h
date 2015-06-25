@@ -104,8 +104,11 @@ struct pack_holder
 // TODO: Check for adaptor types as well
 template<class T, class Tag>
 struct pack_holder
-: std::conditional<std::is_empty<T>::value && std::is_trivial<T>::value, 
-    alias_construct<T, Tag>,
+: std::conditional<
+        std::is_empty<T>::value && 
+        std::is_literal_type<T>::value && 
+        std::is_default_constructible<T>::value, 
+    alias_static<T, Tag>,
     alias<T, Tag>
 >
 {};

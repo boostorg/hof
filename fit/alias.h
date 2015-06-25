@@ -92,22 +92,35 @@ template<class T, class Tag>
 struct alias_tag<alias_inherit<T, Tag>>
 { typedef Tag type; };
 
+namespace detail {
+
+template<class T, class Tag>
+struct alias_static_storage
+{
+    static constexpr T value = T();
+};
+
+template<class T, class Tag>
+constexpr T alias_static_storage<T, Tag>::value;
+
+}
+
 template<class T, class Tag=void>
-struct alias_construct
+struct alias_static
 {
     template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(T, Ts...)>
-    constexpr alias_construct(Ts&&...)
+    constexpr alias_static(Ts&&...)
     {}
 };
 
 template<class T, class Tag, class... Ts>
-constexpr T alias_value(const alias_construct<T, Tag>&, Ts&&...)
+constexpr const T& alias_value(const alias_static<T, Tag>&, Ts&&...)
 {
-    return T();
+    return detail::alias_static_storage<T, Tag>::value;
 }
 
 template<class T, class Tag>
-struct alias_tag<alias_construct<T, Tag>>
+struct alias_tag<alias_static<T, Tag>>
 { typedef Tag type; };
 
 }

@@ -128,27 +128,38 @@ class empty2
 {};
 FIT_TEST_CASE()
 {
-    auto p1 = fit::pack(empty1());
-    p1(fit::always(0));
+    static constexpr auto p1 = fit::pack(empty1());
+    FIT_TEST_CHECK(p1(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p1(fit::always(0)) == 0);
+#ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p1)>::value, "Pack not empty");
+#endif
 
-    auto p2 = fit::pack(empty1(), empty2());
-    p2(fit::always(0));
+    static constexpr auto p2 = fit::pack(empty1(), empty2());
+    FIT_TEST_CHECK(p2(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p2(fit::always(0)) == 0);
+#ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p2)>::value, "Pack not empty");
+#endif
 
-    auto p3 = fit::pack(empty1(), empty2(), empty1());
-    p3(fit::always(0));
+    static constexpr auto p3 = fit::pack(empty1(), empty2(), empty1());
+    FIT_TEST_CHECK(p3(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p3(fit::always(0)) == 0);
+#ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p3)>::value, "Pack not empty");
+#endif
 
-    auto p4 = fit::pack(empty1(), fit::pack(empty1(), empty2()));
-    p4(fit::always(0));
-#if FIT_PACK_HAS_EBO
+    static constexpr auto p4 = fit::pack(empty1(), fit::pack(empty1(), empty2()));
+    FIT_TEST_CHECK(p4(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p4(fit::always(0)) == 0);
+#ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p4)>::value, "Pack not empty");
 #endif
 
-    auto p5 = fit::pack(fit::pack(), fit::pack(fit::pack()), empty1(), fit::pack(empty1(), empty2()));
-    p5(fit::always(0));
-#if FIT_PACK_HAS_EBO
+    static constexpr auto p5 = fit::pack(fit::pack(), fit::pack(fit::pack()), empty1(), fit::pack(empty1(), empty2()));
+    FIT_TEST_CHECK(p5(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p5(fit::always(0)) == 0);
+#ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p5)>::value, "Pack not empty");
 #endif
 }

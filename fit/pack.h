@@ -88,7 +88,7 @@ struct decay_elem_f
 };
 static decay_elem_f decay_elem = {};
 
-template<int N, class...>
+template<class...>
 struct pack_tag
 {};
 
@@ -101,7 +101,6 @@ struct pack_holder
 >
 {};
 #else
-// TODO: Check for adaptor types as well
 template<class T, class Tag>
 struct pack_holder
 : std::conditional<
@@ -130,7 +129,7 @@ struct pack_holder_base;
 
 template<int... Ns, class... Ts>
 struct pack_holder_base<seq<Ns...>, Ts...>
-: pack_holder<Ns, Ts, pack_tag<Ns, Ts...>>::type...
+: pack_holder<Ns, Ts, pack_tag<seq<Ns>, Ts...>>::type...
 {
     typedef typename pack_holder<Ns, Ts, pack_tag<Ts...>>::type base_type;
     FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
@@ -169,18 +168,18 @@ struct pack_base<seq<Ns...>, Ts...>
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
-: pack_holder<Ts, pack_tag<Ns, Ts...>>::type...
+: pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type...
 {
     FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
     
-    template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<Ns, Ts...>>::type)>
-    constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<Ns, Ts...>>::type(fit::forward<Xs>(xs))...
+    template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)>
+    constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(fit::forward<Xs>(xs))...
     {}
   
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(pack_get<Ts, pack_tag<Ns, Ts...>>(*this, f)...)
+        f(pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*this, f)...)
     );
 };
 
@@ -197,7 +196,7 @@ struct pack_base<seq<> >
 #define FIT_DETAIL_UNPACK_PACK_BASE(ref, move) \
 template<class F, int... Ns, class... Ts> \
 constexpr auto unpack_pack_base(F&& f, pack_base<seq<Ns...>, Ts...> ref x) \
-FIT_RETURNS(f(alias_value<Ts, pack_tag<Ns, Ts...>>(move(x), f)...))
+FIT_RETURNS(f(alias_value<Ts, pack_tag<seq<Ns>, Ts...>>(move(x), f)...))
 FIT_UNARY_PERFECT_FOREACH(FIT_DETAIL_UNPACK_PACK_BASE)
 
 template<class P1, class P2>
@@ -215,8 +214,8 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
     {
         // TODO: static_assert that the pack is an rvalue if its only moveable
         return result_type(
-            pack_get<Ts1, pack_tag<Ns1, Ts1...>>(fit::forward<P1>(p1))..., 
-            pack_get<Ts2, pack_tag<Ns2, Ts2...>>(fit::forward<P2>(p2))...);
+            pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(fit::forward<P1>(p1))..., 
+            pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(fit::forward<P2>(p2))...);
     }
 };
 

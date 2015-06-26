@@ -106,7 +106,7 @@ struct pack_holder
 : std::conditional<
         std::is_empty<T>::value && 
         std::is_literal_type<T>::value && 
-        std::is_default_constructible<T>::value, 
+        is_default_constructible<T>::value, 
     alias_static<T, Tag>,
     alias<T, Tag>
 >

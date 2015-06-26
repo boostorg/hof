@@ -129,7 +129,7 @@ struct pack_holder_base;
 
 template<int... Ns, class... Ts>
 struct pack_holder_base<seq<Ns...>, Ts...>
-: pack_holder<Ns, Ts, pack_tag<seq<Ns>, Ts...>>::type...
+: pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type...
 {
     typedef typename pack_holder<Ns, Ts, pack_tag<Ts...>>::type base_type;
     FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);

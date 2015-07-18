@@ -128,11 +128,18 @@ template<class... Ts>
 struct pack_holder_base
 : Ts...
 {
-    FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
+    FIT_INHERIT_DEFAULT(pack_holder_base, Ts...);
     template<class... Xs, class=typename std::enable_if<(sizeof...(Xs) == sizeof...(Ts))>::type>
     constexpr pack_holder_base(Xs&&... xs) 
     : Ts(fit::forward<Xs>(xs))...
     {}
+};
+
+template<class T>
+struct pack_holder_base<T>
+: T
+{
+    FIT_INHERIT_CONSTRUCTOR(pack_holder_base, T);
 };
 
 template<int... Ns, class... Ts>
@@ -145,7 +152,7 @@ struct pack_base<seq<Ns...>, Ts...>
     : base(fit::forward<X1>(x1), fit::forward<X2>(x2), fit::forward<Xs>(xs)...)
     {}
 
-    template<class X1, typename std::enable_if<(!std::is_convertible<X1, pack_base>::value), int>::type = 0>
+    template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
     constexpr pack_base(X1&& x1) 
     : base(fit::forward<X1>(x1))
     {}

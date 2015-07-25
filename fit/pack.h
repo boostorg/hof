@@ -126,27 +126,28 @@ constexpr T&& pack_get(X&& x, Ts&&... xs)
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
 template<class... Ts>
 struct pack_holder_base
-: Ts...
+: Ts::type...
 {
-    FIT_INHERIT_DEFAULT(pack_holder_base, Ts...);
+    FIT_INHERIT_DEFAULT(pack_holder_base, typename Ts::type...);
     template<class... Xs, class=typename std::enable_if<(sizeof...(Xs) == sizeof...(Ts))>::type>
     constexpr pack_holder_base(Xs&&... xs) 
-    : Ts(fit::forward<Xs>(xs))...
+    : Ts::type(fit::forward<Xs>(xs))...
     {}
 };
 
 template<class T>
 struct pack_holder_base<T>
-: T
+: T::type
 {
-    FIT_INHERIT_CONSTRUCTOR(pack_holder_base, T);
+    typedef typename T::type base;
+    FIT_INHERIT_CONSTRUCTOR(pack_holder_base, base);
 };
 
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
-: pack_holder_base<typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type...>
+: pack_holder_base<pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>...>
 {
-    typedef pack_holder_base<typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type...> base;
+    typedef pack_holder_base<pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>...> base;
     template<class X1, class X2, class... Xs>
     constexpr pack_base(X1&& x1, X2&& x2, Xs&&... xs) 
     : base(fit::forward<X1>(x1), fit::forward<X2>(x2), fit::forward<Xs>(xs)...)

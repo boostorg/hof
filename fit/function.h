@@ -59,8 +59,9 @@ struct reveal_static_const_factory
 struct reveal_function_factory
 {
     template<class F>
-    constexpr reveal_adaptor<F> operator += (F*)
+    constexpr reveal_adaptor<F> operator += (F*) const
     {
+        static_assert(std::is_default_constructible<F>::value, "Function not default constructible");
         return {};
     }
 };

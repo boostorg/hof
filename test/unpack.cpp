@@ -102,7 +102,7 @@ FIT_TEST_CASE()
     static_assert(!fit::is_unpackable<int>::value, "Unpackable");
     static_assert(!fit::is_unpackable<void>::value, "Unpackable");
 }
-
+#if FIT_HAS_STATIC_LAMBDA
 FIT_STATIC_AUTO lambda_unary_unpack = fit::unpack(FIT_STATIC_LAMBDA(int x)
 {
     return x;
@@ -117,7 +117,7 @@ FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(3 == lambda_unary_unpack(fit::pack_decay(3)));
 }
-
+#endif
 struct unary_move
 {
     std::unique_ptr<int> i;

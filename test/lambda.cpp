@@ -6,6 +6,7 @@
 #include <memory>
 #include "test.h"
 
+#if FIT_HAS_STATIC_LAMBDA
 static constexpr auto add_one = FIT_STATIC_LAMBDA(int x)
 {
     return x + 1;
@@ -89,3 +90,4 @@ FIT_TEST_CASE()
 }
 
 }
+#endif

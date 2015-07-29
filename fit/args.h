@@ -86,7 +86,7 @@ template<class T, T N>
 struct args_f
 {
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) FIT_RETURNS
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         get_args<N>(fit::forward<Ts>(xs)...)
     );

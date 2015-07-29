@@ -20,7 +20,7 @@
 #endif
 #endif
 
-#if FIT_HAS_RELAXED_CONSTEXPR
+#if FIT_HAS_RELAXED_CONSTEXPR || defined(_MSC_VER)
 #define FIT_STATIC_CONSTEXPR const constexpr
 #else
 #define FIT_STATIC_CONSTEXPR static constexpr

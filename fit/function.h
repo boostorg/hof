@@ -41,11 +41,13 @@ namespace detail {
 
 struct reveal_static_const_factory
 {
+    constexpr reveal_static_const_factory()
+    {}
 #if FIT_NO_UNIQUE_STATIC_VAR
     template<class F>
-    constexpr reveal_adaptor<F> operator=(const F&) const
+    constexpr reveal_adaptor<F> operator=(const F& f) const
     {
-        return {};
+        return reveal_adaptor<F>(f);
     }
 #else
     template<class F>
@@ -55,23 +57,11 @@ struct reveal_static_const_factory
     }
 #endif
 };
-#if FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION
-struct reveal_function_factory
-{
-    template<class F>
-    constexpr reveal_adaptor<F> operator += (F*) const
-    {
-        static_assert(std::is_default_constructible<F>::value, "Function not default constructible");
-        return {};
-    }
-};
-#endif
-
 }}
 
 #if FIT_ONLY_DEFAULT_CONSTRUCTIBLE_STATIC_FUNCTION
 #define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = \
-    fit::detail::reveal_function_factory() += true ? nullptr : fit::detail::static_addr()
+    true ? fit::detail::constexpr_deduce() : fit::detail::reveal_static_const_factory()
 #elif FIT_NO_UNIQUE_STATIC_VAR
 #define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = fit::detail::reveal_static_const_factory()
 #else

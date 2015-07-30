@@ -30,6 +30,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fit::reveal(f)(t3()) == 3);
     // fit::reveal(f)(1);
 }
+#if FIT_HAS_STATIC_LAMBDA
 #ifndef _MSC_VER
 static constexpr auto lam = fit::conditional(
     FIT_STATIC_LAMBDA(t1)
@@ -89,5 +90,6 @@ FIT_TEST_CASE()
 
     // fit::reveal(static_fun)(1);
 }
+#endif
 
 }

@@ -15,8 +15,20 @@ struct sum_f
     }
 };
 
-FIT_STATIC_FUNCTION(sum_partial) = fit::partial(sum_f());
+FIT_STATIC_FUNCTION(sum_init) = sum_f();
 
+FIT_TEST_CASE()
+{
+// TODO: Should be empty on MSVC as well
+#ifndef _MSC_VER
+    STATIC_ASSERT_EMPTY(sum_init);
+#endif
+    FIT_TEST_CHECK(3 == sum_init(1, 2));
+
+    FIT_STATIC_TEST_CHECK(3 == sum_init(1, 2));
+}
+
+FIT_STATIC_FUNCTION(sum_partial) = fit::partial(sum_f());
 FIT_TEST_CASE()
 {
 #ifndef _MSC_VER

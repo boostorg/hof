@@ -61,30 +61,45 @@
 namespace fit {
 namespace detail {
 
-template<class C, class X, class... Xs>
-struct enable_if_constructible
-: std::enable_if<std::is_constructible<X, Xs&&...>::value, int>
-{
-    // const fit::detail::pair_holder<1, fit::detail::pack_base<fit::detail::seq<0>, std::unique_ptr<int> >, deref>
-    // static_assert(!std::is_same<X, fit::detail::pack_base<fit::detail::seq<0>, std::unique_ptr<int> > >::value, "");
-};
 
 template<class T, class=void>
-struct is_default_constructible_helper
+struct is_default_constructible_check
 : std::false_type
 {};
 
 template<class T>
-struct is_default_constructible_helper<T, typename holder<
+struct is_default_constructible_check<T, typename holder<
     decltype(T())
 >::type>
 : std::true_type
 {};
 
+template<class T>
+struct is_default_constructible_helper
+: std::conditional<(std::is_reference<T>::value), 
+    std::false_type,
+    is_default_constructible_check<T>
+>::type
+{};
 
 template<class... Xs>
 struct is_default_constructible
 : and_<is_default_constructible_helper<Xs>...>
+{};
+
+template<class T, class... Xs>
+struct is_constructible
+: std::is_constructible<T, Xs...>
+{};
+
+template<class T>
+struct is_constructible<T>
+: is_default_constructible<T>
+{};
+
+template<class C, class X, class... Xs>
+struct enable_if_constructible
+: std::enable_if<is_constructible<X, Xs&&...>::value, int>
 {};
 
 }

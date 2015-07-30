@@ -162,3 +162,32 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_decay(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
     FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(std::make_tuple(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
 }
+
+template<class...>
+struct deduce_types
+{};
+
+struct deducer
+{
+    template<class... Ts>
+    deduce_types<Ts...> operator()(Ts&&...) const;
+};
+
+static constexpr fit::unpack_adaptor<deducer> deduce = {};
+
+
+FIT_TEST_CASE()
+{
+    STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(std::make_tuple(1, 2))));
+    STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(std::make_tuple(1), std::make_tuple(2))));
+    STATIC_ASSERT_SAME(deduce_types<int, int, int>, decltype(deduce(std::make_tuple(1), std::make_tuple(2), std::make_tuple(3))));
+    STATIC_ASSERT_SAME(std::tuple<int&&, int&&>, decltype(std::forward_as_tuple(1, 2)));
+    // Disable this test, it seems that rvalue references get swalllowed by type deduction
+    // STATIC_ASSERT_SAME(deduce_types<int&&, int&&>, decltype(deduce(std::forward_as_tuple(1, 2))));
+
+
+    STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(fit::pack(1, 2))));
+    STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(fit::pack(1), fit::pack(2))));
+    STATIC_ASSERT_SAME(deduce_types<int, int, int>, decltype(deduce(fit::pack(1), fit::pack(2), fit::pack(3))));
+    // STATIC_ASSERT_SAME(deduce_types<int&&, int&&>, decltype(deduce(fit::pack_forward(1, 2))));
+}

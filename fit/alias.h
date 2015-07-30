@@ -56,7 +56,6 @@ template<class T, class Tag=void>
 struct alias
 {
     T value;
-    FIT_INHERIT_DEFAULT(alias, T)
     FIT_DELGATE_CONSTRUCTOR(alias, T, value)
 };
 
@@ -78,7 +77,6 @@ struct alias_inherit
 : T
 #endif
 {
-    FIT_INHERIT_DEFAULT(alias_inherit, T)
     FIT_INHERIT_CONSTRUCTOR(alias_inherit, T)
 };
 
@@ -110,7 +108,6 @@ constexpr T alias_static_storage<T, Tag>::value;
 template<class T, class Tag=void>
 struct alias_static
 {
-    FIT_INHERIT_DEFAULT(alias_static, T)
     template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(T, Ts...)>
     constexpr alias_static(Ts&&...)
     {}

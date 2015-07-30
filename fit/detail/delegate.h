@@ -31,7 +31,7 @@
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
     class=typename std::enable_if<std::is_constructible<__VA_ARGS__>::value>::type
 
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+#ifndef _MSC_VER
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible<__VA_ARGS__>::value>::type> \

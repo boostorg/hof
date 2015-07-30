@@ -176,6 +176,7 @@ struct rewrite_lambda<T, typename std::enable_if<
 
 #endif
 
+template<class T>
 struct reveal_static_lambda_function_wrapper_factor
 {
     constexpr reveal_static_lambda_function_wrapper_factor()
@@ -195,9 +196,9 @@ struct reveal_static_lambda_function_wrapper_factor
     }
 #else
     template<class F>
-    constexpr reveal_adaptor<F> operator=(const F& f) const
+    constexpr const reveal_adaptor<F>& operator=(const F&) const
     {
-        return reveal_adaptor<F>(f);
+        return reinterpret_cast<const reveal_adaptor<F>&>(static_const_var<T>());
     }
 #endif
 };
@@ -211,7 +212,7 @@ struct reveal_static_lambda_function_wrapper_factor
 #endif
 
 #define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
-#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) fit::detail::reveal_static_lambda_function_wrapper_factor()
+#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>()
 #define FIT_STATIC_LAMBDA_FUNCTION(name) \
 struct fit_private_static_function_ ## name {}; \
 FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)

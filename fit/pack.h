@@ -128,7 +128,6 @@ template<class... Ts>
 struct pack_holder_base
 : Ts::type...
 {
-    FIT_INHERIT_DEFAULT(pack_holder_base, typename Ts::type...);
     template<class... Xs, class=typename std::enable_if<(sizeof...(Xs) == sizeof...(Ts))>::type>
     constexpr pack_holder_base(Xs&&... xs) 
     : Ts::type(fit::forward<Xs>(xs))...
@@ -143,11 +142,20 @@ struct pack_holder_base<T>
     FIT_INHERIT_CONSTRUCTOR(pack_holder_base, base);
 };
 
+template<class... Ts>
+struct pack_holder_builder
+{
+    template<class T, int N>
+    struct apply
+    : pack_holder<T, pack_tag<seq<N>, Ts...>>
+    {};
+};
+
 template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
-: pack_holder_base<pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>...>
+: pack_holder_base<typename pack_holder_builder<Ts...>::template apply<Ts, Ns>...>
 {
-    typedef pack_holder_base<pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>...> base;
+    typedef pack_holder_base<typename pack_holder_builder<Ts...>::template apply<Ts, Ns>...> base;
     template<class X1, class X2, class... Xs>
     constexpr pack_base(X1&& x1, X2&& x2, Xs&&... xs) 
     : base(fit::forward<X1>(x1), fit::forward<X2>(x2), fit::forward<Xs>(xs)...)
@@ -166,6 +174,28 @@ struct pack_base<seq<Ns...>, Ts...>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
         f(pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
+    );
+};
+
+template<class T>
+struct pack_base<seq<0>, T>
+: pack_holder_base<pack_holder<T, pack_tag<seq<0>, T>>>
+{
+    typedef pack_holder_base<pack_holder<T, pack_tag<seq<0>, T>>> base;
+
+    template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
+    constexpr pack_base(X1&& x1) 
+    : base(fit::forward<X1>(x1))
+    {}
+
+    FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
+
+    FIT_RETURNS_CLASS(pack_base);
+  
+    template<class F>
+    constexpr auto operator()(F&& f) const FIT_RETURNS
+    (
+        f(pack_get<T, pack_tag<seq<0>, T>>(*FIT_CONST_THIS, f))
     );
 };
 

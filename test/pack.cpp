@@ -1,5 +1,6 @@
 #include <fit/pack.h>
 #include <fit/always.h>
+#include <fit/identity.h>
 #include <memory>
 #include "test.h"
 
@@ -23,6 +24,12 @@ FIT_TEST_CASE()
 {
     FIT_STATIC_TEST_CHECK(fit::pack()(fit::always(3)) == 3);
     FIT_TEST_CHECK(fit::pack()(fit::always(3)) == 3 );
+}
+
+FIT_TEST_CASE()
+{
+    FIT_STATIC_TEST_CHECK(fit::pack(3)(fit::identity) == 3);
+    FIT_TEST_CHECK(fit::pack(3)(fit::identity) == 3 );
 }
 
 FIT_TEST_CASE()

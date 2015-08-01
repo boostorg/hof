@@ -3,11 +3,11 @@ os: Visual Studio 2015
 
 environment:
   matrix:
-  # - GENERATOR: "Visual Studio 14 2015 Win64"
-  #   CONFIG: Debug
+  - GENERATOR: "Visual Studio 14 2015 Win64"
+    CONFIG: Debug
 
-  # - GENERATOR: "Visual Studio 14 2015 Win64"
-  #   CONFIG: Release
+  - GENERATOR: "Visual Studio 14 2015 Win64"
+    CONFIG: Release
 
   - GENERATOR: "Visual Studio 14 2015"
     CONFIG: Debug

@@ -13,6 +13,43 @@
 #include <fit/detail/move.h>
 #include <fit/detail/holder.h>
 
+/// alias
+/// =====
+/// 
+/// Description
+/// -----------
+/// 
+/// The `alias` class wraps a type with a new type that can be tagged by the
+/// user.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     // Alias the type using a member variable
+///     template<class T, class Tag=void>
+///     class alias;
+/// 
+///     // Alias the type by inheriting
+///     template<class T, class Tag=void>
+///     class alias_inherit;
+/// 
+///     // Alias the type using a static variable
+///     template<class T, class Tag=void>
+///     class alias_static;
+/// 
+///     // Retrieve tag from alias
+///     template<class Alias>
+///     class alias_tag;
+/// 
+///     // Check if type has a certian tag
+///     template<class T, class Tag>
+///     class has_tag;
+/// 
+///     // Retrieve value from alias
+///     template<class Alias>
+///     constexpr auto alias_value(Alias&&);
+/// 
+
 namespace fit {
 
 template<class T>

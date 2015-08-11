@@ -116,7 +116,7 @@ struct reveal_failure
         class... Ts, 
         class=typename std::enable_if<(!is_callable<F, Ts...>::value)>::type
     >
-    constexpr auto operator()(Ts&&... xs) -> 
+    constexpr auto operator()(Ts&&... xs) const -> 
 #if FIT_HAS_TEMPLATE_ALIAS
         typename apply_failure<Failure, Ts...>::template apply<decltype(identity)>;
 #else

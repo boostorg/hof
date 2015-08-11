@@ -77,7 +77,7 @@ struct static_
     }
 
     FIT_RETURNS_CLASS(static_);
-;
+
     template<class... Ts>
     FIT_SFINAE_RESULT(F, id_<Ts>...) 
     operator()(Ts && ... xs) const

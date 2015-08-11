@@ -49,24 +49,18 @@
 #include <utility>
 #include <fit/detail/result_of.h>
 #include <fit/reveal.h>
+#include <fit/detail/constexpr_deduce.h>
 #include <fit/detail/static_constexpr.h>
 #include <fit/detail/static_const_var.h>
 
-#define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
+
+#define FIT_HAS_STATIC_LAMBDA 1
 
 #ifndef FIT_REWRITE_STATIC_LAMBDA
 #ifdef _MSC_VER
 #define FIT_REWRITE_STATIC_LAMBDA 1
 #else
 #define FIT_REWRITE_STATIC_LAMBDA 0
-#endif
-#endif
-
-#ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
-#if defined(_MSC_VER) || FIT_REWRITE_STATIC_LAMBDA
-#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 1
-#else
-#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
 #endif
 #endif
 
@@ -105,10 +99,12 @@ struct static_function_wrapper
 
 struct static_function_wrapper_factor
 {
+    constexpr static_function_wrapper_factor()
+    {}
     template<class F>
-    constexpr static_function_wrapper<F> operator += (F*)
+    constexpr static_function_wrapper<F> operator= (const F&) const
     {
-        static_assert(std::is_literal_type<static_function_wrapper<F>>::value, "Function wrapper not a literal type");
+        // static_assert(std::is_literal_type<static_function_wrapper<F>>::value, "Function wrapper not a literal type");
         return {};
     }
 };
@@ -183,36 +179,28 @@ struct rewrite_lambda<T, typename std::enable_if<
 template<class T>
 struct reveal_static_lambda_function_wrapper_factor
 {
+    constexpr reveal_static_lambda_function_wrapper_factor()
+    {}
 #if FIT_REWRITE_STATIC_LAMBDA
     template<class F>
     constexpr reveal_adaptor<typename rewrite_lambda<F>::type> 
-    operator += (F*)
+    operator=(const F&) const
     {
-        return {};
+        return reveal_adaptor<typename rewrite_lambda<F>::type>();
     }
 #elif FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
     template<class F>
-    constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
+    constexpr reveal_adaptor<static_function_wrapper<F>> operator=(const F&) const
     {
         return {};
     }
 #else
     template<class F>
-    constexpr const reveal_adaptor<F>& operator += (F*)
+    constexpr const reveal_adaptor<F>& operator=(const F&) const
     {
-        static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
-        return FIT_CONST_FOLD(reinterpret_cast<const reveal_adaptor<F>&>(static_const_var<T>()));
+        return reinterpret_cast<const reveal_adaptor<F>&>(static_const_var<T>());
     }
 #endif
-};
-
-struct static_addr
-{
-    template<class T>
-    typename std::remove_reference<T>::type *operator=(T &&t) const
-    {
-        return &t;
-    }
 };
 
 }}
@@ -223,8 +211,8 @@ struct static_addr
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_AUTO_REF
 #endif
 
-#define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
+#define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
+#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>()
 #define FIT_STATIC_LAMBDA_FUNCTION(name) \
 struct fit_private_static_function_ ## name {}; \
 FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)

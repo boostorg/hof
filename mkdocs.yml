@@ -43,6 +43,7 @@ pages:
     - 'identity': 'identity.md'
     - 'placeholders': 'placeholders.md'
 - Utilities:
+    - 'alias': 'alias.md'
     - 'apply': 'apply.md'
     - 'apply_eval': 'apply_eval.md'
     - 'capture': 'capture.md'

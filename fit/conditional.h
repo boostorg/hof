@@ -133,6 +133,12 @@ struct conditional_adaptor
     : base(fit::forward<X>(f1), kernel_base(fit::forward<Xs>(fs)...))
     {}
 
+    template<class X, class... Xs, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X)>
+    constexpr conditional_adaptor(X&& f1) 
+    : base(fit::forward<X>(f1))
+    {}
+
     struct failure
     : failure_for<F, Fs...>
     {};

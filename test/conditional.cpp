@@ -26,7 +26,7 @@ struct t_move ## n {}; \
 struct f_move ## n \
 { \
     std::unique_ptr<int> i;\
-    f_move ## n() : i(new int(n)) {}; \
+    f_move ## n(int i) : i(new int(i)) {}; \
     int operator()(t_move ## n) const \
     { \
         return *i; \
@@ -45,9 +45,9 @@ struct ff
     }
 };
 
-fit::static_<fit::conditional_adaptor<f1, f2, f3, ff> > f = {}; 
+fit::static_<fit::conditional_adaptor<f1, f2, f3, ff> > f = {};
 
-FIT_STATIC_AUTO f_constexpr = fit::conditional_adaptor<f1, f2, f3, ff>();
+FIT_STATIC_FUNCTION(f_constexpr) = fit::conditional_adaptor<f1, f2, f3, ff>();
 
 FIT_TEST_CASE()
 {
@@ -62,7 +62,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    auto f_move_local = fit::conditional(f_move1(), f_move2(), f_move3());
+    auto f_move_local = fit::conditional(f_move1(1), f_move2(2), f_move3(3));
     STATIC_ASSERT_MOVE_ONLY(decltype(f_move_local));
     FIT_TEST_CHECK(f_move_local(t_move1()) == 1);
     FIT_TEST_CHECK(f_move_local(t_move2()) == 2);
@@ -91,7 +91,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(lam(t3()) == 3);
 }
 #endif
-
+#if FIT_HAS_STATIC_LAMBDA
 FIT_STATIC_LAMBDA_FUNCTION(static_fun) = fit::conditional(
     [](t1)
     {
@@ -113,5 +113,5 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(static_fun(t2()) == 2);
     FIT_TEST_CHECK(static_fun(t3()) == 3);
 }
-
+#endif
 }

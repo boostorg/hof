@@ -136,6 +136,10 @@ struct partial_adaptor_join
 template<class Derived, class F>
 struct partial_adaptor_pack
 {
+
+    constexpr partial_adaptor_pack()
+    {}
+    
     template<class... Ts>
     constexpr const F& get_function(Ts&&...) const
     {
@@ -219,13 +223,7 @@ struct partial_adaptor<F, void> : detail::partial_adaptor_base<F, void>::type
 
     using base::operator();
 
-    constexpr partial_adaptor()
-    {}
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    constexpr partial_adaptor(X&& x) : base(fit::forward<X>(x))
-    {}
-
+    FIT_INHERIT_CONSTRUCTOR(partial_adaptor, base);
 
 };
 // Make partial_adaptor work with pipable_adaptor by removing its pipableness
@@ -236,13 +234,7 @@ struct partial_adaptor<pipable_adaptor<F>, void>
     typedef partial_adaptor<F, void> base;
 
     typedef partial_adaptor fit_rewritable1_tag;
-
-    constexpr partial_adaptor()
-    {}
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    constexpr partial_adaptor(X&& x) : base(fit::forward<X>(x))
-    {}
+    FIT_INHERIT_CONSTRUCTOR(partial_adaptor, base);
 };
 
 template<class F>
@@ -253,12 +245,7 @@ struct partial_adaptor<static_<pipable_adaptor<F>>, void>
 
     typedef partial_adaptor fit_rewritable1_tag;
 
-    partial_adaptor()
-    {}
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, base)>
-    partial_adaptor(X&& x) : base(fit::forward<X>(x))
-    {}
+    FIT_INHERIT_CONSTRUCTOR(partial_adaptor, base);
 };
 }
 

@@ -35,7 +35,6 @@ pages:
     - 'reverse_compress': 'reverse_compress.md'
     - 'static': 'static.md'
     - 'unpack': 'unpack.md'
-    - 'variadic': 'variadic.md'
 - Functions:
     - 'always': 'always.md'
     - 'args': 'args.md'

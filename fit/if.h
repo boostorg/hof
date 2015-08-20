@@ -14,7 +14,9 @@
 /// Description
 /// -----------
 /// 
-/// The `if_` function applies a boolen condition to the function.
+/// The `if_` function applies a boolen condition to the function. The `if_c`
+/// version can be used to give a boolean condtion directly(intead of relying
+/// on dependent typing).
 /// 
 /// Synopsis
 /// --------
@@ -22,12 +24,20 @@
 ///     template<class IntegralConstant>
 ///     constexpr auto if_(IntegralConstant);
 /// 
+///     template<bool B, class F>
+///     constexpr auto if_c(F);
+/// 
 /// Requirements
 /// ------------
 /// 
 /// IntegralConstant must be:
 /// 
 ///     IntegralConstant
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
 /// 
 /// Example
 /// -------
@@ -100,6 +110,12 @@ struct if_f
     }
 };
 
+}
+
+template<bool B, class F>
+constexpr detail::if_adaptor<B, F> if_c(F f)
+{
+    return detail::if_adaptor<B, F>(fit::move(f));
 }
 
 FIT_DECLARE_STATIC_VAR(if_, detail::if_f);

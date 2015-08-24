@@ -34,4 +34,5 @@ FIT_TEST_CASE()
     );
 
     std::integral_constant<int, 6> x = fit::repeat_while(increment(), not_6())(std::integral_constant<int, 1>());
+    fit::test::unused(x);
 }

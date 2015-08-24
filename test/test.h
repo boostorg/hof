@@ -42,6 +42,9 @@ void name::operator()() const
 template<class T>
 T bare(const T&);
 
+template<class T>
+inline void unused(T&&) {}
+
 }}
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7

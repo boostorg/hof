@@ -28,10 +28,14 @@ template<bool B>
 struct while_repeater
 {
     template<class F, class P, class... Ts>
-    constexpr FIT_SFINAE_RESULT(while_repeater<compute_predicate<P, result_of<const F&, id_<Ts>...>::type::value>, id_<const F&>, id_<const P&>, result_of<const F&, id_<Ts>...>) 
+    constexpr FIT_SFINAE_RESULT(while_repeater<
+        compute_predicate<P, typename result_of<const F&, id_<Ts>...>::type>::type::value
+    >, id_<const F&>, id_<const P&>, result_of<const F&, id_<Ts>...>) 
     operator()(const F& f, const P& p, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        while_repeater<compute_predicate<P, decltype(f(fit::forward<Ts>(xs)...))>::type::value>()(f, p, f(fit::forward<Ts>(xs)...))
+        while_repeater<
+            compute_predicate<P, decltype(f(fit::forward<Ts>(xs)...))>::type::value
+        >()(f, p, f(fit::forward<Ts>(xs)...))
     );
 };
 
@@ -75,10 +79,16 @@ struct repeat_while_adaptor : F, P
     FIT_RETURNS_CLASS(repeat_while_adaptor);
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(while_repeater<compute_predicate<P, result_of<const F&, id_<Ts>...>::type::value>, id_<const F&>, id_<const P&>, id_<Ts>...) 
+    constexpr FIT_SFINAE_RESULT(
+        detail::while_repeater<
+            detail::compute_predicate<P, typename result_of<const F&, id_<Ts>...>::type>::type::value
+        >, 
+        id_<const F&>, id_<const P&>, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        detail::while_repeater<detail::compute_predicate<P, decltype(std::declval<F>()(fit::forward<Ts>(xs)...))>::type::value>()
+        detail::while_repeater<
+            detail::compute_predicate<P, decltype(std::declval<F>()(fit::forward<Ts>(xs)...))>::type::value
+        >()
         (
             FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), 
             FIT_MANGLE_CAST(const P&)(FIT_CONST_THIS->base_predicate(xs...)), 

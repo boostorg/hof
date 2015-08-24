@@ -31,6 +31,7 @@ pages:
     - 'pipable': 'pipable.md'
     - 'protect': 'protect.md'
     - 'repeat': 'repeat.md'
+    - 'repeat_while': 'repeat_while.md'
     - 'result': 'result.md'
     - 'reveal': 'reveal.md'
     - 'reverse_compress': 'reverse_compress.md'

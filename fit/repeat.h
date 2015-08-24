@@ -22,7 +22,7 @@
 /// --------
 /// 
 ///     template<class F, class IntegralConstant>
-///     constexpr repeat_adaptor<Projection, F> repeat(F f, IntegralConstant);
+///     constexpr repeat_adaptor<F, IntegralConstant> repeat(F f, IntegralConstant);
 /// 
 /// Requirements
 /// ------------

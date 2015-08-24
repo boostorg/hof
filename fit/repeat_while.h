@@ -8,6 +8,68 @@
 #ifndef FIT_GUARD_REPEAT_WHILE_H
 #define FIT_GUARD_REPEAT_WHILE_H
 
+/// repeat_while
+/// ======
+/// 
+/// Description
+/// -----------
+/// 
+/// The `repeat_while` function adaptor will repeatedly apply a function while
+/// the predicate returns an integral constant that is true. As such, the
+/// predicate must be depedently-typed since it is never called at runtime.
+/// 
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F, class Predicate>
+///     constexpr repeat_while_adaptor<F, Predicate> repeat_while(F f, Predicate predicate);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
+/// Predicate must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
+/// Example
+/// -------
+/// 
+///     struct increment
+///     {
+///         template<class T>
+///         constexpr std::integral_constant<int, T::value + 1> operator()(T) const
+///         {
+///             return std::integral_constant<int, T::value + 1>();
+///         }
+///     };
+/// 
+///     struct not_6
+///     {
+///         template<class T>
+///         constexpr std::integral_constant<bool, (T::value != 6)> 
+///         operator()(T) const
+///         {
+///             return std::integral_constant<bool, (T::value != 6)>();
+///         }
+///     };
+/// 
+///     typedef std::integral_constant<int, 1> one;
+///     typedef std::integral_constant<int, 6> six;
+/// 
+///     typedef decltype(fit::repeat_while(increment(), not_6())(std::integral_constant<int, 1>())) increment_until_6;
+/// 
+/// 
+///     constexpr auto increment_until_6 = fit::repeat_while(increment(), not_6());
+///     static_assert(std::is_same<six, decltype(increment_until_6(one()))>::value, "Error");
+/// 
+
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/result_of.h>

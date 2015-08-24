@@ -8,6 +8,50 @@
 #ifndef FIT_GUARD_REPEAT_H
 #define FIT_GUARD_REPEAT_H
 
+/// repeat
+/// ======
+/// 
+/// Description
+/// -----------
+/// 
+/// The `repeat` function adaptor will repeatedly apply a function a given
+/// number of times.
+/// 
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F, class IntegralConstant>
+///     constexpr repeat_adaptor<Projection, F> repeat(F f, IntegralConstant);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
+/// IntegralConstant must be:
+/// 
+///     IntegralConstant
+/// 
+/// Example
+/// -------
+/// 
+///     struct increment
+///     {
+///         template<class T>
+///         constexpr T operator()(T x) const
+///         {
+///             return x + 1;
+///         }
+///     };
+/// 
+///     constexpr auto increment_by_5 = fit::repeat(increment(), std::integral_constant<int, 5>());
+///     assert(increment_by_5(1) == 6);
+/// 
+
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/result_of.h>

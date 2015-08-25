@@ -62,6 +62,7 @@
 #include <fit/detail/static_const_var.h>
 #include <fit/returns.h>
 #include <fit/alias.h>
+#include <fit/decay.h>
 
 #ifndef FIT_HAS_RVALUE_THIS
 #define FIT_HAS_RVALUE_THIS 1
@@ -76,17 +77,6 @@
 #endif
 
 namespace fit { namespace detail {
-
-struct decay_elem_f
-{
-    template<class T>
-    constexpr typename unwrap_reference<typename std::decay<T>::type>::type 
-    operator()(T&& x) const
-    {
-        return fit::forward<T>(x);
-    }
-};
-static decay_elem_f decay_elem = {};
 
 template<class...>
 struct pack_tag
@@ -289,7 +279,7 @@ struct pack_decay_f
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        pack_f()(decay_elem(fit::forward<Ts>(xs))...)
+        pack_f()(decay(fit::forward<Ts>(xs))...)
     );
 };
 

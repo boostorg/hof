@@ -35,6 +35,7 @@ pages:
     - 'result': 'result.md'
     - 'reveal': 'reveal.md'
     - 'reverse_compress': 'reverse_compress.md'
+    - 'rotate': 'rotate.md'
     - 'static': 'static.md'
     - 'unpack': 'unpack.md'
 - Functions:

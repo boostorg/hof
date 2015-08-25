@@ -97,7 +97,7 @@ struct alias
 };
 
 #define FIT_DETAIL_ALIAS_GET_VALUE(ref, move) \
-template<class T, class Tag, class... Ts> \
+template<class Tag, class T, class... Ts> \
 constexpr auto alias_value(alias<T, Tag> ref a, Ts&&...) FIT_RETURNS(move(a.value))
 FIT_UNARY_PERFECT_FOREACH(FIT_DETAIL_ALIAS_GET_VALUE)
 
@@ -118,7 +118,7 @@ struct alias_inherit
 };
 
 #define FIT_DETAIL_ALIAS_INHERIT_GET_VALUE(ref, move) \
-template<class T, class Tag, class... Ts, class=typename std::enable_if<(std::is_class<T>::value)>::type> \
+template<class Tag, class T, class... Ts, class=typename std::enable_if<(std::is_class<T>::value)>::type> \
 constexpr T ref alias_value(alias_inherit<T, Tag> ref a, Ts&&...) \
 { \
     return move(a); \
@@ -150,7 +150,7 @@ struct alias_static
     {}
 };
 
-template<class T, class Tag, class... Ts>
+template<class Tag, class T, class... Ts>
 constexpr const T& alias_value(const alias_static<T, Tag>&, Ts&&...)
 {
     return detail::alias_static_storage<T, Tag>::value;

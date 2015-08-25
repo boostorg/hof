@@ -120,7 +120,7 @@ template<class T, class Tag, class X, class... Ts>
 constexpr T&& pack_get(X&& x, Ts&&... xs)
 {
     // C style cast(rather than static_cast) is needed for gcc
-    return (T&&)(alias_value<T, Tag>(x, xs...));
+    return (T&&)(alias_value<Tag, T>(x, xs...));
 }
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
@@ -234,7 +234,7 @@ struct pack_base<seq<> >
 #define FIT_DETAIL_UNPACK_PACK_BASE(ref, move) \
 template<class F, int... Ns, class... Ts> \
 constexpr auto unpack_pack_base(F&& f, pack_base<seq<Ns...>, Ts...> ref x) \
-FIT_RETURNS(f(alias_value<Ts, pack_tag<seq<Ns>, Ts...>>(move(x), f)...))
+FIT_RETURNS(f(alias_value<pack_tag<seq<Ns>, Ts...>, Ts>(move(x), f)...))
 FIT_UNARY_PERFECT_FOREACH(FIT_DETAIL_UNPACK_PACK_BASE)
 
 template<class P1, class P2>

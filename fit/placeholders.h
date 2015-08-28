@@ -252,7 +252,11 @@ struct partial_ap
 {
     T val;
 
-    FIT_DELGATE_CONSTRUCTOR(partial_ap, T, val);
+    FIT_INHERIT_DEFAULT_EMPTY(partial_ap, T)
+
+    template<class X, class... Xs, FIT_ENABLE_IF_CONSTRUCTIBLE(T, X&&, Xs&&...)>
+    constexpr partial_ap(X&& x, Xs&&... xs) : val(fit::forward<X>(x), fit::forward<Xs>(xs)...)
+    {}
 
     FIT_RETURNS_CLASS(partial_ap);
 

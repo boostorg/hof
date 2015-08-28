@@ -41,6 +41,18 @@
     constexpr C() = default;
 #endif
 
+#ifndef _MSC_VER
+#define FIT_INHERIT_DEFAULT_EMPTY(C, ...) \
+    template<bool FitPrivateEnableBool_##__LINE__=true, \
+    class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && \
+        fit::detail::is_default_constructible<__VA_ARGS__>::value && std::is_empty<__VA_ARGS__>::value \
+    >::type> \
+    constexpr C() {}
+#else
+#define FIT_INHERIT_DEFAULT_EMPTY(C, ...) \
+    constexpr C() = default;
+#endif
+
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 
 #define FIT_DELGATE_CONSTRUCTOR(C, T, var) \

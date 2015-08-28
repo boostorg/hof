@@ -28,12 +28,14 @@ FIT_TEST_CASE()
     // Using mutable_ as a workaround on libc++, since mem_fn does not meet the
     // requirements of a FunctionObject
     FIT_TEST_CHECK(fit::by(fit::mutable_(std::mem_fn(&foo::x)), add)(foo(1), foo(2)) == 3);
+    static_assert(fit::detail::is_default_constructible<decltype(fit::by(select_x(), add))>::value, "Not default constructible");
 }
 
 FIT_TEST_CASE()
 {
     auto indirect_add = fit::by(*fit::_, fit::_ + fit::_);
     FIT_TEST_CHECK(indirect_add(std::unique_ptr<int>(new int(1)), std::unique_ptr<int>(new int(2))) == 3);
+    static_assert(fit::detail::is_default_constructible<decltype(indirect_add)>::value, "Not default constructible");
 }
 
 struct select_x_1

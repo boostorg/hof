@@ -42,6 +42,7 @@ pages:
     - 'always': 'always.md'
     - 'args': 'args.md'
     - 'construct': 'construct.md'
+    - 'decay': 'decay.md'
     - 'identity': 'identity.md'
     - 'placeholders': 'placeholders.md'
 - Utilities:

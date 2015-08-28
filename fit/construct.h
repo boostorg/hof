@@ -48,7 +48,12 @@
 
 #include <initializer_list>
 
-namespace fit { namespace detail {
+namespace fit { 
+
+template<class Projection, class F>
+struct by_adaptor;
+
+namespace detail {
 
 template<class T>
 struct construct_f
@@ -78,6 +83,12 @@ struct construct_f
     {
         return T(x);
     }
+
+    template<class F>
+    constexpr by_adaptor<F, construct_f> by(F f) const
+    {
+        return by_adaptor<F, construct_f>(fit::move(f), *this);
+    }
 };
 
 template<template<class...> class Template>
@@ -90,6 +101,12 @@ struct construct_template_f
     constexpr Result operator()(Ts&&... xs) const
     {
         return Result(fit::forward<Ts>(xs)...);
+    }
+
+    template<class F>
+    constexpr by_adaptor<F, construct_template_f> by(F f) const
+    {
+        return by_adaptor<F, construct_template_f>(fit::move(f), *this);
     }
 };
 }

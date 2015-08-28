@@ -2,6 +2,8 @@
 #include "test.h"
 
 #include <fit/conditional.h>
+#include <fit/by.h>
+#include <fit/placeholders.h>
 
 #include <tuple>
 #include <type_traits>
@@ -20,6 +22,14 @@ FIT_TEST_CASE()
     auto v = fit::construct<std::vector<int>>()(5, 5);
     FIT_TEST_CHECK(v.size() == 5);
     FIT_TEST_CHECK(v == std::vector<int>{5, 5, 5, 5, 5});
+}
+
+FIT_TEST_CASE()
+{
+    auto make = fit::construct<std::vector<int>>().by(fit::_1 * fit::_1);
+    auto v = make(3, 3);
+    FIT_TEST_CHECK(v.size() == 9);
+    FIT_TEST_CHECK(v == std::vector<int>{9, 9, 9, 9, 9, 9, 9, 9, 9});
 }
 
 FIT_TEST_CASE()
@@ -49,6 +59,14 @@ FIT_TEST_CASE()
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 7
     FIT_STATIC_TEST_CHECK(std::make_pair(1, 2) == fit::construct<std::pair>()(1, 2));
 #endif
+}
+
+FIT_TEST_CASE()
+{
+    auto make = fit::construct<std::tuple>().by(fit::_1 * fit::_1);
+    auto t = make(1, 2, 3);
+    static_assert(std::is_same<std::tuple<int, int, int>, decltype(t)>::value, "");
+    FIT_TEST_CHECK(t == std::make_tuple(1, 4, 9));
 }
 
 FIT_TEST_CASE()

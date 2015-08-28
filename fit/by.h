@@ -152,6 +152,9 @@ struct swallow
 }
 
 template<class Projection, class F=void>
+struct by_adaptor;
+
+template<class Projection, class F>
 struct by_adaptor : Projection, F
 {
     typedef by_adaptor fit_rewritable_tag;

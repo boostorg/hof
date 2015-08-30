@@ -118,7 +118,7 @@ struct reveal_failure
     >
     constexpr auto operator()(Ts&&... xs) const -> 
 #if FIT_HAS_TEMPLATE_ALIAS
-        typename apply_failure<Failure, Ts...>::template apply<decltype(identity)>;
+        typename apply_failure<Failure, Ts...>::template apply<fit::detail::identity_base>;
 #else
         decltype(apply_failure<Failure, Ts...>::apply(identity));
 #endif

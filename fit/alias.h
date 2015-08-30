@@ -50,6 +50,10 @@
 ///     constexpr auto alias_value(Alias&&);
 /// 
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4579)
+#endif
+
 namespace fit {
 
 template<class T>
@@ -134,6 +138,15 @@ namespace detail {
 template<class T, class Tag>
 struct alias_static_storage
 {
+#ifdef _MSC_VER
+    // Since we disable the error for 4579 on MSVC, which leaves the static
+    // member unitialized at runtime, it is, therefore, only safe to use this
+    // class on types that are empty with constructors that have no possible
+    // side effects.
+    static_assert(std::is_empty<T>::value && 
+        std::is_literal_type<T>::value && 
+        std::is_default_constructible<T>::value, "In-class initialization is not yet implemented on MSVC");
+#endif
     static constexpr T value = T();
 };
 

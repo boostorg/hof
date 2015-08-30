@@ -22,6 +22,14 @@
 #endif
 #endif
 
+#ifndef FIT_NO_STD_DEFAULT_CONSTRUCTIBLE
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_NO_STD_DEFAULT_CONSTRUCTIBLE 1
+#else
+#define FIT_NO_STD_DEFAULT_CONSTRUCTIBLE 0
+#endif
+#endif
+
 #define FIT_ENABLE_IF_CONVERTIBLE(...) \
     class=typename std::enable_if<std::is_convertible<__VA_ARGS__>::value>::type
 
@@ -31,15 +39,17 @@
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
     class=typename std::enable_if<std::is_constructible<__VA_ARGS__>::value>::type
 
-#ifndef _MSC_VER
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible<__VA_ARGS__>::value>::type> \
     constexpr C() {}
-#else
-#define FIT_INHERIT_DEFAULT(C, ...) \
-    constexpr C() = default;
-#endif
+
+#define FIT_INHERIT_DEFAULT_EMPTY(C, ...) \
+    template<bool FitPrivateEnableBool_##__LINE__=true, \
+    class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && \
+        fit::detail::is_default_constructible<__VA_ARGS__>::value && std::is_empty<__VA_ARGS__>::value \
+    >::type> \
+    constexpr C() {}
 
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 
@@ -84,7 +94,11 @@ struct is_default_constructible_helper
 
 template<class... Xs>
 struct is_default_constructible
+#if FIT_NO_STD_DEFAULT_CONSTRUCTIBLE
 : and_<is_default_constructible_helper<Xs>...>
+#else
+: and_<std::is_default_constructible<Xs>...>
+#endif
 {};
 
 template<class T, class... Xs>

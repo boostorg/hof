@@ -15,6 +15,20 @@ struct square
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto operator()(T x) const FIT_RETURNS(x*x);
 };
 
+#define CHECK_DEFAULT_CONSTRUCTION_OP(op, name) \
+    static_assert(fit::detail::is_default_constructible<fit::operators::name>::value, "Operator not default constructible");
+
+FIT_TEST_CASE()
+{
+    static_assert(fit::detail::is_default_constructible<fit::placeholder<1>>::value, "Placeholder not default constructible");
+    static_assert(fit::detail::is_default_constructible<fit::placeholder<2>>::value, "Placeholder not default constructible");
+    static_assert(fit::detail::is_default_constructible<fit::placeholder<3>>::value, "Placeholder not default constructible");
+
+    FIT_FOREACH_BINARY_OP(CHECK_DEFAULT_CONSTRUCTION_OP)
+    FIT_FOREACH_ASSIGN_OP(CHECK_DEFAULT_CONSTRUCTION_OP)
+    FIT_FOREACH_UNARY_OP(CHECK_DEFAULT_CONSTRUCTION_OP)
+}
+
 FIT_TEST_CASE()
 {
     const auto x_square_add = 2 + (4*4);

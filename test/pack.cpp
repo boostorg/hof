@@ -128,45 +128,80 @@ FIT_TEST_CASE()
     // FIT_TEST_CHECK(p(deref()) == 3);
 }
 
-class empty1
+struct empty1
 {};
 
-class empty2
+struct empty2
 {};
+
 FIT_TEST_CASE()
 {
-    static constexpr auto p1 = fit::pack(empty1());
-    FIT_TEST_CHECK(p1(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p1(fit::always(0)) == 0);
-#ifndef _MSC_VER
-    static_assert(std::is_empty<decltype(p1)>::value, "Pack not empty");
-#endif
+    static_assert(fit::detail::is_default_constructible<empty1, empty2>::value, "Not default constructible");
+}
 
-    static constexpr auto p2 = fit::pack(empty1(), empty2());
-    FIT_TEST_CHECK(p2(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p2(fit::always(0)) == 0);
+FIT_TEST_CASE()
+{
+    static constexpr auto p = fit::pack(empty1());
+    FIT_TEST_CHECK(p(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
-    static_assert(std::is_empty<decltype(p2)>::value, "Pack not empty");
+    static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
+    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 
-    static constexpr auto p3 = fit::pack(empty1(), empty2(), empty1());
-    FIT_TEST_CHECK(p3(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p3(fit::always(0)) == 0);
-#ifndef _MSC_VER
-    static_assert(std::is_empty<decltype(p3)>::value, "Pack not empty");
-#endif
+}
 
-    static constexpr auto p4 = fit::pack(empty1(), fit::pack(empty1(), empty2()));
-    FIT_TEST_CHECK(p4(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p4(fit::always(0)) == 0);
+FIT_TEST_CASE()
+{
+    static constexpr auto p = fit::pack(empty1(), empty2());
+    FIT_TEST_CHECK(p(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
-    static_assert(std::is_empty<decltype(p4)>::value, "Pack not empty");
+    static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
+    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+}
 
-    static constexpr auto p5 = fit::pack(fit::pack(), fit::pack(fit::pack()), empty1(), fit::pack(empty1(), empty2()));
-    FIT_TEST_CHECK(p5(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p5(fit::always(0)) == 0);
+FIT_TEST_CASE()
+{
+    static constexpr auto p = fit::pack(fit::pack(), fit::pack());
+    FIT_TEST_CHECK(p(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
-    static_assert(std::is_empty<decltype(p5)>::value, "Pack not empty");
+    static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
+    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+}
+
+FIT_TEST_CASE()
+{
+    static constexpr auto p = fit::pack(empty1(), empty2(), empty1());
+    FIT_TEST_CHECK(p(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+#ifndef _MSC_VER
+    static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
+#endif
+    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+}
+
+FIT_TEST_CASE()
+{
+    static constexpr auto p = fit::pack(empty1(), fit::pack(empty1(), empty2()));
+    FIT_TEST_CHECK(p(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+#ifndef _MSC_VER
+    static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
+#endif
+    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+}
+
+FIT_TEST_CASE()
+{
+    static constexpr auto p = fit::pack(fit::pack(), fit::pack(fit::pack()), empty1(), fit::pack(empty1(), empty2()));
+    FIT_TEST_CHECK(p(fit::always(0)) == 0);
+    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+#ifndef _MSC_VER
+    static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
+#endif
+    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 }

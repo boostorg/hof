@@ -167,7 +167,6 @@ FIT_FOREACH_UNARY_OP(FIT_UNARY_OP)
 template<int N>
 struct placeholder
 {
-
 #if FIT_HAS_MANGLE_OVERLOAD
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS 

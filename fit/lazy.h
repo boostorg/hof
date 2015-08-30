@@ -151,6 +151,9 @@ struct lazy_invoker
     typedef detail::compressed_pair<F, Pack> base_type;
     typedef lazy_invoker fit_rewritable1_tag;
 
+#ifdef _MSC_VER
+    FIT_INHERIT_CONSTRUCTOR(lazy_invoker, base_type)
+#else
     FIT_INHERIT_DEFAULT_EMPTY(lazy_invoker, base_type)
 
     template<class X, class Y, 
@@ -159,8 +162,7 @@ struct lazy_invoker
     constexpr lazy_invoker(X&& x, Y&& y) 
     : base_type(fit::forward<X>(x), fit::forward<Y>(y))
     {}
-
-    // static_assert(std::is_empty<base_type>::value == (std::is_empty<F>::value && std::is_empty<Pack>::value), "Empty");
+#endif
 
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const

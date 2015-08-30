@@ -14,17 +14,26 @@
 /// Description
 /// -----------
 /// 
-/// The `FIT_STATIC_FUNCTION` macro allows initializing a function object from a
-/// `constexpr` expression. It also ensures that the function object will have a
-/// unique address across translation units. This helps to avoid ODR violations.
+/// The `FIT_STATIC_FUNCTION` macro allows initializing a function object from
+/// a `constexpr` expression. It also ensures that the function object will
+/// have a unique address across translation units. This helps to avoid ODR
+/// violations. As such, the object that is deduced is default constructed.
 /// 
 /// Example
 /// -------
 /// 
-///     FIT_STATIC_FUNCTION(sum) = fit::partial([](int x, int y)
+///     struct sum_f
 ///     {
-///         return x + y;
-///     });
+///         template<class T, class U>
+///         T operator()(T x, U y) const
+///         {
+///             return x+y;
+///         }
+///     };
+/// 
+///     FIT_STATIC_FUNCTION(sum) = sum_f();
+///     FIT_STATIC_FUNCTION(partial_sum) = fit::partial(sum_f());
+///     assert(sum(1, 2) == partial_sum(1)(2));
 /// 
 
 #include <fit/reveal.h>

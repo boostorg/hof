@@ -170,6 +170,8 @@ struct by_adaptor : Projection, F
         return always_ref(*this)(xs...);
     }
 
+    FIT_INHERIT_DEFAULT(by_adaptor, Projection, F)
+
     template<class P, class G, FIT_ENABLE_IF_CONVERTIBLE(P, Projection), FIT_ENABLE_IF_CONVERTIBLE(G, F)>
     constexpr by_adaptor(P&& p, G&& f) 
     : Projection(fit::forward<P>(p)), F(fit::forward<G>(f))
@@ -198,6 +200,8 @@ struct by_adaptor<Projection, void> : Projection
     {
         return always_ref(*this)(xs...);
     }
+
+    FIT_INHERIT_DEFAULT(by_adaptor, Projection)
 
     template<class P, FIT_ENABLE_IF_CONVERTIBLE(P, Projection)>
     constexpr by_adaptor(P&& p) 

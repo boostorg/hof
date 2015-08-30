@@ -88,6 +88,8 @@ struct compressed_pair
     : FirstBase(fit::forward<X>(x)), SecondBase(fit::forward<Y>(y))
     {}
 
+    FIT_INHERIT_DEFAULT(compressed_pair, FirstBase, SecondBase)
+
     template<class Base, class... Xs>
     constexpr const Base& get_base(Xs&&... xs) const
     {

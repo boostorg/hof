@@ -17,6 +17,7 @@ pages:
     - 'by': 'by.md'
     - 'compose': 'compose.md'
     - 'conditional': 'conditional.md'
+    - 'combine': 'combine.md'
     - 'compress': 'compress.md'
     - 'fix': 'fix.md'
     - 'flip': 'flip.md'

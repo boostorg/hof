@@ -120,24 +120,29 @@ struct capture_pack : Pack
     );
 };
 
-template<class Pack>
-constexpr capture_pack<Pack> make_capture_pack(Pack p)
+struct make_capture_pack_f
 {
-    return capture_pack<Pack>(fit::move(p));
+    template<class Pack>
+    constexpr capture_pack<Pack> operator()(Pack p) const
+    {
+        return capture_pack<Pack>(fit::move(p));
+    }
+};
+
+template<class F>
+struct capture_f
+{
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    (
+        FIT_RETURNS_CONSTRUCT(make_capture_pack_f)()(FIT_RETURNS_CONSTRUCT(F)()(fit::forward<Ts>(xs)...))
+    );
+};
 }
-}
 
-template<class... Ts>
-constexpr auto capture(Ts&&... xs) FIT_RETURNS
-(detail::make_capture_pack(pack(fit::forward<Ts>(xs)...)));
-
-template<class... Ts>
-constexpr auto capture_forward(Ts&&... xs) FIT_RETURNS
-(detail::make_capture_pack(pack_forward(fit::forward<Ts>(xs)...)));
-
-template<class... Ts>
-constexpr auto capture_decay(Ts&&... xs) FIT_RETURNS
-(detail::make_capture_pack(pack_decay(fit::forward<Ts>(xs)...)));
+FIT_DECLARE_STATIC_VAR(capture, detail::capture_f<detail::pack_f>);
+FIT_DECLARE_STATIC_VAR(capture_forward, detail::capture_f<detail::pack_forward_f>);
+FIT_DECLARE_STATIC_VAR(capture_decay, detail::capture_f<detail::pack_decay_f>);
 
 }
 

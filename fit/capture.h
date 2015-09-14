@@ -9,6 +9,7 @@
 #define FIT_GUARD_CAPTURE_H
 
 #include <fit/detail/result_of.h>
+#include <fit/reveal.h>
 #include <fit/pack.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
@@ -78,6 +79,32 @@ struct capture_invoke : F, Pack
     {
         return always_ref(*this)(xs...);
     }
+
+    template<class Failure, class... Ts>
+    struct unpack_capture_failure
+    {
+        template<class... Us>
+        struct apply
+        {
+            typedef typename Failure::template of<Us..., Ts...> type;
+        };
+    };
+
+    struct capture_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            template<class... Ts>
+            struct of
+            : Pack::template apply<unpack_capture_failure<Failure, Ts...>>::type
+            {};
+        };
+    };
+
+    struct failure
+    : failure_map<capture_failure, F>
+    {};
 
     FIT_RETURNS_CLASS(capture_invoke);
 

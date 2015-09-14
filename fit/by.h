@@ -170,6 +170,22 @@ struct by_adaptor : Projection, F
         return always_ref(*this)(xs...);
     }
 
+    struct by_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            template<class... Ts>
+            struct of
+            : Failure::template of<decltype(std::declval<Projection>()(std::declval<Ts>()))...>
+            {};
+        };
+    };
+
+    struct failure
+    : failure_map<by_failure, F>
+    {};
+
     FIT_INHERIT_DEFAULT(by_adaptor, Projection, F)
 
     template<class P, class G, FIT_ENABLE_IF_CONVERTIBLE(P, Projection), FIT_ENABLE_IF_CONVERTIBLE(G, F)>

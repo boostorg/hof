@@ -135,10 +135,51 @@ constexpr auto unpack_impl(F&& f, Sequence&& s) FIT_RETURNS
             apply(fit::forward<F>(f), fit::forward<Sequence>(s))
 );
 
+template<class...>
+struct unpack_check_types
+{};
+
+struct unpack_check_deduce
+{
+    template<class... Ts>
+    static constexpr std::true_type check(unpack_check_types<Ts...>)
+    {
+        return {};
+    }
+
+    template<class T>
+    static constexpr std::false_type check(const T&)
+    {
+        return {};
+    }
+    template<class... Ts>
+    constexpr unpack_check_types<Ts...> operator()(Ts&&...) const
+    {
+        return {};
+    }
+};
+
+template<class Sequence>
+constexpr int unpack_check()
+{
+    static_assert(
+        decltype(unpack_check_deduce::check(unpack_impl(unpack_check_deduce(), std::declval<Sequence>())))
+            ::value, 
+        "Unpack is invalid for this sequence. The function used to unpack this sequence does not invoke the function."
+    );
+    return 0;
+}
+
+template<class F, class Sequence, int=(unpack_check<Sequence>())>
+constexpr auto unpack_simple(F&& f, Sequence&& s) FIT_RETURNS
+(
+    unpack_impl(fit::forward<F>(f), fit::forward<Sequence>(s))
+)
+
 template<class F, class... Sequences>
 constexpr auto unpack_join(F&& f, Sequences&&... s) FIT_RETURNS
 (
-    fit::pack_join(unpack_impl(fit::pack_forward, fit::forward<Sequences>(s))...)(fit::forward<F>(f))
+    fit::pack_join(unpack_simple(fit::pack_forward, fit::forward<Sequences>(s))...)(fit::forward<F>(f))
 );
 
 }
@@ -179,7 +220,7 @@ struct unpack_adaptor : F
             static auto deduce(T&& x)
             FIT_RETURNS
             (
-                detail::unpack_impl(deducer(), fit::forward<T>(x))
+                detail::unpack_simple(deducer(), fit::forward<T>(x))
             );
 
             template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
@@ -206,14 +247,13 @@ struct unpack_adaptor : F
     {};
 
     FIT_RETURNS_CLASS(unpack_adaptor);
-
     template<class T, class=typename std::enable_if<(
         is_unpackable<T>::value
     )>::type>
     constexpr auto operator()(T&& x) const
     FIT_RETURNS
     (
-        detail::unpack_impl(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x))
+        detail::unpack_simple(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x))
     );
 
     template<class T, class... Ts, class=typename std::enable_if<(detail::and_<

@@ -116,10 +116,10 @@ before_install:
     - if [ -n "$CLANG_VERSION" ]; then sudo apt-get install -qq clang-${CLANG_VERSION}; fi
     - if [ "$CXX" = "clang++" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
     # Show compiler info
-    - if [ "$ENABLE_BUILD" = "on" ]; $CXX --version; fi
+    - if [ "$ENABLE_BUILD" = "on" ]; "$CXX" --version; fi
     - if [ "$ENABLE_BUILD" = "on" ]; which $CXX; fi
-    - if [ "$ENABLE_BUILD" = "on" ]; $CC --version; fi
-    - if [ "$ENABLE_BUILD" = "on" ]; which $CC; fi
+    - if [ "$ENABLE_BUILD" = "on" ]; "$CC" --version; fi
+    - if [ "$ENABLE_BUILD" = "on" ]; which "$CC"; fi
     # Install libc++
     - if [ "$LIBCXX" = "on" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
     - if [ "$LIBCXX" = "on" ]; then cd libcxx/lib && bash buildit; fi

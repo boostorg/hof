@@ -124,7 +124,7 @@ struct pack_holder_base
     {}
 #ifndef _MSC_VER
     // FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<typename Ts::type>::type>::type...)
-    FIT_INHERIT_DEFAULT(pack_holder_base, Ts::type...)
+    FIT_INHERIT_DEFAULT(pack_holder_base, typename Ts::type...)
 #endif
 };
 

@@ -1,0 +1,6 @@
+Name: Tick
+Description: Trait introspection and concept creator for C++11
+URL: https://github.com/pfultz2/Tick
+Version: @Tick_VERSION_MAJOR@.@Tick_VERSION_MINOR@
+
+Cflags: -I@CMAKE_INSTALL_PREFIX@/include

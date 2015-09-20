@@ -6,26 +6,31 @@ matrix:
         # Debug
         - compiler: gcc
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug"
             - GCC_VERSION="4.9"
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: gcc
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - GCC_VERSION="4.8"
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: gcc
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - GCC_VERSION="4.7"
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: gcc
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - GCC_VERSION="4.6"
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - CLANG_VERSION="3.4"
             - LIBCXX="on"
@@ -33,6 +38,7 @@ matrix:
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - CLANG_VERSION="3.4"
             - LIBCXX="off"
@@ -41,6 +47,7 @@ matrix:
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - CLANG_VERSION="3.6"
             - LIBCXX="on"
@@ -48,6 +55,7 @@ matrix:
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - CLANG_VERSION="3.6"
             - LIBCXX="off"
@@ -56,6 +64,7 @@ matrix:
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - CLANG_VERSION="3.4"
             - LIBCXX="on"
@@ -63,6 +72,7 @@ matrix:
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - CLANG_VERSION="3.4"
             - LIBCXX="off"
@@ -71,6 +81,7 @@ matrix:
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - CLANG_VERSION="3.6"
             - LIBCXX="on"
@@ -78,6 +89,7 @@ matrix:
             - CXX_FLAGS="-Wall -Wextra -Werror"
         - compiler: clang
           env:
+            - ENABLE_BUILD="on"
             - BUILD_TYPE="Debug" 
             - CLANG_VERSION="3.6"
             - LIBCXX="off"
@@ -104,10 +116,10 @@ before_install:
     - if [ -n "$CLANG_VERSION" ]; then sudo apt-get install -qq clang-${CLANG_VERSION}; fi
     - if [ "$CXX" = "clang++" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
     # Show compiler info
-    - $CXX --version
-    - which $CXX
-    - $CC --version
-    - which $CC
+    - if [ "$ENABLE_BUILD" = "on" ]; $CXX --version; fi
+    - if [ "$ENABLE_BUILD" = "on" ]; which $CXX; fi
+    - if [ "$ENABLE_BUILD" = "on" ]; $CC --version; fi
+    - if [ "$ENABLE_BUILD" = "on" ]; which $CC; fi
     # Install libc++
     - if [ "$LIBCXX" = "on" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
     - if [ "$LIBCXX" = "on" ]; then cd libcxx/lib && bash buildit; fi
@@ -124,7 +136,7 @@ script:
     - if [ "$ASAN" == "on"]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     - if [ "$LIBCXX" = "on" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
     - if [ "$LIBCXX" = "on" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
-    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
-    - CTEST_OUTPUT_ON_FAILURE=1 make -j4 check VERBOSE=1
+    - if [ "$ENABLE_BUILD" = "on" ]; cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..; fi
+    - if [ "$ENABLE_BUILD" = "on" ]; CTEST_OUTPUT_ON_FAILURE=1 make -j4 check VERBOSE=1; fi
     - cd .. && rm -rf build/
 

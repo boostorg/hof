@@ -22,6 +22,30 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    static constexpr int x = 1;
+    static constexpr int y = 2;
+
+    auto p1 = fit::pack(x, y);
+    static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Pack default constructible");
+    
+    FIT_STATIC_TEST_CHECK(fit::pack(x, y)(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack(x, y)(binary_class()) == 3 );
+
+    auto p2 = fit::pack_decay(std::ref(x), std::ref(y));
+    static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Pack default constructible");
+
+    FIT_STATIC_TEST_CHECK(fit::pack_decay(x, y)(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_decay(std::ref(x), std::ref(y))(binary_class()) == 3 );
+
+    auto p3 = fit::pack_forward(x, y);
+    static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Pack default constructible");
+
+    FIT_STATIC_TEST_CHECK(fit::pack_forward(x, y)(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_forward(x, y)(binary_class()) == 3 );
+}
+
+FIT_TEST_CASE()
+{
     FIT_STATIC_TEST_CHECK(fit::pack()(fit::always(3)) == 3);
     FIT_TEST_CHECK(fit::pack()(fit::always(3)) == 3 );
 }
@@ -205,3 +229,78 @@ FIT_TEST_CASE()
 #endif
     static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 }
+
+struct not_default_constructible
+{
+    int i;
+    constexpr not_default_constructible(int x) : i(x)
+    {}
+};
+
+struct select_i
+{
+    template<class T>
+    constexpr int operator()(T&& x) const
+    {
+        return x.i;
+    } 
+
+    template<class T, class U>
+    constexpr int operator()(T&& x, U&& y) const
+    {
+        return x.i + y.i;
+    } 
+
+    template<class T, class U, class V>
+    constexpr int operator()(T&& x, U&& y, V&& z) const
+    {
+        return x.i + y.i + z.i;
+    } 
+};
+
+FIT_TEST_CASE()
+{
+    static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
+    auto p = fit::pack(not_default_constructible(3));
+    static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
+    auto p1 = fit::pack_forward(p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
+    auto p2 = fit::pack_forward(p, p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
+    auto p3 = fit::pack_forward(p, p, p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
+    FIT_TEST_CHECK(p(select_i()) == 3);
+    FIT_STATIC_TEST_CHECK(fit::pack(not_default_constructible(3))(select_i()) == 3);
+}
+
+FIT_TEST_CASE()
+{
+    static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
+    auto p = fit::pack(not_default_constructible(1), not_default_constructible(2));
+    static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
+    auto p1 = fit::pack_forward(p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
+    auto p2 = fit::pack_forward(p, p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
+    auto p3 = fit::pack_forward(p, p, p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
+    FIT_TEST_CHECK(p(select_i()) == 3);
+    FIT_STATIC_TEST_CHECK(fit::pack(not_default_constructible(1), not_default_constructible(2))(select_i()) == 3);
+}
+
+FIT_TEST_CASE()
+{
+    static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
+    auto p = fit::pack(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1));
+    static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
+    auto p1 = fit::pack_forward(p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
+    auto p2 = fit::pack_forward(p, p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
+    auto p3 = fit::pack_forward(p, p, p);
+    static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
+    FIT_TEST_CHECK(p(select_i()) == 3);
+    FIT_STATIC_TEST_CHECK(fit::pack(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1))(select_i()) == 3);
+}
+
+

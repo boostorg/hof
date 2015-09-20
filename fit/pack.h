@@ -123,7 +123,8 @@ struct pack_holder_base
     : Ts::type(fit::forward<Xs>(xs))...
     {}
 #ifndef _MSC_VER
-    FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<typename Ts::type>::type>::type...)
+    // FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<typename Ts::type>::type>::type...)
+    FIT_INHERIT_DEFAULT(pack_holder_base, Ts::type...)
 #endif
 };
 
@@ -159,7 +160,8 @@ struct pack_base<seq<Ns...>, Ts...>
     : base(fit::forward<X1>(x1))
     {}
 
-    FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
+    // FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
+    FIT_INHERIT_DEFAULT(pack_base, Ts...);
 
     FIT_RETURNS_CLASS(pack_base);
   
@@ -208,7 +210,8 @@ template<int... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
 : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type...
 {
-    FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
+    // FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
+    FIT_INHERIT_DEFAULT(pack_base, Ts...);
     
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)>
     constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(fit::forward<Xs>(xs))...

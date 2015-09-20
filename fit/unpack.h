@@ -135,36 +135,16 @@ constexpr auto unpack_impl(F&& f, Sequence&& s) FIT_RETURNS
             apply(fit::forward<F>(f), fit::forward<Sequence>(s))
 );
 
-template<class...>
-struct unpack_check_types
-{};
-
-struct unpack_check_deduce
-{
-    template<class... Ts>
-    static constexpr std::true_type check(unpack_check_types<Ts...>)
-    {
-        return {};
-    }
-
-    template<class T>
-    static constexpr std::false_type check(const T&)
-    {
-        return {};
-    }
-    template<class... Ts>
-    constexpr unpack_check_types<Ts...> operator()(Ts&&...) const
-    {
-        return {};
-    }
-};
+struct private_unpack_type {};
 
 template<class Sequence>
 constexpr int unpack_check()
 {
     static_assert(
-        decltype(unpack_check_deduce::check(unpack_impl(unpack_check_deduce(), std::declval<Sequence>())))
-            ::value, 
+        std::is_same<
+            private_unpack_type, 
+            decltype(unpack_impl(always(private_unpack_type()), std::declval<Sequence>()))
+        >::value, 
         "Unpack is invalid for this sequence. The function used to unpack this sequence does not invoke the function."
     );
     return 0;

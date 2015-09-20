@@ -3,7 +3,7 @@ project (Fit)
  
 # The version number.
 set (Fit_VERSION_MAJOR 0)
-set (Fit_VERSION_MINOR 1)
+set (Fit_VERSION_MINOR 3)
 
 include(CheckCXXCompilerFlag)
 enable_language(CXX)
@@ -31,6 +31,8 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
 endforeach()
 
 install (DIRECTORY fit DESTINATION include)
+configure_file(fit.pc.in fit.pc)
+install(FILES fit.pc DESTINATION lib/pkgconfig)
 
 # Moved down, so everything above is common
 if (BIICODE) 

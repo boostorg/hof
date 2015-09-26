@@ -106,9 +106,11 @@ install:
     - if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
-    - LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
-    - LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
-    - LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
+    - LLVM_URL_EXT="xz"
+    - if [[ "${CLANG_VERSION}" == "3.4" ]]; then LLVM_URL_EXT="gz"; fi
+    - LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
+    - LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
+    - LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
     - if [ "$LIBCXX" = "on" ]; then mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi; fi
     - if [ "$LIBCXX" = "on" ]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -xJ -C llvm; fi
     - if [ "$LIBCXX" = "on" ]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxx; fi

@@ -128,6 +128,8 @@ install:
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install -DCMAKE_CXX_COMPILER=clang++); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxx && make install -j2); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
+    # Show files that have been installed
+    - ls -lR ${DEPS_DIR}
 
 script:
     - cd $CHECKOUT_PATH

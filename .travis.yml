@@ -1,6 +1,6 @@
 language: cpp
 script: cmake
-sudo: false
+
 matrix:
     include:
         # Clang
@@ -83,7 +83,7 @@ before_install:
     - export CXX_FLAGS="-Wall -Wextra -Werror"
     # Install cmake
     - wget http://www.cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.sh
-    - sh cmake-3.1.3-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
+    - sudo sh cmake-3.1.3-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
     # Show compiler info
     - $CXX --version
     - which $CXX
@@ -92,11 +92,11 @@ before_install:
     # Install libc++
     - if [ "$LIBCXX" = "on" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
     - if [ "$LIBCXX" = "on" ]; then cd libcxx/lib && bash buildit; fi
-    - if [ "$LIBCXX" = "on" ]; then cp ./libc++.so.1.0 /usr/lib/; fi
-    - if [ "$LIBCXX" = "on" ]; then mkdir /usr/include/c++/v1; fi
-    - if [ "$LIBCXX" = "on" ]; then cd .. && cp -r include/* /usr/include/c++/v1/; fi
-    - if [ "$LIBCXX" = "on" ]; then cd /usr/lib && ln -sf libc++.so.1.0 libc++.so; fi
-    - if [ "$LIBCXX" = "on" ]; then ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
+    - if [ "$LIBCXX" = "on" ]; then sudo cp ./libc++.so.1.0 /usr/lib/; fi
+    - if [ "$LIBCXX" = "on" ]; then sudo mkdir /usr/include/c++/v1; fi
+    - if [ "$LIBCXX" = "on" ]; then cd .. && sudo cp -r include/* /usr/include/c++/v1/; fi
+    - if [ "$LIBCXX" = "on" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
+    - if [ "$LIBCXX" = "on" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
 
 script:
     - cd $CHECKOUT_PATH

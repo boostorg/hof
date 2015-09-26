@@ -10,6 +10,7 @@ matrix:
           addons: &clang34
             apt:
               packages:
+                - g++-4.9
                 - valgrind
               sources:
                 - ubuntu-toolchain-r-test

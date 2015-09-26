@@ -105,17 +105,17 @@ install:
     # Setup deps directory
     - export DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
     - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+    - mkdir usr
+    - export PATH=${DEPS_DIR}/usr/bin:${PATH}
     # Install cmake
     - CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz"
-    - mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-    - export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+    - travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C usr
     # Show compiler info
     - $CXX --version
     - which $CXX
     - $CC --version
     - which $CC
     # Install libc++
-    - mkdir usr
     - if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
@@ -126,7 +126,7 @@ install:
     - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --xz -C llvm; fi
     - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxx; fi
     - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxxabi; fi
-    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr -DCMAKE_CXX_COMPILER=clang++); fi
+    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxx && make install -j2); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
     - if [[ "$LIBCXX" == "on" ]]; then export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"; fi

@@ -87,7 +87,7 @@ install:
     - export CHECKOUT_PATH=`pwd`;
     - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
     - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
-    - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
+    - if [[ "$CLANG_VERSION" == "3.4" ]]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
     - export CXX_FLAGS="-Wall -Wextra -Werror"
     # Setup deps directory
     - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
@@ -112,21 +112,22 @@ install:
     - LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
     - LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
     - LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
-    - if [ "$LIBCXX" = "on" ]; then mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi; fi
-    - if [ "$LIBCXX" = "on" ]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm; fi
-    - if [ "$LIBCXX" = "on" ]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm/projects/libcxx; fi
-    - if [ "$LIBCXX" = "on" ]; then travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm/projects/libcxxabi; fi
-    - if [ "$LIBCXX" = "on" ]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install -DCMAKE_CXX_COMPILER=clang++); fi
-    - if [ "$LIBCXX" = "on" ]; then (cd llvm/build/projects/libcxx && make install -j2); fi
-    - if [ "$LIBCXX" = "on" ]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
+    - if [[ "$LIBCXX" == "on" ]]; then mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi; fi
+    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm; fi
+    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm/projects/libcxx; fi
+    - if [[ "$LIBCXX" == "on" && "${CLANG_VERSION}" != "3.4"]]; then travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm/projects/libcxxabi; fi
+    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install -DCMAKE_CXX_COMPILER=clang++); fi
+    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxx && make install -j2); fi
+    - if [[ "$LIBCXX" == "on" && "${CLANG_VERSION}" != "3.4"]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
 
 script:
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
-    - if [ "$ASAN" == "on"]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
-    - if [ "$LIBCXX" = "on" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I${DEPS_DIR}/llvm/install/include/c++/v1"; fi
-    - if [ "$LIBCXX" = "on" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L${DEPS_DIR}/llvm/install/lib -lc++ -lc++abi"; fi
+    - if [[ "$ASAN" == "on"]]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
+    - if [[ "$LIBCXX" == "on" ]]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I${DEPS_DIR}/llvm/install/include/c++/v1"; fi
+    - if [[ "$LIBCXX" == "on" ]]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L${DEPS_DIR}/llvm/install/lib -lc++"; fi
+    - if [[ "$LIBCXX" == "on" && "${CLANG_VERSION}" != "3.4"]]; then CXX_LINKER_FLAGS="${CXX_LINKER_FLAGS} -lc++abi"; fi
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
     - cd .. && rm -rf build/

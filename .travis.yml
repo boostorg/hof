@@ -6,7 +6,7 @@ matrix:
         # Clang
         - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=on
           os: linux
-          compiler: clang34
+          compiler: clang-3.4
           addons: &clang34
             apt:
               packages:
@@ -16,11 +16,12 @@ matrix:
 
         - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=off
           os: linux
-          compiler: clang
+          compiler: clang-3.4
           addons: *clang34
 
         - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=on
           os: linux
+          compiler: clang-3.7
           addons: &clang37
             apt:
               packages:
@@ -32,10 +33,12 @@ matrix:
 
         - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=off
           os: linux
+          compiler: clang-3.7
           addons: *clang37
 
         - env: GCC_VERSION=4.9 BUILD_TYPE=Debug ASAN=off LIBCXX=off
           os: linux
+          compiler: gcc-4.9
           addons: &gcc49
             apt:
               packages:
@@ -46,6 +49,7 @@ matrix:
 
         - env: GCC_VERSION=4.8 BUILD_TYPE=Debug ASAN=off LIBCXX=off
           os: linux
+          compiler: gcc-4.8
           addons: &gcc48
             apt:
               packages:
@@ -57,6 +61,7 @@ matrix:
 
         - env: GCC_VERSION=4.7 BUILD_TYPE=Debug ASAN=off LIBCXX=off
           os: linux
+          compiler: gcc-4.7
           addons: &gcc47
             apt:
               packages:
@@ -67,6 +72,7 @@ matrix:
 
         - env: GCC_VERSION=4.6 BUILD_TYPE=Debug ASAN=off LIBCXX=off
           os: linux
+          compiler: gcc-4.6
           addons: &gcc46
             apt:
               packages:

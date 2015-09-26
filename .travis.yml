@@ -1,5 +1,6 @@
 language: cpp
 script: cmake
+sudo: false
 
 matrix:
     include:
@@ -88,7 +89,13 @@ install:
     - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
     - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
     - export CXX_FLAGS="-Wall -Wextra -Werror"
+    # Setup deps directory
+    - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+    - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
     # Install cmake
+    - CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz"
+    - mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+    - export PATH=${DEPS_DIR}/cmake/bin:${PATH}
     - wget http://www.cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.sh
     - sudo sh cmake-3.1.3-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
     # Show compiler info
@@ -97,22 +104,28 @@ install:
     - $CC --version
     - which $CC
     # Install libc++
-    - if [ "$LIBCXX" = "on" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
-    - if [ "$LIBCXX" = "on" ]; then cd libcxx/lib && bash buildit; fi
-    - if [ "$LIBCXX" = "on" ]; then sudo cp ./libc++.so.1.0 /usr/lib/; fi
-    - if [ "$LIBCXX" = "on" ]; then sudo mkdir /usr/include/c++/v1; fi
-    - if [ "$LIBCXX" = "on" ]; then cd .. && sudo cp -r include/* /usr/include/c++/v1/; fi
-    - if [ "$LIBCXX" = "on" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
-    - if [ "$LIBCXX" = "on" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
+    - if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
+    - if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
+    - if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
+    - LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+    - LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
+    - LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
+    - if [ "$LIBCXX" = "on" ]; then mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi; fi
+    - if [ "$LIBCXX" = "on" ]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -xJ -C llvm; fi
+    - if [ "$LIBCXX" = "on" ]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxx; fi
+    - if [ "$LIBCXX" = "on" ]; then travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxxabi; fi
+    - if [ "$LIBCXX" = "on" ]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install -DCMAKE_CXX_COMPILER=clang++); fi
+    - if [ "$LIBCXX" = "on" ]; then (cd llvm/build/projects/libcxx && make install -j2); fi
+    - if [ "$LIBCXX" = "on" ]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
 
 script:
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
     - if [ "$ASAN" == "on"]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
-    - if [ "$LIBCXX" = "on" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
-    - if [ "$LIBCXX" = "on" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
-    -  cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
-    -  CTEST_OUTPUT_ON_FAILURE=1 make -j4 check VERBOSE=1
+    - if [ "$LIBCXX" = "on" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I ${DEPS_DIR}/llvm/install/include/c++/v1"; fi
+    - if [ "$LIBCXX" = "on" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L ${DEPS_DIR}/llvm/install/lib -l c++ -l c++abi"; fi
+    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
+    - CTEST_OUTPUT_ON_FAILURE=1 make -j2 check VERBOSE=1
     - cd .. && rm -rf build/
 

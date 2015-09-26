@@ -5,7 +5,7 @@ sudo: false
 matrix:
     include:
         # Clang
-        - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=on
+        - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=off
           os: linux
           compiler: clang
           addons: &clang34
@@ -16,10 +16,22 @@ matrix:
               sources:
                 - ubuntu-toolchain-r-test
 
-        - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=off
+        - env: CLANG_VERSION=3.5 BUILD_TYPE=Debug ASAN=on LIBCXX=on
           os: linux
-          compiler: clang
-          addons: *clang34
+          compiler: clang-3.5
+          addons: &clang35
+            apt:
+              packages:
+                - clang-3.5
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+                - llvm-toolchain-precise-3.5
+
+        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=off
+          os: linux
+          compiler: clang-3.7
+          addons: *clang35
 
         - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=on
           os: linux
@@ -38,6 +50,7 @@ matrix:
           compiler: clang-3.7
           addons: *clang37
 
+        # Gcc
         - env: GCC_VERSION=4.9 BUILD_TYPE=Debug ASAN=off LIBCXX=off
           os: linux
           compiler: gcc-4.9
@@ -102,23 +115,19 @@ install:
     - $CC --version
     - which $CC
     # Install libc++
-    - if [[ "${CLANG_VERSION}" == "3.4" ]]; then LLVM_VERSION="3.4.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
-    - LLVM_EXTRACT="xz"
-    - if [[ "${CLANG_VERSION}" == "3.4" ]]; then LLVM_EXTRACT="gzip"; fi
-    - LLVM_URL_EXT="${LLVM_EXTRACT:0:2}"
-    - LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
-    - LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
-    - LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.${LLVM_URL_EXT}"
+    - LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+    - LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
+    - LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
     - if [[ "$LIBCXX" == "on" ]]; then mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi; fi
-    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm; fi
-    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm/projects/libcxx; fi
-    - if [[ "$LIBCXX" == "on" && "${CLANG_VERSION}" != "3.4"]]; then travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --${LLVM_EXTRACT} -C llvm/projects/libcxxabi; fi
+    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --xz -C llvm; fi
+    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxx; fi
+    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxxabi; fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install -DCMAKE_CXX_COMPILER=clang++); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxx && make install -j2); fi
-    - if [[ "$LIBCXX" == "on" && "${CLANG_VERSION}" != "3.4"]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
+    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
 
 script:
     - cd $CHECKOUT_PATH
@@ -126,8 +135,7 @@ script:
     - cd build
     - if [[ "$ASAN" == "on"]]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     - if [[ "$LIBCXX" == "on" ]]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I${DEPS_DIR}/llvm/install/include/c++/v1"; fi
-    - if [[ "$LIBCXX" == "on" ]]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L${DEPS_DIR}/llvm/install/lib -lc++"; fi
-    - if [[ "$LIBCXX" == "on" && "${CLANG_VERSION}" != "3.4"]]; then CXX_LINKER_FLAGS="${CXX_LINKER_FLAGS} -lc++abi"; fi
+    - if [[ "$LIBCXX" == "on" ]]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L${DEPS_DIR}/llvm/install/lib -lc++ -lc++abi"; fi
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
     - cd .. && rm -rf build/

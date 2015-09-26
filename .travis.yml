@@ -101,7 +101,7 @@ install:
     - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
     - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
     - if [[ "$CLANG_VERSION" == "3.4" ]]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
-    - export CXX_FLAGS="-Wall -Wextra -Werror"
+    - export CXXFLAGS="-Wall -Wextra -Werror"
     # Setup deps directory
     - export DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
     - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
@@ -129,6 +129,8 @@ install:
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr -DCMAKE_CXX_COMPILER=clang++); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxx && make install -j2); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
+    - if [[ "$LIBCXX" == "on" ]]; then export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"; fi
+    - if [[ "$LIBCXX" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"; fi
     # Show files that have been installed
     - ls -lR ${DEPS_DIR}/usr
 
@@ -136,10 +138,8 @@ script:
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
-    - if [[ "$ASAN" == "on" ]]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
-    - if [[ "$LIBCXX" == "on" ]]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"; fi
-    - if [[ "$LIBCXX" == "on" ]]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L${DEPS_DIR}/usr/lib -lc++ -lc++abi"; fi
-    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
+    - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
+    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
     - cd .. && rm -rf build/
 

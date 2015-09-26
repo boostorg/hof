@@ -28,7 +28,7 @@ matrix:
                 - ubuntu-toolchain-r-test
                 - llvm-toolchain-precise-3.5
 
-        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=off
+        - env: CLANG_VERSION=3.5 BUILD_TYPE=Debug ASAN=on LIBCXX=off
           os: linux
           compiler: clang-3.5
           addons: *clang35

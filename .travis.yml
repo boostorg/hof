@@ -33,7 +33,7 @@ matrix:
           compiler: clang-3.5
           addons: *clang35
 
-        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=on
+        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=on
           os: linux
           compiler: clang-3.7
           addons: &clang37
@@ -45,7 +45,7 @@ matrix:
                 - ubuntu-toolchain-r-test
                 - llvm-toolchain-precise-3.7
 
-        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=off
+        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=off
           os: linux
           compiler: clang-3.7
           addons: *clang37
@@ -131,6 +131,7 @@ install:
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
     - if [[ "$LIBCXX" == "on" ]]; then export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"; fi
     - if [[ "$LIBCXX" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"; fi
+    - if [[ "$LIBCXX" == "on" ]]; then export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"; fi
     # Show files that have been installed
     - ls -lR ${DEPS_DIR}/usr
 

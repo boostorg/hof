@@ -6,7 +6,7 @@ matrix:
         # Clang
         - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=on
           os: linux
-          compiler: clang-3.4
+          compiler: clang
           addons: &clang34
             apt:
               packages:
@@ -16,7 +16,7 @@ matrix:
 
         - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=off
           os: linux
-          compiler: clang-3.4
+          compiler: clang
           addons: *clang34
 
         - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=on

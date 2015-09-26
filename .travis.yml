@@ -28,7 +28,7 @@ matrix:
                 - valgrind
               sources:
                 - ubuntu-toolchain-r-test
-                - llvm-toolchain-precise
+                - llvm-toolchain-precise-3.7
 
         - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=on LIBCXX=off
           os: linux

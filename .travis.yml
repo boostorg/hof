@@ -102,6 +102,7 @@ install:
     - $CC --version
     - which $CC
     # Install libc++
+    - if [[ "${CLANG_VERSION}" == "3.4" ]]; then LLVM_VERSION="3.4.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi

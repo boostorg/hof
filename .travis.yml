@@ -115,6 +115,7 @@ install:
     - $CC --version
     - which $CC
     # Install libc++
+    - mkdir usr
     - if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
     - if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
@@ -125,19 +126,19 @@ install:
     - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --xz -C llvm; fi
     - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxx; fi
     - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxxabi; fi
-    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install -DCMAKE_CXX_COMPILER=clang++); fi
+    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr -DCMAKE_CXX_COMPILER=clang++); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxx && make install -j2); fi
     - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
     # Show files that have been installed
-    - ls -lR ${DEPS_DIR}
+    - ls -lR ${DEPS_DIR}/usr
 
 script:
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
     - if [[ "$ASAN" == "on" ]]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
-    - if [[ "$LIBCXX" == "on" ]]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I${DEPS_DIR}/llvm/install/include/c++/v1"; fi
-    - if [[ "$LIBCXX" == "on" ]]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L${DEPS_DIR}/llvm/install/lib -lc++ -lc++abi"; fi
+    - if [[ "$LIBCXX" == "on" ]]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"; fi
+    - if [[ "$LIBCXX" == "on" ]]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L${DEPS_DIR}/usr/lib -lc++ -lc++abi"; fi
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
     - cd .. && rm -rf build/

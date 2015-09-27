@@ -8,6 +8,29 @@
 #ifndef FIT_GUARD_DECORATE_H
 #define FIT_GUARD_DECORATE_H
 
+/// decorate
+/// ========
+/// 
+/// Description
+/// -----------
+/// 
+/// The `decorate` function adaptor helps create simple function decorators. 
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F>
+///     constexpr decorate_adaptor<F> decorate(F f);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+///     FunctionObject
+///     MoveConstructible
+/// 
+
 #include <fit/reveal.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>

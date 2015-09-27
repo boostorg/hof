@@ -20,8 +20,8 @@
 /// Description
 /// -----------
 /// 
-/// The `capture` function is used to capture values in a function. It
-/// provides more flexibility in capturing than the lambda capture list in
+/// The `capture` function decorator is used to capture values in a function.
+/// It provides more flexibility in capturing than the lambda capture list in
 /// C++. It provides a way to do move and perfect capturing. The values
 /// captured are prepended to the argument list of the function that will be
 /// called.

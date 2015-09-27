@@ -14,23 +14,18 @@
 /// Description
 /// -----------
 /// 
-/// The `repeat` function adaptor will repeatedly apply a function a given
+/// The `repeat` function decorator will repeatedly apply a function a given
 /// number of times.
 /// 
 /// 
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class IntegralConstant>
-///     constexpr repeat_adaptor<F, IntegralConstant> repeat(F f, IntegralConstant);
+///     template<class IntegralConstant>
+///     constexpr repeat_adaptor<IntegralConstant> repeat(IntegralConstant);
 /// 
 /// Requirements
 /// ------------
-/// 
-/// F must be:
-/// 
-///     FunctionObject
-///     MoveConstructible
 /// 
 /// IntegralConstant must be:
 /// 
@@ -48,7 +43,7 @@
 ///         }
 ///     };
 /// 
-///     constexpr auto increment_by_5 = fit::repeat(increment(), std::integral_constant<int, 5>());
+///     constexpr auto increment_by_5 = fit::repeat(std::integral_constant<int, 5>())(increment());
 ///     assert(increment_by_5(1) == 6);
 /// 
 
@@ -56,9 +51,9 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/result_of.h>
 #include <fit/detail/move.h>
-#include <fit/detail/make.h>
 #include <fit/detail/sfinae.h>
 #include <fit/detail/static_const_var.h>
+#include <fit/decorate.h>
 
 namespace fit { namespace detail {
 
@@ -83,38 +78,22 @@ struct repeater<0>
     }
 };
 
-}
-
-template<class F, class T>
-struct repeat_adaptor : F
+struct repeat_decorator
 {
-    FIT_INHERIT_CONSTRUCTOR(repeat_adaptor, F)
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
-    constexpr repeat_adaptor(X&& x, T) : F(fit::forward<X>(x))
-    {}
-
-    template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    FIT_RETURNS_CLASS(repeat_adaptor);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(detail::repeater<T::value>, id_<const F&>, id_<Ts>...) 
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    template<class T, class F, class... Ts>
+    constexpr auto operator()(T, const F& f, Ts&&... xs) const FIT_RETURNS
     (
         detail::repeater<T::value>()
         (
-            FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), 
+            f, 
             fit::forward<Ts>(xs)...
         )
     );
 };
 
-FIT_DECLARE_STATIC_VAR(repeat, detail::make<repeat_adaptor>);
+}
+
+FIT_DECLARE_STATIC_VAR(repeat, decorate_adaptor<detail::repeat_decorator>);
 
 }
 

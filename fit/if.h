@@ -14,9 +14,9 @@
 /// Description
 /// -----------
 /// 
-/// The `if_` function applies a boolen condition to the function. The `if_c`
-/// version can be used to give a boolean condtion directly(intead of relying
-/// on dependent typing).
+/// The `if_` function decorator applies a boolen condition to the function.
+/// The `if_c` version can be used to give a boolean condtion directly(intead
+/// of relying on dependent typing).
 /// 
 /// Synopsis
 /// --------

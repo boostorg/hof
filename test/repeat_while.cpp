@@ -28,11 +28,11 @@ FIT_TEST_CASE()
     (
         std::is_same<
             std::integral_constant<int, 6>, 
-            decltype(fit::repeat_while(increment(), not_6())(std::integral_constant<int, 1>()))
+            decltype(fit::repeat_while(not_6())(increment())(std::integral_constant<int, 1>()))
         >::value,
         "Error"
     );
 
-    std::integral_constant<int, 6> x = fit::repeat_while(increment(), not_6())(std::integral_constant<int, 1>());
+    std::integral_constant<int, 6> x = fit::repeat_while(not_6())(increment())(std::integral_constant<int, 1>());
     fit::test::unused(x);
 }

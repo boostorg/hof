@@ -14,7 +14,7 @@
 /// Description
 /// -----------
 /// 
-/// The `repeat_while` function adaptor will repeatedly apply a function while
+/// The `repeat_while` function decorator will repeatedly apply a function while
 /// the predicate returns an integral constant that is true. As such, the
 /// predicate must be depedently-typed since it is never called at runtime.
 /// 
@@ -22,16 +22,11 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class Predicate>
-///     constexpr repeat_while_adaptor<F, Predicate> repeat_while(F f, Predicate predicate);
+///     template<class Predicate>
+///     constexpr auto repeat_while(Predicate predicate);
 /// 
 /// Requirements
 /// ------------
-/// 
-/// F must be:
-/// 
-///     FunctionObject
-///     MoveConstructible
 /// 
 /// Predicate must be:
 /// 
@@ -63,10 +58,10 @@
 ///     typedef std::integral_constant<int, 1> one;
 ///     typedef std::integral_constant<int, 6> six;
 /// 
-///     typedef decltype(fit::repeat_while(increment(), not_6())(std::integral_constant<int, 1>())) increment_until_6;
+///     typedef decltype(fit::repeat_while(not_6())(increment())(std::integral_constant<int, 1>())) increment_until_6;
 /// 
 /// 
-///     constexpr auto increment_until_6 = fit::repeat_while(increment(), not_6());
+///     constexpr auto increment_until_6 = fit::repeat_while(not_6())(increment());
 ///     static_assert(std::is_same<six, decltype(increment_until_6(one()))>::value, "Error");
 /// 
 
@@ -74,7 +69,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/result_of.h>
 #include <fit/detail/move.h>
-#include <fit/detail/make.h>
+#include <fit/decorate.h>
 #include <fit/detail/sfinae.h>
 #include <fit/detail/static_const_var.h>
 
@@ -111,55 +106,25 @@ struct while_repeater<false>
     }
 };
 
-}
-
-template<class F, class P>
-struct repeat_while_adaptor : F, P
+struct repeat_while_decorator
 {
-    FIT_INHERIT_CONSTRUCTOR(repeat_while_adaptor, F)
-
-    template<class X, class Y, 
-        FIT_ENABLE_IF_CONVERTIBLE(X, F),
-        FIT_ENABLE_IF_CONVERTIBLE(Y, P)
-    >
-    constexpr repeat_while_adaptor(X&& x, Y&& y) 
-    : F(fit::forward<X>(x)), P(fit::forward<Y>(y))
-    {}
-
-    template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    template<class... Ts>
-    constexpr const P& base_predicate(Ts&&... xs) const
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    FIT_RETURNS_CLASS(repeat_while_adaptor);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(
-        detail::while_repeater<
-            detail::compute_predicate<P, typename result_of<const F&, id_<Ts>...>::type>::type::value
-        >, 
-        id_<const F&>, id_<const P&>, id_<Ts>...) 
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    template<class P, class F, class... Ts>
+    constexpr auto operator()(const P& p, const F& f, Ts&&... xs) const FIT_RETURNS
     (
         detail::while_repeater<
             detail::compute_predicate<P, decltype(std::declval<F>()(fit::forward<Ts>(xs)...))>::type::value
         >()
         (
-            FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), 
-            FIT_MANGLE_CAST(const P&)(FIT_CONST_THIS->base_predicate(xs...)), 
+            f, 
+            p, 
             fit::forward<Ts>(xs)...
         )
     );
 };
 
-FIT_DECLARE_STATIC_VAR(repeat_while, detail::make<repeat_while_adaptor>);
+}
+
+FIT_DECLARE_STATIC_VAR(repeat_while, decorate_adaptor<detail::repeat_while_decorator>);
 
 }
 

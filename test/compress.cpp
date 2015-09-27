@@ -39,6 +39,21 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(fit::compress(max_f(), 0)(5) == 5);
 }
 
+template<class... Ts>
+constexpr auto find_positive_max(Ts... xs) FIT_RETURNS
+(
+    fit::compress(max_f(), 0)(xs...)
+);
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(find_positive_max() == 0);
+    FIT_TEST_CHECK(find_positive_max(5) == 5);
+
+    FIT_STATIC_TEST_CHECK(find_positive_max() == 0);
+    FIT_STATIC_TEST_CHECK(find_positive_max(5) == 5);
+}
+
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(fit::compress(max_f())(5) == 5);

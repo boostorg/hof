@@ -111,7 +111,7 @@ struct reverse_compress_adaptor
     (
         detail::v_reverse_fold()(
             FIT_MANGLE_CAST(const F&)(this->base_function(xs...)), 
-            FIT_MANGLE_CAST(const State&)(this->get_state(xs...)), 
+            fit::move(FIT_MANGLE_CAST(const State&)(this->get_state(xs...))), 
             fit::forward<Ts>(xs)...
         )
     )

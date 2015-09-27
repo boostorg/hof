@@ -110,7 +110,7 @@ struct compress_adaptor
     (
         detail::v_fold()(
             FIT_MANGLE_CAST(const F&)(this->base_function(xs...)), 
-            fit::move(FIT_MANGLE_CAST(const State&)(this->get_state(xs...))), 
+            FIT_MANGLE_CAST(State&&)(fit::move(this->get_state(xs...))), 
             fit::forward<Ts>(xs)...
         )
     )

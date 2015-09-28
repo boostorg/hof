@@ -11,7 +11,7 @@ Fit is:
 
 Fit is divided into three components:
 
-* Function Adaptors: These take functions and return a new function that provides an additional capability to the previous function.
+* Function Adaptors and Decorators: These enhance functions with additional capability.
 * Functions: These return functions that achieve a specific purpose.
 * Utilities: These are general utilities that are useful when defining or using functions
 

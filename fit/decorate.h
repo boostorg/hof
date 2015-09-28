@@ -90,7 +90,7 @@ struct decorator_invoke
 
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(const D&, id_<const T&>, id_<const F&>, id_<Ts>...) 
-    operator()(Ts&&... xs) const FIT_RETURNS
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_MANGLE_CAST(const D&)(FIT_CONST_THIS->get_decorator(xs...))(
             FIT_MANGLE_CAST(const T&)(FIT_CONST_THIS->get_data(xs...)),

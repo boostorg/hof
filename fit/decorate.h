@@ -69,7 +69,7 @@ struct decorator_invoke
         return always_ref(*this)(xs...);
     }
 
-    FIT_RETURNS_CLASS(decorator_invoke)
+    FIT_RETURNS_CLASS(decorator_invoke);
     // TODO: Add reveal and sfinae result
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS

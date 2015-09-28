@@ -35,6 +35,7 @@
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
+#include <fit/detail/result_of.h>
 #include <fit/detail/static_const_var.h>
 #include <fit/detail/compressed_pair.h>
 
@@ -70,9 +71,26 @@ struct decorator_invoke
     }
 
     FIT_RETURNS_CLASS(decorator_invoke);
-    // TODO: Add reveal and sfinae result
+
+    struct decorator_invoke_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            template<class... Ts>
+            struct of
+            : Failure::template of<const T&, const F&, Ts...>
+            {};
+        };
+    };
+
+    struct failure
+    : failure_map<decorator_invoke_failure, D>
+    {};
+
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const D&, id_<const T&>, id_<const F&>, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_RETURNS
     (
         FIT_MANGLE_CAST(const D&)(FIT_CONST_THIS->get_decorator(xs...))(
             FIT_MANGLE_CAST(const T&)(FIT_CONST_THIS->get_data(xs...)),

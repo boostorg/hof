@@ -22,6 +22,11 @@
 ///     template<class F>
 ///     constexpr decorate_adaptor<F> decorate(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(decorate(f)(x)(g)(xs...) == f(x, g, xs...));
+/// 
 /// Requirements
 /// ------------
 /// 

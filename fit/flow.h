@@ -26,6 +26,11 @@
 ///     template<class... Fs>
 ///     constexpr flow_adaptor<Fs...> flow(Fs... fs);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(flow(f, g)(xs...) == g(f(xs...)));
+/// 
 /// Requirements
 /// ------------
 /// 

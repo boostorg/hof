@@ -16,6 +16,11 @@
 /// 
 /// The `identity` function is a unary function object that returns whats given to it. 
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(idenity(x) == x);
+/// 
 /// Synopsis
 /// --------
 /// 

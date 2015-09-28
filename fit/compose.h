@@ -26,6 +26,11 @@
 ///     template<class... Fs>
 ///     constexpr compose_adaptor<Fs...> compose(Fs... fs);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(compose(f, g)(xs...) == f(g(xs...)));
+/// 
 /// Requirements
 /// ------------
 /// 

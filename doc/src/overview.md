@@ -29,3 +29,13 @@ A decorator is a function that returns a function adaptor. The function adaptor 
 template<class... Ts>
 FunctionAdaptor Decorator(Ts...);
 ```
+
+Semantics
+---------
+
+Some parts of the documentation provides the meaning(or equivalence) of an expression. Here is a guide of thos symbols:
+
+* `f`, `g`, `fs`, `gs`, `p` are functions
+* `x`, `y`, `xs`, `xs` are parameters to a function
+* `T` represents some type
+* `...` are parameter packs 

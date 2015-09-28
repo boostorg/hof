@@ -27,6 +27,11 @@
 ///     template<class F>
 ///     constexpr partial_adaptor<F> partial(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(partial(f)(xs...)(ys...) == f(xs..., ys...));
+/// 
 /// Requirements
 /// ------------
 /// 

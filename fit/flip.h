@@ -22,6 +22,11 @@
 ///     template<class F>
 ///     flip_adaptor<F> flip(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(flip(f)(x, y, xs...) == f(y, x, xs...));
+/// 
 /// Requirements
 /// ------------
 /// 

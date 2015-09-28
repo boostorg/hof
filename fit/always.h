@@ -31,6 +31,11 @@
 ///     template<class T>
 ///     constexpr /* unspecified */ always_ref(T& value);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(always(x)(xs...) == x);
+/// 
 /// Requirements
 /// ------------
 /// 

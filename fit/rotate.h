@@ -23,6 +23,11 @@
 ///     template<class F>
 ///     rotate_adaptor<F> rotate(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(rotate(f)(x, xs...) == f(xs..., x));
+/// 
 /// Requirements
 /// ------------
 /// 

@@ -24,6 +24,11 @@
 ///     template<class F, class... Gs>
 ///     constexpr combine_adaptor<F, Gs...> combine(F f, Gs... gs);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(combine(f, gs...)(xs...) == f(gs(xs)...));
+/// 
 /// Requirements
 /// ------------
 /// 

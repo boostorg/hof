@@ -27,6 +27,11 @@
 ///     template<template<class...> class Template>
 ///     constexpr auto construct();
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(construct<T>()(xs...) == T(xs...));
+/// 
 /// Requirements
 /// ------------
 /// 

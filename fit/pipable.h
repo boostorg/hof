@@ -26,6 +26,11 @@
 ///     template<class F>
 ///     constexpr pipable_adaptor<F> pipable(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(x | pipable(f)(ys...) == f(x, ys...));
+/// 
 /// Requirements
 /// ------------
 /// 

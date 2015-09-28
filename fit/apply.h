@@ -22,6 +22,11 @@
 ///     template<class F, class... Ts>
 ///     constexpr auto apply(F&& f, Ts&&... xs);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(apply(f)(xs...) == f(xs...));
+/// 
 /// Requirements
 /// ------------
 /// 

@@ -33,6 +33,11 @@
 ///     template<class Projection>
 ///     constexpr by_adaptor<Projection> by(Projection p);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(by(p, f)(xs...) == f(p(xs)...));
+/// 
 /// Requirements
 /// ------------
 /// 

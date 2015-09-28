@@ -31,6 +31,14 @@
 ///     template<class F>
 ///     constexpr compress_adaptor<F> compress(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(compress(f, z)() == z);
+///     assert(compress(f, z)(x, xs...) == compress(f, f(z, x))(xs...));
+///     assert(compress(f)(x) == x);
+///     assert(compress(f)(x, y, xs...) == compress(f)(f(x, y), xs...));
+/// 
 /// Requirements
 /// ------------
 /// 

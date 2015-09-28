@@ -23,6 +23,11 @@
 ///     template<class F, class... Ts>
 ///     constexpr auto apply_eval(F&& f, Ts&&... xs);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(apply_eval(f)(xs...) == f(eval(xs)...));
+/// 
 /// Requirements
 /// ------------
 /// 

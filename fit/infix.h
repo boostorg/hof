@@ -24,6 +24,11 @@
 ///     template<class F>
 ///     constexpr infix_adaptor<F> infix(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert((x <infix(f)> y) == f(x, y));
+/// 
 /// Requirements
 /// ------------
 /// 

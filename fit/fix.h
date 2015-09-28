@@ -27,6 +27,11 @@
 ///     template<class F>
 ///     constexpr fix_adaptor<F> fix(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(fix(f)(xs...) == f(f, xs...));
+/// 
 /// Requirements
 /// ------------
 /// 

@@ -41,6 +41,11 @@
 ///     template<class... Ts>
 ///     constexpr auto capture_decay(Ts&&... xs);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(capture(xs...)(f)(ys...) == f(xs..., ys...));
+/// 
 /// 
 /// Example
 /// -------

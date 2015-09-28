@@ -32,6 +32,14 @@
 ///     template<class F>
 ///     constexpr reverse_compress_adaptor<F> reverse_compress(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(reverse_compress(f, z)() == z);
+///     assert(reverse_compress(f, z)(x, xs...) == f(reverse_compress(f, z)(xs...), x));
+///     assert(reverse_compress(f)(x) == x);
+///     assert(reverse_compress(f)(x, xs...) == f(reverse_compress(f)(xs...), x));
+/// 
 /// Requirements
 /// ------------
 /// 

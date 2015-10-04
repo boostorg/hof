@@ -116,22 +116,26 @@ install:
     - $CC --version
     - which $CC
     # Install libc++
-    - if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
-    - if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
-    - if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
-    - LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
-    - LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
-    - LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
-    - if [[ "$LIBCXX" == "on" ]]; then mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi; fi
-    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --xz -C llvm; fi
-    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxx; fi
-    - if [[ "$LIBCXX" == "on" ]]; then travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxxabi; fi
-    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr); fi
-    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxx && make install -j2); fi
-    - if [[ "$LIBCXX" == "on" ]]; then (cd llvm/build/projects/libcxxabi && make install -j2); fi
-    - if [[ "$LIBCXX" == "on" ]]; then export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"; fi
-    - if [[ "$LIBCXX" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"; fi
-    - if [[ "$LIBCXX" == "on" ]]; then export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"; fi
+    - |
+      if [[ "$LIBCXX" == "on" ]]; then
+        if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
+        if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
+        if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
+        LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+        LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
+        LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
+
+        mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi
+        travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --xz -C llvm
+        travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxx
+        travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxxabi
+        (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr)
+        (cd llvm/build/projects/libcxx && make install -j2)
+        (cd llvm/build/projects/libcxxabi && make install -j2)
+        export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
+        export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"
+      fi
     # Show files that have been installed
     - ls -lR ${DEPS_DIR}/usr
 

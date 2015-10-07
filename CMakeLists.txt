@@ -8,8 +8,11 @@ set (Fit_VERSION_MINOR 3)
 include(CheckCXXCompilerFlag)
 enable_language(CXX)
 
-if(CMAKE_HOST_APPLE AND (NOT CMAKE_COMPILER_IS_GNUCXX))
+if(CMAKE_HOST_APPLE)
+  check_cxx_compiler_flag("-stdlib=libc++" COMPILER_HAS_CXX_FLAG_libcxx)
+  if(COMPILER_HAS_CXX_FLAG_libcxx)
     list(APPEND CXX_EXTRA_FLAGS -stdlib=libc++)
+  endif()
 endif()
 
 set(ENABLE_CXXFLAGS_TO_CHECK 

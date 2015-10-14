@@ -13,6 +13,7 @@
 #include <fit/pack.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
+#include <fit/detail/compressed_pair.h>
 
 /// capture
 /// =======

@@ -114,6 +114,58 @@ struct construct_template_f
         return by_adaptor<F, construct_template_f>(fit::move(f), *this);
     }
 };
+
+template<class MetafunctionClass>
+struct construct_meta_f
+{
+    constexpr construct_meta_f()
+    {}
+
+    template<class... Ts>
+    struct apply
+    : MetafunctionClass::template apply<Ts...>
+    {};
+
+    template<class... Ts, 
+        class Metafunction=FIT_JOIN(apply, Ts...), 
+        class Result=typename Metafunction::type, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
+    constexpr Result operator()(Ts&&... xs) const
+    {
+        return Result(fit::forward<Ts>(xs)...);
+    }
+
+    template<class F>
+    constexpr by_adaptor<F, construct_meta_f> by(F f) const
+    {
+        return by_adaptor<F, construct_meta_f>(fit::move(f), *this);
+    }
+};
+
+template<template<class...> class MetafunctionTemplate>
+struct construct_meta_template_f
+{
+    constexpr construct_meta_template_f()
+    {}
+    template<class... Ts, 
+        class Metafunction=FIT_JOIN(MetafunctionTemplate, Ts...), 
+        class Result=typename Metafunction::type, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
+    constexpr Result operator()(Ts&&... xs) const
+    {
+        return Result(fit::forward<Ts>(xs)...);
+    }
+
+    template<class F>
+    constexpr by_adaptor<F, construct_meta_template_f> by(F f) const
+    {
+        return by_adaptor<F, construct_meta_template_f>(fit::move(f), *this);
+    }
+};
+
+
+
+
 }
 
 template<class T>
@@ -124,6 +176,18 @@ constexpr detail::construct_f<T> construct()
 
 template<template<class...> class Template>
 constexpr detail::construct_template_f<Template> construct()
+{
+    return {};
+}
+
+template<class T>
+constexpr detail::construct_meta_f<T> construct_meta()
+{
+    return {};
+}
+
+template<template<class...> class Template>
+constexpr detail::construct_meta_template_f<Template> construct_meta()
 {
     return {};
 }

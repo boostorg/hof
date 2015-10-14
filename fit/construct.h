@@ -35,7 +35,7 @@
 /// Requirements
 /// ------------
 /// 
-/// T or Template must be:
+/// T or Template<Ts..> must be:
 /// 
 ///     MoveConstructible
 /// 

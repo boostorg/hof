@@ -13,6 +13,7 @@
 #include <fit/pack.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
+#include <fit/detail/compressed_pair.h>
 
 /// capture
 /// =======
@@ -67,22 +68,41 @@ namespace fit {
 namespace detail {
 
 template<class F, class Pack>
-struct capture_invoke : F, Pack
+struct capture_invoke 
+// : F, Pack
+: compressed_pair<F, Pack>
 {
     typedef capture_invoke fit_rewritable1_tag;
-    template<class X, class Y>
-    constexpr capture_invoke(X&& x, Y&& y) : F(fit::forward<X>(x)), Pack(fit::forward<Y>(y))
-    {}
+    typedef compressed_pair<F, Pack> base_type;
+
+    FIT_INHERIT_CONSTRUCTOR(capture_invoke, base_type);
+
+    // template<class X, class Y>
+    // constexpr capture_invoke(X&& x, Y&& y) 
+    // : F(fit::forward<X>(x)), Pack(fit::forward<Y>(y))
+    // {}
+    // template<class... Ts>
+    // constexpr const F& base_function(Ts&&... xs) const
+    // {
+    //     return always_ref(*this)(xs...);
+    // }
+
+    // template<class... Ts>
+    // constexpr const Pack& get_pack(Ts&&...xs) const
+    // {
+    //     return always_ref(*this)(xs...);
+    // }
+
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->first(xs...);
     }
 
     template<class... Ts>
-    constexpr const Pack& get_pack(Ts&&...xs) const
+    constexpr const Pack& get_pack(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->second(xs...);
     }
 
     template<class Failure, class... Ts>

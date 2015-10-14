@@ -60,24 +60,39 @@
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
+#include <fit/detail/compressed_pair.h>
 
 namespace fit {
  
 namespace detail{
 template<class T, class F>
-struct postfix_adaptor : F
+struct postfix_adaptor
+: compressed_pair<T, F>
 {
-    T x;
+    typedef compressed_pair<T, F> base_type;
+    // template<class X, class XF>
+    // constexpr postfix_adaptor(X&& x, XF&& f) 
+    // : F(fit::forward<XF>(f)), x(fit::forward<X>(x))
+    // {}
 
-    template<class X, class XF>
-    constexpr postfix_adaptor(X&& x, XF&& f) 
-    : F(fit::forward<XF>(f)), x(fit::forward<X>(x))
-    {}
+    FIT_INHERIT_CONSTRUCTOR(postfix_adaptor, base_type);
+
+    // template<class... Ts>
+    // constexpr const F& base_function(Ts&&... xs) const
+    // {
+    //     return always_ref(*this)(xs...);
+    // }
 
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->second(xs...);
+    }
+
+    template<class... Ts>
+    constexpr const T& get_x(Ts&&... xs) const
+    {
+        return this->first(xs...);
     }
 
     FIT_RETURNS_CLASS(postfix_adaptor);
@@ -86,14 +101,19 @@ struct postfix_adaptor : F
     constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<Ts>...)
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(
+            FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->get_x(xs...))), fit::forward<Ts>(xs)...
+        )
     );
 
     template<class A>
     constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<A>)
     operator>(A&& a) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<A>(a))
+        (*FIT_CONST_THIS)(fit::forward<A>(a))
+        // (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(
+        //     FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->get_x(a))), fit::forward<A>(a)
+        // )
     );
 };
 

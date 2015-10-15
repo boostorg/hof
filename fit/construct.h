@@ -27,15 +27,33 @@
 ///     template<template<class...> class Template>
 ///     constexpr auto construct();
 /// 
+///     template<class MetafunctionClass>
+///     constexpr auto construct_meta();
+/// 
+///     template<template<class...> class MetafunctionTemplate>
+///     constexpr auto construct_meta();
+/// 
 /// Semantics
 /// ---------
 /// 
 ///     assert(construct<T>()(xs...) == T(xs...));
+///     assert(construct<Template>()(xs...) == Template<decltype(xs)...>(xs...));
+///     assert(construct_meta<MetafunctionClass>()(xs...) == MetafunctionClass::apply<decltype(xs)...>(xs...));
+///     assert(construct_meta<MetafunctionTemplate>()(xs...) == MetafunctionTemplate<decltype(xs)...>::type(xs...));
 /// 
 /// Requirements
 /// ------------
 /// 
-/// T or Template<Ts..> must be:
+/// MetafunctionClass must be a:
+/// 
+///     MetafunctionClass
+/// 
+/// MetafunctionTemplate<Ts...> must be a:
+/// 
+///     Metafunction
+/// 
+/// T, Template<Ts..>, MetafunctionClass::apply<Ts...>, and
+/// MetafunctionTemplate<Ts...>::type must be:
 /// 
 ///     MoveConstructible
 /// 

@@ -111,3 +111,31 @@ Given
 |--------------|--------------------------|
 | `f(args...)` | performs a function call |
 
+Metafunction
+------------
+
+Given
+
+* `f`, a metafunction
+* `args...`, any suitable type, which may be empty
+
+| Expression               | Requirements                               |
+|--------------------------|--------------------------------------------|
+| `f::type`                | The type is the result of the metafunction |
+| `f<args...>::type`       | The type is the result of the metafunction |
+
+MetafunctionClass
+-----------------
+
+Given
+
+* `f`, is a metafunction class
+* `args...`, any suitable type, which may be empty
+
+| Expression                | Requirements                               |
+|---------------------------|--------------------------------------------|
+| `f::apply::type`          | The type is the result of the metafunction |
+| `f::apply<args...>::type` | The type is the result of the metafunction |
+
+
+

@@ -15,8 +15,9 @@
 /// -----------
 /// 
 /// The `construct` function returns a function object that will construct the
-/// object when the called. A template can also be givien, which it will
-/// deduce the parameters to the template.
+/// object when the called. A template can also be givien, which it will deduce
+/// the parameters to the template. The `construct_meta` can be used to
+/// construct the object from a metafunction.
 /// 
 /// Synopsis
 /// --------

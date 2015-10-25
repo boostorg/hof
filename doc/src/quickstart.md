@@ -107,18 +107,14 @@ However, when trying to do overloading involving something more generic, it can 
         }
     );
 
-So the `-> decltype(std::cout << x, void())` will only make the function callable if `std::cout << x` is callable. Then the `void()` is used to return `void` from the function. We can constrain the second overload as well, but we will need some helper function in order to call `std::begin` and `std::end` using ADL lookup:
+So the `-> decltype(std::cout << x, void())` will only make the function callable if `std::cout << x` is callable. Then the `void()` is used to return `void` from the function. We can constrain the second overload as well, but we will need some helper function in order to call `std::begin` using ADL lookup:
 
     namespace adl {
 
     using std::begin;
-    using std::end;
 
     template<class R>
     auto adl_begin(R&& r) -> FIT_RETURNS(begin(r));
-
-    template<class R>
-    auto adl_end(R&& r) -> FIT_RETURNS(end(r));
     }
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(

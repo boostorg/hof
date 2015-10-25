@@ -30,6 +30,30 @@ Given
 | `f(args...)` | performs a function call |
 
 
+NullaryFunctionObject
+---------------------
+
+Is an object with a `const` call operator that accepts no parameters:
+
+```cpp
+concept NullaryFunctionObject
+{
+    auto operator()() const;
+};
+```
+
+#### Requirements:
+
+* `FunctionObject`
+
+Given
+
+* `f`, an object of type `const F`
+
+| Expression | Requirements             |
+|------------|--------------------------|
+| `f()`      | performs a function call |
+
 UnaryFunctionObject
 -------------------
 
@@ -110,6 +134,36 @@ Given
 | Expression   | Requirements             |
 |--------------|--------------------------|
 | `f(args...)` | performs a function call |
+
+EvaluatableFunctionObject
+-------------------------
+
+Is an object that is either a `NullaryFunctionObject`, or it is an `UnaryFuntionObject` that accepts the `identity` function as a parameter.
+
+#### Requirements:
+
+* `NullaryFunctionObject`
+
+Given
+
+* `f`, an object of type `const F`
+
+| Expression | Requirements             |
+|------------|--------------------------|
+| `f()`      | performs a function call |
+
+Or:
+
+* `UnaryFuntionObject`
+
+Given
+
+* `f`, an object of type `const F`
+* `identity`, which is the identity function
+
+| Expression    | Requirements             |
+|---------------|--------------------------|
+| `f(identity)` | performs a function call |
 
 Metafunction
 ------------

@@ -37,7 +37,7 @@
 /// 
 /// Ts must be:
 /// 
-/// * Evaluatable
+/// * [EvaluatableFunctionObject](concepts.md#evaluatablefunctionobject)
 /// 
 /// Example
 /// -------

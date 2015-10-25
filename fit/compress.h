@@ -48,7 +48,7 @@
 /// 
 /// F must be:
 /// 
-/// * BinaryFunctionObject
+/// * [BinaryFunctionObject](concepts.md#binaryfunctionobject)
 /// * MoveConstructible
 /// 
 /// Example

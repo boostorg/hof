@@ -43,7 +43,7 @@
 /// 
 /// Projection must be:
 /// 
-/// * UnaryFunctionObject
+/// * [UnaryFunctionObject](concepts.md#unaryfunctionobject)
 /// * MoveConstructible
 /// 
 /// F must be:

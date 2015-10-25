@@ -47,11 +47,11 @@
 /// 
 /// MetafunctionClass must be a:
 /// 
-/// * MetafunctionClass
+/// * [MetafunctionClass](concepts.md#metafunctionclass)
 /// 
 /// MetafunctionTemplate<Ts...> must be a:
 /// 
-/// * Metafunction
+/// * [Metafunction](concepts.md#metafunction)
 /// 
 /// T, Template<Ts..>, MetafunctionClass::apply<Ts...>, and
 /// MetafunctionTemplate<Ts...>::type must be:

@@ -17,7 +17,7 @@
 /// The `tap` function invokes a function on the first argument passed in and
 /// then returns the first argument. This is useful in a chain of pipable
 /// function to perform operations on intermediate results. As a result, this
-/// function is pipable.
+/// function is [`pipable`](pipable.md).
 /// 
 /// Synopsis
 /// --------

@@ -19,10 +19,10 @@
 /// function. This can be very useful when overloading functions using
 /// template constraints(such as with `enable_if`).
 /// 
-/// Note: This is different than the `match` function adaptor, which can lead
-/// to ambiguities. Instead, `conditional` will call the first function that
-/// is callable, regardless if there is another function that could be called
-/// as well. 
+/// Note: This is different than the [`match`](match.md) function adaptor, which
+/// can lead to ambiguities. Instead, `conditional` will call the first function
+/// that is callable, regardless if there is another function that could be
+/// called as well.
 /// 
 /// Synopsis
 /// --------

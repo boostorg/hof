@@ -14,8 +14,9 @@
 /// Description
 /// -----------
 /// 
-/// The `apply_eval` function work like apply, except it calls `eval` on each of
-/// its arguments. Each `eval` call is always ordered from left-to-right.
+/// The `apply_eval` function work like [`apply`](apply.md), except it calls
+/// [`eval`](eval.md) on each of its arguments. Each [`eval`](eval.md) call is
+/// always ordered from left-to-right.
 /// 
 /// Synopsis
 /// --------

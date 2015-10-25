@@ -13,7 +13,7 @@ Both the functional form and the class form can be used to construct the adaptor
 Static Function Adaptor
 -----------------------
 
-A static function adaptor is a function adaptor that doesn't have a functinal form. It is only a class. It has an additional requirement that the function is `DefaultConstructible`:
+A static function adaptor is a function adaptor that doesn't have a functional form. It is only a class. It has an additional requirement that the function is `DefaultConstructible`:
 
 ```cpp
 template<class... Fs>

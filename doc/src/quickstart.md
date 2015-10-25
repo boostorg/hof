@@ -16,32 +16,28 @@ In C++, a function object is just a class that overrides the call operator like 
         }
     };
 
-There are few things to note about this. First, the call operator member function is always declared `const`, which is generally required to be used with Fit.(Note: The `mutable_` adaptor can be used to make a mutable function object have a `const` call operator, but this should generally be avoided). Secondly, the `sum_f` class must be constructed first before it can be called:
+There are few things to note about this. First, the call operator member function is always declared `const`, which is generally required to be used with Fit.(Note: The [`mutable_`](mutable.md) adaptor can be used to make a mutable function object have a `const` call operator, but this should generally be avoided). Secondly, the `sum_f` class must be constructed first before it can be called:
 
     auto three = sum_f()(1, 2);
 
-We can make it behave like a regular function if we construct the class as a global variable. However, we want to statically initialize it(ie initialize it at compile-time) to avoid the static initialization order fiasco. We can do that using `constexpr` like this:
-
-    const constexpr sum_f sum = {};
-
-However, when we declare function objects globally, we want to make sure they have the same address across translation units in order to avoid ODR violations. This can be done by declaring the function object using the `FIT_STATIC_FUNCTION` macro:
+We can make it behave like a regular function if we construct the class as a global variable. The Fit library provides [`FIT_STATIC_FUNCTION`](function.md) to properly initialize the the function object at compile-time to avoid the static initialization order fiasco and possible ODR violations:
 
     FIT_STATIC_FUNCTION(sum) = sum_f();
 
 Adaptors
 --------
 
-Now we have defined the function as a function object, we can add new "enhancements" to the function. We could make the function pipable using the pipable adaptor:
+Now we have defined the function as a function object, we can add new "enhancements" to the function. We could make the function pipable using the [`pipable`](pipable.md) adaptor:
 
-    const constexpr pipable_adaptor<sum_f> sum = {};
+    FIT_STATIC_FUNCTION(sum) = pipable_adaptor<sum_f>();
 
-So it could be called like this:
+This allows the parameters to piped into it, like this:
 
     auto three = 1 | sum(2);
 
-Or we could make it an infix named operator as well using the infix adaptor:
+Or we could make it an infix named operator as well using the [`infix`](infix.md) adaptor:
 
-    const constexpr infix_adaptor<sum_f> sum = {};
+    FIT_STATIC_FUNCTION(sum) = infix_adaptor<sum_f>();
 
 And it could be called like this:
 
@@ -56,9 +52,9 @@ Additionally each of the adaptors have a corresponding function version without 
 Lambdas
 -------
 
-Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be statically initialized at compile time. So we can use the `FIT_STATIC_LAMBDA` to initialize them at compile time:
+Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be statically initialized at compile time. So we can use the [`FIT_STATIC_LAMBDA`](lambda.md) to initialize them at compile time:
 
-    const constexpr auto sum = FIT_STATIC_LAMBDA(auto x, auto y)
+    FIT_STATIC_FUNCTION(sum) = FIT_STATIC_LAMBDA(auto x, auto y)
     {
         return x + y;
     };
@@ -66,12 +62,12 @@ Instead of writing function objects which can be a little verbose, we can write 
 And we can apply the same adaptors as well:
 
     // Pipable sum
-    const constexpr auto sum = pipable(FIT_STATIC_LAMBDA(auto x, auto y)
+    FIT_STATIC_FUNCTION(sum) = pipable(FIT_STATIC_LAMBDA(auto x, auto y)
     {
         return x + y;
     });
 
-We can also use `FIT_STATIC_LAMBDA_FUNCTION` to ensure that `sum` will always have an unique address across translation units, even when using lambdas.
+We can also use [`FIT_STATIC_LAMBDA_FUNCTION`](lambda.md) so we dont have to repeat [`FIT_STATIC_LAMBDA`](lambda.md) for adaptors, and it can help avoid possible ODR violations as well:
 
     // Pipable sum
     FIT_STATIC_LAMBDA_FUNCTION(sum) = pipable([](auto x, auto y)

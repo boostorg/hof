@@ -29,7 +29,7 @@
 /// 
 /// IntegralConstant must be:
 /// 
-///     IntegralConstant
+/// * IntegralConstant
 /// 
 /// Example
 /// -------

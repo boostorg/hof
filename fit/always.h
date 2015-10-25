@@ -41,7 +41,7 @@
 /// 
 /// T must be:
 /// 
-///     CopyConstructible
+/// * CopyConstructible
 /// 
 /// Example
 /// -------

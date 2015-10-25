@@ -32,12 +32,12 @@
 /// 
 /// IntegralConstant must be:
 /// 
-///     IntegralConstant
+/// * IntegralConstant
 /// 
 /// F must be:
 /// 
-///     FunctionObject
-///     MoveConstructible
+/// * FunctionObject
+/// * MoveConstructible
 /// 
 /// Example
 /// -------

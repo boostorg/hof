@@ -28,8 +28,8 @@
 /// 
 /// F must be:
 /// 
-///     FunctionObject
-///     MoveConstructible
+/// * FunctionObject
+/// * MoveConstructible
 /// 
 
 #include <utility>

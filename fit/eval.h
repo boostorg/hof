@@ -31,7 +31,7 @@
 /// 
 /// F must be:
 /// 
-///     EvaluatableFunctionObject
+/// * EvaluatableFunctionObject
 /// 
 /// Example
 /// -------

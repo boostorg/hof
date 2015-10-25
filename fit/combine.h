@@ -34,8 +34,8 @@
 /// 
 /// F and Gs must be:
 /// 
-///     FunctionObject
-///     MoveConstructible
+/// * FunctionObject
+/// * MoveConstructible
 /// 
 /// Example
 /// -------

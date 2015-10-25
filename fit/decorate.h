@@ -32,8 +32,8 @@
 /// 
 /// F must be:
 /// 
-///     FunctionObject
-///     MoveConstructible
+/// * FunctionObject
+/// * MoveConstructible
 /// 
 
 #include <fit/reveal.h>

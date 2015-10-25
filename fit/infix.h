@@ -34,8 +34,8 @@
 /// 
 /// F must be:
 /// 
-///     BinaryFunctionObject
-///     MoveConstructible
+/// * BinaryFunctionObject
+/// * MoveConstructible
 /// 
 /// Example
 /// -------

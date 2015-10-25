@@ -43,13 +43,13 @@
 /// 
 /// Projection must be:
 /// 
-///     UnaryFunctionObject
-///     MoveConstructible
+/// * UnaryFunctionObject
+/// * MoveConstructible
 /// 
 /// F must be:
 /// 
-///     FunctionObject
-///     MoveConstructible
+/// * FunctionObject
+/// * MoveConstructible
 /// 
 /// Example
 /// -------

@@ -34,8 +34,8 @@
 /// 
 /// F must be:
 /// 
-///     MutableFunctionObject
-///     MoveConstructible
+/// * MutableFunctionObject
+/// * MoveConstructible
 /// 
 
 #include <fit/detail/result_of.h>

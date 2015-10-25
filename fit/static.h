@@ -32,8 +32,8 @@
 /// 
 /// F must be:
 /// 
-///     FunctionObject
-///     DefaultConstructible
+/// * FunctionObject
+/// * DefaultConstructible
 /// 
 /// Example
 /// -------

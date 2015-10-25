@@ -33,11 +33,11 @@
 /// 
 /// F must be:
 /// 
-///     FunctionObject
+/// * FunctionObject
 /// 
 /// Ts must be:
 /// 
-///     Evaluatable
+/// * Evaluatable
 /// 
 /// Example
 /// -------

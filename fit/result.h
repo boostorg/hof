@@ -27,8 +27,8 @@
 /// 
 /// F must be:
 /// 
-///     FunctionObject
-///     MoveConstructible
+/// * FunctionObject
+/// * MoveConstructible
 /// 
 /// Example
 /// -------

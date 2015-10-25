@@ -44,12 +44,12 @@
 /// 
 /// State must be:
 /// 
-///     MoveConstructible
+/// * MoveConstructible
 /// 
 /// F must be:
 /// 
-///     BinaryFunctionObject
-///     MoveConstructible
+/// * BinaryFunctionObject
+/// * MoveConstructible
 /// 
 /// Example
 /// -------

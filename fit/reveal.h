@@ -30,10 +30,10 @@
 /// Requirements
 /// ------------
 /// 
-/// Fs must be:
+/// F must be:
 /// 
-///     FunctionObject
-///     MoveConstructible
+/// * FunctionObject
+/// * MoveConstructible
 /// 
 
 #include <fit/always.h>

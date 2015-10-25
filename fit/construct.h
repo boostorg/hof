@@ -47,16 +47,16 @@
 /// 
 /// MetafunctionClass must be a:
 /// 
-///     MetafunctionClass
+/// * MetafunctionClass
 /// 
 /// MetafunctionTemplate<Ts...> must be a:
 /// 
-///     Metafunction
+/// * Metafunction
 /// 
 /// T, Template<Ts..>, MetafunctionClass::apply<Ts...>, and
 /// MetafunctionTemplate<Ts...>::type must be:
 /// 
-///     MoveConstructible
+/// * MoveConstructible
 /// 
 /// Example
 /// -------

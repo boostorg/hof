@@ -32,8 +32,8 @@
 /// 
 /// F must be a template class, that is a:
 /// 
-///     FunctionObject
-///     DefaultConstructible
+/// * FunctionObject
+/// * DefaultConstructible
 /// 
 /// Example
 /// -------

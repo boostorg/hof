@@ -80,7 +80,7 @@ As we will see, this can help make it cleaner when we are defining several lambd
 Overloading
 -----------
 
-Now, Fit provides two ways of doing overloading. The `match` adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:
+Now, Fit provides two ways of doing overloading. The [`match`](match.md) adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = match(
         [](int x)
@@ -93,45 +93,118 @@ Now, Fit provides two ways of doing overloading. The `match` adaptor will call a
         }
     );
 
-However, when trying to do overloading involving something more generic, it can lead to ambiguities. So the `conditional` adaptor will pick the first function that is callable. This allows ordering the functions based on which one is more important. So if we wanted to write a function to print all the values in a type including primitive types as well as ranges, we could write something like this:
+However, when trying to do overloading involving something more generic, it can lead to ambiguities. So the [`conditional`](conditional.md) adaptor will pick the first function that is callable. This allows ordering the functions based on which one is more important. Say we would like to write a `print` function that can print not only using `cout` but can also print the values in ranges. We could write something like this:
 
-    #define REQUIRES(...) typename std::enable_if<(__VA_ARGS__), int>::type = 0
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
-        [](auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
-        {
-            std::cout << x << std::endl;
-        },
-        [](const std::string& x)
+        [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
         },
         [](const auto& range)
         {
-            for(const auto& x:range) 
-                std::cout << x << std::endl;
+            for(const auto& x:range) std::cout << x << std::endl;
         }
     );
 
-We constraint the first lambda to just fundamental types using `REQUIRES`. The last lambda we assume it is a range(we should check if it is a range but that is beyond the scope of this guide), and it is only called if the first two lambdas cannot be called(ie the type is not a fundamental nor a string).
+So the `-> decltype(std::cout << x, void())` will only make the function callable if `std::cout << x` is callable. Then the `void()` is used to return `void` from the function. We can constrain the second overload as well, but we will need some helper function in order to call `std::begin` and `std::end` using ADL lookup:
+
+    namespace adl {
+
+    using std::begin;
+    using std::end;
+
+    template<class R>
+    auto adl_begin(R&& r) -> FIT_RETURNS(begin(r));
+
+    template<class R>
+    auto adl_end(R&& r) -> FIT_RETURNS(end(r));
+    }
+
+    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
+        [](const auto& x) -> decltype(std::cout << x, void())
+        {
+            std::cout << x << std::endl;
+        },
+        [](const auto& range) -> decltype(std::cout << *adl::adl_begin(range), void())
+        {
+            for(const auto& x:range) std::cout << x << std::endl;
+        }
+    );
+
+Tuples
+------
+
+We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which let us call a function for each element. First, the [`by`](by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack.md) adaptor will unpack the elements to a tuple and apply them to the argument:
+
+    FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f) FIT_RETURNS
+    (
+        unpack(by(f))(sequence)
+    );
+
+So now we can add an overload for tuples:
+
+    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
+        [](const auto& x) -> decltype(std::cout << x, void())
+        {
+            std::cout << x << std::endl;
+        },
+        [](const auto& range) -> decltype(std::cout << *adl::adl_begin(range), void())
+        {
+            for(const auto& x:range) std::cout << x << std::endl;
+        },
+        [](const auto& tuple) -> decltype(for_each_tuple(tuple, identity), void())
+        {
+            return for_each_tuple(tuple, [](const auto& x)
+            {
+                std::cout << x << std::endl;
+            });
+        }
+    );
+
+Since we can't use a lambda inside of `decltype` we just put [`identity`](identity.md) instead.
 
 Recursive
 ---------
 
-Additionally, we could go a step further and make the `print` function recursive. We can use the `fix` adaptor, which implements a fix point combinator. So the first parameter of the function will be the function itself:
+Even though we are using lambdas, we can easily make this recursive using the [`fix`](fix.md) adaptor. This implements a fix point combinator, which passes the function(ie itself) in as the first argument, so we could write this:
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
-        [](auto, auto x, REQUIRES(std::is_fundamental<decltype(x)>()))
+        [](auto, const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
         },
-        [](auto, const std::string& x)
-        {
-            std::cout << x << std::endl;
-        },
-        [](auto self, const auto& range)
+        [](auto self, const auto& range) -> decltype(self(*adl::adl_begin(range)), void())
         {
             for(const auto& x:range) self(x);
+        },
+        [](auto self, const auto& tuple) -> decltype(for_each_tuple(tuple, self), void())
+        {
+            return for_each_tuple(tuple, self);
         }
     ));
+
+Variadic
+--------
+
+We can also make this `print` function varidiac, so it prints every argument passed into it. We just rename our original `print` function to `simple_print`:
+
+    FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
+        [](auto, const auto& x) -> decltype(std::cout << x, void())
+        {
+            std::cout << x << std::endl;
+        },
+        [](auto self, const auto& range) -> decltype(self(*adl::adl_begin(range)), void())
+        {
+            for(const auto& x:range) self(x);
+        },
+        [](auto self, const auto& tuple) -> decltype(for_each_tuple(tuple, self), void())
+        {
+            return for_each_tuple(tuple, self);
+        }
+    ));
+
+And then apply the [`by`](by.md) adaptor to `simple_print`:
+
+    FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
 

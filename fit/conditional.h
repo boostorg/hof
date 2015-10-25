@@ -35,7 +35,7 @@
 /// 
 /// Fs must be:
 /// 
-/// * FunctionObject
+/// * [FunctionObject](concepts.md#functionobject)
 /// * MoveConstructible
 /// 
 /// Example

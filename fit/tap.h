@@ -30,7 +30,7 @@
 /// 
 /// F must be:
 /// 
-/// * FunctionObject
+/// * [FunctionObject](concepts.md#functionobject)
 /// 
 /// Example
 /// -------

@@ -32,7 +32,7 @@
 /// 
 /// F must be a template class, that is a:
 /// 
-/// * FunctionObject
+/// * [FunctionObject](concepts.md#functionobject)
 /// * DefaultConstructible
 /// 
 /// Example

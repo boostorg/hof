@@ -33,7 +33,7 @@
 /// 
 /// F must be:
 /// 
-/// * FunctionObject
+/// * [FunctionObject](concepts.md#functionobject)
 /// 
 /// Ts must be:
 /// 

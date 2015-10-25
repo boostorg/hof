@@ -36,6 +36,6 @@ Semantics
 Some parts of the documentation provides the meaning(or equivalence) of an expression. Here is a guide of those symbols:
 
 * `f`, `g`, `fs`, `gs`, `p` are functions
-* `x`, `y`, `xs`, `xs` are parameters to a function
+* `x`, `y`, `xs`, `ys` are parameters to a function
 * `T` represents some type
-* `...` are parameter packs 
+* `...` are parameter packs and represent varidiac parameters

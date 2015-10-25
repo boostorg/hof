@@ -11,3 +11,5 @@ Acknowledgements
     - Jamboree
 * [for_each_argument](http://isocpp.org/blog/2015/01/for-each-argument-sean-parent)
     - Sean Parent
+* [Suggested Design for Customization Points](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html)
+    - Eric Niebler

@@ -27,6 +27,11 @@
 ///     template<template <class...> class F>
 ///     class implicit<F>;
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(T(implicit<F>()(xs...)) == F<T>()(xs...));
+/// 
 /// Requirements
 /// ------------
 /// 

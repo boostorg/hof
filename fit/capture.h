@@ -29,11 +29,11 @@
 /// Synopsis
 /// --------
 /// 
-///     // Capture lvalues and rvalues
+///     // Capture lvalues by reference and rvalues by value.
 ///     template<class... Ts>
 ///     constexpr auto capture(Ts&&... xs);
 /// 
-///     // Capture using perfect forwarding
+///     // Capture lvalues by reference and rvalue reference by reference
 ///     template<class... Ts>
 ///     constexpr auto capture_forward(Ts&&... xs);
 /// 

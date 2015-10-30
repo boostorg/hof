@@ -20,7 +20,7 @@ There are few things to note about this. First, the call operator member functio
 
     auto three = sum_f()(1, 2);
 
-We can make it behave like a regular function if we construct the class as a global variable. The Fit library provides [`FIT_STATIC_FUNCTION`](function.md) to properly initialize the the function object at compile-time to avoid the static initialization order fiasco and possible ODR violations:
+We can make it behave like a regular function if we construct the class as a global variable. The Fit library provides [`FIT_STATIC_FUNCTION`](function.md) to properly initialize the the function object at compile-time to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order) and possible ODR violations:
 
     FIT_STATIC_FUNCTION(sum) = sum_f();
 

@@ -13,3 +13,7 @@ Acknowledgements
     - Sean Parent
 * [Suggested Design for Customization Points](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html)
     - Eric Niebler
+* [FC++](https://yanniss.github.io/fc++/): Functional Programming in C++
+    - Brian McNamara and Yannis Smaragdakis
+* [Boost.Phoenix](http://www.boost.org/doc/libs/1_59_0/libs/phoenix/doc/html/index.html)
+    - Joel de Guzman, Dan Marsden, Thomas Heller, and John Fletcher

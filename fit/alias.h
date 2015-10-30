@@ -20,7 +20,9 @@
 /// -----------
 /// 
 /// The `alias` class wraps a type with a new type that can be tagged by the
-/// user.
+/// user. There are three different ways the value can be stored: as a member
+/// variable, by inheritance, or as a static member variable. The value can
+/// be retrieved uniformily using the `alias_value` function.
 /// 
 /// Synopsis
 /// --------

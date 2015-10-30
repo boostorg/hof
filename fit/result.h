@@ -14,7 +14,11 @@
 /// Description
 /// -----------
 /// 
-/// The `result` function adaptor sets the return type for the function.
+/// The `result` function adaptor sets the return type for the function, which
+/// can be useful when dealing with multiple overloads. Since the return type
+/// is no longer dependent on the parameters passed to the function, the
+/// `result_adaptor` provides a nested `result_type` that is the return type
+/// of the function.
 /// 
 /// Synopsis
 /// --------

@@ -22,6 +22,11 @@
 ///     template<class F>
 ///     constexpr indirect_adaptor<F> indirect(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(indirect(f)(xs...) == (*f)(xs...));
+/// 
 /// Requirements
 /// ------------
 /// 

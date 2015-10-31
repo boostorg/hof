@@ -56,7 +56,7 @@
 namespace fit {
 
 namespace detail {
-#if FIT_HAS_MANUAL_DEDUCTION
+#if FIT_HAS_MANUAL_DEDUCTION || FIT_NO_EXPRESSION_SFINAE
 struct apply_mem_fn
 {
 
@@ -89,7 +89,7 @@ struct apply_mem_data
 
 struct apply_f
 {
-#if FIT_HAS_MANUAL_DEDUCTION
+#if FIT_HAS_MANUAL_DEDUCTION || FIT_NO_EXPRESSION_SFINAE
     template<class F, class T, class... Ts, class=typename std::enable_if<(
         std::is_member_function_pointer<typename std::decay<F>::type>::value
     )>::type>

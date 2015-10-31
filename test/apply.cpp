@@ -28,11 +28,13 @@ struct member_sum_f_derived
 
 FIT_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::add, member_sum_f(1), 2) == 3);
     FIT_TEST_CHECK(fit::apply(&member_sum_f::add, member_sum_f(1), 2) == 3);
-
-    FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::add, member_sum_f_derived(1), 2) == 3);
     FIT_TEST_CHECK(fit::apply(&member_sum_f::add, member_sum_f_derived(1), 2) == 3);
+
+#ifdef __clang__
+    FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::add, member_sum_f(1), 2) == 3);
+    FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::add, member_sum_f_derived(1), 2) == 3);
+#endif
 
     std::unique_ptr<member_sum_f> msp(new member_sum_f(1));
     FIT_TEST_CHECK(fit::apply(&member_sum_f::add, msp, 2) == 3);
@@ -43,11 +45,13 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::i, member_sum_f(3)) == 3);
     FIT_TEST_CHECK(fit::apply(&member_sum_f::i, member_sum_f(3)) == 3);
-
-    FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::i, member_sum_f_derived(3)) == 3);
     FIT_TEST_CHECK(fit::apply(&member_sum_f::i, member_sum_f_derived(3)) == 3);
+
+#ifdef __clang__
+    FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::i, member_sum_f(3)) == 3);
+    FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::i, member_sum_f_derived(3)) == 3);
+#endif
 
     std::unique_ptr<member_sum_f> msp(new member_sum_f(3));
     FIT_TEST_CHECK(fit::apply(&member_sum_f::i, msp) == 3);

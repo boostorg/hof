@@ -29,8 +29,16 @@ struct never_care
 struct cant_be_called_type
 {};
 
+struct no_type
+{};
+
+template<class T, class U=typename std::remove_cv<typename std::remove_reference<T>::type>::type>
+struct is_callable_wrapper_base
+: std::conditional<std::is_class<U>::value, U, no_type>
+{};
+
 template<class F, class... Ts>
-struct is_callable_wrapper : std::remove_cv<typename std::remove_reference<F>::type>::type
+struct is_callable_wrapper : is_callable_wrapper_base<F>::type
 {
     is_callable_wrapper();
     typedef cant_be_called_type const &(*pointer_to_function)(typename never_care<Ts>::type...);

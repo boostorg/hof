@@ -89,33 +89,20 @@ struct rank<0>
 template<int N, class...Fs> struct conditional_adaptor_base;
  
 template<int N, class F, class...Fs>
-struct conditional_adaptor_base<N, F, Fs...> : F, conditional_adaptor_base<N-1, Fs...>
+struct conditional_adaptor_base<N, F, Fs...> : conditional_adaptor_base<N, F>, conditional_adaptor_base<N-1, Fs...>
 {
     typedef conditional_adaptor_base<N-1, Fs...> base;
+    typedef conditional_adaptor_base<N, F> single_base;
 
-    FIT_INHERIT_DEFAULT(conditional_adaptor_base, F, base);
+    FIT_INHERIT_DEFAULT(conditional_adaptor_base, single_base, base);
 
-    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
+    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, single_base), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
     constexpr conditional_adaptor_base(X&& f1, Xs&& ... fs) 
-    : F(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)
+    : single_base(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)
     {}
 
     using base::operator();
-
-    template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    FIT_RETURNS_CLASS(conditional_adaptor_base);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const F&, id_<Ts>...) 
-    operator()(rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
-    );
+    using single_base::operator();
 };
 
 template<int N, class F>
@@ -149,7 +136,7 @@ struct conditional_adaptor
 {
     typedef conditional_adaptor fit_rewritable_tag;
     typedef detail::conditional_adaptor_base<sizeof...(Fs), Fs...> base;
-    typedef detail::rank<sizeof...(Fs)> rank;
+    typedef detail::rank<sizeof...(Fs)> rank_type;
 
     FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, base);
 
@@ -166,10 +153,10 @@ struct conditional_adaptor
     FIT_RETURNS_CLASS(conditional_adaptor);
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const base&, rank, id_<Ts>...) 
+    constexpr FIT_SFINAE_RESULT(const base&, id_<rank_type>, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)))(rank(), fit::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)))(rank_type(), fit::forward<Ts>(xs)...)
     );
 };
 

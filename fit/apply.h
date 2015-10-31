@@ -52,10 +52,11 @@
 #include <fit/detail/forward.h>
 #include <fit/detail/static_const_var.h>
 
+
 namespace fit {
 
 namespace detail {
-#if FIT_NO_EXPRESSION_SFINAE
+#if FIT_HAS_MANUAL_DEDUCTION
 struct apply_mem_fn
 {
 
@@ -88,12 +89,12 @@ struct apply_mem_data
 
 struct apply_f
 {
-#if FIT_NO_EXPRESSION_SFINAE
+#if FIT_HAS_MANUAL_DEDUCTION
     template<class F, class T, class... Ts, class=typename std::enable_if<(
         std::is_member_function_pointer<typename std::decay<F>::type>::value
     )>::type>
-    constexpr FIT_SFINAE_RESULT(apply_mem_fn, id_<F>, id_<T>, id_<Ts>...) 
-    operator()(F&& f, T&& obj, Ts&&... xs) const FIT_SFINAE_RETURNS
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_fn, id_<F>, id_<T>, id_<Ts>...) 
+    operator()(F&& f, T&& obj, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         apply_mem_fn()(f, fit::forward<T>(obj), fit::forward<Ts>(xs)...)
     );
@@ -101,8 +102,8 @@ struct apply_f
     template<class F, class T, class... Ts, class=typename std::enable_if<(
         std::is_member_function_pointer<typename std::decay<F>::type>::value
     )>::type>
-    constexpr FIT_SFINAE_RESULT(apply_mem_fn, id_<F>, id_<decltype(*std::declval<T>())>, id_<Ts>...) 
-    operator()(F&& f, T&& obj, Ts&&... xs) const FIT_SFINAE_RETURNS
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_fn, id_<F>, id_<decltype(*std::declval<T>())>, id_<Ts>...) 
+    operator()(F&& f, T&& obj, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         apply_mem_fn()(f, *fit::forward<T>(obj), fit::forward<Ts>(xs)...)
     );
@@ -110,8 +111,8 @@ struct apply_f
     template<class F, class T, class=typename std::enable_if<(
         std::is_member_object_pointer<typename std::decay<F>::type>::value
     )>::type>
-    constexpr FIT_SFINAE_RESULT(apply_mem_data, id_<F>, id_<T>) 
-    operator()(F&& f, T&& obj) const FIT_SFINAE_RETURNS
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_data, id_<F>, id_<T>) 
+    operator()(F&& f, T&& obj) const FIT_SFINAE_MANUAL_RETURNS
     (
         apply_mem_data()(f, fit::forward<T>(obj))
     );
@@ -119,8 +120,8 @@ struct apply_f
     template<class F, class T, class=typename std::enable_if<(
         std::is_member_object_pointer<typename std::decay<F>::type>::value
     )>::type>
-    constexpr FIT_SFINAE_RESULT(apply_mem_data, id_<F>, id_<decltype(*std::declval<T>())>) 
-    operator()(F&& f, T&& obj) const FIT_SFINAE_RETURNS
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_data, id_<F>, id_<decltype(*std::declval<T>())>) 
+    operator()(F&& f, T&& obj) const FIT_SFINAE_MANUAL_RETURNS
     (
         apply_mem_data()(f, *fit::forward<T>(obj))
     );

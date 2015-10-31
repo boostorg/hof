@@ -83,9 +83,6 @@ struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
 
     FIT_INHERIT_DEFAULT(match_adaptor, F, base);
 
-    // constexpr match_adaptor()
-    // {}
-
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
     constexpr match_adaptor(X&& f1, Xs&& ... fs) 
     : F(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)

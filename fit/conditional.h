@@ -67,92 +67,110 @@
 /// So, the order of the functions in the `conditional_adaptor` are very important
 /// to how the function is chosen.
 
-#include <fit/is_callable.h>
 #include <fit/reveal.h>
 #include <fit/detail/result_of.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
-#include <type_traits>
 
 namespace fit {
 
 namespace detail {
 
-template<class F1, class F2>
-struct conditional_kernel : F1, F2
-{
-    FIT_INHERIT_DEFAULT(conditional_kernel, F1, F2)
+template<int N>
+struct rank : rank<N-1>
+{};
 
-    template<class A, class B,
-        FIT_ENABLE_IF_CONVERTIBLE(A, F1),
-        FIT_ENABLE_IF_CONVERTIBLE(B, F2)>
-    constexpr conditional_kernel(A&& f1, B&& f2) : F1(fit::forward<A>(f1)), F2(fit::forward<B>(f2))
+template<>
+struct rank<0>
+{};
+
+template<int N, class...Fs> struct conditional_adaptor_base;
+ 
+template<int N, class F, class...Fs>
+struct conditional_adaptor_base<N, F, Fs...> : F, conditional_adaptor_base<N-1, Fs...>
+{
+    typedef conditional_adaptor_base<N-1, Fs...> base;
+
+    FIT_INHERIT_DEFAULT(conditional_adaptor_base, F, base);
+
+    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
+    constexpr conditional_adaptor_base(X&& f1, Xs&& ... fs) 
+    : F(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)
     {}
 
-    template<class... Ts>
-    struct select
-    : std::conditional
-    <
-        is_callable<F1, Ts...>::value, 
-        F1,
-        F2
-    >
-    {};
+    using base::operator();
 
     template<class... Ts>
-    constexpr const typename select<Ts...>::type& select_function() const
+    constexpr const F& base_function(Ts&&... xs) const
     {
-        return *this;
+        return always_ref(*this)(xs...);
     }
 
-    FIT_RETURNS_CLASS(conditional_kernel);
+    FIT_RETURNS_CLASS(conditional_adaptor_base);
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
-    operator()(Ts && ... x) const
-    FIT_SFINAE_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(fit::forward<Ts>(x)...));
+    constexpr FIT_SFINAE_RESULT(const F&, id_<Ts>...) 
+    operator()(rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
+    (
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
+    );
 };
+
+template<int N, class F>
+struct conditional_adaptor_base<N, F> : F
+{
+    typedef F base;
+
+    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor_base, F);
+
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&... xs) const
+    {
+        return always_ref(*this)(xs...);
+    }
+
+    FIT_RETURNS_CLASS(conditional_adaptor_base);
+
+    template<class... Ts>
+    constexpr FIT_SFINAE_RESULT(const F&, id_<Ts>...) 
+    operator()(rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
+    (
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
+    );
+};
+
 }
 
-template<class F, class... Fs>
+template<class... Fs>
 struct conditional_adaptor 
-: detail::conditional_kernel<F, FIT_JOIN(conditional_adaptor, Fs...) >
+: detail::conditional_adaptor_base<sizeof...(Fs), Fs...>
 {
     typedef conditional_adaptor fit_rewritable_tag;
-    typedef FIT_JOIN(conditional_adaptor, Fs...) kernel_base;
-    typedef detail::conditional_kernel<F, kernel_base > base;
+    typedef detail::conditional_adaptor_base<sizeof...(Fs), Fs...> base;
+    typedef detail::rank<sizeof...(Fs)> rank;
 
-    FIT_INHERIT_DEFAULT(conditional_adaptor, base)
-
-    template<class X, class... Xs, 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, kernel_base), 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(kernel_base, Xs...)>
-    constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
-    : base(fit::forward<X>(f1), kernel_base(fit::forward<Xs>(fs)...))
-    {}
-
-    template<class X, class... Xs, 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X)>
-    constexpr conditional_adaptor(X&& f1) 
-    : base(fit::forward<X>(f1))
-    {}
+    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, base);
 
     struct failure
-    : failure_for<F, Fs...>
+    : failure_for<Fs...>
     {};
-};
 
-template<class F>
-struct conditional_adaptor<F> : F
-{
-    typedef conditional_adaptor fit_rewritable_tag;
-    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, F);
+    template<class... Ts>
+    constexpr const base& base_function(Ts&&... xs) const
+    {
+        return always_ref(*this)(xs...);
+    }
 
-    struct failure
-    : failure_for<F>
-    {};
+    FIT_RETURNS_CLASS(conditional_adaptor);
+
+    template<class... Ts>
+    constexpr FIT_SFINAE_RESULT(const base&, rank, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    (
+        (FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)))(rank(), fit::forward<Ts>(xs)...)
+    );
 };
 
 FIT_DECLARE_STATIC_VAR(conditional, detail::make<conditional_adaptor>);

@@ -21,9 +21,9 @@
 
 #if FIT_HAS_MANUAL_DEDUCTION || FIT_NO_EXPRESSION_SFINAE
 
-#include <type_traits>
-#include <fit/is_callable.h>
+#include <fit/detail/and.h>
 #include <fit/detail/holder.h>
+#include <fit/detail/can_be_called.h>
 
 namespace fit { namespace detail {
 
@@ -34,7 +34,7 @@ template<class F, class... Ts>
 struct result_of_impl<
     F, 
     holder<Ts...>, 
-    typename std::enable_if<is_callable<F, typename Ts::type...>::value>::type
+    typename std::enable_if<can_be_called<F, typename Ts::type...>::value>::type
 >
 {
     typedef decltype(std::declval<F>()(std::declval<typename Ts::type>()...)) type;

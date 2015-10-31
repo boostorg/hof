@@ -45,7 +45,7 @@
 /// 
 /// State must be:
 /// 
-/// * MoveConstructible
+/// * CopyConstructible
 /// 
 /// F must be:
 /// 
@@ -108,18 +108,18 @@ struct reverse_compress_adaptor
     }
 
     template<class... Ts>
-    constexpr const State& get_state(Ts&&... xs) const
+    constexpr State get_state(Ts&&... xs) const
     {
         return this->second(xs...);
     }
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(detail::v_reverse_fold, id_<const F&>, id_<const State&>, id_<Ts>...)
+    constexpr FIT_SFINAE_RESULT(detail::v_reverse_fold, id_<const F&>, id_<State>, id_<Ts>...)
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::v_reverse_fold()(
             FIT_MANGLE_CAST(const F&)(this->base_function(xs...)), 
-            FIT_MANGLE_CAST(State&&)(fit::move(this->get_state(xs...))), 
+            FIT_MANGLE_CAST(State)(this->get_state(xs...)), 
             fit::forward<Ts>(xs)...
         )
     )

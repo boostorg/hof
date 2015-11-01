@@ -36,6 +36,7 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(fit::apply(&member_sum_f::add, member_sum_f_derived(1), 2) == 3);
 #endif
 
+    static_assert(std::is_base_of<member_sum_f, member_sum_f>::value, "Base of failed");
     std::unique_ptr<member_sum_f> msp(new member_sum_f(1));
     FIT_TEST_CHECK(fit::apply(&member_sum_f::add, msp, 2) == 3);
 

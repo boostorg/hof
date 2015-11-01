@@ -59,11 +59,21 @@ namespace detail {
 #if FIT_HAS_MANUAL_DEDUCTION || FIT_NO_EXPRESSION_SFINAE
 struct apply_mem_fn
 {
+    template<class...>
+    struct convertible_args;
+
+    template<class T, class U>
+    struct is_convertible_args;
+
+    template<class... Ts, class... Us>
+    struct is_convertible_args<convertible_args<Ts...>, convertible_args<Us...>>
+    : and_<std::is_convertible<Ts, Us>...>
+    {};
 
 #define FIT_APPLY_MEM_FN_CALL(cv) \
     template <class R, class Base, class Derived, class... Ts, class... Us, class=typename std::enable_if<and_< \
         std::is_base_of<Base, typename std::decay<Derived>::type>, \
-        std::is_convertible<Us, Ts>... \
+        is_convertible_args<convertible_args<Us...>, convertible_args<Ts...>> \
     >::value>::type> \
     constexpr R operator()(R (Base::*mf)(Ts...) cv, Derived&& ref, Us &&... xs) const \
     { \
@@ -85,6 +95,11 @@ struct apply_mem_data
         return fit::forward<Derived>(ref).*pmd;
     }
 };
+
+template<class T, class U=decltype(*std::declval<T>())>
+struct apply_deref
+{ typedef U type; };
+
 #endif
 
 struct apply_f
@@ -99,10 +114,10 @@ struct apply_f
         apply_mem_fn()(f, fit::forward<T>(obj), fit::forward<Ts>(xs)...)
     );
 
-    template<class F, class T, class... Ts, class=typename std::enable_if<(
+    template<class F, class T, class... Ts, class U=typename apply_deref<T>::type, class=typename std::enable_if<(
         std::is_member_function_pointer<typename std::decay<F>::type>::value
     )>::type>
-    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_fn, id_<F>, id_<decltype(*std::declval<T>())>, id_<Ts>...) 
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_fn, id_<F>, id_<U>, id_<Ts>...) 
     operator()(F&& f, T&& obj, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         apply_mem_fn()(f, *fit::forward<T>(obj), fit::forward<Ts>(xs)...)
@@ -117,10 +132,10 @@ struct apply_f
         apply_mem_data()(f, fit::forward<T>(obj))
     );
 
-    template<class F, class T, class=typename std::enable_if<(
+    template<class F, class T, class U=typename apply_deref<T>::type, class=typename std::enable_if<(
         std::is_member_object_pointer<typename std::decay<F>::type>::value
     )>::type>
-    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_data, id_<F>, id_<decltype(*std::declval<T>())>) 
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_data, id_<F>, id_<U>) 
     operator()(F&& f, T&& obj) const FIT_SFINAE_MANUAL_RETURNS
     (
         apply_mem_data()(f, *fit::forward<T>(obj))

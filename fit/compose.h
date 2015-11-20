@@ -64,7 +64,7 @@
 ///     assert(r == 4);
 /// 
 
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/compressed_pair.h>
@@ -97,30 +97,30 @@ struct compose_kernel : detail::compressed_pair<F1, F2>
 }
 
 template<class F, class... Fs>
-struct compose_adaptor : detail::compose_kernel<F, FIT_JOIN(compose_adaptor, Fs...)>
+struct compose_adaptor : detail::compose_kernel<detail::callable_base<F>, FIT_JOIN(compose_adaptor, detail::callable_base<Fs>...)>
 {
     typedef compose_adaptor fit_rewritable_tag;
-    typedef FIT_JOIN(compose_adaptor, Fs...) tail;
-    typedef detail::compose_kernel<F, tail> base_type;
+    typedef FIT_JOIN(compose_adaptor, detail::callable_base<Fs>...) tail;
+    typedef detail::compose_kernel<detail::callable_base<F>, tail> base_type;
 
     FIT_INHERIT_DEFAULT(compose_adaptor, base_type)
 
-    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
+    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
     constexpr compose_adaptor(X&& f1, Xs&& ... fs) 
     : base_type(fit::forward<X>(f1), tail(fit::forward<Xs>(fs)...))
     {}
 };
 
 template<class F>
-struct compose_adaptor<F> : F
+struct compose_adaptor<F> : detail::callable_base<F>
 {
     typedef compose_adaptor fit_rewritable_tag;
 
-    FIT_INHERIT_DEFAULT(compose_adaptor, F)
+    FIT_INHERIT_DEFAULT(compose_adaptor, detail::callable_base<F>)
 
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
+    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>)>
     constexpr compose_adaptor(X&& f1) 
-    : F(fit::forward<X>(f1))
+    : detail::callable_base<F>(fit::forward<X>(f1))
     {}
 
 };

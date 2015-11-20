@@ -8,7 +8,7 @@
 #ifndef FIT_GUARD_CAPTURE_H
 #define FIT_GUARD_CAPTURE_H
 
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/reveal.h>
 #include <fit/pack.h>
 #include <fit/always.h>
@@ -67,14 +67,14 @@ namespace fit {
 namespace detail {
 
 template<class F, class Pack>
-struct capture_invoke : F, Pack
+struct capture_invoke : detail::callable_base<F>, Pack
 {
     typedef capture_invoke fit_rewritable1_tag;
     template<class X, class Y>
-    constexpr capture_invoke(X&& x, Y&& y) : F(fit::forward<X>(x)), Pack(fit::forward<Y>(y))
+    constexpr capture_invoke(X&& x, Y&& y) : detail::callable_base<F>(fit::forward<X>(x)), Pack(fit::forward<Y>(y))
     {}
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
@@ -108,7 +108,7 @@ struct capture_invoke : F, Pack
     };
 
     struct failure
-    : failure_map<capture_failure, F>
+    : failure_map<capture_failure, detail::callable_base<F>>
     {};
 
     FIT_RETURNS_CLASS(capture_invoke);
@@ -120,7 +120,7 @@ struct capture_invoke : F, Pack
             id_<const Pack&>, 
             result_of<decltype(fit::pack_forward), id_<Ts>...> 
         >::type,
-        id_<F&&>
+        id_<detail::callable_base<F>&&>
     ) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
@@ -129,7 +129,7 @@ struct capture_invoke : F, Pack
             FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), 
             fit::pack_forward(fit::forward<Ts>(xs)...)
         )
-        (FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->base_function(xs...)))
+        (FIT_RETURNS_C_CAST(detail::callable_base<F>&&)(FIT_CONST_THIS->base_function(xs...)))
     );
 };
 

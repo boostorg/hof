@@ -33,6 +33,17 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+#ifndef _MSC_VER
+    constexpr 
+#endif
+    auto add = fit::_ + fit::_;
+    FIT_STATIC_TEST_CHECK(fit::by(select_x(), add)(foo(1), foo(2)) == 3);
+    FIT_TEST_CHECK(fit::by(&foo::x, add)(foo(1), foo(2)) == 3);
+    static_assert(fit::detail::is_default_constructible<decltype(fit::by(select_x(), add))>::value, "Not default constructible");
+}
+
+FIT_TEST_CASE()
+{
     auto indirect_add = fit::by(*fit::_, fit::_ + fit::_);
     FIT_TEST_CHECK(indirect_add(std::unique_ptr<int>(new int(1)), std::unique_ptr<int>(new int(2))) == 3);
     static_assert(fit::detail::is_default_constructible<decltype(indirect_add)>::value, "Not default constructible");

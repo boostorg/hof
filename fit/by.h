@@ -67,7 +67,7 @@
 
 #include <utility>
 #include <fit/always.h>
-#include <fit/detail/delegate.h>
+#include <fit/detail/callable_base.h>
 #include <fit/detail/result_of.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
@@ -160,17 +160,17 @@ template<class Projection, class F=void>
 struct by_adaptor;
 
 template<class Projection, class F>
-struct by_adaptor : Projection, F
+struct by_adaptor : detail::callable_base<Projection>, detail::callable_base<F>
 {
     typedef by_adaptor fit_rewritable_tag;
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
 
     template<class... Ts>
-    constexpr const Projection& base_projection(Ts&&... xs) const
+    constexpr const detail::callable_base<Projection>& base_projection(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
@@ -182,51 +182,51 @@ struct by_adaptor : Projection, F
         {
             template<class... Ts>
             struct of
-            : Failure::template of<decltype(std::declval<Projection>()(std::declval<Ts>()))...>
+            : Failure::template of<decltype(std::declval<detail::callable_base<Projection>>()(std::declval<Ts>()))...>
             {};
         };
     };
 
     struct failure
-    : failure_map<by_failure, F>
+    : failure_map<by_failure, detail::callable_base<F>>
     {};
 
-    FIT_INHERIT_DEFAULT(by_adaptor, Projection, F)
+    FIT_INHERIT_DEFAULT(by_adaptor, detail::callable_base<Projection>, F)
 
-    template<class P, class G, FIT_ENABLE_IF_CONVERTIBLE(P, Projection), FIT_ENABLE_IF_CONVERTIBLE(G, F)>
+    template<class P, class G, FIT_ENABLE_IF_CONVERTIBLE(P, detail::callable_base<Projection>), FIT_ENABLE_IF_CONVERTIBLE(G, detail::callable_base<F>)>
     constexpr by_adaptor(P&& p, G&& f) 
-    : Projection(fit::forward<P>(p)), F(fit::forward<G>(f))
+    : detail::callable_base<Projection>(fit::forward<P>(p)), detail::callable_base<F>(fit::forward<G>(f))
     {}
 
     FIT_RETURNS_CLASS(by_adaptor);
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const F&, result_of<const Projection&, id_<Ts>>...) 
+    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, result_of<const detail::callable_base<Projection>&, id_<Ts>>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::by_eval(
-            FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...)),
-            FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)),
+            FIT_MANGLE_CAST(const detail::callable_base<Projection>&)(FIT_CONST_THIS->base_projection(xs...)),
+            FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)),
             fit::forward<Ts>(xs)...
         )
     );
 };
 
 template<class Projection>
-struct by_adaptor<Projection, void> : Projection
+struct by_adaptor<Projection, void> : detail::callable_base<Projection>
 {
     typedef by_adaptor fit_rewritable1_tag;
     template<class... Ts>
-    constexpr const Projection& base_projection(Ts&&... xs) const
+    constexpr const detail::callable_base<Projection>& base_projection(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
 
-    FIT_INHERIT_DEFAULT(by_adaptor, Projection)
+    FIT_INHERIT_DEFAULT(by_adaptor, detail::callable_base<Projection>)
 
-    template<class P, FIT_ENABLE_IF_CONVERTIBLE(P, Projection)>
+    template<class P, FIT_ENABLE_IF_CONVERTIBLE(P, detail::callable_base<Projection>)>
     constexpr by_adaptor(P&& p) 
-    : Projection(fit::forward<P>(p))
+    : detail::callable_base<Projection>(fit::forward<P>(p))
     {}
 
     FIT_RETURNS_CLASS(by_adaptor);

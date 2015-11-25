@@ -41,6 +41,7 @@
 #include <fit/is_callable.h>
 #include <fit/identity.h>
 #include <fit/detail/move.h>
+#include <fit/detail/callable_base.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/holder.h>
 #include <fit/detail/join.h>
@@ -211,13 +212,13 @@ struct failure_for
 
 template<class F>
 struct reveal_adaptor
-: detail::traverse_failure<F>, F
+: detail::traverse_failure<detail::callable_base<F>>, detail::callable_base<F>
 {
     typedef reveal_adaptor fit_rewritable1_tag;
-    using detail::traverse_failure<F>::operator();
-    using F::operator();
+    using detail::traverse_failure<detail::callable_base<F>>::operator();
+    using detail::callable_base<F>::operator();
 
-    FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, F);
+    FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, detail::callable_base<F>);
 };
 // Avoid double reveals, it causes problem on gcc 4.6
 template<class F>

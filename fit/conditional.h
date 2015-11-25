@@ -68,7 +68,7 @@
 /// to how the function is chosen.
 
 #include <fit/reveal.h>
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
 #include <fit/detail/make.h>
@@ -106,14 +106,14 @@ struct conditional_adaptor_base<N, F, Fs...> : conditional_adaptor_base<N, F>, c
 };
 
 template<int N, class F>
-struct conditional_adaptor_base<N, F> : F
+struct conditional_adaptor_base<N, F> : detail::callable_base<F>
 {
-    typedef F base;
+    typedef detail::callable_base<F> base;
 
-    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor_base, F);
+    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor_base, detail::callable_base<F>);
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
@@ -121,10 +121,10 @@ struct conditional_adaptor_base<N, F> : F
     FIT_RETURNS_CLASS(conditional_adaptor_base);
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const F&, id_<Ts>...) 
+    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<Ts>...) 
     operator()(rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
     );
 };
 

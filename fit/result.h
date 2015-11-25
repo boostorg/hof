@@ -50,7 +50,7 @@
 ///     static_assert(std::is_same<decltype(int_result(true)), int>::value, "Not the same type");
 /// 
 
-#include <fit/detail/delegate.h>
+#include <fit/detail/callable_base.h>
 #include <fit/is_callable.h>
 #include <fit/always.h>
 #include <fit/reveal.h>
@@ -58,18 +58,18 @@
 namespace fit {
 
 template<class Result, class F>
-struct result_adaptor : F
+struct result_adaptor : detail::callable_base<F>
 {
-    FIT_INHERIT_CONSTRUCTOR(result_adaptor, F)
+    FIT_INHERIT_CONSTRUCTOR(result_adaptor, detail::callable_base<F>)
 
     typedef Result result_type;
 
     struct failure
-    : failure_for<F>
+    : failure_for<detail::callable_base<F>>
     {};
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
@@ -82,14 +82,14 @@ struct result_adaptor : F
 };
 
 template<class F>
-struct result_adaptor<void, F> : F
+struct result_adaptor<void, F> : detail::callable_base<F>
 {
-    FIT_INHERIT_CONSTRUCTOR(result_adaptor, F)
+    FIT_INHERIT_CONSTRUCTOR(result_adaptor, detail::callable_base<F>)
 
     typedef void result_type;
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }

@@ -44,11 +44,11 @@
 namespace fit {
 
 template<class F>
-struct protect_adaptor : F
+struct protect_adaptor : detail::callable_base<F>
 {
     typedef protect_adaptor fit_rewritable1_tag;
     template<class... Ts>
-    constexpr protect_adaptor(Ts&&... xs) : F(fit::forward<Ts>(xs)...)
+    constexpr protect_adaptor(Ts&&... xs) : detail::callable_base<F>(fit::forward<Ts>(xs)...)
     {}
 };
 

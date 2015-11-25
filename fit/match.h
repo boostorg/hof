@@ -62,6 +62,7 @@
 /// 
 
 #include <fit/reveal.h>
+#include <fit/detail/callable_base.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
@@ -72,20 +73,20 @@ namespace fit {
 template<class...Fs> struct match_adaptor;
  
 template<class F, class...Fs>
-struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
+struct match_adaptor<F, Fs...> : detail::callable_base<F>, match_adaptor<Fs...>
 {
     typedef match_adaptor<Fs...> base;
     typedef match_adaptor fit_rewritable_tag;
 
     struct failure
-    : failure_for<F, Fs...>
+    : failure_for<detail::callable_base<F>, Fs...>
     {};
 
-    FIT_INHERIT_DEFAULT(match_adaptor, F, base);
+    FIT_INHERIT_DEFAULT(match_adaptor, detail::callable_base<F>, base);
 
-    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
+    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
     constexpr match_adaptor(X&& f1, Xs&& ... fs) 
-    : F(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)
+    : detail::callable_base<F>(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)
     {}
 
     using F::operator();
@@ -93,13 +94,13 @@ struct match_adaptor<F, Fs...> : F, match_adaptor<Fs...>
 };
 
 template<class F>
-struct match_adaptor<F> : F
+struct match_adaptor<F> : detail::callable_base<F>
 {
-    typedef F base;
+    typedef detail::callable_base<F> base;
     typedef match_adaptor fit_rewritable_tag;
     using F::operator();
 
-    FIT_INHERIT_CONSTRUCTOR(match_adaptor, F);
+    FIT_INHERIT_CONSTRUCTOR(match_adaptor, detail::callable_base<F>);
 };
 
 FIT_DECLARE_STATIC_VAR(match, detail::make<match_adaptor>);

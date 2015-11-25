@@ -58,7 +58,7 @@
 /// 
 
 #include <fit/always.h>
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/detail/forward.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
@@ -74,9 +74,9 @@ struct if_depend
 {};
 
 template<bool Cond, class F>
-struct if_adaptor : F
+struct if_adaptor : detail::callable_base<F>
 {
-    FIT_INHERIT_CONSTRUCTOR(if_adaptor, F)
+    FIT_INHERIT_CONSTRUCTOR(if_adaptor, detail::callable_base<F>)
 };
 
 template<class F>

@@ -225,12 +225,12 @@ constexpr lazy_nullary_invoker<F> make_lazy_nullary_invoker(F f)
 
 
 template<class F>
-struct lazy_adaptor : F
+struct lazy_adaptor : detail::callable_base<F>
 {
-    FIT_INHERIT_CONSTRUCTOR(lazy_adaptor, F);
+    FIT_INHERIT_CONSTRUCTOR(lazy_adaptor, detail::callable_base<F>);
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
@@ -240,7 +240,7 @@ struct lazy_adaptor : F
     template<class T, class... Ts>
     constexpr auto operator()(T x, Ts... xs) const FIT_RETURNS
     (
-        fit::detail::make_lazy_invoker(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->base_function(x, xs...)), 
+        fit::detail::make_lazy_invoker(FIT_RETURNS_C_CAST(detail::callable_base<F>&&)(FIT_CONST_THIS->base_function(x, xs...)), 
             pack(fit::move(x), fit::move(xs)...))
     );
 
@@ -248,7 +248,7 @@ struct lazy_adaptor : F
     template<class Unused=int>
     constexpr detail::lazy_nullary_invoker<F> operator()() const
     {
-        return fit::detail::make_lazy_nullary_invoker((F&&)(
+        return fit::detail::make_lazy_nullary_invoker((detail::callable_base<F>&&)(
             this->base_function(Unused())
         ));
     }

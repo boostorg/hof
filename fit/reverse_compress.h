@@ -66,7 +66,7 @@
 ///     assert(fit::reverse_compress(max_f())(2, 3, 4, 5) == 5);
 /// 
 
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/compressed_pair.h>
 #include <fit/detail/move.h>
@@ -96,13 +96,13 @@ struct v_reverse_fold
 
 template<class F, class State=void>
 struct reverse_compress_adaptor
-: detail::compressed_pair<F, State>
+: detail::compressed_pair<detail::callable_base<F>, State>
 {
-    typedef detail::compressed_pair<F, State> base_type;
+    typedef detail::compressed_pair<detail::callable_base<F>, State> base_type;
     FIT_INHERIT_CONSTRUCTOR(reverse_compress_adaptor, base_type)
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return this->first(xs...);
     }
@@ -114,11 +114,11 @@ struct reverse_compress_adaptor
     }
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(detail::v_reverse_fold, id_<const F&>, id_<State>, id_<Ts>...)
+    constexpr FIT_SFINAE_RESULT(detail::v_reverse_fold, id_<const detail::callable_base<F>&>, id_<State>, id_<Ts>...)
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::v_reverse_fold()(
-            FIT_MANGLE_CAST(const F&)(this->base_function(xs...)), 
+            FIT_MANGLE_CAST(const detail::callable_base<F>&)(this->base_function(xs...)), 
             FIT_MANGLE_CAST(State)(this->get_state(xs...)), 
             fit::forward<Ts>(xs)...
         )
@@ -128,22 +128,22 @@ struct reverse_compress_adaptor
 
 template<class F>
 struct reverse_compress_adaptor<F, void>
-: F
+: detail::callable_base<F>
 {
-    FIT_INHERIT_CONSTRUCTOR(reverse_compress_adaptor, F)
+    FIT_INHERIT_CONSTRUCTOR(reverse_compress_adaptor, detail::callable_base<F>)
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(detail::v_reverse_fold, id_<const F&>, id_<Ts>...)
+    constexpr FIT_SFINAE_RESULT(detail::v_reverse_fold, id_<const detail::callable_base<F>&>, id_<Ts>...)
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::v_reverse_fold()(
-            FIT_MANGLE_CAST(const F&)(this->base_function(xs...)), 
+            FIT_MANGLE_CAST(const detail::callable_base<F>&)(this->base_function(xs...)), 
             fit::forward<Ts>(xs)...
         )
     )

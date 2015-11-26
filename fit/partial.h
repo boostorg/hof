@@ -186,14 +186,14 @@ struct partial_adaptor_base<F, void>
 }
 
 template<class F, class Pack>
-struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
+struct partial_adaptor : detail::partial_adaptor_base<detail::callable_base<F>, Pack>::type, detail::callable_base<F>, Pack
 {
-    typedef typename detail::partial_adaptor_base<F, Pack>::type base;
+    typedef typename detail::partial_adaptor_base<detail::callable_base<F>, Pack>::type base;
 
     typedef partial_adaptor fit_rewritable1_tag;
     
     template<class... Ts>
-    constexpr const F& base_function(Ts&&...) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&...) const
     {
         return *this;
     }
@@ -209,19 +209,19 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
     {}
 
     template<class X, class S>
-    constexpr partial_adaptor(X&& x, S&& seq) : F(fit::forward<X>(x)), Pack(fit::forward<S>(seq))
+    constexpr partial_adaptor(X&& x, S&& seq) : detail::callable_base<F>(fit::forward<X>(x)), Pack(fit::forward<S>(seq))
     {}
 };
 
 template<class F>
-struct partial_adaptor<F, void> : detail::partial_adaptor_base<F, void>::type
+struct partial_adaptor<F, void> : detail::partial_adaptor_base<detail::callable_base<F>, void>::type
 {
-    typedef typename detail::partial_adaptor_base<F, void>::type base;
+    typedef typename detail::partial_adaptor_base<detail::callable_base<F>, void>::type base;
 
     typedef partial_adaptor fit_rewritable1_tag;
     
     template<class... Ts>
-    constexpr const F& base_function(Ts&&...) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&...) const
     {
         return *this;
     }

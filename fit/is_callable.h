@@ -38,12 +38,13 @@
 
 
 #include <fit/detail/can_be_called.h>
+#include <fit/apply.h>
 
 namespace fit {
 
 template<class F, class... Ts>
 struct is_callable
-: detail::can_be_called<F, Ts...>
+: detail::can_be_called<detail::apply_f, F, Ts...>
 {};
 
 }

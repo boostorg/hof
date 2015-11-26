@@ -125,9 +125,9 @@ struct decoration
     }
 
     template<class F>
-    constexpr decorator_invoke<F, T, D> operator()(F f) const
+    constexpr decorator_invoke<detail::callable_base<F>, T, D> operator()(F f) const
     {
-        return decorator_invoke<F, T, D>(fit::move(f), this->get_data(f), this->get_decorator(f));
+        return decorator_invoke<detail::callable_base<F>, T, D>(fit::move(f), this->get_data(f), this->get_decorator(f));
     }
 };
 

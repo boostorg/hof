@@ -16,6 +16,11 @@ matrix:
               sources:
                 - ubuntu-toolchain-r-test
 
+        - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=off CXX11=on
+          os: linux
+          compiler: clang
+          addons: *clang34
+
         - env: CLANG_VERSION=3.5 BUILD_TYPE=Debug ASAN=on LIBCXX=on
           os: linux
           compiler: clang-3.5
@@ -109,7 +114,7 @@ install:
     - export PATH=${DEPS_DIR}/usr/bin:${PATH}
     # Install cmake
     - CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz"
-    - travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C usr
+    - travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C usr
     # Show compiler info
     - $CXX --version
     - which $CXX
@@ -143,6 +148,7 @@ script:
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
+    - if [[ "$CXX11" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -std=c++11"; fi
     - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1

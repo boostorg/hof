@@ -44,7 +44,7 @@ template<class F, class Base=typename std::conditional<(std::is_class<F>::value)
 struct callable_base
 : Base
 {
-    FIT_INHERIT_CONSTRUCTOR(callable_basse, Base)
+    FIT_INHERIT_CONSTRUCTOR(callable_base, Base)
 };
 #endif
 

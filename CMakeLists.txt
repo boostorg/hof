@@ -3,7 +3,7 @@ project (Fit)
  
 # The version number.
 set (Fit_VERSION_MAJOR 0)
-set (Fit_VERSION_MINOR 3)
+set (Fit_VERSION_MINOR 4)
 
 include(CheckCXXCompilerFlag)
 enable_language(CXX)

@@ -40,12 +40,28 @@ struct non_class_function
 template<class F>
 using callable_base = typename std::conditional<(std::is_class<F>::value), F, non_class_function<F>>::type;
 #else
-template<class F, class Base=typename std::conditional<(std::is_class<F>::value), F, non_class_function<F>>::type>
+
+template<class F>
+struct callable_base_type
+: std::conditional<(std::is_class<F>::value), F, non_class_function<F>>
+{};
+
+template<class F>
 struct callable_base
-: Base
+: callable_base_type<F>::type
 {
-    FIT_INHERIT_CONSTRUCTOR(callable_base, Base)
+    typedef typename callable_base_type<F>::type base;
+    FIT_INHERIT_CONSTRUCTOR(callable_base, base)
 };
+
+template<class F>
+struct callable_base<callable_base<F>>
+: callable_base<F>
+{
+    typedef callable_base<F> base;
+    FIT_INHERIT_CONSTRUCTOR(callable_base, base)
+};
+
 #endif
 
 }}

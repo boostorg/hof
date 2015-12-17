@@ -31,7 +31,7 @@
 /// 
 /// F must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -172,13 +172,13 @@ struct is_unpackable
 {};
 
 template<class F>
-struct unpack_adaptor : F
+struct unpack_adaptor : detail::callable_base<F>
 {
     typedef unpack_adaptor fit_rewritable1_tag;
-    FIT_INHERIT_CONSTRUCTOR(unpack_adaptor, F);
+    FIT_INHERIT_CONSTRUCTOR(unpack_adaptor, detail::callable_base<F>);
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
@@ -223,7 +223,7 @@ struct unpack_adaptor : F
     };
 
     struct failure
-    : failure_map<unpack_failure, F>
+    : failure_map<unpack_failure, detail::callable_base<F>>
     {};
 
     FIT_RETURNS_CLASS(unpack_adaptor);
@@ -233,7 +233,7 @@ struct unpack_adaptor : F
     constexpr auto operator()(T&& x) const
     FIT_RETURNS
     (
-        detail::unpack_simple(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x))
+        detail::unpack_simple(FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x))
     );
 
     template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
@@ -241,7 +241,7 @@ struct unpack_adaptor : F
     >::value)>::type>
     constexpr auto operator()(T&& x, Ts&&... xs) const FIT_RETURNS
     (
-        detail::unpack_join(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x), fit::forward<Ts>(xs)...)
+        detail::unpack_join(FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x), fit::forward<Ts>(xs)...)
     );
 };
 

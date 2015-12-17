@@ -34,7 +34,7 @@
 /// 
 /// F must be:
 /// 
-/// * [BinaryFunctionObject](concepts.md#binaryfunctionobject)
+/// * [BinaryCallable](concepts.md#binarycallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -55,7 +55,7 @@
 /// 
 
 #include <fit/detail/delegate.h>
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
@@ -105,19 +105,19 @@ constexpr postfix_adaptor<T, F> make_postfix_adaptor(T&& x, F f)
 }
 
 template<class F>
-struct infix_adaptor : F
+struct infix_adaptor : detail::callable_base<F>
 {
     typedef infix_adaptor fit_rewritable1_tag;
-    FIT_INHERIT_CONSTRUCTOR(infix_adaptor, F);
+    FIT_INHERIT_CONSTRUCTOR(infix_adaptor, detail::callable_base<F>);
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
 
     template<class... Ts>
-    constexpr const F& infix_base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& infix_base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
@@ -127,7 +127,7 @@ struct infix_adaptor : F
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
     );
 };
 

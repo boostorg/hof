@@ -165,6 +165,79 @@ Given
 |---------------|--------------------------|
 | `f(identity)` | performs a function call |
 
+Callable
+--------
+
+Is an object for which the `INVOKE` operation can be applied.
+
+#### Requirements:
+
+The type `T` satisfies `Callable` if
+
+Given
+
+* `f`, an object of type `const T`
+* `Args...`, suitable list of argument types
+
+The following expressions must be valid: 
+
+| Expression                           | Requirements                                          |
+|--------------------------------------|-------------------------------------------------------|
+| `INVOKE(f, std::declval<Args>()...)` | the expression is well-formed in unevaluated context  |
+
+where `INVOKE(f, x, xs...)` is defined as follows:
+
+* if `f` is a pointer to member function of class `T`: 
+
+    - If `std::is_base_of<T, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x, xs...)` is equivalent to `(x.*f)(xs...)`
+    - otherwise, if `std::decay_t<decltype(x)>` is a specialization of `std::reference_wrapper`, then `INVOKE(f, x, xs...)` is equivalent to `(x.get().*f)(xs...)` 
+    - otherwise, if x does not satisfy the previous items, then `INVOKE(f, x, xs...)` is equivalent to `((*x).*f)(xs...)`. 
+
+* otherwise, if `f` is a pointer to data member of class `T`: 
+
+    - If `std::is_base_of<T, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x)` is equivalent to `x.*f`
+    - otherwise, if `std::decay_t<decltype(x)>` is a specialization of `std::reference_wrapper`, then `INVOKE(f, x)` is equivalent to `x.get().*f`
+    - otherwise, if `x` does not satisfy the previous items, then `INVOKE(f, x)` is equivalent to `(*x).*f`
+
+* otherwise, `INVOKE(f, x, xs...)` is equivalent to `f(x, xs...)`
+
+UnaryCallable
+-------------
+
+Is an object for which the `INVOKE` operation can be applied with one parameter.
+
+#### Requirements:
+
+* `Callable`
+
+Given
+
+* `f`, an object of type `const F`
+* `arg`, a single argument
+
+| Expression       | Requirements                                          |
+|------------------|-------------------------------------------------------|
+| `INVOKE(f, arg)` | the expression is well-formed in unevaluated context  |
+
+BinaryCallable
+--------------------
+
+Is an object for which the `INVOKE` operation can be applied with two parameters.
+
+#### Requirements:
+
+* `Callable`
+
+Given
+
+* `f`, an object of type `const F`
+* `arg1`, a single argument
+* `arg2`, a single argument
+
+| Expression              | Requirements                                          |
+|-------------------------|-------------------------------------------------------|
+| `INVOKE(f, arg1, arg2)` | the expression is well-formed in unevaluated context  |
+
 Metafunction
 ------------
 

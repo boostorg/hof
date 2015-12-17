@@ -32,7 +32,7 @@
 /// 
 /// F must be:
 /// 
-/// * [BinaryFunctionObject](concepts.md#binaryfunctionobject)
+/// * [BinaryCallable](concepts.md#binarycallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -42,7 +42,7 @@
 ///     assert(r == 3);
 /// 
 
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/reveal.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
@@ -50,10 +50,10 @@
 namespace fit {
 
 template<class F>
-struct flip_adaptor : F
+struct flip_adaptor : detail::callable_base<F>
 {
     typedef flip_adaptor fit_rewritable1_tag;
-    FIT_INHERIT_CONSTRUCTOR(flip_adaptor, F);
+    FIT_INHERIT_CONSTRUCTOR(flip_adaptor, detail::callable_base<F>);
 
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
@@ -74,16 +74,16 @@ struct flip_adaptor : F
     };
 
     struct failure
-    : failure_map<flip_failure, F>
+    : failure_map<flip_failure, detail::callable_base<F>>
     {};
 
     FIT_RETURNS_CLASS(flip_adaptor);
 
     template<class T, class U, class... Ts>
-    constexpr FIT_SFINAE_RESULT(const F&, id_<U>, id_<T>, id_<Ts>...) 
+    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<U>, id_<T>, id_<Ts>...) 
     operator()(T&& x, U&& y, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))
+        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))
             (fit::forward<U>(y), fit::forward<T>(x), fit::forward<Ts>(xs)...)
     );
 };

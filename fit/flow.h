@@ -36,7 +36,7 @@
 /// 
 /// Fs must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -64,7 +64,7 @@
 ///     assert(r == 4);
 /// 
 
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/compressed_pair.h>
@@ -77,20 +77,20 @@
 namespace fit { namespace detail {
 
 template<class F1, class F2>
-struct flow_kernel : detail::compressed_pair<F1, F2>
+struct flow_kernel : detail::compressed_pair<detail::callable_base<F1>, detail::callable_base<F2>>
 {
-    typedef detail::compressed_pair<F1, F2> base_type;
+    typedef detail::compressed_pair<detail::callable_base<F1>, detail::callable_base<F2>> base_type;
 
     FIT_INHERIT_CONSTRUCTOR(flow_kernel, base_type)
 
     FIT_RETURNS_CLASS(flow_kernel);
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const F2&, result_of<const F1&, id_<Ts>...>) 
+    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F2>&, result_of<const detail::callable_base<F1>&, id_<Ts>...>) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))(
-            FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...))(fit::forward<Ts>(xs)...)
+        FIT_MANGLE_CAST(const detail::callable_base<F2>&)(FIT_CONST_THIS->second(xs...))(
+            FIT_MANGLE_CAST(const detail::callable_base<F1>&)(FIT_CONST_THIS->first(xs...))(fit::forward<Ts>(xs)...)
         )
     );
 };
@@ -112,14 +112,14 @@ struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor, Fs...)>
 };
 
 template<class F>
-struct flow_adaptor<F> : F
+struct flow_adaptor<F> : detail::callable_base<F>
 {
     typedef flow_adaptor fit_rewritable_tag;
-    FIT_INHERIT_DEFAULT(flow_adaptor, F)
+    FIT_INHERIT_DEFAULT(flow_adaptor, detail::callable_base<F>)
 
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>
+    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>)>
     constexpr flow_adaptor(X&& f1) 
-    : F(fit::forward<X>(f1))
+    : detail::callable_base<F>(fit::forward<X>(f1))
     {}
 
 };

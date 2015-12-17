@@ -36,7 +36,7 @@
 /// 
 /// F must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -145,14 +145,14 @@ constexpr auto operator|(A&& a, const pipe_closure<F, Pack>& p) FIT_RETURNS
 
 template<class F>
 struct pipable_adaptor 
-: conditional_adaptor<F, detail::pipe_pack<pipable_adaptor<F>, F> >
+: conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> >
 {
-    typedef conditional_adaptor<F, detail::pipe_pack<pipable_adaptor<F>, F> > base;
+    typedef conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> > base;
     typedef pipable_adaptor fit_rewritable_tag;
 
     FIT_INHERIT_CONSTRUCTOR(pipable_adaptor, base);
 
-    constexpr const F& base_function() const
+    constexpr const detail::callable_base<F>& base_function() const
     {
         return *this;
     }

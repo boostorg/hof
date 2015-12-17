@@ -34,7 +34,7 @@
 /// 
 /// F must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [Callable](concepts.md#callable)
 /// 
 /// Ts must be:
 /// 
@@ -57,6 +57,7 @@
 #include <fit/returns.h>
 #include <fit/detail/forward.h>
 #include <fit/detail/static_const_var.h>
+#include <fit/apply.h>
 #include <fit/eval.h>
 
 #ifndef FIT_NO_ORDERD_BRACE_INIT
@@ -95,7 +96,7 @@ struct eval_helper
     R result;
 
     template<class F, class... Ts>
-    constexpr eval_helper(const F& f, Ts&&... xs) : result(f(fit::forward<Ts>(xs)...))
+    constexpr eval_helper(const F& f, Ts&&... xs) : result(apply(f, fit::forward<Ts>(xs)...))
     {}
 
     constexpr R get_result()
@@ -109,7 +110,7 @@ struct eval_helper<void>
 {
     int x;
     template<class F, class... Ts>
-    constexpr eval_helper(const F& f, Ts&&... xs) : x(f(fit::forward<Ts>(xs)...), 0)
+    constexpr eval_helper(const F& f, Ts&&... xs) : x(apply(f, fit::forward<Ts>(xs)...), 0)
     {}
 };
 #endif
@@ -117,7 +118,7 @@ struct eval_helper<void>
 struct apply_eval_f
 {
     template<class F, class... Ts, class R=decltype(
-        std::declval<const F&>()(fit::eval(std::declval<Ts>())...)
+        apply(std::declval<const F&>(), fit::eval(std::declval<Ts>())...)
     ),
     class=typename std::enable_if<(!std::is_void<R>::value)>::type 
     >
@@ -134,7 +135,7 @@ struct apply_eval_f
     }
 
     template<class F, class... Ts, class R=decltype(
-        std::declval<const F&>()(fit::eval(std::declval<Ts>())...)
+        apply(std::declval<const F&>(), fit::eval(std::declval<Ts>())...)
     ),
     class=typename std::enable_if<(std::is_void<R>::value)>::type 
     >

@@ -34,7 +34,7 @@
 /// 
 /// F and Gs must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -49,7 +49,7 @@
 
 #include <fit/pack.h>
 #include <fit/always.h>
-#include <fit/detail/result_of.h>
+#include <fit/detail/callable_base.h>
 #include <fit/detail/make.h>
 
 namespace fit { namespace detail {
@@ -106,9 +106,9 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
 
 template<class F, class... Gs>
 struct combine_adaptor
-: detail::combine_adaptor_base<typename detail::gens<sizeof...(Gs)>::type, F, Gs...>
+: detail::combine_adaptor_base<typename detail::gens<sizeof...(Gs)>::type, detail::callable_base<F>, detail::callable_base<Gs>...>
 {
-    typedef detail::combine_adaptor_base<typename detail::gens<sizeof...(Gs)>::type, F, Gs...> base_type;
+    typedef detail::combine_adaptor_base<typename detail::gens<sizeof...(Gs)>::type, detail::callable_base<F>, detail::callable_base<Gs>...> base_type;
     FIT_INHERIT_CONSTRUCTOR(combine_adaptor, base_type)
 };
 

@@ -37,7 +37,7 @@
 /// 
 /// F must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -173,13 +173,13 @@ struct partial_adaptor_base
     > type;
 };
 
-template<class F>
-struct partial_adaptor_base<F, void>
+template<class Derived, class F>
+struct partial_adaptor_pack_base
 {
     typedef conditional_adaptor
     <
         F,
-        partial_adaptor_pack<partial_adaptor<F, void>, F> 
+        partial_adaptor_pack<Derived, F> 
     > type;
 };
 
@@ -214,14 +214,14 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
 };
 
 template<class F>
-struct partial_adaptor<F, void> : detail::partial_adaptor_base<F, void>::type
+struct partial_adaptor<F, void> : detail::partial_adaptor_pack_base<partial_adaptor<F, void>, detail::callable_base<F>>::type
 {
-    typedef typename detail::partial_adaptor_base<F, void>::type base;
+    typedef typename detail::partial_adaptor_pack_base<partial_adaptor<F, void>, detail::callable_base<F>>::type base;
 
     typedef partial_adaptor fit_rewritable1_tag;
     
     template<class... Ts>
-    constexpr const F& base_function(Ts&&...) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&...) const
     {
         return *this;
     }
@@ -231,6 +231,7 @@ struct partial_adaptor<F, void> : detail::partial_adaptor_base<F, void>::type
     FIT_INHERIT_CONSTRUCTOR(partial_adaptor, base);
 
 };
+
 // Make partial_adaptor work with pipable_adaptor by removing its pipableness
 template<class F>
 struct partial_adaptor<pipable_adaptor<F>, void>

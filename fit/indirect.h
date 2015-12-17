@@ -61,7 +61,7 @@
 #include <fit/detail/static_const_var.h>
 
 namespace fit {
-
+// TODO: Support non-classes as well
 template<class F>
 struct indirect_adaptor : F
 {

@@ -36,7 +36,7 @@
 /// 
 /// F must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
 /// Example

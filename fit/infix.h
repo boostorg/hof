@@ -34,7 +34,7 @@
 /// 
 /// F must be:
 /// 
-/// * [BinaryFunctionObject](concepts.md#binaryfunctionobject)
+/// * [BinaryCallable](concepts.md#binarycallable)
 /// * MoveConstructible
 /// 
 /// Example

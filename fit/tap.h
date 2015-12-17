@@ -30,7 +30,7 @@
 /// 
 /// F must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [UnaryCallable](concepts.md#unarycallable)
 /// 
 /// Example
 /// -------

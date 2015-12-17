@@ -43,12 +43,12 @@
 /// 
 /// Projection must be:
 /// 
-/// * [UnaryFunctionObject](concepts.md#unaryfunctionobject)
+/// * [UnaryCallable](concepts.md#unarycallable)
 /// * MoveConstructible
 /// 
 /// F must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -60,7 +60,7 @@
 ///         {}
 ///         int x;
 ///     };
-///     assert(fit::by(std::mem_fn(&foo::x), _ + _)(foo(1), foo(2)) == 3);
+///     assert(fit::by(&foo::x, _ + _)(foo(1), foo(2)) == 3);
 /// 
 
 

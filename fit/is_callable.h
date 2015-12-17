@@ -14,9 +14,15 @@
 /// Description
 /// -----------
 /// 
-/// The `is_callable` metafunction checks if the function object is callable with
+/// The `is_callable` metafunction checks if the function is callable with
 /// certain parameters.
 /// 
+/// Requirements
+/// ------------
+/// 
+/// F must be:
+/// 
+/// * [Callable](concepts.md#callable)
 /// 
 /// Synopsis
 /// --------

@@ -31,6 +31,13 @@
 ///     placeholder<8> _8 = {};
 ///     placeholder<9> _9 = {};
 /// 
+/// Operators
+/// ---------
+/// 
+/// * Binary operators: +,-,*,/,%,>>,<<,>,<,<=,>=,==,!=,&,^,|,&&,||
+/// * Assign operators: +=,-=,*=,/=,%=,>>=,<<=,&=,|=,^=
+/// * Unary operators: !,~,+,-,*,++,--
+/// 
 /// 
 /// Example
 /// -------

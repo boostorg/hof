@@ -49,6 +49,14 @@
 ///     int ten = 10;
 ///     assert( always(ten)(1,2,3,4,5) == 10 );
 /// 
+///     // Count all
+///     template<class Iterator, class T>
+///     auto count(Iterator first, Iterator last)
+///     {
+///         return std::count_if(first, last, always(true));
+///     }
+/// 
+
 
 #define FIT_NO_CONSTEXPR_VOID 1
 #ifndef FIT_NO_CONSTEXPR_VOID

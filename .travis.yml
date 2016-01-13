@@ -145,6 +145,9 @@ install:
     - ls -lR ${DEPS_DIR}/usr
 
 script:
+    - export CMAKE_PREFIX_PATH="${TRAVIS_BUILD_DIR}/usr"
+    - mkdir -p "$CMAKE_PREFIX_PATH"
+    - export PKG_CONFIG_PATH="$CMAKE_PREFIX_PATH/lib/pkgconfig"
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
@@ -152,5 +155,8 @@ script:
     - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
+    - make install
+    - echo -e "#include <fit/always.h>\nint main() {}" | clang++ -std=c++0x `pkg-config fit --cflags` -x c++ -S -
     - cd .. && rm -rf build/
+    - rm -rf "$CMAKE_PREFIX_PATH"
 

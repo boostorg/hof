@@ -39,3 +39,27 @@ Some parts of the documentation provides the meaning(or equivalence) of an expre
 * `x`, `y`, `xs`, `ys` are parameters to a function
 * `T` represents some type
 * `...` are parameter packs and represent varidiac parameters
+
+Signatures
+----------
+
+All the functions are global function objects except where an explicit template parameter is required. However, the documentation still shows the traditional signature since it is much clearer. So instead of writing this:
+
+```cpp
+struct if_f
+{
+    template<class IntegralConstant>
+    constexpr auto operator()(IntegralConstant) const;
+};
+const constexpr if_f if_ = {};
+```
+
+The direct function signature is written even though it is actually declared like above:
+
+```cpp
+template<class IntegralConstant>
+constexpr auto if_(IntegralConstant);
+```
+
+Its usage is the same except it has the extra benefit that the function can be directly passed to another function.
+

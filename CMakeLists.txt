@@ -35,7 +35,7 @@ endforeach()
 
 install (DIRECTORY fit DESTINATION include)
 configure_file(fit.pc.in fit.pc)
-install(FILES fit.pc DESTINATION lib/pkgconfig)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
 
 # Moved down, so everything above is common
 if (BIICODE) 

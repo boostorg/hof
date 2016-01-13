@@ -133,10 +133,10 @@ Tuples
 
 We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which let us call a function for each element. First, the [`by`](by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack.md) adaptor will unpack the elements to a tuple and apply them to the argument:
 
-    FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f) FIT_RETURNS
-    (
-        unpack(by(f))(sequence)
-    );
+    FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
+    {
+        return unpack(by(f))(sequence)
+    };
 
 So now we can add an overload for tuples:
 

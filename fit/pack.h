@@ -107,11 +107,19 @@ template<class Seq, class... Ts>
 struct pack_base;
 
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
-    std::is_copy_constructible<T>::value || std::is_reference<T>::value
+    (std::is_copy_constructible<T>::value || std::is_reference<T>::value) && !std::is_lvalue_reference<T>::value
 , int>::type = 0>
 constexpr T pack_get(X&& x, Ts&&... xs)
 {
     return static_cast<T>(alias_value<Tag, T>(fit::forward<X>(x), xs...));
+}
+
+template<class T, class Tag, class X, class... Ts, typename std::enable_if<
+    std::is_lvalue_reference<T>::value
+, int>::type = 0>
+constexpr T pack_get(X&& x, Ts&&... xs)
+{
+    return alias_value<Tag, T>(x, xs...);
 }
 
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<

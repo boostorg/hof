@@ -225,6 +225,6 @@ struct check_this
 
 #endif
 
-#define FIT_AUTO_FORWARD(x) fit::forward<decltype(x)>(x)
+#define FIT_AUTO_FORWARD(...) static_cast<decltype(__VA_ARGS__)>(__VA_ARGS__)
 
 #endif

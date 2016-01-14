@@ -152,6 +152,38 @@ FIT_TEST_CASE()
     // FIT_TEST_CHECK(p(deref()) == 3);
 }
 
+struct move_rvalue 
+{
+    void operator()(std::string&& s) const 
+    {
+        std::string ss = std::move(s);
+        FIT_TEST_CHECK(ss == "abcdef");
+        s = "00000";
+    }
+};
+
+struct check_rvalue 
+{
+    void operator()(std::string&& s) const 
+    {
+        FIT_TEST_CHECK(s == "abcdef");
+    }
+};
+
+FIT_TEST_CASE()
+{
+    auto p = fit::pack(std::string{"abcdef"});
+    p(move_rvalue{});
+    p(check_rvalue{});
+}
+
+FIT_TEST_CASE()
+{
+    auto p = fit::pack_decay(std::string{"abcdef"});
+    p(move_rvalue{});
+    p(check_rvalue{});
+}
+
 struct empty1
 {};
 

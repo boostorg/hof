@@ -18,9 +18,8 @@ struct remove_rvalue_reference
 
 template<class T>
 struct remove_rvalue_reference<T&&>
-{
-    typedef T type;
-};
+: remove_rvalue_reference<T>
+{};
 
 }}
 

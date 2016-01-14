@@ -157,7 +157,9 @@ script:
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
     - make install
     - pkg-config fit --cflags
-    - for file in fit/*.h; do echo -e "#include <$file>\nint main() {}" | clang++ -std=c++0x `pkg-config fit --cflags` -x c++ -S -; done
-    - cd .. && rm -rf build/
+    - cd ..
+    - HEADERS=$(echo fit/*.h)
+    - for file in $HEADERS; do echo -e "#include <$file>\nint main() {}" | clang++ -std=gnu++0x `pkg-config fit --cflags` -x c++ -S -; done
+    - rm -rf build/
     - rm -rf "$INSTALL_PREFIX_PATH"
 

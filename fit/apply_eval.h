@@ -87,7 +87,7 @@ constexpr R eval_ordered(const F& f, Pack&& p)
 template<class R, class F, class Pack, class T, class... Ts>
 constexpr R eval_ordered(const F& f, Pack&& p, T&& x, Ts&&... xs)
 {
-    return eval_ordered<R>(f, pack_join(p, fit::pack(fit::eval(x))), fit::forward<Ts>(xs)...);
+    return eval_ordered<R>(f, pack_join(fit::forward<Pack>(p), fit::pack_forward(fit::eval(x))), fit::forward<Ts>(xs)...);
 }
 #else
 template<class R>

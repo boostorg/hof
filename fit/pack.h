@@ -280,7 +280,6 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
     template<class P1, class P2>
     static constexpr result_type call(P1&& p1, P2&& p2)
     {
-        // TODO: static_assert that the pack is an rvalue if its only moveable
         return result_type(
             pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(fit::forward<P1>(p1))..., 
             pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(fit::forward<P2>(p2))...);

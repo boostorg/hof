@@ -145,12 +145,21 @@ install:
     - ls -lR ${DEPS_DIR}/usr
 
 script:
+    - export INSTALL_PREFIX_PATH="${TRAVIS_BUILD_DIR}/usr"
+    - mkdir -p "$INSTALL_PREFIX_PATH"
+    - export PKG_CONFIG_PATH="$INSTALL_PREFIX_PATH/lib/pkgconfig"
     - cd $CHECKOUT_PATH
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
     - if [[ "$CXX11" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -std=c++11"; fi
     - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
-    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
-    - cd .. && rm -rf build/
+    - make install
+    - pkg-config fit --cflags
+    - cd ..
+    - HEADERS=$(echo fit/*.h)
+    - for file in $HEADERS; do echo -e "#include <$file>\nint main() {}" | $CXX -std=gnu++0x `pkg-config fit --cflags` -x c++ -S -; done
+    - rm -rf build/
+    - rm -rf "$INSTALL_PREFIX_PATH"
 

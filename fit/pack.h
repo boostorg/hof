@@ -106,8 +106,20 @@ struct pack_holder
 template<class Seq, class... Ts>
 struct pack_base;
 
+template<class T>
+struct is_copyable
+: std::integral_constant<bool, (
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+    std::is_constructible<T, typename std::add_const<T>::type>::value ||
+#else
+    std::is_copy_constructible<T>::value || 
+#endif
+    std::is_reference<T>::value
+)>
+{};
+
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
-    (std::is_copy_constructible<T>::value || std::is_reference<T>::value) && !std::is_lvalue_reference<T>::value
+    is_copyable<T>::value && !std::is_lvalue_reference<T>::value
 , int>::type = 0>
 constexpr T pack_get(X&& x, Ts&&... xs)
 {
@@ -123,7 +135,7 @@ constexpr T pack_get(X&& x, Ts&&... xs)
 }
 
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
-    !std::is_copy_constructible<T>::value && !std::is_reference<T>::value
+    !is_copyable<T>::value
 , int>::type = 0>
 constexpr auto pack_get(X&& x, Ts&&... xs) FIT_RETURNS
 (

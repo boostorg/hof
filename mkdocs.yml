@@ -44,6 +44,7 @@ pages:
 - Decorators:
     - 'capture': 'capture.md'
     - 'if': 'if.md'
+    - 'limit': 'limit.md'
     - 'repeat': 'repeat.md'
     - 'repeat_while': 'repeat_while.md'
 - Functions:

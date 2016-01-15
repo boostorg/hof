@@ -8,6 +8,66 @@
 #ifndef FIT_GUARD_LIMIT_H
 #define FIT_GUARD_LIMIT_H
 
+/// limit
+/// =====
+/// 
+/// Description
+/// -----------
+/// 
+/// The `limit` function decorator annotates the function with the max number of
+/// parameters. The `limit_c` version can be used to give a the number
+/// directly(instead of relying on dependent typing).
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class IntegralConstant>
+///     constexpr auto limit(IntegralConstant);
+/// 
+///     template<std::size_t N, class F>
+///     constexpr auto limit_c(F);
+/// 
+/// Requirements
+/// ------------
+/// 
+/// IntegralConstant must be:
+/// 
+/// * IntegralConstant
+/// 
+/// F must be:
+/// 
+/// * [Callable](concepts.md#callable)
+/// * MoveConstructible
+/// 
+/// Example
+/// -------
+/// 
+///     struct sum_f
+///     {
+///         template<class T>
+///         int operator()(T x, T y) const
+///         {
+///             return x+y
+///         }
+///     };
+///     FIT_STATIC_FUNCTION(sum) = limit_c<2>(sum_f());
+/// 
+/// function_param_limit
+/// ====================
+/// 
+/// Description
+/// -----------
+/// 
+/// The `function_param_limit` metafunction retrieves the maxium number of
+/// parameters for a function.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     template<class F>
+///     struct function_param_limit;
+/// 
+
 #include <fit/detail/callable_base.h>
 #include <fit/detail/forward.h>
 #include <fit/detail/delegate.h>

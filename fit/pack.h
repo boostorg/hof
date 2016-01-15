@@ -28,7 +28,7 @@
 /// 
 ///     // Capture lvalues by reference and rvalue reference by reference
 ///     template<class... Ts>
-///     constexpr auto pack_perfect(Ts&&... xs);
+///     constexpr auto pack_forward(Ts&&... xs);
 /// 
 ///     // Decay everything before capturing
 ///     template<class... Ts>

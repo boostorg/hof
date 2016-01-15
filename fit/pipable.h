@@ -61,6 +61,7 @@
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
+#include <fit/limit.h>
 
 namespace fit { 
  
@@ -132,7 +133,9 @@ struct pipe_pack
 
     FIT_RETURNS_CLASS(pipe_pack);
 
-    template<class... Ts>
+    template<class... Ts, class=typename std::enable_if<
+        sizeof...(Ts) < function_param_limit<F>::value
+    >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (make_pipe_closure(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), fit::pack_forward(fit::forward<Ts>(xs)...)));
 };

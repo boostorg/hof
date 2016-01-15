@@ -61,3 +61,16 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(3 == (unary_pipable_constexpr(3)));
 }
 
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(3 == fit::limit_c<2>(binary_pipable_constexpr)(1, 2));
+    FIT_STATIC_TEST_CHECK(3 == fit::limit_c<2>(binary_pipable_constexpr)(1, 2));
+}
+
+FIT_TEST_CASE()
+{
+    auto f = fit::pipable(fit::limit_c<2>(binary_class()));
+    static_assert(fit::is_callable<decltype(f), int, int>::value, "Passing the limit is not callable");
+    static_assert(!fit::is_callable<decltype(f), int, int, int>::value, "Passing the limit is not callable");
+    static_assert(!fit::is_callable<decltype(f), int, int, int, int>::value, "Passing the limit is not callable");
+}

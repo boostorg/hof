@@ -38,6 +38,14 @@
 ///     template<class... Ts>
 ///     constexpr auto pack_join(Ts&&... xs);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(pack(xs...)(f) == f(xs...));
+///     assert(unpack(f)(pack(xs...)) == f(xs...));
+/// 
+///     assert(pack_join(pack(xs...), pack(ys...)) == pack(xs..., ys...));
+/// 
 /// 
 /// Example
 /// -------

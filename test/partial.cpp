@@ -65,3 +65,18 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(3 == mono_partial_constexpr()(2));
 
 }
+
+FIT_TEST_CASE()
+{
+    auto f = fit::partial(fit::limit_c<2>(binary_class()));
+    static_assert(fit::is_callable<decltype(f), int>::value, "Passing the limit is not callable");
+    static_assert(fit::is_callable<decltype(f), int, int>::value, "Passing the limit is not callable");
+    static_assert(!fit::is_callable<decltype(f), int, int, int>::value, "Passing the limit is not callable");
+    static_assert(!fit::is_callable<decltype(f), int, int, int, int>::value, "Passing the limit is not callable");
+
+    auto g = f(0);
+    static_assert(fit::is_callable<decltype(g), int>::value, "Passing the limit is not callable");
+    static_assert(!fit::is_callable<decltype(g), int, int>::value, "Passing the limit is not callable");
+    static_assert(!fit::is_callable<decltype(g), int, int, int>::value, "Passing the limit is not callable");
+    static_assert(!fit::is_callable<decltype(g), int, int, int, int>::value, "Passing the limit is not callable");
+}

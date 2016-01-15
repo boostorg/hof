@@ -200,6 +200,8 @@ struct pack_base<seq<Ns...>, Ts...>
         f(pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 
+    typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
+
     template<class F>
     struct apply
     : F::template apply<Ts...>
@@ -227,6 +229,8 @@ struct pack_base<seq<0>, T>
         f(pack_get<T, pack_tag<seq<0>, T>>(*FIT_CONST_THIS, f))
     );
 
+    typedef std::integral_constant<std::size_t, 1> fit_function_param_limit;
+
     template<class F>
     struct apply
     : F::template apply<T>
@@ -252,6 +256,8 @@ struct pack_base<seq<Ns...>, Ts...>
         f(pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*this, f)...)
     );
 
+    typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
+
     template<class F>
     struct apply
     : F::template apply<Ts...>
@@ -266,6 +272,8 @@ struct pack_base<seq<> >
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (f());
+
+    typedef std::integral_constant<std::size_t, 0> fit_function_param_limit;
 
     template<class F>
     struct apply

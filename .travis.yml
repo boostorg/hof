@@ -27,6 +27,7 @@ matrix:
           addons: &clang35
             apt:
               packages:
+                - util-linux
                 - clang-3.5
                 - valgrind
               sources:
@@ -44,6 +45,7 @@ matrix:
           addons: &clang37
             apt:
               packages:
+                - util-linux
                 - clang-3.7
                 - valgrind
               sources:

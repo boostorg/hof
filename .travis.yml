@@ -1,6 +1,5 @@
 language: cpp
 script: cmake
-sudo: false
 
 matrix:
     include:

@@ -37,13 +37,6 @@ install (DIRECTORY fit DESTINATION include)
 configure_file(fit.pc.in fit.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
 
-# Moved down, so everything above is common
-if (BIICODE) 
-    ADD_BII_TARGETS()
-    target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
-    return() #finish processing, no need to run cmake below
-endif()
-
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -VV -C ${CMAKE_CFG_INTDIR})
 
 macro(add_test_executable TEST_NAME_)

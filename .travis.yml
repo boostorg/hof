@@ -117,6 +117,8 @@ install:
     - which $CXX
     - $CC --version
     - which $CC
+    - which cmake
+    - cmake --version
     # Install libc++
     - |
       if [[ "$LIBCXX" == "on" ]]; then

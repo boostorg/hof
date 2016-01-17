@@ -42,7 +42,7 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -VV -C ${CMAKE_CFG_INTDIR
 macro(add_test_executable TEST_NAME_)
     set(TEST_NAME "${TEST_NAME_}")
     add_executable (${TEST_NAME} EXCLUDE_FROM_ALL test/${TEST_NAME}.cpp ${ARGN})
-    set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS ${CXX_EXTRA_FLAGS})
+    set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS "${CXX_EXTRA_FLAGS}")
     if(WIN32)
         add_test(NAME ${TEST_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
     else()

@@ -113,13 +113,14 @@ install:
     - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
     - mkdir usr
     - export PATH=${DEPS_DIR}/usr/bin:${PATH}
+    # Install cmake
+    - CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz"
+    - if [[ "$LIBCXX" == "on" ]]; travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C usr; fi
     # Show compiler info
     - $CXX --version
     - which $CXX
     - $CC --version
     - which $CC
-    - which cmake
-    - cmake --version
     # Install libc++
     - |
       if [[ "$LIBCXX" == "on" ]]; then
@@ -129,9 +130,6 @@ install:
         LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
         LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
         LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
-        
-        CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz"
-        travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C usr
 
         mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi
         travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --xz -C llvm
@@ -140,11 +138,14 @@ install:
         (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr)
         (cd llvm/build/projects/libcxx && make install -j2)
         (cd llvm/build/projects/libcxxabi && make install -j2)
-        export LDFLAGS="-v -Wl,-v -L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
+        export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
         export CFLAGS="${CFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
         export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"
       fi
+    # Show cmake info
+    - which cmake
+    - cmake --version
     # Show files that have been installed
     - ls -lR ${DEPS_DIR}/usr
 

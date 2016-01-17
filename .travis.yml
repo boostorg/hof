@@ -136,7 +136,7 @@ install:
         (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr)
         (cd llvm/build/projects/libcxx && make install -j2)
         (cd llvm/build/projects/libcxxabi && make install -j2)
-        export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
+        export LDFLAGS="-v -L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
         export CFLAGS="${CFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
         export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"

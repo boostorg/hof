@@ -121,6 +121,8 @@ install:
     - which $CXX
     - $CC --version
     - which $CC
+    - which cmake
+    - cmake --version
     # Install libc++
     - |
       if [[ "$LIBCXX" == "on" ]]; then
@@ -143,9 +145,6 @@ install:
         export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"
       fi
-    # Show cmake info
-    - which cmake
-    - cmake --version
     # Show files that have been installed
     - ls -lR ${DEPS_DIR}/usr
 

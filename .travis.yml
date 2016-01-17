@@ -136,7 +136,7 @@ install:
         (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/usr)
         (cd llvm/build/projects/libcxx && make install -j2)
         (cd llvm/build/projects/libcxxabi && make install -j2)
-        export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
+        export CXX_LINKER_FLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
         export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"
       fi
@@ -152,7 +152,7 @@ script:
     - cd build
     - if [[ "$CXX11" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -std=c++11"; fi
     - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
-    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
+    - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH -DCMAKE_EXE_LINKER_FLAGS="$CXX_LINKER_FLAGS" ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
     - make install
     - pkg-config fit --cflags

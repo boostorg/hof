@@ -2,13 +2,12 @@
 import os
 
 prefix = '/// '
-include_dir = 'include/fit/'
-include_prefix = 'fit/'
+include_dir = 'include/'
 doc_dir = 'doc/src'
 
 def insert_header_each(line, file):
     if line.startswith('=='):
-        return [line, "\n", "Header\n", "------\n", "\n", "    #include <{0}{1}.h>\n".format(include_prefix, file), "\n"]
+        return [line, "\n", "Header\n", "------\n", "\n", "    #include <{0}.h>\n".format(file), "\n"]
     else:
         return [line]
 
@@ -19,11 +18,14 @@ def extract_md(file):
     f = open(file)
     return [line[len(prefix):] for line in f.readlines() if line.startswith(prefix)]
 
-
-files = (path for f in os.listdir(include_dir) for path in [os.path.join(include_dir,f)] if os.path.isfile(path))
-for file in files:
-    md = extract_md(file)
-    if len(md) > 0:
-        print('Extracting:', file)
-        name, ext = os.path.splitext(os.path.basename(file))
-        open(os.path.join(doc_dir, name + '.md'), 'w').writelines(insert_header(md, name))
+for root, subdirs, files in os.walk(include_dir):
+    print("root", root)
+    if 'detail' not in root:
+        for f in files: 
+            file = os.path.join(root, f)
+            include_file = file[len(include_dir):]
+            md = extract_md(file)
+            if len(md) > 0:
+                print('Extracting:', file)
+                name, ext = os.path.splitext(os.path.basename(file))
+                open(os.path.join(doc_dir, name + '.md'), 'w').writelines(insert_header(md, include_file))

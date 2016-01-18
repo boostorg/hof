@@ -8,18 +8,19 @@
 #ifndef FIT_GUARD_FUNCTION_DETAIL_SEQ_H
 #define FIT_GUARD_FUNCTION_DETAIL_SEQ_H
 
+#include <cstdlib>
 
 namespace fit { 
 
 namespace detail {
 
-template<int ...>
+template<std::size_t ...>
 struct seq {};
 
-template<int N, int ...S>
+template<std::size_t N, std::size_t ...S>
 struct gens : gens<N-1, N-1, S...> {};
 
-template<int ...S>
+template<std::size_t ...S>
 struct gens<0, S...> 
 {
   typedef seq<S...> type;

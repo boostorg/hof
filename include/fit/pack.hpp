@@ -176,13 +176,13 @@ struct pack_holder_base<T>
 template<class... Ts>
 struct pack_holder_builder
 {
-    template<class T, int N>
+    template<class T, std::size_t N>
     struct apply
     : pack_holder<T, pack_tag<seq<N>, Ts...>>
     {};
 };
 
-template<int... Ns, class... Ts>
+template<std::size_t... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
 : pack_holder_base<typename pack_holder_builder<Ts...>::template apply<Ts, Ns>...>
 {
@@ -247,7 +247,7 @@ struct pack_base<seq<0>, T>
 
 #else
 
-template<int... Ns, class... Ts>
+template<std::size_t... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
 : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type...
 {
@@ -290,7 +290,7 @@ struct pack_base<seq<> >
 };
 
 #define FIT_DETAIL_UNPACK_PACK_BASE(ref, move) \
-template<class F, int... Ns, class... Ts> \
+template<class F, std::size_t... Ns, class... Ts> \
 constexpr auto unpack_pack_base(F&& f, pack_base<seq<Ns...>, Ts...> ref x) \
 FIT_RETURNS(f(alias_value<pack_tag<seq<Ns>, Ts...>, Ts>(move(x), f)...))
 FIT_UNARY_PERFECT_FOREACH(FIT_DETAIL_UNPACK_PACK_BASE)
@@ -299,7 +299,7 @@ template<class P1, class P2>
 struct pack_join_base;
 
 // TODO: Extend to join more than two packs at a time
-template<int... Ns1, class... Ts1, int... Ns2, class... Ts2>
+template<std::size_t... Ns1, class... Ts1, std::size_t... Ns2, class... Ts2>
 struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2...>>
 {
     static constexpr long total_size = sizeof...(Ts1) + sizeof...(Ts2);

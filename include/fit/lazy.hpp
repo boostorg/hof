@@ -47,7 +47,7 @@
 ///     assert(increment(5) == 6);
 /// 
 
-#include <fit/args.hpp>
+#include <fit/arg.hpp>
 #include <fit/conditional.hpp>
 #include <fit/always.hpp>
 #include <fit/static.hpp>

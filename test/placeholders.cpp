@@ -205,7 +205,7 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(f_and_(true, false) == x_and_);
     FIT_TEST_CHECK(f_and_(true, false) == x_and_);
 
-    const auto x_or_ = true || false;
+    const auto x_or_ = true;
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_or_ = fit::_1 || fit::_2;
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 6   
     static_assert(std::is_copy_constructible<decltype(f_or_)>::value, "Not copyable");
@@ -443,7 +443,7 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(f_and_(true, false) == x_and_);
     FIT_TEST_CHECK(f_and_(true, false) == x_and_);
 
-    const auto x_or_ = true || false;
+    const auto x_or_ = true;
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_or_ = fit::_ || fit::_;
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 6   
     static_assert(std::is_copy_constructible<decltype(f_or_)>::value, "Not copyable");
@@ -608,7 +608,7 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(f_and_(false) == x_and_);
     FIT_TEST_CHECK(f_and_(false) == x_and_);
 
-    const auto x_or_ = true || false;
+    const auto x_or_ = true;
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_or_ = true || fit::_;
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 6   
     static_assert(std::is_copy_constructible<decltype(f_or_)>::value, "Not copyable");
@@ -773,7 +773,7 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(f_and_(true) == x_and_);
     FIT_TEST_CHECK(f_and_(true) == x_and_);
 
-    const auto x_or_ = true || false;
+    const auto x_or_ = true;
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_or_ = fit::_ || false;
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 6   
     static_assert(std::is_copy_constructible<decltype(f_or_)>::value, "Not copyable");

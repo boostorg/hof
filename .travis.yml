@@ -150,7 +150,7 @@ install:
         (cd llvm/build/projects/libcxxabi && make install -j2)
         export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
         export CFLAGS="${CFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
-        export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
+        export CXXFLAGS="${CXXFLAGS} --analyze -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"
       fi
     # Show files that have been installed

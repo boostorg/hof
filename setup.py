@@ -2,12 +2,13 @@
 import os
 
 prefix = '/// '
-include_dir = 'fit/'
+include_dir = 'include/fit/'
+include_prefix = 'fit/'
 doc_dir = 'doc/src'
 
 def insert_header_each(line, file):
     if line.startswith('=='):
-        return [line, "\n", "Header\n", "------\n", "\n", "    #include <{0}{1}.h>\n".format(include_dir, file), "\n"]
+        return [line, "\n", "Header\n", "------\n", "\n", "    #include <{0}{1}.h>\n".format(include_prefix, file), "\n"]
     else:
         return [line]
 

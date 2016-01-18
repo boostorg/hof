@@ -16,6 +16,6 @@ struct holder
     typedef void type;
 };
 
-}}
+}} // namespace fit
 
 #endif

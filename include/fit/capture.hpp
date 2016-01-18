@@ -176,6 +176,6 @@ FIT_DECLARE_STATIC_VAR(capture, detail::capture_f<detail::pack_f>);
 FIT_DECLARE_STATIC_VAR(capture_forward, detail::capture_f<detail::pack_forward_f>);
 FIT_DECLARE_STATIC_VAR(capture_decay, detail::capture_f<detail::pack_decay_f>);
 
-}
+} // namespace fit
 
 #endif

@@ -257,6 +257,6 @@ struct partial_adaptor<static_<pipable_adaptor<F>>, void>
 
     FIT_INHERIT_CONSTRUCTOR(partial_adaptor, base);
 };
-}
+} // namespace fit
 
 #endif

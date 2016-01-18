@@ -25,6 +25,6 @@ struct make
     }
 };
 
-}}
+}} // namespace fit
 
 #endif

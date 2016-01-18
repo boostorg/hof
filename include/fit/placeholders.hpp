@@ -315,7 +315,7 @@ FIT_FOREACH_BINARY_OP(FIT_UNAMED_PLACEHOLDER_BINARY_OP)
 
 FIT_DECLARE_STATIC_VAR(_, detail::unamed_placeholder);
 
-}
+} // namespace fit
 
 namespace std {
     template<int N>

@@ -33,6 +33,6 @@ struct and_
 {};
 #endif
 
-}}
+}} // namespace fit
 
 #endif

@@ -155,6 +155,6 @@ struct apply_eval_f
 
 FIT_DECLARE_STATIC_VAR(apply_eval, detail::apply_eval_f);
 
-}
+} // namespace fit
 
 #endif

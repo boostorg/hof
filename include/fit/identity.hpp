@@ -53,6 +53,6 @@ struct identity_base
 
 FIT_DECLARE_STATIC_VAR(identity, detail::identity_base);
 
-}
+} // namespace fit
 
 #endif

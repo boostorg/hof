@@ -150,6 +150,6 @@ struct compress_adaptor<F, void>
 
 FIT_DECLARE_STATIC_VAR(compress, detail::make<compress_adaptor>);
 
-}
+} // namespace fit
 
 #endif

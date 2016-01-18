@@ -117,6 +117,6 @@ struct enable_if_constructible
 {};
 
 }
-}
+} // namespace fit
 
 #endif

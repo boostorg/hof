@@ -126,6 +126,6 @@ struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
 
 FIT_DECLARE_STATIC_VAR(fix, detail::make<fix_adaptor>);
 
-}
+} // namespace fit
 
 #endif

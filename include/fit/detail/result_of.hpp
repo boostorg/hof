@@ -56,7 +56,7 @@ struct result_of
 // using result_of = detail::result_of_impl<F, detail::holder<Ts...>>;
 // using result_of = id_<decltype(std::declval<F>()(std::declval<typename Ts::type>()...))>;
 
-}
+} // namespace fit
 #endif
 
 #if FIT_NO_EXPRESSION_SFINAE

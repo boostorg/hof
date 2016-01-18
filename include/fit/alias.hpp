@@ -175,6 +175,6 @@ template<class T, class Tag>
 struct alias_tag<alias_static<T, Tag>>
 { typedef Tag type; };
 
-}
+} // namespace fit
 
 #endif

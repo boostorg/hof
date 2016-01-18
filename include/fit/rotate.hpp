@@ -91,6 +91,6 @@ struct rotate_adaptor : detail::callable_base<F>
 
 FIT_DECLARE_STATIC_VAR(rotate, detail::make<rotate_adaptor>);
 
-}
+} // namespace fit
 
 #endif

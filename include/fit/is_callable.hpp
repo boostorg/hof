@@ -53,6 +53,6 @@ struct is_callable
 : detail::can_be_called<detail::apply_f, F, Ts...>
 {};
 
-}
+} // namespace fit
 
 #endif

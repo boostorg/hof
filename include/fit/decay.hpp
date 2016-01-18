@@ -49,6 +49,6 @@ struct decay_f
 
 FIT_DECLARE_STATIC_VAR(decay, detail::decay_f);
 
-}
+} // namespace fit
 
 #endif

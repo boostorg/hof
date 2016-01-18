@@ -90,6 +90,6 @@ struct indirect_adaptor : F
 
 FIT_DECLARE_STATIC_VAR(indirect, detail::make<indirect_adaptor>);
 
-}
+} // namespace fit
 
 #endif

@@ -126,6 +126,6 @@ struct repeat_while_decorator
 
 FIT_DECLARE_STATIC_VAR(repeat_while, decorate_adaptor<detail::repeat_while_decorator>);
 
-}
+} // namespace fit
 
 #endif

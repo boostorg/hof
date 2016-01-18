@@ -273,7 +273,7 @@ struct lazy_adaptor : detail::callable_base<F>
 
 FIT_DECLARE_STATIC_VAR(lazy, detail::make<lazy_adaptor>);
 
-}
+} // namespace fit
 
 namespace std {
     template<class F, class Pack>

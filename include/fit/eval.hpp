@@ -68,6 +68,6 @@ struct id_eval
 
 FIT_DECLARE_STATIC_VAR(eval, fit::conditional_adaptor<detail::simple_eval, detail::id_eval>);
 
-}
+} // namespace fit
 
 #endif

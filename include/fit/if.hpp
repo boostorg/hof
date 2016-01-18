@@ -120,6 +120,6 @@ constexpr detail::if_adaptor<B, F> if_c(F f)
 
 FIT_DECLARE_STATIC_VAR(if_, detail::if_f);
 
-}
+} // namespace fit
 
 #endif

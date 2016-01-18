@@ -105,6 +105,6 @@ struct match_adaptor<F> : detail::callable_base<F>
 
 FIT_DECLARE_STATIC_VAR(match, detail::make<match_adaptor>);
 
-}
+} // namespace fit
 
 #endif

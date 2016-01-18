@@ -111,6 +111,6 @@ struct compressed_pair
 };
 
 
-}}
+}} // namespace fit
 
 #endif

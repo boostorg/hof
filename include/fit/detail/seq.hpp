@@ -26,6 +26,6 @@ struct gens<0, S...>
 };
 
 }
-}
+} // namespace fit
 
 #endif

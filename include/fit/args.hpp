@@ -107,6 +107,6 @@ constexpr detail::args_f<int, IntegralConstant::value> args(IntegralConstant)
     return detail::args_f<int, IntegralConstant::value>();
 }
 
-}
+} // namespace fit
 
 #endif

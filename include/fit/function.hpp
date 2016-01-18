@@ -65,7 +65,7 @@ struct reveal_static_const_factory
     }
 #endif
 };
-}}
+}} // namespace fit
 
 #if FIT_NO_UNIQUE_STATIC_VAR
 #define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = FIT_DETAIL_MSVC_CONSTEXPR_DEDUCE fit::detail::reveal_static_const_factory()

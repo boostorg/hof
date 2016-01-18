@@ -140,6 +140,6 @@ struct always_ref_f
 FIT_DECLARE_STATIC_VAR(always, detail::always_f);
 FIT_DECLARE_STATIC_VAR(always_ref, detail::always_ref_f);
 
-}
+} // namespace fit
 
 #endif

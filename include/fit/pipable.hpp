@@ -195,6 +195,6 @@ template<class A, class F>
 auto operator|(A&& a, static_<F> f) FIT_RETURNS
 (f.base_function().base_function()(fit::forward<A>(a)));
 
-}
+} // namespace fit
 
 #endif

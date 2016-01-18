@@ -157,6 +157,6 @@ struct decorate_adaptor : detail::callable_base<F>
 
 FIT_DECLARE_STATIC_VAR(decorate, detail::make<decorate_adaptor>);
 
-}
+} // namespace fit
 
 #endif

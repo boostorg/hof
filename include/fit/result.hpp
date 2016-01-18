@@ -108,6 +108,6 @@ constexpr result_adaptor<Result, F> result(F f)
     return result_adaptor<Result, F>(std::move(f));
 }
 
-}
+} // namespace fit
 
 #endif

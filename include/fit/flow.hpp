@@ -126,6 +126,6 @@ struct flow_adaptor<F> : detail::callable_base<F>
 
 FIT_DECLARE_STATIC_VAR(flow, detail::make<flow_adaptor>);
 
-}
+} // namespace fit
 
 #endif

@@ -231,6 +231,6 @@ struct reveal_adaptor<reveal_adaptor<F>>
 
 FIT_DECLARE_STATIC_VAR(reveal, detail::make<reveal_adaptor>);
 
-}
+} // namespace fit
 
 #endif

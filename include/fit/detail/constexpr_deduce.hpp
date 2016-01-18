@@ -56,7 +56,7 @@ struct constexpr_deduce_unique
 #endif
 };
 
-}}
+}} // namespace fit
 
 #define FIT_DETAIL_CONSTEXPR_DEDUCE true ? fit::detail::constexpr_deduce() :
 #define FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) true ? fit::detail::constexpr_deduce_unique<T>() :

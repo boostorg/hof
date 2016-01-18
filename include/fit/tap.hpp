@@ -70,6 +70,6 @@ struct tap_f
 FIT_DECLARE_STATIC_VAR(tap, pipable_adaptor<detail::tap_f>);
 
 
-}
+} // namespace fit
 
 #endif

@@ -172,6 +172,6 @@ struct apply_f
 
 FIT_DECLARE_STATIC_VAR(apply, detail::apply_f);
 
-}
+} // namespace fit
 
 #endif

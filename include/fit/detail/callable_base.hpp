@@ -64,6 +64,6 @@ struct callable_base<callable_base<F>>
 
 #endif
 
-}}
+}} // namespace fit
 
 #endif

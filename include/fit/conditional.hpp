@@ -162,6 +162,6 @@ struct conditional_adaptor
 
 FIT_DECLARE_STATIC_VAR(conditional, detail::make<conditional_adaptor>);
 
-}
+} // namespace fit
 
 #endif

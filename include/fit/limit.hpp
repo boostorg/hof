@@ -128,6 +128,6 @@ struct function_param_limit<F, typename detail::holder<typename F::fit_function_
 : F::fit_function_param_limit
 {};
 
-}
+} // namespace fit
 
 #endif

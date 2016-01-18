@@ -27,7 +27,7 @@ constexpr const T& static_const_var()
     return detail::static_const_storage<T>::value;
 }
 
-}
+} // namespace fit
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
 #define FIT_STATIC_AUTO_REF static auto&

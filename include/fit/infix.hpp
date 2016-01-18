@@ -162,6 +162,6 @@ auto operator<(T&& x, const fit::detail::static_default_function<F>&) FIT_RETURN
 
 FIT_DECLARE_STATIC_VAR(infix, detail::make<infix_adaptor>);
 
-}
+} // namespace fit
 
 #endif

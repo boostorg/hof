@@ -135,6 +135,6 @@ struct implicit
 
 };
 
-}
+} // namespace fit
 
 #endif

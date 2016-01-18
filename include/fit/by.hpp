@@ -249,5 +249,5 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
 
 FIT_DECLARE_STATIC_VAR(by, detail::make<by_adaptor>);
 
-}
+} // namespace fit
 #endif

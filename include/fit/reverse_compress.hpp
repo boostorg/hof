@@ -151,6 +151,6 @@ struct reverse_compress_adaptor<F, void>
 
 FIT_DECLARE_STATIC_VAR(reverse_compress, detail::make<reverse_compress_adaptor>);
 
-}
+} // namespace fit
 
 #endif

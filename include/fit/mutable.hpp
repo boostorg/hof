@@ -62,7 +62,7 @@ struct mutable_adaptor
 
 FIT_DECLARE_STATIC_VAR(mutable_, detail::make<mutable_adaptor>);
 
-}
+} // namespace fit
 
 
 #endif

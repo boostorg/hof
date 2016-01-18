@@ -90,6 +90,6 @@ struct flip_adaptor : detail::callable_base<F>
 
 FIT_DECLARE_STATIC_VAR(flip, detail::make<flip_adaptor>);
 
-}
+} // namespace fit
 
 #endif

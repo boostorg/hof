@@ -402,6 +402,6 @@ FIT_DECLARE_STATIC_VAR(pack_decay, detail::pack_decay_f);
 
 FIT_DECLARE_STATIC_VAR(pack_join, detail::pack_join_f);
 
-}
+} // namespace fit
 
 #endif

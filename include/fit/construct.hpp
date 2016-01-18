@@ -211,6 +211,6 @@ constexpr detail::construct_meta_template_f<Template> construct_meta()
     return {};
 }
 
-}
+} // namespace fit
 
 #endif

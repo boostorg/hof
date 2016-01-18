@@ -85,6 +85,6 @@ struct static_
 };
 
 
-}
+} // namespace fit
 
 #endif

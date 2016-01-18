@@ -95,6 +95,6 @@ struct repeat_decorator
 
 FIT_DECLARE_STATIC_VAR(repeat, decorate_adaptor<detail::repeat_decorator>);
 
-}
+} // namespace fit
 
 #endif

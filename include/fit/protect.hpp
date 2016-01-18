@@ -54,5 +54,5 @@ struct protect_adaptor : detail::callable_base<F>
 
 FIT_DECLARE_STATIC_VAR(protect, detail::make<protect_adaptor>);
 
-}
+} // namespace fit
 #endif

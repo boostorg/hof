@@ -24,6 +24,6 @@ struct unwrap_reference<std::reference_wrapper<T>>
     typedef T& type;
 };
 
-}}
+}} // namespace fit
 
 #endif

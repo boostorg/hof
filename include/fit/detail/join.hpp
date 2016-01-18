@@ -31,7 +31,7 @@ struct join
 : join_impl<T, join_args<Args...>>
 {};
 
-}}
+}} // namespace fit
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
 #define FIT_JOIN(c, ...) typename fit::detail::join<c, __VA_ARGS__>::type

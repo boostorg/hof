@@ -114,6 +114,6 @@ struct combine_adaptor
 
 FIT_DECLARE_STATIC_VAR(combine, detail::make<combine_adaptor>);
 
-}
+} // namespace fit
 
 #endif

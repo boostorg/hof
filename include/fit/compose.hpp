@@ -127,6 +127,6 @@ struct compose_adaptor<F> : detail::callable_base<F>
 
 FIT_DECLARE_STATIC_VAR(compose, detail::make<compose_adaptor>);
 
-}
+} // namespace fit
 
 #endif

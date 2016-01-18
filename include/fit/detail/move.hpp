@@ -19,6 +19,6 @@ move(T&& x) noexcept
     return static_cast<typename std::remove_reference<T>::type&&>(x); 
 }
 
-}
+} // namespace fit
 
 #endif

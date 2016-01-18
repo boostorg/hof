@@ -203,7 +203,7 @@ struct reveal_static_lambda_function_wrapper_factor
 #endif
 };
 
-}}
+}} // namespace fit
 
 #if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR || FIT_REWRITE_STATIC_LAMBDA
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR auto

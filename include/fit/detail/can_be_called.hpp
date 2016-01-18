@@ -106,6 +106,6 @@ struct can_be_called
 
 #endif
 
-}}
+}} // namespace fit
 
 #endif

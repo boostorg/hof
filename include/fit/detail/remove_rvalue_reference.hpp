@@ -21,6 +21,6 @@ struct remove_rvalue_reference<T&&>
 : remove_rvalue_reference<T>
 {};
 
-}}
+}} // namespace fit
 
 #endif

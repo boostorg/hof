@@ -7,7 +7,7 @@ doc_dir = 'doc/src'
 
 def insert_header_each(line, file):
     if line.startswith('=='):
-        return [line, "\n", "Header\n", "------\n", "\n", "    #include <{0}.h>\n".format(file), "\n"]
+        return [line, "\n", "Header\n", "------\n", "\n", "    #include <{0}>\n".format(file), "\n"]
     else:
         return [line]
 

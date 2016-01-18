@@ -3,11 +3,11 @@
 
 // TODO: Test infix
 
-fit::static_<binary_class> binary_static = {};
+static constexpr fit::static_<binary_class> binary_static = {};
 
-fit::static_<void_class> void_static = {};
+static constexpr fit::static_<void_class> void_static = {};
 
-fit::static_<mono_class> mono_static = {};
+static constexpr fit::static_<mono_class> mono_static = {};
 
 
 FIT_TEST_CASE()

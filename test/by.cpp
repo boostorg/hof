@@ -7,7 +7,7 @@
 
 struct foo
 {
-    constexpr foo(int x) : x(x)
+    constexpr foo(int xp) : x(xp)
     {}
     int x;
 };

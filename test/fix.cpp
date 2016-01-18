@@ -27,7 +27,7 @@ struct factorial_move_t
 };
 
 static constexpr fit::fix_adaptor<factorial_t> factorial = {};
-fit::static_<fit::fix_adaptor<factorial_move_t> > factorial_move = {};
+static constexpr fit::static_<fit::fix_adaptor<factorial_move_t> > factorial_move = {};
 
 FIT_TEST_CASE()
 {

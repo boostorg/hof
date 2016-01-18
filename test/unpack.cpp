@@ -5,8 +5,8 @@
 
 #include <memory>
 
-fit::static_<fit::unpack_adaptor<unary_class> > unary_unpack = {};
-fit::static_<fit::unpack_adaptor<binary_class> > binary_unpack = {};
+static constexpr fit::static_<fit::unpack_adaptor<unary_class> > unary_unpack = {};
+static constexpr fit::static_<fit::unpack_adaptor<binary_class> > binary_unpack = {};
 
 FIT_STATIC_AUTO unary_unpack_constexpr = fit::unpack_adaptor<unary_class>();
 FIT_STATIC_AUTO binary_unpack_constexpr = fit::unpack_adaptor<binary_class>();
@@ -132,7 +132,7 @@ struct unary_move
     }
 };
 
-fit::static_<fit::unpack_adaptor<unary_move> > unary_move_unpack = {};
+static constexpr fit::static_<fit::unpack_adaptor<unary_move> > unary_move_unpack = {};
 
 FIT_TEST_CASE()
 {

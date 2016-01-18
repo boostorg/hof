@@ -85,7 +85,7 @@ struct project_eval
     const Projection& p;
 
     template<class X, class P>
-    constexpr project_eval(X&& x, const P& p) : x(fit::forward<X>(x)), p(p)
+    constexpr project_eval(X&& xp, const P& pp) : x(fit::forward<X>(xp)), p(pp)
     {}
 
     constexpr auto operator()() const FIT_RETURNS
@@ -105,7 +105,7 @@ struct project_void_eval
     const Projection& p;
 
     template<class X, class P>
-    constexpr project_void_eval(X&& x, const P& p) : x(fit::forward<X>(x)), p(p)
+    constexpr project_void_eval(X&& xp, const P& pp) : x(fit::forward<X>(xp)), p(pp)
     {}
 
     struct void_ {};

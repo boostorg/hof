@@ -127,8 +127,8 @@ struct lazy_unpack
     const F& f;
     const Pack& p;
 
-    constexpr lazy_unpack(const F& f, const Pack& p) 
-    : f(f), p(p)
+    constexpr lazy_unpack(const F& fp, const Pack& pp) 
+    : f(fp), p(pp)
     {}
 
     template<class... Ts>

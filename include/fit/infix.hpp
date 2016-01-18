@@ -70,8 +70,8 @@ struct postfix_adaptor : F
     T x;
 
     template<class X, class XF>
-    constexpr postfix_adaptor(X&& x, XF&& f) 
-    : F(fit::forward<XF>(f)), x(fit::forward<X>(x))
+    constexpr postfix_adaptor(X&& xp, XF&& fp) 
+    : F(fit::forward<XF>(fp)), x(fit::forward<X>(xp))
     {}
 
     template<class... Ts>

@@ -21,7 +21,7 @@ CONDITIONAL_FUNCTION(1)
 CONDITIONAL_FUNCTION(2)
 CONDITIONAL_FUNCTION(3)
 
-fit::static_<fit::conditional_adaptor<f1, f2, f3> > f = {}; 
+static constexpr fit::static_<fit::conditional_adaptor<f1, f2, f3> > f = {}; 
 
 FIT_TEST_CASE()
 {

@@ -99,7 +99,7 @@ struct implicit_invoke
 {
     Pack p;
 
-    constexpr implicit_invoke(Pack p) : p(p)
+    constexpr implicit_invoke(Pack pp) : p(pp)
     {}
 
     template<class X, class=typename std::enable_if<is_implicit_callable<F<X>, Pack, X>::value>::type>

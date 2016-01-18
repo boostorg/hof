@@ -77,7 +77,7 @@ struct always_base
     constexpr always_base()
     {}
     
-    constexpr always_base(T x) : x(x)
+    constexpr always_base(T xp) : x(xp)
     {}
 
     template<class... As>

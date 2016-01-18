@@ -14,11 +14,11 @@ struct auto_caster
 struct auto_caster_foo
 {
     int i;
-    explicit auto_caster_foo(int i) : i(i) {}
+    explicit auto_caster_foo(int ip) : i(ip) {}
 
 };
 // TODO: Test template constraint on conversion operator
-fit::implicit<auto_caster> auto_cast = {};
+static constexpr fit::implicit<auto_caster> auto_cast = {};
 
 FIT_TEST_CASE()
 {

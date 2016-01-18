@@ -26,7 +26,7 @@ struct t_move ## n {}; \
 struct f_move ## n \
 { \
     std::unique_ptr<int> i;\
-    f_move ## n(int i) : i(new int(i)) {}; \
+    f_move ## n(int ip) : i(new int(ip)) {}; \
     int operator()(t_move ## n) const \
     { \
         return *i; \
@@ -45,7 +45,7 @@ struct ff
     }
 };
 
-fit::static_<fit::conditional_adaptor<f1, f2, f3, ff> > f = {};
+static constexpr fit::static_<fit::conditional_adaptor<f1, f2, f3, ff> > f = {};
 
 FIT_STATIC_FUNCTION(f_constexpr) = fit::conditional_adaptor<f1, f2, f3, ff>();
 

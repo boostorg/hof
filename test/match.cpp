@@ -26,7 +26,7 @@ namespace test1
         }
     };
 
-    fit::static_<fit::match_adaptor<int_class, foo_class> > fun = {};
+    static constexpr fit::static_<fit::match_adaptor<int_class, foo_class> > fun = {};
 
     static_assert(std::is_same<int, decltype(fun(1))>::value, "Failed match");
     static_assert(std::is_same<foo, decltype(fun(foo()))>::value, "Failed match");

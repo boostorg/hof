@@ -2,17 +2,17 @@
 #include <fit/static.hpp>
 #include "test.hpp"
 
-fit::static_<fit::pipable_adaptor<binary_class> > binary_pipable = {};
+static constexpr fit::static_<fit::pipable_adaptor<binary_class> > binary_pipable = {};
 
-fit::static_<fit::pipable_adaptor<unary_class> > unary_pipable = {};
+static constexpr fit::static_<fit::pipable_adaptor<unary_class> > unary_pipable = {};
 
-fit::static_<fit::pipable_adaptor<mutable_class> > mutable_pipable = {};
+static constexpr fit::static_<fit::pipable_adaptor<mutable_class> > mutable_pipable = {};
 
-fit::static_<fit::pipable_adaptor<void_class> > void_pipable = {};
+static constexpr fit::static_<fit::pipable_adaptor<void_class> > void_pipable = {};
 
-fit::static_<fit::pipable_adaptor<mono_class> > mono_pipable = {};
+static constexpr fit::static_<fit::pipable_adaptor<mono_class> > mono_pipable = {};
 
-fit::static_<fit::pipable_adaptor<move_class> > move_pipable = {};
+static constexpr fit::static_<fit::pipable_adaptor<move_class> > move_pipable = {};
 
 constexpr fit::pipable_adaptor<void_class> void_pipable_constexpr = {};
 

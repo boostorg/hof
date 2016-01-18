@@ -75,7 +75,7 @@ struct pipe_closure : F, Pack
 {
     
     template<class X, class P>
-    constexpr pipe_closure(X&& f, P&& pack) : F(fit::forward<X>(f)), Pack(fit::forward<P>(pack))
+    constexpr pipe_closure(X&& fp, P&& packp) : F(fit::forward<X>(fp)), Pack(fit::forward<P>(packp))
     {}
 
     template<class... Ts>
@@ -96,7 +96,7 @@ struct pipe_closure : F, Pack
         A a;
         const pipe_closure * self;
         template<class X>
-        constexpr invoke(X&& x, const pipe_closure * self) : a(fit::forward<X>(x)), self(self)
+        constexpr invoke(X&& xp, const pipe_closure * selfp) : a(fit::forward<X>(xp)), self(selfp)
         {}
 
         FIT_RETURNS_CLASS(invoke);

@@ -1,17 +1,17 @@
 #include <fit/partial.hpp>
 #include "test.hpp"
 
-fit::static_<fit::partial_adaptor<binary_class> > binary_partial = {};
+static constexpr fit::static_<fit::partial_adaptor<binary_class> > binary_partial = {};
 
-fit::static_<fit::partial_adaptor<unary_class> > unary_partial = {};
+static constexpr fit::static_<fit::partial_adaptor<unary_class> > unary_partial = {};
 
-fit::static_<fit::partial_adaptor<mutable_class> > mutable_partial = {};
+static constexpr fit::static_<fit::partial_adaptor<mutable_class> > mutable_partial = {};
 
-fit::static_<fit::partial_adaptor<void_class> > void_partial = {};
+static constexpr fit::static_<fit::partial_adaptor<void_class> > void_partial = {};
 
-fit::static_<fit::partial_adaptor<mono_class> > mono_partial = {};
+static constexpr fit::static_<fit::partial_adaptor<mono_class> > mono_partial = {};
 
-fit::static_<fit::partial_adaptor<move_class> > move_partial = {};
+static constexpr fit::static_<fit::partial_adaptor<move_class> > move_partial = {};
 
 constexpr fit::partial_adaptor<binary_class> binary_partial_constexpr = {};
 

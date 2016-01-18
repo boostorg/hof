@@ -31,7 +31,7 @@ struct add_member
 {
     int i;
 
-    add_member(int i) : i(i)
+    add_member(int ip) : i(ip)
     {}
 
     int add(int j) const

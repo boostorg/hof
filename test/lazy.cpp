@@ -66,7 +66,7 @@ constexpr long operator()(long a, long b) const
 }
 };
 
-long global_result;
+static long global_result;
 
 struct fv_0 {
 void operator()() const

@@ -1,6 +1,6 @@
-#include <fit/is_callable.h>
+#include <fit/is_callable.hpp>
 #include <ciso646>
-#include "test.h"
+#include "test.hpp"
 
 template<int N>
 struct callable_rank : callable_rank<N-1>

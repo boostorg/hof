@@ -1,5 +1,5 @@
-#include <fit/tap.h>
-#include "test.h"
+#include <fit/tap.hpp>
+#include "test.hpp"
 
 struct sum_f
 {

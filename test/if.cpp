@@ -1,8 +1,8 @@
-#include <fit/if.h>
-#include "test.h"
+#include <fit/if.hpp>
+#include "test.hpp"
 
-#include <fit/conditional.h>
-#include <fit/placeholders.h>
+#include <fit/conditional.hpp>
+#include <fit/placeholders.hpp>
 
 
 struct is_5

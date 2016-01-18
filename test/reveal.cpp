@@ -1,9 +1,9 @@
-#include "test.h"
-#include <fit/reveal.h>
-#include <fit/conditional.h>
-#include <fit/static.h>
-#include <fit/lambda.h>
-#include <fit/fix.h>
+#include "test.hpp"
+#include <fit/reveal.hpp>
+#include <fit/conditional.hpp>
+#include <fit/static.hpp>
+#include <fit/lambda.hpp>
+#include <fit/fix.hpp>
 
 namespace reveal_test {
 

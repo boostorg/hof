@@ -10,9 +10,9 @@
 
 #include <type_traits>
 #include <utility>
-#include <fit/detail/and.h>
-#include <fit/detail/holder.h>
-#include <fit/detail/forward.h>
+#include <fit/detail/and.hpp>
+#include <fit/detail/holder.hpp>
+#include <fit/detail/forward.hpp>
 
 #ifndef FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7

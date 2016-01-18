@@ -1,8 +1,8 @@
-#include <fit/mutable.h>
-#include <fit/lazy.h>
-#include <fit/detail/move.h>
+#include <fit/mutable.hpp>
+#include <fit/lazy.hpp>
+#include <fit/detail/move.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 struct mutable_fun
 {

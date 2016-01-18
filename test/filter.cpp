@@ -1,11 +1,11 @@
-#include <fit/if.h>
-#include "test.h"
+#include <fit/if.hpp>
+#include "test.hpp"
 
-#include <fit/by.h>
-#include <fit/lift.h>
-#include <fit/construct.h>
-#include <fit/conditional.h>
-#include <fit/unpack.h>
+#include <fit/by.hpp>
+#include <fit/lift.hpp>
+#include <fit/construct.hpp>
+#include <fit/conditional.hpp>
+#include <fit/unpack.hpp>
 
 #include <tuple>
 

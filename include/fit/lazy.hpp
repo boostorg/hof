@@ -47,15 +47,15 @@
 ///     assert(increment(5) == 6);
 /// 
 
-#include <fit/args.h>
-#include <fit/conditional.h>
-#include <fit/always.h>
-#include <fit/static.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/compressed_pair.h>
-#include <fit/pack.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/args.hpp>
+#include <fit/conditional.hpp>
+#include <fit/always.hpp>
+#include <fit/static.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/compressed_pair.hpp>
+#include <fit/pack.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 #include <functional>
 #include <type_traits>
 

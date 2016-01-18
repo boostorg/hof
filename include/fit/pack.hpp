@@ -63,14 +63,14 @@
 ///     assert(r == 5);
 /// 
 
-#include <fit/detail/seq.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/remove_rvalue_reference.h>
-#include <fit/detail/unwrap.h>
-#include <fit/detail/static_const_var.h>
-#include <fit/returns.h>
-#include <fit/alias.h>
-#include <fit/decay.h>
+#include <fit/detail/seq.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/remove_rvalue_reference.hpp>
+#include <fit/detail/unwrap.hpp>
+#include <fit/detail/static_const_var.hpp>
+#include <fit/returns.hpp>
+#include <fit/alias.hpp>
+#include <fit/decay.hpp>
 
 #ifndef FIT_HAS_RVALUE_THIS
 #define FIT_HAS_RVALUE_THIS 1

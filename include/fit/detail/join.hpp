@@ -8,7 +8,7 @@
 #ifndef FIT_GUARD_FUNCTION_DETAIL_JOIN_H
 #define FIT_GUARD_FUNCTION_DETAIL_JOIN_H
 
-#include <fit/detail/holder.h>
+#include <fit/detail/holder.hpp>
 
 namespace fit { namespace detail {
 

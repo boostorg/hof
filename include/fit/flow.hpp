@@ -64,15 +64,15 @@
 ///     assert(r == 4);
 /// 
 
-#include <fit/detail/callable_base.h>
-#include <fit/always.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/compressed_pair.h>
-#include <fit/detail/join.h>
+#include <fit/detail/callable_base.hpp>
+#include <fit/always.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/compressed_pair.hpp>
+#include <fit/detail/join.hpp>
 #include <tuple>
-#include <fit/detail/move.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/detail/move.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 namespace fit { namespace detail {
 

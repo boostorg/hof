@@ -8,8 +8,8 @@
 #ifndef FIT_GUARD_MAKE_H
 #define FIT_GUARD_MAKE_H
 
-#include <fit/detail/move.h>
-#include <fit/detail/join.h>
+#include <fit/detail/move.hpp>
+#include <fit/detail/join.hpp>
 
 namespace fit { namespace detail {
 

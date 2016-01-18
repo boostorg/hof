@@ -1,6 +1,6 @@
-#include <fit/lazy.h>
+#include <fit/lazy.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 template<int N>
 struct test_placeholder

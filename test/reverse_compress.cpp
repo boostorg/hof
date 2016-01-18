@@ -1,5 +1,5 @@
-#include <fit/reverse_compress.h>
-#include "test.h"
+#include <fit/reverse_compress.hpp>
+#include "test.hpp"
 
 struct max_f
 {

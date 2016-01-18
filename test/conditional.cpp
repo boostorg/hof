@@ -1,9 +1,9 @@
-#include <fit/conditional.h>
-#include <fit/static.h>
-#include <fit/lambda.h>
-#include <fit/function.h>
+#include <fit/conditional.hpp>
+#include <fit/static.hpp>
+#include <fit/lambda.hpp>
+#include <fit/function.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 namespace conditional_test {
 

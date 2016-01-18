@@ -1,5 +1,5 @@
-#include <fit/partial.h>
-#include "test.h"
+#include <fit/partial.hpp>
+#include "test.hpp"
 
 fit::static_<fit::partial_adaptor<binary_class> > binary_partial = {};
 

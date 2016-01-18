@@ -57,12 +57,12 @@
 ///     assert(sum_f()("", "") == 0);
 /// 
 
-#include <fit/always.h>
-#include <fit/detail/callable_base.h>
-#include <fit/detail/forward.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/move.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/always.hpp>
+#include <fit/detail/callable_base.hpp>
+#include <fit/detail/forward.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 namespace fit {
 

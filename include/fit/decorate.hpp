@@ -36,13 +36,13 @@
 /// * MoveConstructible
 /// 
 
-#include <fit/reveal.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/move.h>
-#include <fit/detail/make.h>
-#include <fit/detail/callable_base.h>
-#include <fit/detail/static_const_var.h>
-#include <fit/detail/compressed_pair.h>
+#include <fit/reveal.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/callable_base.hpp>
+#include <fit/detail/static_const_var.hpp>
+#include <fit/detail/compressed_pair.hpp>
 
 namespace fit { namespace detail {
 

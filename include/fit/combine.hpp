@@ -47,10 +47,10 @@
 ///     assert(f(2, 4) == std::make_tuple(std::make_pair(1, 2), std::make_pair(2, 4)));
 /// 
 
-#include <fit/pack.h>
-#include <fit/always.h>
-#include <fit/detail/callable_base.h>
-#include <fit/detail/make.h>
+#include <fit/pack.hpp>
+#include <fit/always.hpp>
+#include <fit/detail/callable_base.hpp>
+#include <fit/detail/make.hpp>
 
 namespace fit { namespace detail {
 

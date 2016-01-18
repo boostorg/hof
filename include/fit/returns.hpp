@@ -122,7 +122,7 @@
 #endif
 
 #include <utility>
-#include <fit/detail/forward.h>
+#include <fit/detail/forward.hpp>
 
 #define FIT_EAT(...)
 #define FIT_REM(...) __VA_ARGS__
@@ -145,7 +145,7 @@ void fit_returns_class_check() \
 #define FIT_RETURNS_STATIC_CAST(...) static_cast<__VA_ARGS__>
 #define FIT_RETURNS_CONSTRUCT(...) __VA_ARGS__
 #else
-#include <fit/detail/pp.h>
+#include <fit/detail/pp.hpp>
 
 #define FIT_RETURNS_RETURN(...) return FIT_RETURNS_RETURN_X(FIT_PP_WALL(__VA_ARGS__))
 #define FIT_RETURNS_RETURN_X(...) __VA_ARGS__

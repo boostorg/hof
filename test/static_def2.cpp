@@ -1,6 +1,6 @@
 
 #include <cstdio>
-#include "static_def.h"
+#include "static_def.hpp"
 
 extern void* f_sum_lambda_addr();
 extern void* f_sum_fo_addr();

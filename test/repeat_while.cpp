@@ -1,5 +1,5 @@
-#include <fit/repeat_while.h>
-#include "test.h"
+#include <fit/repeat_while.hpp>
+#include "test.hpp"
 
 // TODO: Test default construction, and static initialization
 

@@ -54,11 +54,11 @@
 ///     assert(fit::apply_eval(sum_f(), []{ return 1; }, []{ return 2; }) == 3);
 /// 
 
-#include <fit/returns.h>
-#include <fit/detail/forward.h>
-#include <fit/detail/static_const_var.h>
-#include <fit/apply.h>
-#include <fit/eval.h>
+#include <fit/returns.hpp>
+#include <fit/detail/forward.hpp>
+#include <fit/detail/static_const_var.hpp>
+#include <fit/apply.hpp>
+#include <fit/eval.hpp>
 
 #ifndef FIT_NO_ORDERD_BRACE_INIT
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 9) || defined(_MSC_VER)
@@ -69,8 +69,8 @@
 #endif
 
 #if FIT_NO_ORDERD_BRACE_INIT
-#include <fit/pack.h>
-#include <fit/capture.h>
+#include <fit/pack.hpp>
+#include <fit/capture.hpp>
 #endif
 
 namespace fit {

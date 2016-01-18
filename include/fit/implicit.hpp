@@ -69,8 +69,8 @@
 ///     assert(1 == x.i);
 /// 
 
-#include <fit/pack.h>
-#include <fit/detail/result_of.h>
+#include <fit/pack.hpp>
+#include <fit/detail/result_of.hpp>
 
 namespace fit { namespace detail {
 

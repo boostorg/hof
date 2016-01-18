@@ -1,8 +1,8 @@
-#include <fit/function.h>
-#include <fit/partial.h>
-#include <fit/infix.h>
+#include <fit/function.hpp>
+#include <fit/partial.hpp>
+#include <fit/infix.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 namespace test_constexpr {
 

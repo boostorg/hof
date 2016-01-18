@@ -50,10 +50,10 @@
 ///     static_assert(std::is_same<decltype(int_result(true)), int>::value, "Not the same type");
 /// 
 
-#include <fit/detail/callable_base.h>
-#include <fit/is_callable.h>
-#include <fit/always.h>
-#include <fit/reveal.h>
+#include <fit/detail/callable_base.hpp>
+#include <fit/is_callable.hpp>
+#include <fit/always.hpp>
+#include <fit/reveal.hpp>
 
 namespace fit {
 

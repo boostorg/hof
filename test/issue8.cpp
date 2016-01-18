@@ -1,8 +1,8 @@
 
-#include "test.h"
+#include "test.hpp"
 #include <vector>
-#include <fit/pipable.h>
-#include <fit/placeholders.h>
+#include <fit/pipable.hpp>
+#include <fit/placeholders.hpp>
 #include <algorithm>
 
 

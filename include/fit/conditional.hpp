@@ -67,12 +67,12 @@
 /// So, the order of the functions in the `conditional_adaptor` are very important
 /// to how the function is chosen.
 
-#include <fit/reveal.h>
-#include <fit/detail/callable_base.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/join.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/reveal.hpp>
+#include <fit/detail/callable_base.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/join.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 namespace fit {
 

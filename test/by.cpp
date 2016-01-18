@@ -1,7 +1,7 @@
-#include <fit/by.h>
-#include <fit/placeholders.h>
-#include <fit/mutable.h>
-#include "test.h"
+#include <fit/by.hpp>
+#include <fit/placeholders.hpp>
+#include <fit/mutable.hpp>
+#include "test.hpp"
 
 #include <memory>
 

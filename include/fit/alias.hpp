@@ -8,10 +8,10 @@
 #ifndef FIT_GUARD_ALIAS_H
 #define FIT_GUARD_ALIAS_H
 
-#include <fit/returns.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/move.h>
-#include <fit/detail/holder.h>
+#include <fit/returns.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/holder.hpp>
 
 /// alias
 /// =====

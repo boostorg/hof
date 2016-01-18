@@ -61,12 +61,12 @@
 ///     static_assert(std::is_same<foo, decltype(fun()(foo()))>::value, "Failed match");
 /// 
 
-#include <fit/reveal.h>
-#include <fit/detail/callable_base.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/move.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/reveal.hpp>
+#include <fit/detail/callable_base.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 namespace fit {
 

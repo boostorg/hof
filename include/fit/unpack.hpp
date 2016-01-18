@@ -93,18 +93,18 @@
 ///     };
 /// 
 
-#include <fit/returns.h>
+#include <fit/returns.hpp>
 #include <tuple>
-#include <fit/detail/seq.h>
-#include <fit/capture.h>
-#include <fit/always.h>
-#include <fit/reveal.h>
-#include <fit/detail/and.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/holder.h>
-#include <fit/detail/move.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/detail/seq.hpp>
+#include <fit/capture.hpp>
+#include <fit/always.hpp>
+#include <fit/reveal.hpp>
+#include <fit/detail/and.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/holder.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 namespace fit {
 

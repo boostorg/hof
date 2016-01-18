@@ -29,9 +29,9 @@
 ///     } decay;
 /// 
 
-#include <fit/detail/unwrap.h>
-#include <fit/detail/static_const_var.h>
-#include <fit/detail/forward.h>
+#include <fit/detail/unwrap.hpp>
+#include <fit/detail/static_const_var.hpp>
+#include <fit/detail/forward.hpp>
 
 namespace fit { namespace detail {
 

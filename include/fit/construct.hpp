@@ -65,10 +65,10 @@
 ///     assert(v.size() == 5);
 /// 
 
-#include <fit/detail/forward.h>
-#include <fit/detail/move.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/join.h>
+#include <fit/detail/forward.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/join.hpp>
 
 #include <initializer_list>
 

@@ -1,8 +1,8 @@
-#include <fit/combine.h>
-#include "test.h"
+#include <fit/combine.hpp>
+#include "test.hpp"
 
-#include <fit/construct.h>
-#include <fit/capture.h>
+#include <fit/construct.hpp>
+#include <fit/capture.hpp>
 #include <utility>
 #include <tuple>
 

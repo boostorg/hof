@@ -1,6 +1,6 @@
-#include <fit/compose.h>
+#include <fit/compose.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 namespace compose_test {
 struct increment

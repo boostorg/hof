@@ -8,8 +8,8 @@
 #ifndef FIT_GUARD_FUNCTION_ARGS_H
 #define FIT_GUARD_FUNCTION_ARGS_H
 
-#include <fit/detail/seq.h>
-#include <fit/returns.h>
+#include <fit/detail/seq.hpp>
+#include <fit/returns.hpp>
 #include <utility>
 
 /// args

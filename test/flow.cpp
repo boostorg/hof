@@ -1,6 +1,6 @@
-#include <fit/flow.h>
+#include <fit/flow.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 namespace flow_test {
 struct increment

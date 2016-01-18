@@ -1,6 +1,6 @@
-#include <fit/args.h>
+#include <fit/args.hpp>
 #include <type_traits>
-#include "test.h"
+#include "test.hpp"
 
 FIT_TEST_CASE()
 {

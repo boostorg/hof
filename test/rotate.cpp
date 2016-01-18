@@ -1,6 +1,6 @@
-#include <fit/rotate.h>
-#include <fit/placeholders.h>
-#include "test.h"
+#include <fit/rotate.hpp>
+#include <fit/placeholders.hpp>
+#include "test.hpp"
 
 FIT_TEST_CASE()
 {

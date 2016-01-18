@@ -8,11 +8,11 @@
 #ifndef FIT_GUARD_CAPTURE_H
 #define FIT_GUARD_CAPTURE_H
 
-#include <fit/detail/callable_base.h>
-#include <fit/reveal.h>
-#include <fit/pack.h>
-#include <fit/always.h>
-#include <fit/detail/move.h>
+#include <fit/detail/callable_base.hpp>
+#include <fit/reveal.hpp>
+#include <fit/pack.hpp>
+#include <fit/always.hpp>
+#include <fit/detail/move.hpp>
 
 /// capture
 /// =======

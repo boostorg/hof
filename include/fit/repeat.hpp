@@ -47,13 +47,13 @@
 ///     assert(increment_by_5(1) == 6);
 /// 
 
-#include <fit/always.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/result_of.h>
-#include <fit/detail/move.h>
-#include <fit/detail/sfinae.h>
-#include <fit/detail/static_const_var.h>
-#include <fit/decorate.h>
+#include <fit/always.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/result_of.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/sfinae.hpp>
+#include <fit/detail/static_const_var.hpp>
+#include <fit/decorate.hpp>
 
 namespace fit { namespace detail {
 

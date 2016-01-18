@@ -1,6 +1,6 @@
-#include <fit/always.h>
+#include <fit/always.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 FIT_TEST_CASE()
 {

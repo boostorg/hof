@@ -1,5 +1,5 @@
-#include <fit/static.h>
-#include "test.h"
+#include <fit/static.hpp>
+#include "test.hpp"
 
 // TODO: Test infix
 

@@ -40,8 +40,8 @@
 ///     assert(max_f()(3, 4) == std::max(3, 4));
 /// 
 
-#include <fit/returns.h>
-#include <fit/detail/forward.h>
+#include <fit/returns.hpp>
+#include <fit/detail/forward.hpp>
 
 #define FIT_LIFT(...) [](auto&&... xs) FIT_RETURNS(__VA_ARGS__(fit::forward<decltype(xs)>(xs)...))
 

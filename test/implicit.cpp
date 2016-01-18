@@ -1,5 +1,5 @@
-#include <fit/implicit.h>
-#include "test.h"
+#include <fit/implicit.hpp>
+#include "test.hpp"
 
 template<class T>
 struct auto_caster

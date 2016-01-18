@@ -1,5 +1,5 @@
-#include <fit/placeholders.h>
-#include "test.h"
+#include <fit/placeholders.hpp>
+#include "test.hpp"
 
 // TODO: Test assign operators
 

@@ -36,10 +36,10 @@
 /// 
 
 #include <utility>
-#include <fit/reveal.h>
-#include <fit/detail/forward.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/reveal.hpp>
+#include <fit/detail/forward.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 namespace fit {
 

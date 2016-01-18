@@ -57,8 +57,8 @@
 ///     assert(6 == times2(3));
 /// 
 
-#include <fit/detail/result_of.h>
-#include <fit/reveal.h>
+#include <fit/detail/result_of.hpp>
+#include <fit/reveal.hpp>
 
 namespace fit { 
 

@@ -1,9 +1,9 @@
-#include <fit/construct.h>
-#include "test.h"
+#include <fit/construct.hpp>
+#include "test.hpp"
 
-#include <fit/conditional.h>
-#include <fit/by.h>
-#include <fit/placeholders.h>
+#include <fit/conditional.hpp>
+#include <fit/by.hpp>
+#include <fit/placeholders.hpp>
 
 #include <tuple>
 #include <type_traits>

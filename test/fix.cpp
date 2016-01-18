@@ -1,7 +1,7 @@
-#include <fit/fix.h>
-#include <fit/static.h>
-#include <fit/reveal.h>
-#include "test.h"
+#include <fit/fix.hpp>
+#include <fit/static.hpp>
+#include <fit/reveal.hpp>
+#include "test.hpp"
 
 #include <memory>
 

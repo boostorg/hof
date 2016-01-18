@@ -47,13 +47,13 @@
 ///     assert(r == 5*4*3*2*1);
 /// 
 
-#include <fit/always.h>
-#include <fit/detail/callable_base.h>
-#include <fit/reveal.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/move.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/always.hpp>
+#include <fit/detail/callable_base.hpp>
+#include <fit/reveal.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 #ifndef FIT_FIX_HAS_CONSTEXPR
 #define FIT_FIX_HAS_CONSTEXPR 0

@@ -8,8 +8,8 @@
 #ifndef FIT_GUARD_FUNCTION_ALWAYS_H
 #define FIT_GUARD_FUNCTION_ALWAYS_H
 
-#include <fit/detail/unwrap.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/detail/unwrap.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 /// always
 /// ======

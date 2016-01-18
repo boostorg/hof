@@ -1,6 +1,6 @@
-#include <fit/apply_eval.h>
-#include <fit/always.h>
-#include "test.h"
+#include <fit/apply_eval.hpp>
+#include <fit/always.hpp>
+#include "test.hpp"
 
 #include <memory>
 

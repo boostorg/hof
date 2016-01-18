@@ -1,7 +1,7 @@
-#include <fit/unpack.h>
-#include <fit/static.h>
-#include <fit/lambda.h>
-#include "test.h"
+#include <fit/unpack.hpp>
+#include <fit/static.hpp>
+#include <fit/lambda.hpp>
+#include "test.hpp"
 
 #include <memory>
 

@@ -2,8 +2,8 @@
 #ifndef GUARD_STATIC_DEF
 #define GUARD_STATIC_DEF
 
-#include <fit/function.h>
-#include <fit/lambda.h>
+#include <fit/function.hpp>
+#include <fit/lambda.hpp>
 
 namespace fit_test {
 #if FIT_HAS_STATIC_LAMBDA

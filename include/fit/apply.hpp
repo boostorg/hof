@@ -48,9 +48,9 @@
 ///     assert(fit::apply(sum_f(), 1, 2) == 3);
 /// 
 
-#include <fit/detail/result_of.h>
-#include <fit/detail/forward.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/detail/result_of.hpp>
+#include <fit/detail/forward.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 
 namespace fit {

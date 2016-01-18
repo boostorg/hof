@@ -1,5 +1,5 @@
-#include "test.h"
-#include <fit/lift.h>
+#include "test.hpp"
+#include <fit/lift.hpp>
 #include <tuple>
 
 template<class T, class U>

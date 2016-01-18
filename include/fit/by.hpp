@@ -66,13 +66,13 @@
 
 
 #include <utility>
-#include <fit/always.h>
-#include <fit/detail/callable_base.h>
-#include <fit/detail/result_of.h>
-#include <fit/detail/move.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
-#include <fit/apply_eval.h>
+#include <fit/always.hpp>
+#include <fit/detail/callable_base.hpp>
+#include <fit/detail/result_of.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
+#include <fit/apply_eval.hpp>
 
 namespace fit {
 

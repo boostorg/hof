@@ -8,9 +8,9 @@
 #ifndef FIT_GUARD_CALLABLE_BASE_H
 #define FIT_GUARD_CALLABLE_BASE_H
 
-#include <fit/detail/delegate.h>
-#include <fit/detail/result_of.h>
-#include <fit/apply.h>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/result_of.hpp>
+#include <fit/apply.hpp>
 
 #ifndef FIT_HAS_TEMPLATE_ALIAS
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)

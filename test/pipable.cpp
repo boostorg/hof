@@ -1,6 +1,6 @@
-#include <fit/pipable.h>
-#include <fit/static.h>
-#include "test.h"
+#include <fit/pipable.hpp>
+#include <fit/static.hpp>
+#include "test.hpp"
 
 fit::static_<fit::pipable_adaptor<binary_class> > binary_pipable = {};
 

@@ -55,11 +55,11 @@
 ///     assert(3 == partial(sum())(1)(2));
 /// 
 
-#include <fit/conditional.h>
-#include <fit/static.h>
-#include <fit/pipable.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/conditional.hpp>
+#include <fit/static.hpp>
+#include <fit/pipable.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 
 namespace fit { 

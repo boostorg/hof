@@ -1,5 +1,5 @@
-#include <fit/infix.h>
-#include "test.h"
+#include <fit/infix.hpp>
+#include "test.hpp"
 
 struct sum_f
 {

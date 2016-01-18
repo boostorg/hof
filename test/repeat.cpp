@@ -1,5 +1,5 @@
-#include <fit/repeat.h>
-#include "test.h"
+#include <fit/repeat.hpp>
+#include "test.hpp"
 
 
 struct increment

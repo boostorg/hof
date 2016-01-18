@@ -8,11 +8,11 @@
 #ifndef FIT_GUARD_COMPRESSED_PAIR_H
 #define FIT_GUARD_COMPRESSED_PAIR_H
 
-#include <fit/detail/delegate.h>
-#include <fit/detail/move.h>
-#include <fit/detail/forward.h>
-#include <fit/always.h>
-#include <fit/alias.h>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/forward.hpp>
+#include <fit/always.hpp>
+#include <fit/alias.hpp>
 
 #ifndef FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND
 #ifdef __clang__

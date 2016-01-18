@@ -47,11 +47,11 @@
 
 #include <type_traits>
 #include <utility>
-#include <fit/detail/result_of.h>
-#include <fit/reveal.h>
-#include <fit/detail/constexpr_deduce.h>
-#include <fit/detail/static_constexpr.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/detail/result_of.hpp>
+#include <fit/reveal.hpp>
+#include <fit/detail/constexpr_deduce.hpp>
+#include <fit/detail/static_constexpr.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 
 #define FIT_HAS_STATIC_LAMBDA 1

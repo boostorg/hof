@@ -8,9 +8,9 @@
 #ifndef FIT_GUARD_CAN_BE_CALLED_H
 #define FIT_GUARD_CAN_BE_CALLED_H
 
-#include <fit/detail/and.h>
-#include <fit/detail/holder.h>
-#include <fit/detail/sfinae.h>
+#include <fit/detail/and.hpp>
+#include <fit/detail/holder.hpp>
+#include <fit/detail/sfinae.hpp>
 
 namespace fit { namespace detail {
 

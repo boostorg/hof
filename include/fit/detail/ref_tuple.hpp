@@ -9,8 +9,8 @@
 #define FIT_GUARD_FUNCTION_REF_TUPLE_H
 
 #include <tuple>
-#include <fit/detail/remove_rvalue_reference.h>
-#include <fit/returns.h>
+#include <fit/detail/remove_rvalue_reference.hpp>
+#include <fit/returns.hpp>
 
 namespace fit {
 namespace detail {

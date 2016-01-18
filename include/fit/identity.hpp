@@ -35,8 +35,8 @@
 /// 
 
 #include <utility>
-#include <fit/detail/forward.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/detail/forward.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 namespace fit { namespace detail {
 

@@ -1,6 +1,6 @@
-#include <fit/result.h>
-#include <fit/static.h>
-#include "test.h"
+#include <fit/result.hpp>
+#include <fit/static.hpp>
+#include "test.hpp"
 
 
 static constexpr fit::result_adaptor<int, unary_class> unary_int = {};

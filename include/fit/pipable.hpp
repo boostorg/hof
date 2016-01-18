@@ -55,13 +55,13 @@
 ///     assert(3 == pipable(sum())(1, 2));
 /// 
 
-#include <fit/conditional.h>
-#include <fit/pack.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/move.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
-#include <fit/limit.h>
+#include <fit/conditional.hpp>
+#include <fit/pack.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
+#include <fit/limit.hpp>
 
 namespace fit { 
  

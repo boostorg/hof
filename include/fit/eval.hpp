@@ -39,10 +39,10 @@
 ///     assert(fit::eval([]{ return 3; }) == 3);
 /// 
 
-#include <fit/always.h>
-#include <fit/identity.h>
-#include <fit/conditional.h>
-#include <fit/detail/result_of.h>
+#include <fit/always.hpp>
+#include <fit/identity.hpp>
+#include <fit/conditional.hpp>
+#include <fit/detail/result_of.hpp>
 
 namespace fit {
 

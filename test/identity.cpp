@@ -1,5 +1,5 @@
-#include <fit/identity.h>
-#include "test.h"
+#include <fit/identity.hpp>
+#include "test.hpp"
 
 FIT_TEST_CASE()
 {

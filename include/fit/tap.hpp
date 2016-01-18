@@ -50,9 +50,9 @@
 ///     assert(r == 5);
 /// 
 
-#include <fit/pipable.h>
-#include <fit/apply.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/pipable.hpp>
+#include <fit/apply.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 namespace fit { namespace detail {
 

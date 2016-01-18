@@ -1,5 +1,5 @@
-#include <fit/indirect.h>
-#include "test.h"
+#include <fit/indirect.hpp>
+#include "test.hpp"
 
 FIT_TEST_CASE()
 {

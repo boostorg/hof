@@ -1,10 +1,10 @@
-#include <fit/lambda.h>
-#include <fit/conditional.h>
-#include <fit/partial.h>
-#include <fit/infix.h>
-#include <fit/pipable.h>
+#include <fit/lambda.hpp>
+#include <fit/conditional.hpp>
+#include <fit/partial.hpp>
+#include <fit/infix.hpp>
+#include <fit/pipable.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 #if FIT_HAS_STATIC_LAMBDA
 static constexpr auto add_one = FIT_STATIC_LAMBDA(int x)

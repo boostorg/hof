@@ -36,10 +36,10 @@
 ///     assert(sum(1, 2) == partial_sum(1)(2));
 /// 
 
-#include <fit/reveal.h>
-#include <fit/detail/static_constexpr.h>
-#include <fit/detail/static_const_var.h>
-#include <fit/detail/constexpr_deduce.h>
+#include <fit/reveal.hpp>
+#include <fit/detail/static_constexpr.hpp>
+#include <fit/detail/static_const_var.hpp>
+#include <fit/detail/constexpr_deduce.hpp>
 
 namespace fit {
 

@@ -8,8 +8,8 @@
 #ifndef FIT_GUARD_DETAIL_RESULT_OF_H
 #define FIT_GUARD_DETAIL_RESULT_OF_H
 
-#include <fit/returns.h>
-#include <fit/detail/sfinae.h>
+#include <fit/returns.hpp>
+#include <fit/detail/sfinae.hpp>
 
 #ifndef FIT_HAS_MANUAL_DEDUCTION
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
@@ -21,9 +21,9 @@
 
 #if FIT_HAS_MANUAL_DEDUCTION || FIT_NO_EXPRESSION_SFINAE
 
-#include <fit/detail/and.h>
-#include <fit/detail/holder.h>
-#include <fit/detail/can_be_called.h>
+#include <fit/detail/and.hpp>
+#include <fit/detail/holder.hpp>
+#include <fit/detail/can_be_called.hpp>
 
 namespace fit { namespace detail {
 

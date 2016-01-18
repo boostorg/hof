@@ -1,8 +1,8 @@
-#include <fit/pack.h>
-#include <fit/always.h>
-#include <fit/identity.h>
+#include <fit/pack.hpp>
+#include <fit/always.hpp>
+#include <fit/identity.hpp>
 #include <memory>
-#include "test.h"
+#include "test.hpp"
 
 FIT_TEST_CASE()
 {

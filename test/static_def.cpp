@@ -1,6 +1,6 @@
 
 #include <cstdio>
-#include "static_def.h"
+#include "static_def.hpp"
 
 extern int f();
 

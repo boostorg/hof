@@ -7,7 +7,7 @@
 #include <functional>
 #include <vector>
 #include <memory>
-#include <fit/detail/forward.h>
+#include <fit/detail/forward.hpp>
 
 #ifndef FIT_HAS_STATIC_TEST_CHECK
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)

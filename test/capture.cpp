@@ -1,5 +1,5 @@
-#include "test.h"
-#include <fit/capture.h>
+#include "test.hpp"
+#include <fit/capture.hpp>
 
 // TODO: Test empty capture
 

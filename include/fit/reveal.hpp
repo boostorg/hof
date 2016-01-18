@@ -36,17 +36,17 @@
 /// * MoveConstructible
 /// 
 
-#include <fit/always.h>
-#include <fit/returns.h>
-#include <fit/is_callable.h>
-#include <fit/identity.h>
-#include <fit/detail/move.h>
-#include <fit/detail/callable_base.h>
-#include <fit/detail/delegate.h>
-#include <fit/detail/holder.h>
-#include <fit/detail/join.h>
-#include <fit/detail/make.h>
-#include <fit/detail/static_const_var.h>
+#include <fit/always.hpp>
+#include <fit/returns.hpp>
+#include <fit/is_callable.hpp>
+#include <fit/identity.hpp>
+#include <fit/detail/move.hpp>
+#include <fit/detail/callable_base.hpp>
+#include <fit/detail/delegate.hpp>
+#include <fit/detail/holder.hpp>
+#include <fit/detail/join.hpp>
+#include <fit/detail/make.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 #ifndef FIT_HAS_TEMPLATE_ALIAS
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7

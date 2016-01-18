@@ -69,8 +69,8 @@
 ///     assert(3 == sum(1, 2));
 /// 
 
-#include <fit/lazy.h>
-#include <fit/protect.h>
+#include <fit/lazy.hpp>
+#include <fit/protect.hpp>
 
 namespace fit { namespace detail {
     template<int N>

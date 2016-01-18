@@ -7,6 +7,10 @@ matrix:
         - env: BUILD_TYPE=Debug ASAN=off LIBCXX=off
           os: osx
           compiler: clang
+
+        - env: BUILD_TYPE=Release ASAN=off LIBCXX=off
+          os: osx
+          compiler: clang
         # Clang
         - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug ASAN=on LIBCXX=off
           os: linux

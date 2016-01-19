@@ -76,7 +76,7 @@ namespace fit { namespace detail {
     template<int N>
     struct simple_placeholder
     {};
-}}
+}} // namesoace fit
 
 namespace std {
     template<int N>

@@ -175,7 +175,7 @@ struct check_this
     static_assert(std::is_same<T, Assumed>::value, "Incorret FIT_THIS or FIT_CONST_THIS used.");
 };
 
-}}
+}} // namespace fit
 
 #endif
 

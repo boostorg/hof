@@ -1,5 +1,5 @@
-Overview
-========
+Introduction
+============
 
 Fit is a header-only C++11/C++14 library that provides utilities for functions and function objects. 
 
@@ -153,10 +153,10 @@ Tuples
 
 We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which let us call a function for each element. First, the [`by`](by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack.md) adaptor will unpack the elements to a tuple and apply them to the argument:
 
-    FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f) FIT_RETURNS
-    (
-        unpack(by(f))(sequence)
-    );
+    FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
+    {
+        return unpack(by(f))(sequence)
+    };
 
 So now we can add an overload for tuples:
 
@@ -227,4 +227,4 @@ And then apply the [`by`](by.md) adaptor to `simple_print`:
 Requirements
 ============
 
-This requires a C++11 compiler. There are no third-party dependencies. This has been tested on clang 3.4, gcc 4.6-4.9, and Visual Studio 2015 RC.
+This requires a C++11 compiler. There are no third-party dependencies. This has been tested on clang 3.4-3.7, gcc 4.6-4.9, and Visual Studio 2015. Gcc 5.1 is not supported at all.

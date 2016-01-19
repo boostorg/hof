@@ -57,7 +57,7 @@ namespace fit { namespace detail {
 template<class S, class F, class... Gs>
 struct combine_adaptor_base;
 
-template<int... Ns, class F, class... Gs>
+template<std::size_t... Ns, class F, class... Gs>
 struct combine_adaptor_base<seq<Ns...>, F, Gs...>
 : F, pack_base<seq<Ns...>, Gs...>
 {

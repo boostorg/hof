@@ -49,7 +49,7 @@ pages:
     - 'repeat_while': 'repeat_while.md'
 - Functions:
     - 'always': 'always.md'
-    - 'args': 'args.md'
+    - 'arg': 'arg.md'
     - 'construct': 'construct.md'
     - 'decay': 'decay.md'
     - 'identity': 'identity.md'

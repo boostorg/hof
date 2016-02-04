@@ -51,7 +51,7 @@
 /// 
 ///     struct for_floats
 ///     {
-///         void operator()(int) const
+///         void operator()(float) const
 ///         {
 ///             printf("Float\n");
 ///         }

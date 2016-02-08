@@ -43,7 +43,7 @@
 /// Example
 /// -------
 /// 
-///     int r = fit::fix([](auto s, auto x) -> decltype(x) { return x == 0 ? 1 : x * s(x-1); })(5);
+///     int r = fit::fix([](auto recurse, auto x) -> decltype(x) { return x == 0 ? 1 : x * recurse(x-1); })(5);
 ///     assert(r == 5*4*3*2*1);
 /// 
 

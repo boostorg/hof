@@ -142,6 +142,7 @@ struct apply_eval_f
     constexpr typename detail::holder<Ts...>::type 
     operator()(const F& f, Ts&&... xs) const
     {
+        return
 #if FIT_NO_ORDERED_BRACE_INIT
         eval_ordered<R>
             (f, pack(), fit::forward<Ts>(xs)...);

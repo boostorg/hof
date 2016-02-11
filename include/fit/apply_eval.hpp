@@ -60,15 +60,15 @@
 #include <fit/apply.hpp>
 #include <fit/eval.hpp>
 
-#ifndef FIT_NO_ORDERD_BRACE_INIT
+#ifndef FIT_NO_ORDERED_BRACE_INIT
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 9) || defined(_MSC_VER)
-#define FIT_NO_ORDERD_BRACE_INIT 1
+#define FIT_NO_ORDERED_BRACE_INIT 1
 #else
-#define FIT_NO_ORDERD_BRACE_INIT 0
+#define FIT_NO_ORDERED_BRACE_INIT 0
 #endif 
 #endif
 
-#if FIT_NO_ORDERD_BRACE_INIT
+#if FIT_NO_ORDERED_BRACE_INIT
 #include <fit/pack.hpp>
 #include <fit/capture.hpp>
 #endif
@@ -77,7 +77,7 @@ namespace fit {
 
 namespace detail {
 
-#if FIT_NO_ORDERD_BRACE_INIT
+#if FIT_NO_ORDERED_BRACE_INIT
 template<class R, class F, class Pack>
 constexpr R eval_ordered(const F& f, Pack&& p)
 {
@@ -125,7 +125,7 @@ struct apply_eval_f
     constexpr R operator()(const F& f, Ts&&... xs) const
     {
         return
-#if FIT_NO_ORDERD_BRACE_INIT
+#if FIT_NO_ORDERED_BRACE_INIT
         eval_ordered<R>
             (f, pack(), fit::forward<Ts>(xs)...);
 #else
@@ -139,9 +139,10 @@ struct apply_eval_f
     ),
     class=typename std::enable_if<(std::is_void<R>::value)>::type 
     >
-    constexpr void operator()(const F& f, Ts&&... xs) const
+    constexpr typename detail::holder<Ts...>::type 
+    operator()(const F& f, Ts&&... xs) const
     {
-#if FIT_NO_ORDERD_BRACE_INIT
+#if FIT_NO_ORDERED_BRACE_INIT
         eval_ordered<R>
             (f, pack(), fit::forward<Ts>(xs)...);
 #else

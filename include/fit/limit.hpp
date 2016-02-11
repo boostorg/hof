@@ -51,6 +51,7 @@
 ///         }
 ///     };
 ///     FIT_STATIC_FUNCTION(sum) = limit_c<2>(sum_f());
+///     assert(3 == sum(1, 2));
 /// 
 /// function_param_limit
 /// ====================

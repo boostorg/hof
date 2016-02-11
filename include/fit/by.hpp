@@ -56,7 +56,7 @@
 /// 
 ///     struct foo
 ///     {
-///         foo(int x) : x(x)
+///         foo(int x_) : x(x_)
 ///         {}
 ///         int x;
 ///     };

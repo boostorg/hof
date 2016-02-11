@@ -24,6 +24,7 @@
 ///     {
 ///         return x + 1;
 ///     };
+///     assert(3 == add_one(2));
 /// 
 /// FIT_STATIC_LAMBDA_FUNCTION
 /// ==========================
@@ -43,6 +44,7 @@
 ///     {
 ///         return x + 1;
 ///     };
+///     assert(3 == add_one(2));
 /// 
 
 #include <type_traits>

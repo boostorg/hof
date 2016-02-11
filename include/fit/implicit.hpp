@@ -58,7 +58,7 @@
 ///     struct auto_caster_foo
 ///     {
 ///         int i;
-///         explicit auto_caster_foo(int i) : i(i) {}
+///         explicit auto_caster_foo(int i_) : i(i_) {}
 /// 
 ///     };
 /// 

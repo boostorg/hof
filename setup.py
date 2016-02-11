@@ -5,6 +5,9 @@ prefix = '/// '
 include_dir = 'include/'
 doc_dir = 'doc/src'
 example_dir = 'examples'
+namespace = 'fit'
+declare_template_block = ('struct', 'class', 'template')
+declare_template_stmt = ('FIT_LIFT_CLASS')
 
 def write_to(dir_name, file, lines):
     content = list((line + "\n" for line in lines))
@@ -27,17 +30,17 @@ def extract_classes(lines):
     result = [[], []]
     which = 1
     for line in lines:
-        if line.startswith(('struct', 'class', 'template')):
-            which = 0
+        if line.startswith(declare_template_block) or line.startswith(declare_template_stmt): which = 0
+        if line.startswith(('assert')): which = 1
         result[which].append(line)
-        if which == 0 and line.startswith('}'): which = 1
+        if which == 0 and (line.startswith('}') or line.startswith(declare_template_stmt)): which = 1
     return result[0], result[1]
 
 def extract_example(lines):
     decls, main = extract_classes((x[4:] for x in extract_section(lines, "Example") if x.startswith('    ')))
     if len(decls) > 0 or len(main) > 0:
         yield '#include "example.h"'
-        yield 'using namespace fit;'
+        yield 'using namespace {0};'.format(namespace)
         for x in decls: yield x
         yield 'int main() {'
         for x in main: yield '    ' + x

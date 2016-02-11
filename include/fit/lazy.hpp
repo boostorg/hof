@@ -42,7 +42,7 @@
 /// Example
 /// -------
 /// 
-///     auto add = [](auto x, auto y) { return x+y; }
+///     auto add = [](auto x, auto y) { return x+y; };
 ///     auto increment = lazy(add)(_1, 1);
 ///     assert(increment(5) == 6);
 /// 

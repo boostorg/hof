@@ -131,7 +131,7 @@ constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
     return apply_eval(f, make_project_eval(fit::forward<Ts>(xs), p)...);
 }
 
-#if FIT_NO_ORDERD_BRACE_INIT
+#if FIT_NO_ORDERED_BRACE_INIT
 #define FIT_BY_VOID_RETURN FIT_ALWAYS_VOID_RETURN
 #else
 #if FIT_NO_CONSTEXPR_VOID
@@ -234,7 +234,7 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
     template<class... Ts>
     constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const
     {
-#if FIT_NO_ORDERD_BRACE_INIT
+#if FIT_NO_ORDERED_BRACE_INIT
         return detail::by_void_eval(this->base_projection(xs...), fit::forward<Ts>(xs)...);
 #else
 #if FIT_NO_CONSTEXPR_VOID

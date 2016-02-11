@@ -23,12 +23,23 @@ def extract_section(lines, section):
     taken = itertools.takewhile(lambda x:not (x[1].startswith('--') or x[1].startswith('==')), dropped)
     return (x for x, y in taken)
 
+def extract_classes(lines):
+    result = [[], []]
+    which = 1
+    for line in lines:
+        if line.startswith(('struct', 'class', 'template')):
+            which = 0
+        result[which].append(line)
+        if which == 0 and line.startswith('}'): which = 1
+    return result[0], result[1]
+
 def extract_example(lines):
-    example = [x[4:] for x in extract_section(lines, "Example") if x.startswith('    ')]
-    if len(example) > 0:
+    decls, main = extract_classes((x[4:] for x in extract_section(lines, "Example") if x.startswith('    ')))
+    if len(decls) > 0 or len(main) > 0:
         yield '#include "example.h"'
+        for x in decls: yield x
         yield 'int main() {'
-        for x in example: yield x
+        for x in main: yield '    ' + x
         yield "}"
 
 def write_example(md, name):

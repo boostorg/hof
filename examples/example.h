@@ -56,6 +56,10 @@
 #include <fit/unpack.hpp>
 
 #include <algorithm>
+#include <memory>
+#include <iostream>
 #include <cassert>
+
+using namespace fit;
 
 #endif

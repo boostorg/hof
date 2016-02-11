@@ -37,6 +37,7 @@ def extract_example(lines):
     decls, main = extract_classes((x[4:] for x in extract_section(lines, "Example") if x.startswith('    ')))
     if len(decls) > 0 or len(main) > 0:
         yield '#include "example.h"'
+        yield 'using namespace fit;'
         for x in decls: yield x
         yield 'int main() {'
         for x in main: yield '    ' + x

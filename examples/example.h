@@ -60,6 +60,4 @@
 #include <iostream>
 #include <cassert>
 
-using namespace fit;
-
 #endif

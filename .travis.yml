@@ -46,7 +46,7 @@ matrix:
           compiler: clang-3.5
           addons: *clang35
 
-        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=on
+        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=on BUILD_EXAMPLES=on
           os: linux
           compiler: clang-3.7
           addons: &clang37
@@ -55,11 +55,12 @@ matrix:
                 - util-linux
                 - clang-3.7
                 - valgrind
+                - python
               sources:
                 - ubuntu-toolchain-r-test
                 - llvm-toolchain-precise-3.7
 
-        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=off
+        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=off BUILD_EXAMPLES=on
           os: linux
           compiler: clang-3.7
           addons: *clang37
@@ -163,6 +164,7 @@ script:
     - mkdir -p "$INSTALL_PREFIX_PATH"
     - export PKG_CONFIG_PATH="$INSTALL_PREFIX_PATH/lib/pkgconfig"
     - cd $CHECKOUT_PATH
+    - if [[ "$BUILD_EXAMPLES" == "on" ]]; then python setup.py; fi
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
     - if [[ "$CXX11" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -std=c++11"; fi

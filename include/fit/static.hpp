@@ -43,7 +43,7 @@
 ///     struct times_function
 ///     {
 ///         double factor;
-///         times2_function() : factor(2)
+///         times_function() : factor(2)
 ///         {}
 ///         template<class T>
 ///         T operator()(T x) const

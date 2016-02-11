@@ -51,7 +51,7 @@
 ///         }
 ///     };
 /// 
-///     assert(3 == 1 | pipable(sum())(2));
+///     assert(3 == (1 | pipable(sum())(2)));
 ///     assert(3 == pipable(sum())(1, 2));
 /// 
 

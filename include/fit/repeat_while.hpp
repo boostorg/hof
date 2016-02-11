@@ -58,9 +58,6 @@
 ///     typedef std::integral_constant<int, 1> one;
 ///     typedef std::integral_constant<int, 6> six;
 /// 
-///     typedef decltype(fit::repeat_while(not_6())(increment())(std::integral_constant<int, 1>())) increment_until_6;
-/// 
-/// 
 ///     constexpr auto increment_until_6 = fit::repeat_while(not_6())(increment());
 ///     static_assert(std::is_same<six, decltype(increment_until_6(one()))>::value, "Error");
 /// 

@@ -47,7 +47,7 @@
 ///         template<class T>
 ///         int operator()(T x, T y) const
 ///         {
-///             return x+y
+///             return x+y;
 ///         }
 ///     };
 ///     FIT_STATIC_FUNCTION(sum) = limit_c<2>(sum_f());

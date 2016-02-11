@@ -19,7 +19,7 @@
 /// Semantics
 /// ---------
 /// 
-///     assert(idenity(x) == x);
+///     assert(identity(x) == x);
 /// 
 /// Synopsis
 /// --------

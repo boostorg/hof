@@ -14,7 +14,8 @@
 /// Description
 /// -----------
 /// 
-/// The `decorate` function adaptor helps create simple function decorators. 
+/// The `decorate` function adaptor helps create simple function decorators.
+/// The `decorate_adaptor` is a decorator that will take one parameter.
 /// 
 /// Synopsis
 /// --------
@@ -35,6 +36,37 @@
 /// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
+/// Example
+/// -------
+/// 
+///     struct log_f
+///     {
+///         template<class F, class... Ts>
+///         auto operator()(const std::string& message, F&& f, Ts&&.. xs) const -> decltype(f(std::forward<Ts>(xs)...)))
+///         {
+///             // Message to print out when the function is called
+///             std::cout << message << std::endl;
+///             // Call the function
+///             return f(std::forward<Ts>(xs)...));
+///         }
+///     };
+///     
+///     FIT_STATIC_FUNCTION(log) = fit::decorate(log_f());
+///     
+///     struct sum_f
+///     {
+///         template<class T, class U>
+///         T operator()(T x, U y) const
+///         {
+///             return x+y;
+///         }
+///     };
+///     
+///     FIT_STATIC_FUNCTION(logged_sum) = log("Calling sum")(sum_f());
+///     // Prints out "Calling sum"
+///     assert(3 == logged_sum(1, 2));
+/// 
+
 
 #include <fit/reveal.hpp>
 #include <fit/detail/delegate.hpp>

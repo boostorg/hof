@@ -144,7 +144,7 @@ struct capture_pack : Pack
     template<class F>
     constexpr auto operator()(F f) const FIT_SFINAE_RETURNS
     (
-        capture_invoke<F, Pack>(fit::move(f), 
+        capture_invoke<F, Pack>(FIT_RETURNS_STATIC_CAST(F&&)(f), 
             FIT_RETURNS_C_CAST(Pack&&)(
                 FIT_RETURNS_STATIC_CAST(const Pack&)(*always(FIT_CONST_THIS)(f))
             )
@@ -157,7 +157,7 @@ struct make_capture_pack_f
     template<class Pack>
     constexpr capture_pack<Pack> operator()(Pack p) const
     {
-        return capture_pack<Pack>(fit::move(p));
+        return capture_pack<Pack>(static_cast<Pack&&>(p));
     }
 };
 

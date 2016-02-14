@@ -93,7 +93,7 @@ struct construct_f
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&&)>
     constexpr T operator()(std::initializer_list<X>&& x) const
     {
-        return T(fit::move(x));
+        return T(static_cast<std::initializer_list<X>&&>(x));
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&)>
@@ -111,7 +111,7 @@ struct construct_f
     template<class F>
     constexpr by_adaptor<F, construct_f> by(F f) const
     {
-        return by_adaptor<F, construct_f>(fit::move(f), *this);
+        return by_adaptor<F, construct_f>(static_cast<F&&>(f), *this);
     }
 };
 
@@ -130,7 +130,7 @@ struct construct_template_f
     template<class F>
     constexpr by_adaptor<F, construct_template_f> by(F f) const
     {
-        return by_adaptor<F, construct_template_f>(fit::move(f), *this);
+        return by_adaptor<F, construct_template_f>(static_cast<F&&>(f), *this);
     }
 };
 
@@ -157,7 +157,7 @@ struct construct_meta_f
     template<class F>
     constexpr by_adaptor<F, construct_meta_f> by(F f) const
     {
-        return by_adaptor<F, construct_meta_f>(fit::move(f), *this);
+        return by_adaptor<F, construct_meta_f>(static_cast<F&&>(f), *this);
     }
 };
 
@@ -178,7 +178,7 @@ struct construct_meta_template_f
     template<class F>
     constexpr by_adaptor<F, construct_meta_template_f> by(F f) const
     {
-        return by_adaptor<F, construct_meta_template_f>(fit::move(f), *this);
+        return by_adaptor<F, construct_meta_template_f>(static_cast<F&&>(f), *this);
     }
 };
 

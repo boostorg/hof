@@ -118,7 +118,7 @@ struct pipe_closure : F, Pack
 template<class F, class Pack>
 constexpr auto make_pipe_closure(F f, Pack&& p) FIT_RETURNS
 (
-    pipe_closure<F, typename std::remove_reference<Pack>::type>(fit::move(f), FIT_FORWARD(Pack)(p))
+    pipe_closure<F, typename std::remove_reference<Pack>::type>(FIT_RETURNS_STATIC_CAST(F&&)(f), FIT_FORWARD(Pack)(p))
 );
 
 

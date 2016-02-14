@@ -95,7 +95,7 @@ struct make_if_f
     template<class F>
     constexpr if_adaptor<Cond, F> operator()(F f) const
     {
-        return if_adaptor<Cond, F>(fit::move(f));
+        return if_adaptor<Cond, F>(static_cast<F&&>(f));
     }
 };
 
@@ -115,7 +115,7 @@ struct if_f
 template<bool B, class F>
 constexpr detail::if_adaptor<B, F> if_c(F f)
 {
-    return detail::if_adaptor<B, F>(fit::move(f));
+    return detail::if_adaptor<B, F>(static_cast<F&&>(f));
 }
 
 FIT_DECLARE_STATIC_VAR(if_, detail::if_f);

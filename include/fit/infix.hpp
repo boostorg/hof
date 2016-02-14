@@ -86,21 +86,21 @@ struct postfix_adaptor : F
     constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<Ts>...)
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), FIT_FORWARD(Ts)(xs)...)
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_RETURNS_C_CAST(T&&)(FIT_CONST_THIS->x), FIT_FORWARD(Ts)(xs)...)
     );
 
     template<class A>
     constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<A>)
     operator>(A&& a) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), FIT_FORWARD(A)(a))
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_RETURNS_C_CAST(T&&)(FIT_CONST_THIS->x), FIT_FORWARD(A)(a))
     );
 };
 
 template<class T, class F>
 constexpr postfix_adaptor<T, F> make_postfix_adaptor(T&& x, F f)
 {
-    return postfix_adaptor<T, F>(FIT_FORWARD(T)(x), fit::move(f));
+    return postfix_adaptor<T, F>(FIT_FORWARD(T)(x), static_cast<F&&>(f));
 }
 }
 

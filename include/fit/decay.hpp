@@ -41,7 +41,7 @@ struct decay_f
     constexpr typename unwrap_reference<typename std::decay<T>::type>::type 
     operator()(T&& x) const
     {
-        return fit::forward<T>(x);
+        return FIT_FORWARD(T)(x);
     }
 };
 

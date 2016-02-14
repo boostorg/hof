@@ -70,7 +70,7 @@ struct placeholder_transformer
     {
         template<class... Ts>
         constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-        (detail::get_args<std::is_placeholder<T>::value>(fit::forward<Ts>(xs)...));
+        (detail::get_args<std::is_placeholder<T>::value>(FIT_FORWARD(Ts)(xs)...));
     };
 
     template<class T, typename std::enable_if<(std::is_placeholder<T>::value > 0), int>::type = 0>
@@ -118,7 +118,7 @@ FIT_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transfo
 template<class T, class Pack>
 constexpr auto lazy_transform(T&& x, Pack&& p) FIT_RETURNS
 (
-    p(fit::detail::pick_transformer(fit::forward<T>(x)))
+    p(fit::detail::pick_transformer(FIT_FORWARD(T)(x)))
 );
 
 template<class F, class Pack>
@@ -134,7 +134,7 @@ struct lazy_unpack
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        f(lazy_transform(fit::forward<Ts>(xs), p)...)
+        f(lazy_transform(FIT_FORWARD(Ts)(xs), p)...)
     );
 };
 
@@ -160,7 +160,7 @@ struct lazy_invoker
         FIT_ENABLE_IF_CONSTRUCTIBLE(base_type, X&&, Y&&)
     >
     constexpr lazy_invoker(X&& x, Y&& y) 
-    : base_type(fit::forward<X>(x), fit::forward<Y>(y))
+    : base_type(FIT_FORWARD(X)(x), FIT_FORWARD(Y)(y))
     {}
 #endif
 
@@ -184,7 +184,7 @@ struct lazy_invoker
         FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...))(
             fit::detail::make_lazy_unpack(
                 FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), 
-                pack_forward(fit::forward<Ts>(xs)...)
+                pack_forward(FIT_FORWARD(Ts)(xs)...)
             )
         )
     );

@@ -26,6 +26,12 @@ constexpr T&& forward(typename std::remove_reference<T>::type&& t) noexcept
   return static_cast<T&&>(t);
 }
 
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+#define FIT_FORWARD(...) fit::forward<__VA_ARGS__>
+#else
+#define FIT_FORWARD(...) static_cast<__VA_ARGS__ &&>
+#endif
+
 } // namespace fit
 
 #endif

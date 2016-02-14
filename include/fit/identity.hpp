@@ -45,7 +45,7 @@ struct identity_base
     template<class T>
     constexpr T operator()(T&& x) const
     {
-        return fit::forward<T>(x);
+        return FIT_FORWARD(T)(x);
     }
 };
 

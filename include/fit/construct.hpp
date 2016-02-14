@@ -87,7 +87,7 @@ struct construct_f
     template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(T, Ts...)>
     constexpr T operator()(Ts&&... xs) const
     {
-        return T(fit::forward<Ts>(xs)...);
+        return T(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&&)>
@@ -124,7 +124,7 @@ struct construct_template_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(fit::forward<Ts>(xs)...);
+        return Result(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>
@@ -151,7 +151,7 @@ struct construct_meta_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(fit::forward<Ts>(xs)...);
+        return Result(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>
@@ -172,7 +172,7 @@ struct construct_meta_template_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(fit::forward<Ts>(xs)...);
+        return Result(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>

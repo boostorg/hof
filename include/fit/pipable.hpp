@@ -75,7 +75,7 @@ struct pipe_closure : F, Pack
 {
     
     template<class X, class P>
-    constexpr pipe_closure(X&& fp, P&& packp) : F(fit::forward<X>(fp)), Pack(fit::forward<P>(packp))
+    constexpr pipe_closure(X&& fp, P&& packp) : F(FIT_FORWARD(X)(fp)), Pack(FIT_FORWARD(P)(packp))
     {}
 
     template<class... Ts>
@@ -96,7 +96,7 @@ struct pipe_closure : F, Pack
         A a;
         const pipe_closure * self;
         template<class X>
-        constexpr invoke(X&& xp, const pipe_closure * selfp) : a(fit::forward<X>(xp)), self(selfp)
+        constexpr invoke(X&& xp, const pipe_closure * selfp) : a(FIT_FORWARD(X)(xp)), self(selfp)
         {}
 
         FIT_RETURNS_CLASS(invoke);
@@ -104,7 +104,7 @@ struct pipe_closure : F, Pack
         template<class... Ts>
         constexpr FIT_SFINAE_RESULT(const F&, id_<A>, id_<Ts>...) 
         operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->self->base_function(xs...))(fit::forward<A>(a), fit::forward<Ts>(xs)...));
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->self->base_function(xs...))(FIT_FORWARD(A)(a), FIT_FORWARD(Ts)(xs)...));
     };
 
     FIT_RETURNS_CLASS(pipe_closure);
@@ -112,13 +112,13 @@ struct pipe_closure : F, Pack
     template<class A>
     constexpr FIT_SFINAE_RESULT(const Pack&, id_<invoke<A&&>>) 
     operator()(A&& a) const FIT_SFINAE_RETURNS
-    (FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(a))(invoke<A&&>(fit::forward<A>(a), FIT_CONST_THIS)));
+    (FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(a))(invoke<A&&>(FIT_FORWARD(A)(a), FIT_CONST_THIS)));
 };
 
 template<class F, class Pack>
 constexpr auto make_pipe_closure(F f, Pack&& p) FIT_RETURNS
 (
-    pipe_closure<F, typename std::remove_reference<Pack>::type>(fit::move(f), fit::forward<Pack>(p))
+    pipe_closure<F, typename std::remove_reference<Pack>::type>(fit::move(f), FIT_FORWARD(Pack)(p))
 );
 
 
@@ -137,12 +137,12 @@ struct pipe_pack
         sizeof...(Ts) < function_param_limit<F>::value
     >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-    (make_pipe_closure(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), fit::pack_forward(fit::forward<Ts>(xs)...)));
+    (make_pipe_closure(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), fit::pack_forward(FIT_FORWARD(Ts)(xs)...)));
 };
     
 template<class A, class F, class Pack>
 constexpr auto operator|(A&& a, const pipe_closure<F, Pack>& p) FIT_RETURNS
-(p(fit::forward<A>(a)));
+(p(FIT_FORWARD(A)(a)));
 
 }
 
@@ -163,7 +163,7 @@ struct pipable_adaptor
 
 template<class A, class F>
 constexpr auto operator|(A&& a, const pipable_adaptor<F>& p) FIT_RETURNS
-(p(fit::forward<A>(a)));
+(p(FIT_FORWARD(A)(a)));
 
 FIT_DECLARE_STATIC_VAR(pipable, detail::make<pipable_adaptor>);
 
@@ -175,7 +175,7 @@ struct static_function_wrapper;
 // Operators for static_function_wrapper adaptor
 template<class A, class F>
 auto operator|(A&& a, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
-(f(fit::forward<A>(a)));
+(f(FIT_FORWARD(A)(a)));
 
 template<class F>
 struct static_default_function;
@@ -183,7 +183,7 @@ struct static_default_function;
 // Operators for static_default_function adaptor
 template<class A, class F>
 auto operator|(A&& a, const fit::detail::static_default_function<F>& f) FIT_RETURNS
-(f(fit::forward<A>(a)));
+(f(FIT_FORWARD(A)(a)));
 
 }
 
@@ -193,7 +193,7 @@ struct static_;
 // Operators for static_ adaptor
 template<class A, class F>
 auto operator|(A&& a, static_<F> f) FIT_RETURNS
-(f.base_function().base_function()(fit::forward<A>(a)));
+(f.base_function().base_function()(FIT_FORWARD(A)(a)));
 
 } // namespace fit
 

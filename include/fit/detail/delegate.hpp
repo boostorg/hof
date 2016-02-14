@@ -60,7 +60,7 @@
 #else
 #define FIT_DELGATE_CONSTRUCTOR(C, T, var) \
     template<class... FitXs, FIT_ENABLE_IF_CONSTRUCTIBLE(T, FitXs&&...)> \
-    constexpr C(FitXs&&... fit_xs) : var(fit::forward<FitXs>(fit_xs)...) {}
+    constexpr C(FitXs&&... fit_xs) : var(FIT_FORWARD(FitXs)(fit_xs)...) {}
 
 #endif
 

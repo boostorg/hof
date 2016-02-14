@@ -85,7 +85,7 @@ struct compressed_pair
         FIT_ENABLE_IF_CONSTRUCTIBLE(Second, Y&&)
     >
     constexpr compressed_pair(X&& x, Y&& y) 
-    : FirstBase(fit::forward<X>(x)), SecondBase(fit::forward<Y>(y))
+    : FirstBase(FIT_FORWARD(X)(x)), SecondBase(FIT_FORWARD(Y)(y))
     {}
 
     FIT_INHERIT_DEFAULT(compressed_pair, FirstBase, SecondBase)

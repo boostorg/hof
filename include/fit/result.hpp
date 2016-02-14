@@ -77,7 +77,7 @@ struct result_adaptor : detail::callable_base<F>
     template<class... Ts, class=typename std::enable_if<(fit::is_callable<F, Ts...>::value)>::type>
     constexpr result_type operator()(Ts&&... xs) const
     {
-        return this->base_function(xs...)(fit::forward<Ts>(xs)...);
+        return this->base_function(xs...)(FIT_FORWARD(Ts)(xs)...);
     };
 };
 
@@ -97,7 +97,7 @@ struct result_adaptor<void, F> : detail::callable_base<F>
     template<class... Ts, class=typename std::enable_if<(fit::is_callable<F, Ts...>::value)>::type>
     constexpr typename detail::holder<Ts...>::type operator()(Ts&&... xs) const
     {
-        return (typename detail::holder<Ts...>::type)this->base_function(xs...)(fit::forward<Ts>(xs)...);
+        return (typename detail::holder<Ts...>::type)this->base_function(xs...)(FIT_FORWARD(Ts)(xs)...);
     };
 };
 

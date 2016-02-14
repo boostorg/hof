@@ -98,7 +98,7 @@ struct conditional_adaptor_base<N, F, Fs...> : conditional_adaptor_base<N, F>, c
 
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, single_base), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
     constexpr conditional_adaptor_base(X&& f1, Xs&& ... fs) 
-    : single_base(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)
+    : single_base(FIT_FORWARD(X)(f1)), base(FIT_FORWARD(Xs)(fs)...)
     {}
 
     using base::operator();
@@ -124,7 +124,7 @@ struct conditional_adaptor_base<N, F> : detail::callable_base<F>
     constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<Ts>...) 
     operator()(rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
     );
 };
 
@@ -156,7 +156,7 @@ struct conditional_adaptor
     constexpr FIT_SFINAE_RESULT(const base&, id_<rank_type>, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)))(rank_type(), fit::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)))(rank_type(), FIT_FORWARD(Ts)(xs)...)
     );
 };
 

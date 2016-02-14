@@ -71,7 +71,7 @@ struct capture_invoke : detail::callable_base<F>, Pack
 {
     typedef capture_invoke fit_rewritable1_tag;
     template<class X, class Y>
-    constexpr capture_invoke(X&& x, Y&& y) : detail::callable_base<F>(fit::forward<X>(x)), Pack(fit::forward<Y>(y))
+    constexpr capture_invoke(X&& x, Y&& y) : detail::callable_base<F>(FIT_FORWARD(X)(x)), Pack(FIT_FORWARD(Y)(y))
     {}
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
@@ -127,7 +127,7 @@ struct capture_invoke : detail::callable_base<F>, Pack
         fit::pack_join
         (
             FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), 
-            fit::pack_forward(fit::forward<Ts>(xs)...)
+            fit::pack_forward(FIT_FORWARD(Ts)(xs)...)
         )
         (FIT_RETURNS_C_CAST(detail::callable_base<F>&&)(FIT_CONST_THIS->base_function(xs...)))
     );
@@ -167,7 +167,7 @@ struct capture_f
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        FIT_RETURNS_CONSTRUCT(make_capture_pack_f)()(FIT_RETURNS_CONSTRUCT(F)()(fit::forward<Ts>(xs)...))
+        FIT_RETURNS_CONSTRUCT(make_capture_pack_f)()(FIT_RETURNS_CONSTRUCT(F)()(FIT_FORWARD(Ts)(xs)...))
     );
 };
 }

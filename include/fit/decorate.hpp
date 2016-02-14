@@ -54,7 +54,7 @@ struct decorator_invoke
 
     template<class X1, class X2, class X3>
     constexpr decorator_invoke(X1&& x1, X2&& x2, X3&& x3)
-    : base(fit::forward<X1>(x1), fit::forward<X2>(x2)), D(fit::forward<X3>(x3))
+    : base(FIT_FORWARD(X1)(x1), FIT_FORWARD(X2)(x2)), D(FIT_FORWARD(X3)(x3))
     {}
 
     template<class... Ts>
@@ -100,7 +100,7 @@ struct decorator_invoke
         FIT_MANGLE_CAST(const D&)(FIT_CONST_THIS->get_decorator(xs...))(
             FIT_MANGLE_CAST(const T&)(FIT_CONST_THIS->get_data(xs...)),
             FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)),
-            fit::forward<Ts>(xs)...
+            FIT_FORWARD(Ts)(xs)...
         )
     );
 };

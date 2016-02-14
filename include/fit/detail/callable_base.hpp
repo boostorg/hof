@@ -32,7 +32,7 @@ struct non_class_function
     constexpr FIT_SFINAE_RESULT(apply_f, id_<F>, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        fit::apply(f, fit::forward<Ts>(xs)...)
+        fit::apply(f, FIT_FORWARD(Ts)(xs)...)
     );
 };
 

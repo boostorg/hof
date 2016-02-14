@@ -90,7 +90,7 @@ struct compose_kernel : detail::compressed_pair<F1, F2>
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...))(
-            FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))(fit::forward<Ts>(xs)...)
+            FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))(FIT_FORWARD(Ts)(xs)...)
         )
     );
 };
@@ -107,7 +107,7 @@ struct compose_adaptor : detail::compose_kernel<detail::callable_base<F>, FIT_JO
 
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
     constexpr compose_adaptor(X&& f1, Xs&& ... fs) 
-    : base_type(fit::forward<X>(f1), tail(fit::forward<Xs>(fs)...))
+    : base_type(FIT_FORWARD(X)(f1), tail(FIT_FORWARD(Xs)(fs)...))
     {}
 };
 
@@ -120,7 +120,7 @@ struct compose_adaptor<F> : detail::callable_base<F>
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>)>
     constexpr compose_adaptor(X&& f1) 
-    : detail::callable_base<F>(fit::forward<X>(f1))
+    : detail::callable_base<F>(FIT_FORWARD(X)(f1))
     {}
 
 };

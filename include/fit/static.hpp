@@ -81,7 +81,7 @@ struct static_
     template<class... Ts>
     FIT_SFINAE_RESULT(F, id_<Ts>...) 
     operator()(Ts && ... xs) const
-    FIT_SFINAE_RETURNS(FIT_CONST_THIS->base_function()(fit::forward<Ts>(xs)...));
+    FIT_SFINAE_RETURNS(FIT_CONST_THIS->base_function()(FIT_FORWARD(Ts)(xs)...));
 };
 
 

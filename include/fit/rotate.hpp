@@ -85,7 +85,7 @@ struct rotate_adaptor : detail::callable_base<F>
     operator()(T&& x, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))
-            (fit::forward<Ts>(xs)..., fit::forward<T>(x))
+            (FIT_FORWARD(Ts)(xs)..., FIT_FORWARD(T)(x))
     );
 };
 

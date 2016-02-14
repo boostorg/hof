@@ -57,7 +57,7 @@ struct mutable_adaptor
 
     template<class... Ts>
     FIT_SFINAE_RESULT(F, id_<Ts>...) 
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS(FIT_CONST_THIS->f(fit::forward<Ts>(xs)...));
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS(FIT_CONST_THIS->f(FIT_FORWARD(Ts)(xs)...));
 };
 
 FIT_DECLARE_STATIC_VAR(mutable_, detail::make<mutable_adaptor>);

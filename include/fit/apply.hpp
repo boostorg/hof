@@ -77,7 +77,7 @@ struct apply_mem_fn
     >::value>::type> \
     constexpr R operator()(R (Base::*mf)(Ts...) cv, Derived&& ref, Us &&... xs) const \
     { \
-        return (fit::forward<Derived>(ref).*mf)(fit::forward<Us>(xs)...); \
+        return (FIT_FORWARD(Derived)(ref).*mf)(FIT_FORWARD(Us)(xs)...); \
     }
     FIT_APPLY_MEM_FN_CALL()
     FIT_APPLY_MEM_FN_CALL(const)
@@ -92,7 +92,7 @@ struct apply_mem_data
     )>::type>
     constexpr R operator()(R Base::*pmd, Derived&& ref) const
     {
-        return fit::forward<Derived>(ref).*pmd;
+        return FIT_FORWARD(Derived)(ref).*pmd;
     }
 };
 
@@ -111,7 +111,7 @@ struct apply_f
     constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_fn, id_<F>, id_<T>, id_<Ts>...) 
     operator()(F&& f, T&& obj, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
-        apply_mem_fn()(f, fit::forward<T>(obj), fit::forward<Ts>(xs)...)
+        apply_mem_fn()(f, FIT_FORWARD(T)(obj), FIT_FORWARD(Ts)(xs)...)
     );
 
     template<class F, class T, class... Ts, class U=typename apply_deref<T>::type, class=typename std::enable_if<(
@@ -120,7 +120,7 @@ struct apply_f
     constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_fn, id_<F>, id_<U>, id_<Ts>...) 
     operator()(F&& f, T&& obj, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
-        apply_mem_fn()(f, *fit::forward<T>(obj), fit::forward<Ts>(xs)...)
+        apply_mem_fn()(f, *FIT_FORWARD(T)(obj), FIT_FORWARD(Ts)(xs)...)
     );
 
     template<class F, class T, class=typename std::enable_if<(
@@ -129,7 +129,7 @@ struct apply_f
     constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_data, id_<F>, id_<T>) 
     operator()(F&& f, T&& obj) const FIT_SFINAE_MANUAL_RETURNS
     (
-        apply_mem_data()(f, fit::forward<T>(obj))
+        apply_mem_data()(f, FIT_FORWARD(T)(obj))
     );
 
     template<class F, class T, class U=typename apply_deref<T>::type, class=typename std::enable_if<(
@@ -138,33 +138,33 @@ struct apply_f
     constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_data, id_<F>, id_<U>) 
     operator()(F&& f, T&& obj) const FIT_SFINAE_MANUAL_RETURNS
     (
-        apply_mem_data()(f, *fit::forward<T>(obj))
+        apply_mem_data()(f, *FIT_FORWARD(T)(obj))
     );
 
 #else
 
     template <class Base, class T, class Derived>
     constexpr auto operator()(T Base::*pmd, Derived&& ref) const
-    FIT_RETURNS(fit::forward<Derived>(ref).*pmd);
+    FIT_RETURNS(FIT_FORWARD(Derived)(ref).*pmd);
      
     template <class PMD, class Pointer>
     constexpr auto operator()(PMD&& pmd, Pointer&& ptr) const
-    FIT_RETURNS((*fit::forward<Pointer>(ptr)).*fit::forward<PMD>(pmd));
+    FIT_RETURNS((*FIT_FORWARD(Pointer)(ptr)).*FIT_FORWARD(PMD)(pmd));
      
     template <class Base, class T, class Derived, class... Args>
     constexpr auto operator()(T Base::*pmf, Derived&& ref, Args&&... args) const
-    FIT_RETURNS((fit::forward<Derived>(ref).*pmf)(fit::forward<Args>(args)...));
+    FIT_RETURNS((FIT_FORWARD(Derived)(ref).*pmf)(FIT_FORWARD(Args)(args)...));
      
     template <class PMF, class Pointer, class... Args>
     constexpr auto operator()(PMF&& pmf, Pointer&& ptr, Args&&... args) const
-    FIT_RETURNS(((*fit::forward<Pointer>(ptr)).*fit::forward<PMF>(pmf))(fit::forward<Args>(args)...));
+    FIT_RETURNS(((*FIT_FORWARD(Pointer)(ptr)).*FIT_FORWARD(PMF)(pmf))(FIT_FORWARD(Args)(args)...));
 
 #endif
     template<class F, class... Ts>
     constexpr FIT_SFINAE_RESULT(F, id_<Ts>...) 
     operator()(F&& f, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        f(fit::forward<Ts>(xs)...)
+        f(FIT_FORWARD(Ts)(xs)...)
     );
 };
 

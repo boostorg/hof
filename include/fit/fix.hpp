@@ -111,7 +111,7 @@ struct fix_adaptor_base : detail::callable_base<F>
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...))
-            (FIT_MANGLE_CAST(const Derived&)(FIT_CONST_THIS->derived_function(xs...)), fit::forward<Ts>(xs)...)
+            (FIT_MANGLE_CAST(const Derived&)(FIT_CONST_THIS->derived_function(xs...)), FIT_FORWARD(Ts)(xs)...)
     );
 };
 }

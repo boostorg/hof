@@ -64,7 +64,7 @@ struct repeater
     constexpr FIT_SFINAE_RESULT(repeater<N-1>, id_<const F&>, result_of<const F&, id_<Ts>...>) 
     operator()(const F& f, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        repeater<N-1>()(f, f(fit::forward<Ts>(xs)...))
+        repeater<N-1>()(f, f(FIT_FORWARD(Ts)(xs)...))
     );
 };
 
@@ -86,7 +86,7 @@ struct repeat_decorator
         detail::repeater<T::value>()
         (
             f, 
-            fit::forward<Ts>(xs)...
+            FIT_FORWARD(Ts)(xs)...
         )
     );
 };

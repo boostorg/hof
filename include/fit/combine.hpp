@@ -69,7 +69,7 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
         FIT_ENABLE_IF_CONSTRUCTIBLE(F, X),
         FIT_ENABLE_IF_CONSTRUCTIBLE(base_type, Xs...)>
     constexpr combine_adaptor_base(X&& x, Xs&&... xs) 
-    : F(fit::forward<X>(x)), base_type(fit::forward<Xs>(xs)...)
+    : F(FIT_FORWARD(X)(x)), base_type(FIT_FORWARD(Xs)(xs)...)
     {}
 
     template<class... Ts>
@@ -98,7 +98,7 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
     operator()(Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))
-            (alias_value<pack_tag<seq<Ns>, Gs...>, Gs>(*FIT_CONST_THIS, xs)(fit::forward<Ts>(xs))...)
+            (alias_value<pack_tag<seq<Ns>, Gs...>, Gs>(*FIT_CONST_THIS, xs)(FIT_FORWARD(Ts)(xs))...)
     );
 };
 

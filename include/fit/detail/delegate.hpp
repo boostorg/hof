@@ -13,6 +13,7 @@
 #include <fit/detail/and.hpp>
 #include <fit/detail/holder.hpp>
 #include <fit/detail/forward.hpp>
+#include <fit/detail/using.hpp>
 
 #ifndef FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
@@ -93,13 +94,11 @@ struct is_default_constructible_helper
 {};
 
 template<class... Xs>
-struct is_default_constructible
 #if FIT_NO_STD_DEFAULT_CONSTRUCTIBLE
-: and_<is_default_constructible_helper<Xs>...>
+FIT_USING(is_default_constructible, and_<is_default_constructible_helper<Xs>...>);
 #else
-: and_<std::is_default_constructible<Xs>...>
+FIT_USING(is_default_constructible, and_<std::is_default_constructible<Xs>...>);
 #endif
-{};
 
 template<class T, class... Xs>
 struct is_constructible

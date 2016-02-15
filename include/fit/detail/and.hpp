@@ -9,6 +9,7 @@
 #define FIT_GUARD_AND_H
 
 #include <type_traits>
+#include <fit/detail/using.hpp>
 
 namespace fit { namespace detail {
 
@@ -28,9 +29,7 @@ struct and_<>
 #else
 template<bool...> struct bool_seq {};
 template<class... Ts>
-struct and_
-: std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, true)...>>::type
-{};
+FIT_USING(and_, std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, true)...>>);
 #endif
 
 }} // namespace fit

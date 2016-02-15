@@ -47,14 +47,7 @@
 #include <fit/detail/join.hpp>
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
-
-#ifndef FIT_HAS_TEMPLATE_ALIAS
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_HAS_TEMPLATE_ALIAS 0
-#else
-#define FIT_HAS_TEMPLATE_ALIAS 1
-#endif
-#endif
+#include <fit/detail/using.hpp>
 
 namespace fit { 
 
@@ -101,9 +94,7 @@ struct get_failure<F, typename std::enable_if<detail::has_failure<F>::value>::ty
 
 namespace detail {
 template<class Failure, class... Ts>
-struct apply_failure
-: Failure::template of<Ts...>
-{};
+FIT_USING_TYPENAME(apply_failure, Failure::template of<Ts...>);
 
 template<class F, class Failure>
 struct reveal_failure
@@ -170,9 +161,8 @@ template<class Failure, class... Failures>
 struct failures 
 {
     template<class Transform>
-    struct transform
-    : with_failures<detail::transform_failures<Failure, Transform>, detail::transform_failures<Failures, Transform>...>
-    {};
+    FIT_USING(transform, with_failures<detail::transform_failures<Failure, Transform>, detail::transform_failures<Failures, Transform>...>);
+
     template<class F, class FailureBase=FIT_JOIN(failures, Failures...)>
     struct overloads
     : detail::traverse_failure<F, Failure>, FailureBase::template overloads<F>
@@ -188,9 +178,8 @@ template<class Failure>
 struct failures<Failure>
 {
     template<class Transform>
-    struct transform
-    : with_failures<detail::transform_failures<Failure, Transform>>
-    {};
+    FIT_USING(transform, with_failures<detail::transform_failures<Failure, Transform>>);
+
     template<class F>
     struct overloads
     : detail::traverse_failure<F, Failure>
@@ -201,14 +190,10 @@ struct failures<Failure>
 };
 
 template<class Transform, class... Fs>
-struct failure_map
-: with_failures<detail::transform_failures<get_failure<Fs>, Transform>...>
-{};
+FIT_USING(failure_map, with_failures<detail::transform_failures<get_failure<Fs>, Transform>...>);
 
 template<class... Fs>
-struct failure_for
-: with_failures<get_failure<Fs>...>
-{};
+FIT_USING(failure_for, with_failures<get_failure<Fs>...>);
 
 template<class F>
 struct reveal_adaptor

@@ -61,6 +61,7 @@
 #include <fit/detail/move.hpp>
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
+#include <fit/detail/cast.hpp>
 #include <fit/limit.hpp>
 
 namespace fit { 
@@ -112,7 +113,9 @@ struct pipe_closure : F, Pack
     template<class A>
     constexpr FIT_SFINAE_RESULT(const Pack&, id_<invoke<A&&>>) 
     operator()(A&& a) const FIT_SFINAE_RETURNS
-    (FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(a))(invoke<A&&>(FIT_FORWARD(A)(a), FIT_CONST_THIS)));
+    (
+        fit::detail::cast<Pack>(*FIT_CONST_THIS, a)(invoke<A&&>(FIT_FORWARD(A)(a), FIT_CONST_THIS))
+    );
 };
 
 template<class F, class Pack>

@@ -181,12 +181,7 @@ struct failures<Failure>
     FIT_USING(transform, with_failures<detail::transform_failures<Failure, Transform>>);
 
     template<class F>
-    struct overloads
-    : detail::traverse_failure<F, Failure>
-    {
-        constexpr overloads()
-        {}
-    };
+    FIT_USING(overloads, detail::traverse_failure<F, Failure>);
 };
 
 template<class Transform, class... Fs>

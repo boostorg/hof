@@ -104,7 +104,7 @@ struct pipe_closure : F, Pack
         template<class... Ts>
         constexpr FIT_SFINAE_RESULT(const F&, id_<A>, id_<Ts>...) 
         operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->self->base_function(xs...))(FIT_FORWARD(A)(a), FIT_FORWARD(Ts)(xs)...));
+        (FIT_RETURNS_STATIC_CAST(const F&)(*FIT_CONST_THIS->self)(FIT_FORWARD(A)(a), FIT_FORWARD(Ts)(xs)...));
     };
 
     FIT_RETURNS_CLASS(pipe_closure);

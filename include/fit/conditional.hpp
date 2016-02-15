@@ -71,6 +71,7 @@
 #include <fit/detail/callable_base.hpp>
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/join.hpp>
+#include <fit/detail/seq.hpp>
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
 
@@ -101,8 +102,8 @@ struct conditional_adaptor_base<N, F, Fs...> : conditional_adaptor_base<N, F>, c
     : single_base(FIT_FORWARD(X)(f1)), base(FIT_FORWARD(Xs)(fs)...)
     {}
 
-    using base::operator();
-    using single_base::operator();
+    using base::fit_conditional_invoke;
+    using single_base::fit_conditional_invoke;
 };
 
 template<int N, class F>
@@ -120,11 +121,11 @@ struct conditional_adaptor_base<N, F> : detail::callable_base<F>
 
     FIT_RETURNS_CLASS(conditional_adaptor_base);
 
-    template<class... Ts>
+    template<class Derived, class... Ts>
     constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<Ts>...) 
-    operator()(rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
+    fit_conditional_invoke(const Derived& d, rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
+        (FIT_RETURNS_STATIC_CAST(const detail::callable_base<F>&)(d))(FIT_FORWARD(Ts)(xs)...)
     );
 };
 
@@ -156,7 +157,7 @@ struct conditional_adaptor
     constexpr FIT_SFINAE_RESULT(const base&, id_<rank_type>, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)))(rank_type(), FIT_FORWARD(Ts)(xs)...)
+        FIT_CONST_THIS->fit_conditional_invoke(*FIT_CONST_THIS, rank_type(), FIT_FORWARD(Ts)(xs)...)
     );
 };
 

@@ -73,6 +73,7 @@
 #include <fit/detail/join.hpp>
 #include <fit/detail/seq.hpp>
 #include <fit/detail/make.hpp>
+#include <fit/detail/cast.hpp>
 #include <fit/detail/static_const_var.hpp>
 
 namespace fit {
@@ -116,7 +117,7 @@ struct conditional_adaptor_base<N, F> : detail::callable_base<F>
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return fit::detail::cast<detail::callable_base<F>>(*this, xs...);
     }
 
     FIT_RETURNS_CLASS(conditional_adaptor_base);
@@ -148,7 +149,7 @@ struct conditional_adaptor
     template<class... Ts>
     constexpr const base& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return fit::detail::cast<base>(*this, xs...);
     }
 
     FIT_RETURNS_CLASS(conditional_adaptor);

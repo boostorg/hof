@@ -80,15 +80,15 @@ struct pipe_closure : F, Pack
     {}
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&...) const
+    constexpr const F& base_function(Ts&&... xs) const
     {
-        return *this;
+        return fit::detail::cast<F>(*this, xs...);
     }
 
     template<class... Ts>
-    constexpr const Pack& get_pack(Ts&&...) const
+    constexpr const Pack& get_pack(Ts&&... xs) const
     {
-        return *this;
+        return fit::detail::cast<Pack>(*this, xs...);
     }
 
     template<class A>

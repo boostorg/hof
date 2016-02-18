@@ -30,6 +30,9 @@ struct and_<>
 template<bool...> struct bool_seq {};
 template<class... Ts>
 FIT_USING(and_, std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, true)...>>);
+
+template<bool... Bs>
+FIT_USING(and_c, std::is_same<bool_seq<Bs...>, bool_seq<(Bs, true)...>>);
 #endif
 
 }} // namespace fit

@@ -93,7 +93,7 @@ struct pack_tag
 #if FIT_PACK_HAS_EBO
 template<class T, class Tag>
 struct pack_holder
-: std::conditional<std::is_empty<T>::value, 
+: std::conditional<FIT_IS_EMPTY(T), 
     alias_inherit<T, Tag>, 
     alias<T, Tag>
 >
@@ -102,8 +102,8 @@ struct pack_holder
 template<class T, class Tag>
 struct pack_holder
 : std::conditional<
-        std::is_empty<T>::value && 
-        std::is_literal_type<T>::value && 
+        FIT_IS_EMPTY(T) && 
+        FIT_IS_LITERAL(T) && 
         is_default_constructible<T>::value,
     alias_static<T, Tag>,
     alias<T, Tag>

@@ -14,6 +14,7 @@
 #include <fit/detail/holder.hpp>
 #include <fit/detail/forward.hpp>
 #include <fit/detail/using.hpp>
+#include <fit/detail/intrinsics.hpp>
 
 #ifndef FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
@@ -32,13 +33,13 @@
 #endif
 
 #define FIT_ENABLE_IF_CONVERTIBLE(...) \
-    class=typename std::enable_if<std::is_convertible<__VA_ARGS__>::value>::type
+    class=typename std::enable_if<FIT_IS_CONVERTIBLE(__VA_ARGS__)>::type
 
 #define FIT_ENABLE_IF_CONVERTIBLE_UNPACK(...) \
-    class=typename std::enable_if<fit::detail::and_<std::is_convertible<__VA_ARGS__>...>::value>::type
+    class=typename std::enable_if<fit::detail::and_c<FIT_IS_CONVERTIBLE(__VA_ARGS__)...>::value>::type
 
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
-    class=typename std::enable_if<std::is_constructible<__VA_ARGS__>::value>::type
+    class=typename std::enable_if<FIT_IS_CONSTRUCTIBLE(__VA_ARGS__)>::type
 
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
@@ -48,7 +49,7 @@
 #define FIT_INHERIT_DEFAULT_EMPTY(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && \
-        fit::detail::is_default_constructible<__VA_ARGS__>::value && std::is_empty<__VA_ARGS__>::value \
+        fit::detail::is_default_constructible<__VA_ARGS__>::value && FIT_IS_EMPTY(__VA_ARGS__) \
     >::type> \
     constexpr C() {}
 

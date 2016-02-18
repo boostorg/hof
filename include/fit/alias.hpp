@@ -124,7 +124,7 @@ struct alias_inherit
 };
 
 #define FIT_DETAIL_ALIAS_INHERIT_GET_VALUE(ref, move) \
-template<class Tag, class T, class... Ts, class=typename std::enable_if<(std::is_class<T>::value)>::type> \
+template<class Tag, class T, class... Ts, class=typename std::enable_if<(FIT_IS_CLASS(T))>::type> \
 constexpr T ref alias_value(alias_inherit<T, Tag> ref a, Ts&&...) \
 { \
     return move(a); \
@@ -145,8 +145,8 @@ struct alias_static_storage
     // member unitialized at runtime, it is, therefore, only safe to use this
     // class on types that are empty with constructors that have no possible
     // side effects.
-    static_assert(std::is_empty<T>::value && 
-        std::is_literal_type<T>::value && 
+    static_assert(FIT_IS_EMPTY(T) && 
+        FIT_IS_LITERAL(T) && 
         std::is_default_constructible<T>::value, "In-class initialization is not yet implemented on MSVC");
 #endif
     static constexpr T value = T();

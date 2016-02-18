@@ -24,19 +24,14 @@
 #endif
 #endif
 
-#ifndef FIT_NO_STD_DEFAULT_CONSTRUCTIBLE
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_NO_STD_DEFAULT_CONSTRUCTIBLE 1
-#else
-#define FIT_NO_STD_DEFAULT_CONSTRUCTIBLE 0
-#endif
-#endif
-
 #define FIT_ENABLE_IF_CONVERTIBLE(...) \
     class=typename std::enable_if<FIT_IS_CONVERTIBLE(__VA_ARGS__)>::type
 
 #define FIT_ENABLE_IF_CONVERTIBLE_UNPACK(...) \
-    class=typename std::enable_if<fit::detail::and_c<FIT_IS_CONVERTIBLE(__VA_ARGS__)...>::value>::type
+    class=typename std::enable_if<FIT_AND_UNPACK(FIT_IS_CONVERTIBLE(__VA_ARGS__))>::type
+
+#define FIT_ENABLE_IF_BASE_OF(...) \
+    class=typename std::enable_if<FIT_IS_BASE_OF(__VA_ARGS__)>::type
 
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
     class=typename std::enable_if<FIT_IS_CONSTRUCTIBLE(__VA_ARGS__)>::type
@@ -66,50 +61,25 @@
 
 #endif
 
-// TODO: For compilers that support inheriting constructors replace with
-// `using Base::Base;`
+// Currently its faster to use `FIT_DELGATE_CONSTRUCTOR` than `using
+// Base::Base;`
+#if 1
 #define FIT_INHERIT_CONSTRUCTOR(Derived, Base) FIT_DELGATE_CONSTRUCTOR(Derived, Base, Base)
+#else
+#define FIT_INHERIT_CONSTRUCTOR(Derived, Base) \
+    using fit_inherit_base = Base; \
+    using fit_inherit_base::fit_inherit_base; \
+    Derived()=default; \
+    template<class FitX, FIT_ENABLE_IF_CONVERTIBLE(FitX, Base)> \
+    constexpr Derived(FitX&& fit_x) : Base(FIT_FORWARD(FitX)(fit_x)) {}
+#endif
 
 namespace fit {
 namespace detail {
 
 
-template<class T, class=void>
-struct is_default_constructible_check
-: std::false_type
-{};
-
-template<class T>
-struct is_default_constructible_check<T, typename holder<
-    decltype(T())
->::type>
-: std::true_type
-{};
-
-template<class T>
-struct is_default_constructible_helper
-: std::conditional<(std::is_reference<T>::value), 
-    std::false_type,
-    is_default_constructible_check<T>
->::type
-{};
-
 template<class... Xs>
-#if FIT_NO_STD_DEFAULT_CONSTRUCTIBLE
-FIT_USING(is_default_constructible, and_<is_default_constructible_helper<Xs>...>);
-#else
-FIT_USING(is_default_constructible, and_c<FIT_IS_CONSTRUCTIBLE(Xs)...>);
-#endif
-
-template<class T, class... Xs>
-struct is_constructible
-: std::is_constructible<T, Xs...>
-{};
-
-template<class T>
-struct is_constructible<T>
-: is_default_constructible<T>
-{};
+FIT_USING(is_default_constructible, std::integral_constant<bool, FIT_AND_UNPACK(FIT_IS_DEFAULT_CONSTRUCTIBLE(Xs))>);
 
 template<class C, class X, class... Xs>
 struct enable_if_constructible

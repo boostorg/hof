@@ -206,9 +206,9 @@ struct unpack_adaptor : detail::callable_base<F>
                 detail::unpack_simple(deducer(), FIT_FORWARD(T)(x))
             );
 
-            template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
-                is_unpackable<T>, is_unpackable<Ts>...
-            >::value)>::type>
+            template<class T, class... Ts, class=typename std::enable_if<(
+                is_unpackable<T>::value && FIT_AND_UNPACK(is_unpackable<Ts>::value)
+            )>::type>
             static auto deduce(T&& x, Ts&&... xs) FIT_RETURNS
             (
                 detail::unpack_join(deducer(), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
@@ -239,9 +239,9 @@ struct unpack_adaptor : detail::callable_base<F>
         detail::unpack_simple(FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(x)), FIT_FORWARD(T)(x))
     );
 
-    template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
-        is_unpackable<T>, is_unpackable<Ts>...
-    >::value)>::type>
+    template<class T, class... Ts, class=typename std::enable_if<(
+        is_unpackable<T>::value && FIT_AND_UNPACK(is_unpackable<Ts>::value)
+    )>::type>
     constexpr auto operator()(T&& x, Ts&&... xs) const FIT_RETURNS
     (
         detail::unpack_join(FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(x)), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)

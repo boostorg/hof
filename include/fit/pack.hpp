@@ -325,11 +325,17 @@ struct pack_join_result
 
 struct pack_f
 {
+    // template<class... Ts>
+    // constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    // (
+    //     pack_base<typename gens<sizeof...(Ts)>::type, typename remove_rvalue_reference<Ts>::type...>(FIT_FORWARD(Ts)(xs)...)
+    // );
+
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-    (
-        pack_base<typename gens<sizeof...(Ts)>::type, typename remove_rvalue_reference<Ts>::type...>(FIT_FORWARD(Ts)(xs)...)
-    );
+    constexpr auto operator()(Ts&&... xs) const
+    {
+        return pack_base<typename gens<sizeof...(Ts)>::type, typename remove_rvalue_reference<Ts>::type...>(FIT_FORWARD(Ts)(xs)...);
+    }
 };
 
 struct pack_forward_f

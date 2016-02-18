@@ -22,7 +22,7 @@
 #define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value
 #define FIT_IS_CLASS(...) __is_class(__VA_ARGS__)
 #define FIT_IS_EMPTY(...) __is_empty(__VA_ARGS__)
-#define FIT_IS_LITERAL(...) __is_literal(__VA_ARGS__)
+#define FIT_IS_LITERAL(...) __is_literal_type(__VA_ARGS__)
 #elif defined(_MSC_VER)
 #define FIT_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #define FIT_IS_CONVERTIBLE(...) __is_convertible_to(__VA_ARGS__)

@@ -36,7 +36,7 @@ FIT_USING(and_, std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, true).
 template<bool... Bs>
 FIT_USING(and_c, std::is_same<bool_seq<Bs...>, bool_seq<(Bs, true)...>>);
 
-#define FIT_AND_UNPACK(Bs) FIT_IS_BASE_OF(fit::detail::bool_seq<Bs...>, fit::detail::bool_seq<(Bs, true)...>)
+#define FIT_AND_UNPACK(Bs) FIT_IS_BASE_OF(fit::detail::bool_seq<Bs...>, fit::detail::bool_seq<(Bs || true)...>)
 #endif
 
 }} // namespace fit

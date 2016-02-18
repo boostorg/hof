@@ -28,13 +28,13 @@
 #define FIT_IS_CONVERTIBLE(...) __is_convertible_to(__VA_ARGS__)
 #define FIT_IS_CLASS(...) __is_class(__VA_ARGS__)
 #define FIT_IS_EMPTY(...) __is_empty(__VA_ARGS__)
-#define FIT_IS_LITERAL(...) std::is_literal<__VA_ARGS__>::value
+#define FIT_IS_LITERAL(...) std::is_literal_type<__VA_ARGS__>::value
 #else
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
 #define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value
 #define FIT_IS_CLASS(...) std::is_class<__VA_ARGS__>::value
 #define FIT_IS_EMPTY(...) std::is_empty<__VA_ARGS__>::value
-#define FIT_IS_LITERAL(...) std::is_literal<__VA_ARGS__>::value
+#define FIT_IS_LITERAL(...) std::is_literal_type<__VA_ARGS__>::value
 #endif
 
 namespace fit {

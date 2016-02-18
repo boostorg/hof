@@ -98,7 +98,7 @@ template<class... Xs>
 #if FIT_NO_STD_DEFAULT_CONSTRUCTIBLE
 FIT_USING(is_default_constructible, and_<is_default_constructible_helper<Xs>...>);
 #else
-FIT_USING(is_default_constructible, and_<std::is_default_constructible<Xs>...>);
+FIT_USING(is_default_constructible, and_c<FIT_IS_CONSTRUCTIBLE(Xs)...>);
 #endif
 
 template<class T, class... Xs>

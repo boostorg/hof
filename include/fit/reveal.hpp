@@ -185,10 +185,14 @@ struct failures<Failure>
 };
 
 template<class Transform, class... Fs>
-FIT_USING(failure_map, with_failures<detail::transform_failures<get_failure<Fs>, Transform>...>);
+struct failure_map
+: with_failures<detail::transform_failures<get_failure<Fs>, Transform>...>
+{};
 
 template<class... Fs>
-FIT_USING(failure_for, with_failures<get_failure<Fs>...>);
+struct failure_for
+: with_failures<get_failure<Fs>...>
+{};
 
 template<class F>
 struct reveal_adaptor

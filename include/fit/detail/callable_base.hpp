@@ -38,12 +38,12 @@ struct non_class_function
 
 #if FIT_HAS_TEMPLATE_ALIAS
 template<class F>
-using callable_base = typename std::conditional<(std::is_class<F>::value), F, non_class_function<F>>::type;
+using callable_base = typename std::conditional<(FIT_IS_CLASS(F)), F, non_class_function<F>>::type;
 #else
 
 template<class F>
 struct callable_base_type
-: std::conditional<(std::is_class<F>::value), F, non_class_function<F>>
+: std::conditional<(FIT_IS_CLASS(F)), F, non_class_function<F>>
 {};
 
 template<class F>

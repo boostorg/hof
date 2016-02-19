@@ -50,7 +50,7 @@ struct constexpr_deduce_unique
     template<class F>
     constexpr operator const F&() const
     {
-        static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
+        static_assert(FIT_IS_EMPTY(F), "Function or lambda expression must be empty");
         return FIT_CONST_FOLD(reinterpret_cast<const F&>(static_const_var<T>()));
     }
 #endif

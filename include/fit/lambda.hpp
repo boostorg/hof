@@ -77,7 +77,7 @@ struct static_function_wrapper
     constexpr static_function_wrapper()
     {}
 
-    static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
+    static_assert(FIT_IS_EMPTY(F), "Function or lambda expression must be empty");
 
     struct failure
     : failure_for<F>

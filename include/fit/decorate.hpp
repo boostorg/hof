@@ -50,7 +50,7 @@
 ///             return f(std::forward<Ts>(xs)...));
 ///         }
 ///     };
-///     
+///     // The log decorator
 ///     FIT_STATIC_FUNCTION(log) = fit::decorate(log_f());
 ///     
 ///     struct sum_f
@@ -62,11 +62,10 @@
 ///         }
 ///     };
 ///     
-///     FIT_STATIC_FUNCTION(logged_sum) = log("Calling sum")(sum_f());
-///     // Prints out "Calling sum"
-///     assert(3 == logged_sum(1, 2));
+///     FIT_STATIC_FUNCTION(sum) = sum_f();
+///     // Use the log decorator to print "Calling sum" when the function is called
+///     assert(3 == log("Calling sum")(sum)(1, 2));
 /// 
-
 
 #include <fit/reveal.hpp>
 #include <fit/detail/delegate.hpp>

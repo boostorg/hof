@@ -86,10 +86,18 @@ struct rank : rank<N-1>
 template<>
 struct rank<0>
 {};
-#if FIT_NO_EXPRESSION_SFINAE
-#define FIT_CONDITIONAL_INVOKE operator()
+
+#if FIT_NO_EXPRESSION_SFINAE || !FIT_HAS_MANGLE_OVERLOAD
+#define FIT_USE_CONDITIONAL_INVOKE_MEMBER 0
 #else
+#define FIT_USE_CONDITIONAL_INVOKE_MEMBER 1
+
+#endif
+
+#if FIT_USE_CONDITIONAL_INVOKE_MEMBER
 #define FIT_CONDITIONAL_INVOKE fit_conditional_invoke
+#else
+#define FIT_CONDITIONAL_INVOKE operator()
 #endif
 
 template<int N, class...Fs> struct conditional_adaptor_base;
@@ -133,17 +141,11 @@ struct conditional_adaptor_base<N, F> : detail::callable_base<F>
         (FIT_RETURNS_STATIC_CAST(const detail::callable_base<F>&)(d))(FIT_FORWARD(Ts)(xs)...)
     );
 };
-#if FIT_NO_EXPRESSION_SFINAE
+#if !FIT_USE_CONDITIONAL_INVOKE_MEMBER
 template<class T, class... Ts>
-auto conditional_invoke(T&& x, Ts&&... xs) FIT_RETURNS
+constexpr auto conditional_invoke(T&& x, Ts&&... xs) FIT_RETURNS
 (
     x(x, FIT_FORWARD(Ts)(xs)...)
-);
-#elif !FIT_HAS_MANGLE_OVERLOAD
-template<class T, class... Ts>
-auto conditional_invoke(T&& x, Ts&&... xs) FIT_RETURNS
-(
-    x.FIT_CONDITIONAL_INVOKE(x, FIT_FORWARD(Ts)(xs)...)
 );
 #endif
 
@@ -174,7 +176,7 @@ struct conditional_adaptor
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(const base&, id_<const base&>, id_<rank_type>, id_<Ts>...) 
     operator()(Ts&&... xs) const 
-#if FIT_HAS_MANGLE_OVERLOAD
+#if FIT_USE_CONDITIONAL_INVOKE_MEMBER
     FIT_SFINAE_RETURNS
     (
         FIT_CONST_THIS->FIT_CONDITIONAL_INVOKE(*FIT_CONST_THIS, rank_type(), FIT_FORWARD(Ts)(xs)...)
@@ -182,7 +184,7 @@ struct conditional_adaptor
 #else
     FIT_SFINAE_RETURNS
     (
-        fit::detail::conditional_invoke(*FIT_CONST_THIS, rank_type(), FIT_FORWARD(Ts)(xs)...)
+        fit::detail::conditional_invoke(FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)), rank_type(), FIT_FORWARD(Ts)(xs)...)
     );
 #endif
 };

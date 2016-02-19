@@ -9,7 +9,7 @@
 #define FIT_GUARD_USING_HPP
 
 #ifndef FIT_HAS_TEMPLATE_ALIAS
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
 #define FIT_HAS_TEMPLATE_ALIAS 0
 #else
 #define FIT_HAS_TEMPLATE_ALIAS 1

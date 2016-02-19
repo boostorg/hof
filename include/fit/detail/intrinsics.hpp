@@ -52,7 +52,7 @@
 #endif
 
 #if FIT_NO_STD_DEFAULT_CONSTRUCTIBLE
-#define FIT_IS_DEFAULT_CONSTRUCTIBLE(...) is_default_constructible_helper<__VA_ARGS__>::value
+#define FIT_IS_DEFAULT_CONSTRUCTIBLE(...) fit::detail::is_default_constructible_helper<__VA_ARGS__>::value
 #else
 #define FIT_IS_DEFAULT_CONSTRUCTIBLE FIT_IS_CONSTRUCTIBLE
 #endif

@@ -43,12 +43,12 @@
 ///     {
 ///         template<class F, class... Ts>
 ///         auto operator()(const std::string& message, F&& f, Ts&&... xs) const 
-///             -> decltype(f(std::forward<Ts>(xs)...)))
+///             -> decltype(f(std::forward<Ts>(xs)...))
 ///         {
 ///             // Message to print out when the function is called
 ///             std::cout << message << std::endl;
 ///             // Call the function
-///             return f(std::forward<Ts>(xs)...));
+///             return f(std::forward<Ts>(xs)...);
 ///         }
 ///     };
 ///     // The log decorator

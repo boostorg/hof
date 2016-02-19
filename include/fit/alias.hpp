@@ -147,7 +147,7 @@ struct alias_static_storage
     // side effects.
     static_assert(FIT_IS_EMPTY(T) && 
         FIT_IS_LITERAL(T) && 
-        std::is_default_constructible<T>::value, "In-class initialization is not yet implemented on MSVC");
+        FIT_IS_DEFAULT_CONSTRUCTIBLE(T), "In-class initialization is not yet implemented on MSVC");
 #endif
     static constexpr T value = T();
 };

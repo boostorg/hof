@@ -84,7 +84,6 @@ constexpr bool is_default_constructible_c()
 }
 
 template<class... Xs>
-// FIT_USING(is_default_constructible, std::integral_constant<bool, FIT_AND_UNPACK(FIT_IS_DEFAULT_CONSTRUCTIBLE(Xs))>);
 FIT_USING(is_default_constructible, std::integral_constant<bool, is_default_constructible_c<Xs...>()>);
 
 template<class C, class X, class... Xs>

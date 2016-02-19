@@ -42,7 +42,8 @@
 ///     struct log_f
 ///     {
 ///         template<class F, class... Ts>
-///         auto operator()(const std::string& message, F&& f, Ts&&.. xs) const -> decltype(f(std::forward<Ts>(xs)...)))
+///         auto operator()(const std::string& message, F&& f, Ts&&... xs) const 
+///             -> decltype(f(std::forward<Ts>(xs)...)))
 ///         {
 ///             // Message to print out when the function is called
 ///             std::cout << message << std::endl;

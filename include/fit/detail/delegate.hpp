@@ -38,13 +38,13 @@
 
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
-    class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible<__VA_ARGS__>::value>::type> \
+    class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible_c<__VA_ARGS__>()>::type> \
     constexpr C() {}
 
 #define FIT_INHERIT_DEFAULT_EMPTY(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && \
-        fit::detail::is_default_constructible<__VA_ARGS__>::value && FIT_IS_EMPTY(__VA_ARGS__) \
+        fit::detail::is_default_constructible_c<__VA_ARGS__>() && FIT_IS_EMPTY(__VA_ARGS__) \
     >::type> \
     constexpr C() {}
 
@@ -77,9 +77,15 @@
 namespace fit {
 namespace detail {
 
+template<class... Xs>
+constexpr bool is_default_constructible_c()
+{
+    return FIT_AND_UNPACK(FIT_IS_DEFAULT_CONSTRUCTIBLE(Xs));
+}
 
 template<class... Xs>
-FIT_USING(is_default_constructible, std::integral_constant<bool, FIT_AND_UNPACK(FIT_IS_DEFAULT_CONSTRUCTIBLE(Xs))>);
+// FIT_USING(is_default_constructible, std::integral_constant<bool, FIT_AND_UNPACK(FIT_IS_DEFAULT_CONSTRUCTIBLE(Xs))>);
+FIT_USING(is_default_constructible, std::integral_constant<bool, is_default_constructible_c<Xs...>()>);
 
 template<class C, class X, class... Xs>
 struct enable_if_constructible

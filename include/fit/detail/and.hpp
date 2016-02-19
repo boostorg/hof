@@ -26,9 +26,18 @@ constexpr bool and_c(bool b, Ts... bs)
 }
 
 #ifdef _MSC_VER
+
+template<class T>
+constexpr bool get_constant_value()
+{
+    return T::value;
+}
+
 template<class... Ts>
 struct and_
-: std::integral_constant<bool, (and_c(Ts::value...))
+: std::integral_constant<bool, (
+    and_c(get_constant_value<Ts>()...)
+)>
 {};
 
 #define FIT_AND_UNPACK(Bs) fit::detail::and_c(Bs...)

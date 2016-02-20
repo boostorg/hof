@@ -53,7 +53,7 @@
 /// is_unpackable
 /// =============
 /// 
-/// This is a trait that can be used to detect whethet the type can be called
+/// This is a trait that can be used to detect whether the type can be called
 /// with `unpack`.
 /// 
 /// Synopsis

@@ -81,13 +81,13 @@ struct v_fold
     constexpr FIT_SFINAE_MANUAL_RESULT(const v_fold&, id_<const F&>, result_of<const F&, id_<State>, id_<T>>, id_<Ts>...)
     operator()(const F& f, State&& state, T&& x, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
-        (*FIT_CONST_THIS)(f, f(fit::forward<State>(state), fit::forward<T>(x)), fit::forward<Ts>(xs)...)
+        (*FIT_CONST_THIS)(f, f(FIT_FORWARD(State)(state), FIT_FORWARD(T)(x)), FIT_FORWARD(Ts)(xs)...)
     );
 
     template<class F, class State>
     constexpr State operator()(const F&, State&& state) const 
     {
-        return fit::forward<State>(state);
+        return FIT_FORWARD(State)(state);
     }
 };
 
@@ -119,7 +119,7 @@ struct compress_adaptor
         detail::v_fold()(
             FIT_MANGLE_CAST(const detail::callable_base<F>&)(this->base_function(xs...)), 
             FIT_MANGLE_CAST(State)(this->get_state(xs...)), 
-            fit::forward<Ts>(xs)...
+            FIT_FORWARD(Ts)(xs)...
         )
     )
 };
@@ -143,7 +143,7 @@ struct compress_adaptor<F, void>
     (
         detail::v_fold()(
             FIT_MANGLE_CAST(const detail::callable_base<F>&)(this->base_function(xs...)), 
-            fit::forward<Ts>(xs)...
+            FIT_FORWARD(Ts)(xs)...
         )
     )
 };

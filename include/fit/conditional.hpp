@@ -71,6 +71,7 @@
 #include <fit/detail/callable_base.hpp>
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/join.hpp>
+#include <fit/detail/seq.hpp>
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
 
@@ -86,6 +87,19 @@ template<>
 struct rank<0>
 {};
 
+#if FIT_NO_EXPRESSION_SFINAE || !FIT_HAS_MANGLE_OVERLOAD
+#define FIT_USE_CONDITIONAL_INVOKE_MEMBER 0
+#else
+#define FIT_USE_CONDITIONAL_INVOKE_MEMBER 1
+
+#endif
+
+#if FIT_USE_CONDITIONAL_INVOKE_MEMBER
+#define FIT_CONDITIONAL_INVOKE fit_conditional_invoke
+#else
+#define FIT_CONDITIONAL_INVOKE operator()
+#endif
+
 template<int N, class...Fs> struct conditional_adaptor_base;
  
 template<int N, class F, class...Fs>
@@ -98,11 +112,11 @@ struct conditional_adaptor_base<N, F, Fs...> : conditional_adaptor_base<N, F>, c
 
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, single_base), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
     constexpr conditional_adaptor_base(X&& f1, Xs&& ... fs) 
-    : single_base(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)
+    : single_base(FIT_FORWARD(X)(f1)), base(FIT_FORWARD(Xs)(fs)...)
     {}
 
-    using base::operator();
-    using single_base::operator();
+    using base::FIT_CONDITIONAL_INVOKE;
+    using single_base::FIT_CONDITIONAL_INVOKE;
 };
 
 template<int N, class F>
@@ -120,13 +134,20 @@ struct conditional_adaptor_base<N, F> : detail::callable_base<F>
 
     FIT_RETURNS_CLASS(conditional_adaptor_base);
 
-    template<class... Ts>
+    template<class Derived, class... Ts>
     constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<Ts>...) 
-    operator()(rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
+    FIT_CONDITIONAL_INVOKE(const Derived& d, rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
+        (FIT_RETURNS_STATIC_CAST(const detail::callable_base<F>&)(d))(FIT_FORWARD(Ts)(xs)...)
     );
 };
+#if !FIT_USE_CONDITIONAL_INVOKE_MEMBER
+template<class T, class... Ts>
+constexpr auto conditional_invoke(T&& x, Ts&&... xs) FIT_RETURNS
+(
+    x(x, FIT_FORWARD(Ts)(xs)...)
+);
+#endif
 
 }
 
@@ -153,11 +174,19 @@ struct conditional_adaptor
     FIT_RETURNS_CLASS(conditional_adaptor);
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const base&, id_<rank_type>, id_<Ts>...) 
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    constexpr FIT_SFINAE_RESULT(const base&, id_<const base&>, id_<rank_type>, id_<Ts>...) 
+    operator()(Ts&&... xs) const 
+#if FIT_USE_CONDITIONAL_INVOKE_MEMBER
+    FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)))(rank_type(), fit::forward<Ts>(xs)...)
+        FIT_CONST_THIS->FIT_CONDITIONAL_INVOKE(*FIT_CONST_THIS, rank_type(), FIT_FORWARD(Ts)(xs)...)
     );
+#else
+    FIT_SFINAE_RETURNS
+    (
+        fit::detail::conditional_invoke(FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)), rank_type(), FIT_FORWARD(Ts)(xs)...)
+    );
+#endif
 };
 
 FIT_DECLARE_STATIC_VAR(conditional, detail::make<conditional_adaptor>);

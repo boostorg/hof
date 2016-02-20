@@ -91,7 +91,7 @@ struct decorator_invoke
 
     template<class X1, class X2, class X3>
     constexpr decorator_invoke(X1&& x1, X2&& x2, X3&& x3)
-    : base(fit::forward<X1>(x1), fit::forward<X2>(x2)), D(fit::forward<X3>(x3))
+    : base(FIT_FORWARD(X1)(x1), FIT_FORWARD(X2)(x2)), D(FIT_FORWARD(X3)(x3))
     {}
 
     template<class... Ts>
@@ -137,7 +137,7 @@ struct decorator_invoke
         FIT_MANGLE_CAST(const D&)(FIT_CONST_THIS->get_decorator(xs...))(
             FIT_MANGLE_CAST(const T&)(FIT_CONST_THIS->get_data(xs...)),
             FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)),
-            fit::forward<Ts>(xs)...
+            FIT_FORWARD(Ts)(xs)...
         )
     );
 };
@@ -164,7 +164,7 @@ struct decoration
     template<class F>
     constexpr decorator_invoke<detail::callable_base<F>, T, D> operator()(F f) const
     {
-        return decorator_invoke<detail::callable_base<F>, T, D>(fit::move(f), this->get_data(f), this->get_decorator(f));
+        return decorator_invoke<detail::callable_base<F>, T, D>(static_cast<F&&>(f), this->get_data(f), this->get_decorator(f));
     }
 };
 
@@ -187,7 +187,7 @@ struct decorate_adaptor : detail::callable_base<F>
     template<class T>
     constexpr detail::decoration<T, detail::callable_base<F>> operator()(T x) const
     {
-        return detail::decoration<T, detail::callable_base<F>>(fit::move(x), this->base_function(x));
+        return detail::decoration<T, detail::callable_base<F>>(static_cast<T&&>(x), this->base_function(x));
     }
 
 };

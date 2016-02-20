@@ -58,6 +58,7 @@ include(CTest)
 
 include_directories(include)
 
+add_fit_test(alias)
 add_fit_test(always)
 add_fit_test(apply)
 add_fit_test(apply_eval)

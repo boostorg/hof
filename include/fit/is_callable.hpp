@@ -49,9 +49,7 @@
 namespace fit {
 
 template<class F, class... Ts>
-struct is_callable
-: detail::can_be_called<detail::apply_f, F, Ts...>
-{};
+FIT_USING(is_callable, detail::can_be_called<detail::apply_f, F, Ts...>);
 
 } // namespace fit
 

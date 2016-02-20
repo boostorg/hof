@@ -61,7 +61,7 @@ struct tap_f
     template<class T, class F>
     constexpr T operator()(T&& x, const F& f) const
     {
-        return fit::apply(f, x), fit::forward<T>(x);
+        return fit::apply(f, x), FIT_FORWARD(T)(x);
     }
 };
 

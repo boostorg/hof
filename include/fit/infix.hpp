@@ -71,7 +71,7 @@ struct postfix_adaptor : F
 
     template<class X, class XF>
     constexpr postfix_adaptor(X&& xp, XF&& fp) 
-    : F(fit::forward<XF>(fp)), x(fit::forward<X>(xp))
+    : F(FIT_FORWARD(XF)(fp)), x(FIT_FORWARD(X)(xp))
     {}
 
     template<class... Ts>
@@ -86,21 +86,21 @@ struct postfix_adaptor : F
     constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<Ts>...)
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_RETURNS_C_CAST(T&&)(FIT_CONST_THIS->x), FIT_FORWARD(Ts)(xs)...)
     );
 
     template<class A>
     constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<A>)
     operator>(A&& a) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<A>(a))
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_RETURNS_C_CAST(T&&)(FIT_CONST_THIS->x), FIT_FORWARD(A)(a))
     );
 };
 
 template<class T, class F>
 constexpr postfix_adaptor<T, F> make_postfix_adaptor(T&& x, F f)
 {
-    return postfix_adaptor<T, F>(fit::forward<T>(x), fit::move(f));
+    return postfix_adaptor<T, F>(FIT_FORWARD(T)(x), static_cast<F&&>(f));
 }
 }
 
@@ -127,13 +127,13 @@ struct infix_adaptor : detail::callable_base<F>
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
+        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
     );
 };
 
 template<class T, class F>
 constexpr auto operator<(T&& x, const infix_adaptor<F>& i) FIT_RETURNS
-(detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(i.base_function(x))));
+(detail::make_postfix_adaptor(FIT_FORWARD(T)(x), fit::move(i.base_function(x))));
 
 // TODO: Operators for static_
 
@@ -146,7 +146,7 @@ struct static_function_wrapper;
 template<class T, class F>
 auto operator<(T&& x, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
 (
-    detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(f.base_function().infix_base_function()))
+    detail::make_postfix_adaptor(FIT_FORWARD(T)(x), fit::move(f.base_function().infix_base_function()))
 );
 
 template<class F>
@@ -156,7 +156,7 @@ struct static_default_function;
 template<class T, class F>
 auto operator<(T&& x, const fit::detail::static_default_function<F>&) FIT_RETURNS
 (
-    detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(F().infix_base_function()))
+    detail::make_postfix_adaptor(FIT_FORWARD(T)(x), fit::move(F().infix_base_function()))
 );
 }
 

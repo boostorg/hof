@@ -104,7 +104,7 @@ struct partial_adaptor_invoke
         fit::pack_join
         (
             FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), 
-            fit::pack_forward(fit::forward<Ts>(xs)...)
+            fit::pack_forward(FIT_FORWARD(Ts)(xs)...)
         )
         (FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)))
     );
@@ -136,7 +136,7 @@ struct partial_adaptor_join
         partial
         (
             FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
-            fit::pack_join(FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), fit::pack_decay(fit::forward<Ts>(xs)...))
+            fit::pack_join(FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), fit::pack_decay(FIT_FORWARD(Ts)(xs)...))
         )
     );
 };
@@ -163,7 +163,7 @@ struct partial_adaptor_pack
         partial
         (
             FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
-            fit::pack_decay(fit::forward<Ts>(xs)...)
+            fit::pack_decay(FIT_FORWARD(Ts)(xs)...)
         )
     );
 };
@@ -213,7 +213,7 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
     {}
 
     template<class X, class S>
-    constexpr partial_adaptor(X&& x, S&& seq) : F(fit::forward<X>(x)), Pack(fit::forward<S>(seq))
+    constexpr partial_adaptor(X&& x, S&& seq) : F(FIT_FORWARD(X)(x)), Pack(FIT_FORWARD(S)(seq))
     {}
 };
 

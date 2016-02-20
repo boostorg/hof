@@ -95,7 +95,7 @@ struct make_limit_f
     template<class F>
     constexpr limit_adaptor<N, F> operator()(F f) const
     {
-        return limit_adaptor<N, F>(fit::move(f));
+        return limit_adaptor<N, F>(static_cast<F&&>(f));
     }
 };
 
@@ -113,7 +113,7 @@ struct limit_f
 template<std::size_t N, class F>
 constexpr detail::limit_adaptor<N, F> limit_c(F f)
 {
-    return detail::limit_adaptor<N, F>(fit::move(f));
+    return detail::limit_adaptor<N, F>(static_cast<F&&>(f));
 }
 
 FIT_DECLARE_STATIC_VAR(limit, detail::limit_f);

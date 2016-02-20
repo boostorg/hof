@@ -93,7 +93,7 @@ struct pack_tag
 #if FIT_PACK_HAS_EBO
 template<class T, class Tag>
 struct pack_holder
-: std::conditional<std::is_empty<T>::value, 
+: std::conditional<FIT_IS_EMPTY(T), 
     alias_inherit<T, Tag>, 
     alias<T, Tag>
 >
@@ -102,8 +102,8 @@ struct pack_holder
 template<class T, class Tag>
 struct pack_holder
 : std::conditional<
-        std::is_empty<T>::value && 
-        std::is_literal_type<T>::value && 
+        FIT_IS_EMPTY(T) && 
+        FIT_IS_LITERAL(T) && 
         is_default_constructible<T>::value,
     alias_static<T, Tag>,
     alias<T, Tag>
@@ -131,7 +131,7 @@ template<class T, class Tag, class X, class... Ts, typename std::enable_if<
 , int>::type = 0>
 constexpr T pack_get(X&& x, Ts&&... xs)
 {
-    return static_cast<T>(alias_value<Tag, T>(fit::forward<X>(x), xs...));
+    return static_cast<T>(alias_value<Tag, T>(FIT_FORWARD(X)(x), xs...));
 }
 
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
@@ -147,7 +147,7 @@ template<class T, class Tag, class X, class... Ts, typename std::enable_if<
 , int>::type = 0>
 constexpr auto pack_get(X&& x, Ts&&... xs) FIT_RETURNS
 (
-    alias_value<Tag, T>(fit::forward<X>(x), xs...)
+    alias_value<Tag, T>(FIT_FORWARD(X)(x), xs...)
 );
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
@@ -157,7 +157,7 @@ struct pack_holder_base
 {
     template<class... Xs, class=typename std::enable_if<(sizeof...(Xs) == sizeof...(Ts))>::type>
     constexpr pack_holder_base(Xs&&... xs) 
-    : Ts::type(fit::forward<Xs>(xs))...
+    : Ts::type(FIT_FORWARD(Xs)(xs))...
     {}
 #ifndef _MSC_VER
     // FIT_INHERIT_DEFAULT(pack_holder_base, typename std::remove_cv<typename std::remove_reference<typename Ts::type>::type>::type...)
@@ -189,12 +189,12 @@ struct pack_base<seq<Ns...>, Ts...>
     typedef pack_holder_base<typename pack_holder_builder<Ts...>::template apply<Ts, Ns>...> base;
     template<class X1, class X2, class... Xs>
     constexpr pack_base(X1&& x1, X2&& x2, Xs&&... xs) 
-    : base(fit::forward<X1>(x1), fit::forward<X2>(x2), fit::forward<Xs>(xs)...)
+    : base(FIT_FORWARD(X1)(x1), FIT_FORWARD(X2)(x2), FIT_FORWARD(Xs)(xs)...)
     {}
 
     template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
     constexpr pack_base(X1&& x1) 
-    : base(fit::forward<X1>(x1))
+    : base(FIT_FORWARD(X1)(x1))
     {}
 
     // FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
@@ -224,7 +224,7 @@ struct pack_base<seq<0>, T>
 
     template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
     constexpr pack_base(X1&& x1) 
-    : base(fit::forward<X1>(x1))
+    : base(FIT_FORWARD(X1)(x1))
     {}
 
     FIT_INHERIT_DEFAULT(pack_base, T);
@@ -255,7 +255,7 @@ struct pack_base<seq<Ns...>, Ts...>
     FIT_INHERIT_DEFAULT(pack_base, Ts...);
     
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)>
-    constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(fit::forward<Xs>(xs))...
+    constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(FIT_FORWARD(Xs)(xs))...
     {}
   
     template<class F>
@@ -309,8 +309,8 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
     static constexpr result_type call(P1&& p1, P2&& p2)
     {
         return result_type(
-            pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(fit::forward<P1>(p1))..., 
-            pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(fit::forward<P2>(p2))...);
+            pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
+            pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...);
     }
 };
 
@@ -328,7 +328,7 @@ struct pack_f
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        pack_base<typename gens<sizeof...(Ts)>::type, typename remove_rvalue_reference<Ts>::type...>(fit::forward<Ts>(xs)...)
+        pack_base<typename gens<sizeof...(Ts)>::type, typename remove_rvalue_reference<Ts>::type...>(FIT_FORWARD(Ts)(xs)...)
     );
 };
 
@@ -337,7 +337,7 @@ struct pack_forward_f
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        pack_base<typename gens<sizeof...(Ts)>::type, Ts&&...>(fit::forward<Ts>(xs)...)
+        pack_base<typename gens<sizeof...(Ts)>::type, Ts&&...>(FIT_FORWARD(Ts)(xs)...)
     );
 };
 
@@ -346,14 +346,14 @@ struct pack_decay_f
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        pack_f()(decay(fit::forward<Ts>(xs))...)
+        pack_f()(decay(FIT_FORWARD(Ts)(xs))...)
     );
 };
 
 template<class P1, class P2>
 constexpr typename pack_join_result<P1, P2>::result_type make_pack_join_dual(P1&& p1, P2&& p2)
 {
-    return pack_join_result<P1, P2>::call(fit::forward<P1>(p1), fit::forward<P2>(p2));
+    return pack_join_result<P1, P2>::call(FIT_FORWARD(P1)(p1), FIT_FORWARD(P2)(p2));
 }
 
 // Manually compute join return type to make older gcc happy
@@ -375,13 +375,13 @@ struct join_type<T, Ts...>
 template<class P1>
 constexpr P1 make_pack_join(P1&& p1)
 {
-    return fit::forward<P1>(p1);
+    return FIT_FORWARD(P1)(p1);
 }
 
 template<class P1, class... Ps>
 constexpr typename join_type<P1, Ps...>::type make_pack_join(P1&& p1, Ps&&... ps)
 {
-    return make_pack_join_dual(fit::forward<P1>(p1), make_pack_join(fit::forward<Ps>(ps)...));
+    return make_pack_join_dual(FIT_FORWARD(P1)(p1), make_pack_join(FIT_FORWARD(Ps)(ps)...));
 }
 
 struct pack_join_f
@@ -390,7 +390,7 @@ struct pack_join_f
     template<class... Ps>
     constexpr auto operator()(Ps&&... ps) const FIT_RETURNS
     (
-        make_pack_join(fit::forward<Ps>(ps)...)
+        make_pack_join(FIT_FORWARD(Ps)(ps)...)
     );
 };
 

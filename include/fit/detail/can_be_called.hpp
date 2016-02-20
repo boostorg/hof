@@ -11,6 +11,7 @@
 #include <fit/detail/and.hpp>
 #include <fit/detail/holder.hpp>
 #include <fit/detail/sfinae.hpp>
+#include <fit/detail/using.hpp>
 
 namespace fit { namespace detail {
 
@@ -100,9 +101,7 @@ struct can_be_called_impl<F, callable_args<Args...>, typename detail::holder<
 {};
 
 template<class F, class... Ts>
-struct can_be_called
-: can_be_called_impl<F, detail::callable_args<Ts...>>
-{};
+FIT_USING(can_be_called, can_be_called_impl<F, detail::callable_args<Ts...>>);
 
 #endif
 

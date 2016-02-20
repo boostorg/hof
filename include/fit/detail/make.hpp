@@ -21,7 +21,7 @@ struct make
     template<class... Fs, class Result=FIT_JOIN(Adaptor, Fs...)>
     constexpr Result operator()(Fs... fs) const
     {
-        return Result(fit::move(fs)...);
+        return Result(static_cast<Fs&&>(fs)...);
     }
 };
 

@@ -36,9 +36,9 @@ struct is_related
 template<int I, class T, class U>
 struct pair_holder_related
 : std::conditional<
-        std::is_empty<T>::value && 
-        std::is_literal_type<T>::value && 
-        is_default_constructible<T>::value, 
+        FIT_IS_EMPTY(T) && 
+        FIT_IS_LITERAL(T) && 
+        FIT_IS_DEFAULT_CONSTRUCTIBLE(T), 
     alias_static<T, pair_tag<I, T, U>>,
     alias<T, pair_tag<I, T, U>>
 >
@@ -46,7 +46,7 @@ struct pair_holder_related
 
 template<int I, class T, class U>
 struct pair_holder_non_related
-: std::conditional<std::is_class<T>::value, 
+: std::conditional<FIT_IS_CLASS(T), 
     alias_inherit<T, pair_tag<I, T, U>>, 
     alias<T, pair_tag<I, T, U>>
 >
@@ -62,7 +62,7 @@ struct pair_holder
 #else
 template<int I, class T, class U>
 struct pair_holder
-: std::conditional<std::is_class<T>::value, 
+: std::conditional<FIT_IS_CLASS(T), 
     alias_inherit<T, pair_tag<I, T, U>>, 
     alias<T, pair_tag<I, T, U>>
 >
@@ -85,7 +85,7 @@ struct compressed_pair
         FIT_ENABLE_IF_CONSTRUCTIBLE(Second, Y&&)
     >
     constexpr compressed_pair(X&& x, Y&& y) 
-    : FirstBase(fit::forward<X>(x)), SecondBase(fit::forward<Y>(y))
+    : FirstBase(FIT_FORWARD(X)(x)), SecondBase(FIT_FORWARD(Y)(y))
     {}
 
     FIT_INHERIT_DEFAULT(compressed_pair, FirstBase, SecondBase)

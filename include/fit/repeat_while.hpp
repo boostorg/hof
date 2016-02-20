@@ -88,8 +88,8 @@ struct while_repeater
     operator()(const F& f, const P& p, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         while_repeater<
-            compute_predicate<P, decltype(f(fit::forward<Ts>(xs)...))>::type::value
-        >()(f, p, f(fit::forward<Ts>(xs)...))
+            compute_predicate<P, decltype(f(FIT_FORWARD(Ts)(xs)...))>::type::value
+        >()(f, p, f(FIT_FORWARD(Ts)(xs)...))
     );
 };
 
@@ -109,12 +109,12 @@ struct repeat_while_decorator
     constexpr auto operator()(const P& p, const F& f, Ts&&... xs) const FIT_RETURNS
     (
         detail::while_repeater<
-            detail::compute_predicate<P, decltype(std::declval<F>()(fit::forward<Ts>(xs)...))>::type::value
+            detail::compute_predicate<P, decltype(std::declval<F>()(FIT_FORWARD(Ts)(xs)...))>::type::value
         >()
         (
             f, 
             p, 
-            fit::forward<Ts>(xs)...
+            FIT_FORWARD(Ts)(xs)...
         )
     );
 };

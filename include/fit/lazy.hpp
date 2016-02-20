@@ -70,7 +70,7 @@ struct placeholder_transformer
     {
         template<class... Ts>
         constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-        (detail::get_args<std::is_placeholder<T>::value>(fit::forward<Ts>(xs)...));
+        (detail::get_args<std::is_placeholder<T>::value>(FIT_FORWARD(Ts)(xs)...));
     };
 
     template<class T, typename std::enable_if<(std::is_placeholder<T>::value > 0), int>::type = 0>
@@ -118,7 +118,7 @@ FIT_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transfo
 template<class T, class Pack>
 constexpr auto lazy_transform(T&& x, Pack&& p) FIT_RETURNS
 (
-    p(fit::detail::pick_transformer(fit::forward<T>(x)))
+    p(fit::detail::pick_transformer(FIT_FORWARD(T)(x)))
 );
 
 template<class F, class Pack>
@@ -134,7 +134,7 @@ struct lazy_unpack
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        f(lazy_transform(fit::forward<Ts>(xs), p)...)
+        f(lazy_transform(FIT_FORWARD(Ts)(xs), p)...)
     );
 };
 
@@ -160,7 +160,7 @@ struct lazy_invoker
         FIT_ENABLE_IF_CONSTRUCTIBLE(base_type, X&&, Y&&)
     >
     constexpr lazy_invoker(X&& x, Y&& y) 
-    : base_type(fit::forward<X>(x), fit::forward<Y>(y))
+    : base_type(FIT_FORWARD(X)(x), FIT_FORWARD(Y)(y))
     {}
 #endif
 
@@ -184,7 +184,7 @@ struct lazy_invoker
         FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...))(
             fit::detail::make_lazy_unpack(
                 FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), 
-                pack_forward(fit::forward<Ts>(xs)...)
+                pack_forward(FIT_FORWARD(Ts)(xs)...)
             )
         )
     );
@@ -193,7 +193,7 @@ struct lazy_invoker
 template<class F, class Pack>
 constexpr lazy_invoker<F, Pack> make_lazy_invoker(F f, Pack pack)
 {
-    return lazy_invoker<F, Pack>(fit::move(f), fit::move(pack));
+    return lazy_invoker<F, Pack>(static_cast<F&&>(f), static_cast<Pack&&>(pack));
 }
 
 template<class F>
@@ -219,7 +219,7 @@ struct lazy_nullary_invoker : F
 template<class F>
 constexpr lazy_nullary_invoker<F> make_lazy_nullary_invoker(F f)
 {
-    return lazy_nullary_invoker<F>(fit::move(f));
+    return lazy_nullary_invoker<F>(static_cast<F&&>(f));
 }
 }
 
@@ -241,7 +241,7 @@ struct lazy_adaptor : detail::callable_base<F>
     constexpr auto operator()(T x, Ts... xs) const FIT_RETURNS
     (
         fit::detail::make_lazy_invoker(FIT_RETURNS_C_CAST(detail::callable_base<F>&&)(FIT_CONST_THIS->base_function(x, xs...)), 
-            pack(fit::move(x), fit::move(xs)...))
+            pack(FIT_RETURNS_STATIC_CAST(T&&)(x), FIT_RETURNS_STATIC_CAST(Ts&&)(xs)...))
     );
 
     // Workaround for gcc 4.7

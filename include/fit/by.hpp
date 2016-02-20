@@ -85,17 +85,17 @@ struct project_eval
     const Projection& p;
 
     template<class X, class P>
-    constexpr project_eval(X&& xp, const P& pp) : x(fit::forward<X>(xp)), p(pp)
+    constexpr project_eval(X&& xp, const P& pp) : x(FIT_FORWARD(X)(xp)), p(pp)
     {}
 
     constexpr auto operator()() const FIT_RETURNS
-    (p(fit::forward<T>(x)));
+    (p(FIT_FORWARD(T)(x)));
 };
 
 template<class T, class Projection>
 constexpr project_eval<T, Projection> make_project_eval(T&& x, const Projection& p)
 {
-    return project_eval<T, Projection>(fit::forward<T>(x), p);
+    return project_eval<T, Projection>(FIT_FORWARD(T)(x), p);
 }
 
 template<class T, class Projection>
@@ -105,21 +105,21 @@ struct project_void_eval
     const Projection& p;
 
     template<class X, class P>
-    constexpr project_void_eval(X&& xp, const P& pp) : x(fit::forward<X>(xp)), p(pp)
+    constexpr project_void_eval(X&& xp, const P& pp) : x(FIT_FORWARD(X)(xp)), p(pp)
     {}
 
     struct void_ {};
 
     constexpr void_ operator()() const
     {
-        return p(fit::forward<T>(x)), void_();
+        return p(FIT_FORWARD(T)(x)), void_();
     }
 };
 
 template<class T, class Projection>
 constexpr project_void_eval<T, Projection> make_project_void_eval(T&& x, const Projection& p)
 {
-    return project_void_eval<T, Projection>(fit::forward<T>(x), p);
+    return project_void_eval<T, Projection>(FIT_FORWARD(T)(x), p);
 }
 
 template<class Projection, class F, class... Ts, 
@@ -128,7 +128,7 @@ template<class Projection, class F, class... Ts,
     )>
 constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
 {
-    return apply_eval(f, make_project_eval(fit::forward<Ts>(xs), p)...);
+    return apply_eval(f, make_project_eval(FIT_FORWARD(Ts)(xs), p)...);
 }
 
 #if FIT_NO_ORDERED_BRACE_INIT
@@ -144,7 +144,7 @@ constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
 template<class Projection, class... Ts>
 constexpr FIT_ALWAYS_VOID_RETURN by_void_eval(const Projection& p, Ts&&... xs)
 {
-    return apply_eval(always(), make_project_void_eval(fit::forward<Ts>(xs), p)...);
+    return apply_eval(always(), make_project_void_eval(FIT_FORWARD(Ts)(xs), p)...);
 }
 
 struct swallow
@@ -195,7 +195,7 @@ struct by_adaptor : detail::callable_base<Projection>, detail::callable_base<F>
 
     template<class P, class G, FIT_ENABLE_IF_CONVERTIBLE(P, detail::callable_base<Projection>), FIT_ENABLE_IF_CONVERTIBLE(G, detail::callable_base<F>)>
     constexpr by_adaptor(P&& p, G&& f) 
-    : detail::callable_base<Projection>(fit::forward<P>(p)), detail::callable_base<F>(fit::forward<G>(f))
+    : detail::callable_base<Projection>(FIT_FORWARD(P)(p)), detail::callable_base<F>(FIT_FORWARD(G)(f))
     {}
 
     FIT_RETURNS_CLASS(by_adaptor);
@@ -207,7 +207,7 @@ struct by_adaptor : detail::callable_base<Projection>, detail::callable_base<F>
         detail::by_eval(
             FIT_MANGLE_CAST(const detail::callable_base<Projection>&)(FIT_CONST_THIS->base_projection(xs...)),
             FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)),
-            fit::forward<Ts>(xs)...
+            FIT_FORWARD(Ts)(xs)...
         )
     );
 };
@@ -226,7 +226,7 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
 
     template<class P, FIT_ENABLE_IF_CONVERTIBLE(P, detail::callable_base<Projection>)>
     constexpr by_adaptor(P&& p) 
-    : detail::callable_base<Projection>(fit::forward<P>(p))
+    : detail::callable_base<Projection>(FIT_FORWARD(P)(p))
     {}
 
     FIT_RETURNS_CLASS(by_adaptor);
@@ -235,13 +235,13 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
     constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const
     {
 #if FIT_NO_ORDERED_BRACE_INIT
-        return detail::by_void_eval(this->base_projection(xs...), fit::forward<Ts>(xs)...);
+        return detail::by_void_eval(this->base_projection(xs...), FIT_FORWARD(Ts)(xs)...);
 #else
 #if FIT_NO_CONSTEXPR_VOID
         return
 #endif
         detail::swallow{
-            (this->base_projection(xs...)(fit::forward<Ts>(xs)), 0)...
+            (this->base_projection(xs...)(FIT_FORWARD(Ts)(xs)), 0)...
         };
 #endif
     }

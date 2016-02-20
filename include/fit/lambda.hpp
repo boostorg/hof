@@ -77,7 +77,7 @@ struct static_function_wrapper
     constexpr static_function_wrapper()
     {}
 
-    static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
+    static_assert(FIT_IS_EMPTY(F), "Function or lambda expression must be empty");
 
     struct failure
     : failure_for<F>
@@ -95,7 +95,7 @@ struct static_function_wrapper
     FIT_SFINAE_RESULT(const F&, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(fit::forward<Ts>(xs)...)
+        FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(FIT_FORWARD(Ts)(xs)...)
     );
 };
 

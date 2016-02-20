@@ -90,7 +90,7 @@ struct flow_kernel : detail::compressed_pair<detail::callable_base<F1>, detail::
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_MANGLE_CAST(const detail::callable_base<F2>&)(FIT_CONST_THIS->second(xs...))(
-            FIT_MANGLE_CAST(const detail::callable_base<F1>&)(FIT_CONST_THIS->first(xs...))(fit::forward<Ts>(xs)...)
+            FIT_MANGLE_CAST(const detail::callable_base<F1>&)(FIT_CONST_THIS->first(xs...))(FIT_FORWARD(Ts)(xs)...)
         )
     );
 };
@@ -107,7 +107,7 @@ struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor, Fs...)>
 
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
     constexpr flow_adaptor(X&& f1, Xs&& ... fs) 
-    : base(fit::forward<X>(f1), tail(fit::forward<Xs>(fs)...))
+    : base(FIT_FORWARD(X)(f1), tail(FIT_FORWARD(Xs)(fs)...))
     {}
 };
 
@@ -119,7 +119,7 @@ struct flow_adaptor<F> : detail::callable_base<F>
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>)>
     constexpr flow_adaptor(X&& f1) 
-    : detail::callable_base<F>(fit::forward<X>(f1))
+    : detail::callable_base<F>(FIT_FORWARD(X)(f1))
     {}
 
 };

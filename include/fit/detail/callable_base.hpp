@@ -32,20 +32,18 @@ struct non_class_function
     constexpr FIT_SFINAE_RESULT(apply_f, id_<F>, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        fit::apply(f, fit::forward<Ts>(xs)...)
+        fit::apply(f, FIT_FORWARD(Ts)(xs)...)
     );
 };
 
-#if FIT_HAS_TEMPLATE_ALIAS
-template<class F>
-using callable_base = typename std::conditional<(std::is_class<F>::value), F, non_class_function<F>>::type;
-#else
-
 template<class F>
 struct callable_base_type
-: std::conditional<(std::is_class<F>::value), F, non_class_function<F>>
+: std::conditional<(FIT_IS_CLASS(F)), F, non_class_function<F>>
 {};
-
+#if FIT_HAS_TEMPLATE_ALIAS
+template<class F>
+using callable_base = typename callable_base_type<F>::type;
+#else
 template<class F>
 struct callable_base
 : callable_base_type<F>::type

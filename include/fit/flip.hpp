@@ -84,7 +84,7 @@ struct flip_adaptor : detail::callable_base<F>
     operator()(T&& x, U&& y, Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))
-            (fit::forward<U>(y), fit::forward<T>(x), fit::forward<Ts>(xs)...)
+            (FIT_FORWARD(U)(y), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
     );
 };
 

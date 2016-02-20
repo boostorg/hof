@@ -135,7 +135,7 @@ template<class F, class Sequence>
 constexpr auto unpack_impl(F&& f, Sequence&& s) FIT_RETURNS
 (
     fit::unpack_sequence<typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type>::
-            apply(fit::forward<F>(f), fit::forward<Sequence>(s))
+            apply(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))
 );
 
 struct private_unpack_type {};
@@ -156,13 +156,13 @@ constexpr int unpack_check()
 template<class F, class Sequence, int=(unpack_check<Sequence>())>
 constexpr auto unpack_simple(F&& f, Sequence&& s) FIT_RETURNS
 (
-    unpack_impl(fit::forward<F>(f), fit::forward<Sequence>(s))
+    unpack_impl(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))
 )
 
 template<class F, class... Sequences>
 constexpr auto unpack_join(F&& f, Sequences&&... s) FIT_RETURNS
 (
-    fit::pack_join(unpack_simple(fit::pack_forward, fit::forward<Sequences>(s))...)(fit::forward<F>(f))
+    fit::pack_join(unpack_simple(fit::pack_forward, FIT_FORWARD(Sequences)(s))...)(FIT_FORWARD(F)(f))
 );
 
 }
@@ -203,15 +203,15 @@ struct unpack_adaptor : detail::callable_base<F>
             static auto deduce(T&& x)
             FIT_RETURNS
             (
-                detail::unpack_simple(deducer(), fit::forward<T>(x))
+                detail::unpack_simple(deducer(), FIT_FORWARD(T)(x))
             );
 
-            template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
-                is_unpackable<T>, is_unpackable<Ts>...
-            >::value)>::type>
+            template<class T, class... Ts, class=typename std::enable_if<(
+                is_unpackable<T>::value && FIT_AND_UNPACK(is_unpackable<Ts>::value)
+            )>::type>
             static auto deduce(T&& x, Ts&&... xs) FIT_RETURNS
             (
-                detail::unpack_join(deducer(), fit::forward<T>(x), fit::forward<Ts>(xs)...)
+                detail::unpack_join(deducer(), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
             );
 
             template<class... Ts>
@@ -236,15 +236,15 @@ struct unpack_adaptor : detail::callable_base<F>
     constexpr auto operator()(T&& x) const
     FIT_RETURNS
     (
-        detail::unpack_simple(FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x))
+        detail::unpack_simple(FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(x)), FIT_FORWARD(T)(x))
     );
 
-    template<class T, class... Ts, class=typename std::enable_if<(detail::and_<
-        is_unpackable<T>, is_unpackable<Ts>...
-    >::value)>::type>
+    template<class T, class... Ts, class=typename std::enable_if<(
+        is_unpackable<T>::value && FIT_AND_UNPACK(is_unpackable<Ts>::value)
+    )>::type>
     constexpr auto operator()(T&& x, Ts&&... xs) const FIT_RETURNS
     (
-        detail::unpack_join(FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(x)), fit::forward<T>(x), fit::forward<Ts>(xs)...)
+        detail::unpack_join(FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(x)), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
     );
 };
 
@@ -262,19 +262,19 @@ make_tuple_gens(const Sequence&)
 template<class F, class... Ts, std::size_t ...N>
 constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> && t, seq<N...>) FIT_RETURNS
 (
-    f(fit::forward<Ts>(std::get<N>(t))...)
+    f(FIT_FORWARD(Ts)(std::get<N>(t))...)
 );
 
 template<class F, class... Ts, std::size_t ...N>
 constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
 (
-    f(fit::forward<Ts>(std::get<N>(t))...)
+    f(FIT_FORWARD(Ts)(std::get<N>(t))...)
 );
 
 template<class F, class... Ts, std::size_t ...N>
 constexpr auto unpack_tuple(F&& f, const std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
 (
-    f(fit::forward<Ts>(std::get<N>(t))...)
+    f(FIT_FORWARD(Ts)(std::get<N>(t))...)
 );
 
 }
@@ -285,7 +285,7 @@ struct unpack_sequence<std::tuple<Ts...>>
     template<class F, class S>
     constexpr static auto apply(F&& f, S&& t) FIT_RETURNS
     (
-        detail::unpack_tuple(fit::forward<F>(f), t, detail::make_tuple_gens(t))
+        detail::unpack_tuple(FIT_FORWARD(F)(f), t, detail::make_tuple_gens(t))
     );
 };
 
@@ -295,7 +295,7 @@ struct unpack_sequence<detail::pack_base<T, Ts...>>
     template<class F, class P>
     constexpr static auto apply(F&& f, P&& p) FIT_RETURNS
     (
-        fit::detail::unpack_pack_base(fit::forward<F>(f), fit::forward<P>(p))
+        fit::detail::unpack_pack_base(FIT_FORWARD(F)(f), FIT_FORWARD(P)(p))
     );
 };
 

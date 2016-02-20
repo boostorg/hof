@@ -43,14 +43,14 @@
 #include <fit/returns.hpp>
 #include <fit/detail/forward.hpp>
 
-#define FIT_LIFT(...) [](auto&&... xs) FIT_RETURNS(__VA_ARGS__(fit::forward<decltype(xs)>(xs)...))
+#define FIT_LIFT(...) [](auto&&... xs) FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(decltype(xs))(xs)...))
 
 #define FIT_LIFT_CLASS(name, ...) \
 struct name \
 { \
     template<class... Ts> \
     constexpr auto operator()(Ts&&... xs) const \
-    FIT_RETURNS(__VA_ARGS__(fit::forward<Ts>(xs)...)) \
+    FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(Ts)(xs)...)) \
 }
 
 #endif

@@ -86,7 +86,7 @@ struct match_adaptor<F, Fs...> : detail::callable_base<F>, match_adaptor<Fs...>
 
     template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
     constexpr match_adaptor(X&& f1, Xs&& ... fs) 
-    : detail::callable_base<F>(fit::forward<X>(f1)), base(fit::forward<Xs>(fs)...)
+    : detail::callable_base<F>(FIT_FORWARD(X)(f1)), base(FIT_FORWARD(Xs)(fs)...)
     {}
 
     using F::operator();

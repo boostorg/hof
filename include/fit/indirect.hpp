@@ -84,7 +84,7 @@ struct indirect_adaptor : F
     constexpr FIT_SFINAE_RESULT(decltype(*std::declval<F>()), id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (*FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
+        (*FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
     );
 };
 

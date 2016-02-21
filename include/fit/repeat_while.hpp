@@ -122,14 +122,13 @@ struct repeat_while_constant_decorator
 };
 
 template<int Depth>
-struct integral_while_repeater
+struct repeat_while_integral_decorator
 {
-    template<class P, class F, class T, class... Ts, class Self=integral_while_repeater<Depth-1>>
-    constexpr auto operator()(bool b, const P& p, const F& f, T&& x, Ts&&... xs) const FIT_RETURNS
+    template<class P, class F, class T, class... Ts, class Self=repeat_while_integral_decorator<Depth-1>>
+    constexpr auto operator()(const P& p, const F& f, T&& x, Ts&&... xs) const FIT_RETURNS
     (
-        (b) ? 
+        (p(x, FIT_FORWARD(Ts)(xs)...)) ? 
             Self()(
-                p(x, FIT_FORWARD(Ts)(xs)...), 
                 p, 
                 f, 
                 f(x, FIT_FORWARD(Ts)(xs)...)
@@ -139,14 +138,13 @@ struct integral_while_repeater
 };
 
 template<>
-struct integral_while_repeater<0>
+struct repeat_while_integral_decorator<0>
 {
-    template<class P, class F, class T, class Self=integral_while_repeater<0>>
-    auto operator()(bool b, const P& p, const F& f, T&& x) const -> decltype(f(x))
+    template<class P, class F, class T, class Self=repeat_while_integral_decorator<0>>
+    auto operator()(const P& p, const F& f, T&& x) const -> decltype(f(x))
     {
-        return (b) ? 
-            Self()(
-                p(x), 
+        return (p(x)) ? 
+            Self()( 
                 p, 
                 f, 
                 f(x)
@@ -154,21 +152,12 @@ struct integral_while_repeater<0>
             FIT_FORWARD(T)(x);
     }
 };
-struct repeat_while_integral_decorator
-{
-    template<class P, class F, class... Ts>
-    constexpr auto operator()(const P& p, const F& f, Ts&&... xs) const FIT_RETURNS
-    (
-        integral_while_repeater<FIT_RECURSIVE_CONSTEXPR_DEPTH>()(true, p, f, FIT_FORWARD(Ts)(xs)...)
-    );
-};
-
 }
 
 FIT_DECLARE_STATIC_VAR(repeat_while, decorate_adaptor<
     fit::conditional_adaptor<
-        detail::repeat_while_constant_decorator
-        // detail::repeat_while_integral_decorator
+        detail::repeat_while_constant_decorator,
+        detail::repeat_while_integral_decorator<FIT_RECURSIVE_CONSTEXPR_DEPTH>
     >
 >);
 

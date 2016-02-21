@@ -55,8 +55,7 @@
 #include <fit/detail/static_const_var.hpp>
 #include <fit/decorate.hpp>
 #include <fit/conditional.hpp>
-
-#include <stdexcept>
+#include <fit/detail/recursive_constexpr_depth.hpp>
 
 namespace fit { namespace detail {
 
@@ -97,14 +96,6 @@ struct repeat_constant_decorator
 template<int Limit>
 struct repeat_integral_decorator
 {
-    // template<class Integral, class F, class... Ts>
-    // constexpr auto operator()(Integral n, const F& f, Ts&&... xs) const FIT_RETURNS
-    // (
-    //     (n) ? 
-    //         repeat_integral_decorator<!Switch>()(--n, f, f(FIT_FORWARD(Ts)(xs)...)) :
-    //         throw std::runtime_error("")
-    // );
-
     template<class Integral, class F, class T, class... Ts, class Self=repeat_integral_decorator<Limit-1>>
     constexpr auto operator()(Integral n, const F& f, T&& x, Ts&&... xs) const FIT_RETURNS
     (
@@ -131,7 +122,7 @@ struct repeat_integral_decorator<0>
 FIT_DECLARE_STATIC_VAR(repeat, decorate_adaptor<
     fit::conditional_adaptor<
     detail::repeat_constant_decorator, 
-    detail::repeat_integral_decorator<200>
+    detail::repeat_integral_decorator<FIT_RECURSIVE_CONSTEXPR_DEPTH>
 >>);
 
 } // namespace fit

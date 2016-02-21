@@ -56,6 +56,7 @@
 #include <fit/detail/static_const_var.hpp>
 #include <fit/indirect.hpp>
 #include <fit/result.hpp>
+#include <fit/detail/recursive_constexpr_depth.hpp>
 
 
 namespace fit {
@@ -197,10 +198,10 @@ struct fix_adaptor_base<F, Result, 0> : F
 }
 
 template<class F>
-struct fix_adaptor : detail::fix_adaptor_base<F, detail::fix_result<F>, 32>
+struct fix_adaptor : detail::fix_adaptor_base<F, detail::fix_result<F>, FIT_RECURSIVE_CONSTEXPR_DEPTH>
 {
     typedef fix_adaptor fit_rewritable1_tag;
-    typedef detail::fix_adaptor_base<F, detail::fix_result<F>, 32> base;
+    typedef detail::fix_adaptor_base<F, detail::fix_result<F>, FIT_RECURSIVE_CONSTEXPR_DEPTH> base;
     FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
 };
 

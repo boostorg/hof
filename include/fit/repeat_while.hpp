@@ -15,8 +15,8 @@
 /// -----------
 /// 
 /// The `repeat_while` function decorator will repeatedly apply a function while
-/// the predicate returns an integral constant that is true. As such, the
-/// predicate must be depedently-typed since it is never called at runtime.
+/// the predicate returns a boolean that is true. If the predicate returns an
+/// `IntergralConstant` then the predicate is only evaluated at compile-time.
 /// 
 /// 
 /// Synopsis

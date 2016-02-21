@@ -21,13 +21,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class IntegralConstant>
-///     constexpr repeat_adaptor<IntegralConstant> repeat(IntegralConstant);
+///     template<class Integral>
+///     constexpr repeat_adaptor<Integral> repeat(Integral);
 /// 
 /// Requirements
 /// ------------
 /// 
-/// IntegralConstant must be:
+/// Integral must be:
+/// 
+/// * Integral
+/// 
+/// Or:
 /// 
 /// * IntegralConstant
 /// 

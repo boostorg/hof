@@ -79,114 +79,79 @@ namespace fit {
 
 namespace detail {
 
-template<int N>
-struct rank : rank<N-1>
-{};
-
-template<>
-struct rank<0>
-{};
-
-#if FIT_NO_EXPRESSION_SFINAE || !FIT_HAS_MANGLE_OVERLOAD
-#define FIT_USE_CONDITIONAL_INVOKE_MEMBER 0
-#else
-#define FIT_USE_CONDITIONAL_INVOKE_MEMBER 1
-
-#endif
-
-#if FIT_USE_CONDITIONAL_INVOKE_MEMBER
-#define FIT_CONDITIONAL_INVOKE fit_conditional_invoke
-#else
-#define FIT_CONDITIONAL_INVOKE operator()
-#endif
-
-template<int N, class...Fs> struct conditional_adaptor_base;
- 
-template<int N, class F, class...Fs>
-struct conditional_adaptor_base<N, F, Fs...> : conditional_adaptor_base<N, F>, conditional_adaptor_base<N-1, Fs...>
+template<class F1, class F2>
+struct conditional_kernel : F1, F2
 {
-    typedef conditional_adaptor_base<N-1, Fs...> base;
-    typedef conditional_adaptor_base<N, F> single_base;
+    FIT_INHERIT_DEFAULT(conditional_kernel, F1, F2)
 
-    FIT_INHERIT_DEFAULT(conditional_adaptor_base, single_base, base);
-
-    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, single_base), FIT_ENABLE_IF_CONSTRUCTIBLE(base, Xs...)>
-    constexpr conditional_adaptor_base(X&& f1, Xs&& ... fs) 
-    : single_base(FIT_FORWARD(X)(f1)), base(FIT_FORWARD(Xs)(fs)...)
+    template<class A, class B,
+        FIT_ENABLE_IF_CONVERTIBLE(A, F1),
+        FIT_ENABLE_IF_CONVERTIBLE(B, F2)>
+    constexpr conditional_kernel(A&& f1, B&& f2) : F1(FIT_FORWARD(A)(f1)), F2(FIT_FORWARD(B)(f2))
     {}
 
-    using base::FIT_CONDITIONAL_INVOKE;
-    using single_base::FIT_CONDITIONAL_INVOKE;
-};
-
-template<int N, class F>
-struct conditional_adaptor_base<N, F> : detail::callable_base<F>
-{
-    typedef detail::callable_base<F> base;
-
-    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor_base, detail::callable_base<F>);
-
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    FIT_RETURNS_CLASS(conditional_adaptor_base);
-
-    template<class Derived, class... Ts>
-    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<Ts>...) 
-    FIT_CONDITIONAL_INVOKE(const Derived& d, rank<N>, Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        (FIT_RETURNS_STATIC_CAST(const detail::callable_base<F>&)(d))(FIT_FORWARD(Ts)(xs)...)
-    );
-};
-#if !FIT_USE_CONDITIONAL_INVOKE_MEMBER
-template<class T, class... Ts>
-constexpr auto conditional_invoke(T&& x, Ts&&... xs) FIT_RETURNS
-(
-    x(x, FIT_FORWARD(Ts)(xs)...)
-);
-#endif
-
-}
-
-template<class... Fs>
-struct conditional_adaptor 
-: detail::conditional_adaptor_base<sizeof...(Fs), Fs...>
-{
-    typedef conditional_adaptor fit_rewritable_tag;
-    typedef detail::conditional_adaptor_base<sizeof...(Fs), Fs...> base;
-    typedef detail::rank<sizeof...(Fs)> rank_type;
-
-    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, base);
-
-    struct failure
-    : failure_for<Fs...>
+    struct select
+    : std::conditional
+    <
+        is_callable<F1, Ts...>::value, 
+        F1,
+        F2
+    >
     {};
 
     template<class... Ts>
-    constexpr const base& base_function(Ts&&... xs) const
+    constexpr const typename select<Ts...>::type& select_function() const
     {
-        return always_ref(*this)(xs...);
+        return *this;
     }
 
-    FIT_RETURNS_CLASS(conditional_adaptor);
+    FIT_RETURNS_CLASS(conditional_kernel);
 
     template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const base&, id_<const base&>, id_<rank_type>, id_<Ts>...) 
-    operator()(Ts&&... xs) const 
-#if FIT_USE_CONDITIONAL_INVOKE_MEMBER
-    FIT_SFINAE_RETURNS
-    (
-        FIT_CONST_THIS->FIT_CONDITIONAL_INVOKE(*FIT_CONST_THIS, rank_type(), FIT_FORWARD(Ts)(xs)...)
-    );
-#else
-    FIT_SFINAE_RETURNS
-    (
-        fit::detail::conditional_invoke(FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_function(xs...)), rank_type(), FIT_FORWARD(Ts)(xs)...)
-    );
-#endif
+    constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
+    operator()(Ts && ... x) const
+    FIT_SFINAE_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(FIT_FORWARD(Ts)(x)...));
+};
+}
+
+template<class F, class... Fs>
+struct conditional_adaptor 
+: detail::conditional_kernel<F, FIT_JOIN(conditional_adaptor, Fs...) >
+{
+    typedef conditional_adaptor fit_rewritable_tag;
+    typedef FIT_JOIN(conditional_adaptor, Fs...) kernel_base;
+    typedef detail::conditional_kernel<F, kernel_base > base;
+
+    FIT_INHERIT_DEFAULT(conditional_adaptor, base)
+
+    template<class X, class... Xs, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, kernel_base), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(kernel_base, Xs...)>
+    constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
+    : base(FIT_FORWARD(X)(f1), kernel_base(FIT_FORWARD(Xs)(fs)...))
+    {}
+
+    template<class X, class... Xs, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X)>
+    constexpr conditional_adaptor(X&& f1) 
+    : base(FIT_FORWARD(X)(f1))
+    {}
+
+    struct failure
+    : failure_for<F, Fs...>
+    {};
+};
+
+template<class F>
+struct conditional_adaptor<F> : F
+{
+    typedef conditional_adaptor fit_rewritable_tag;
+    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, F);
+
+    struct failure
+    : failure_for<F>
+    {};
 };
 
 FIT_DECLARE_STATIC_VAR(conditional, detail::make<conditional_adaptor>);

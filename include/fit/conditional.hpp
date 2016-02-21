@@ -90,6 +90,14 @@ struct conditional_kernel : F1, F2
     constexpr conditional_kernel(A&& f1, B&& f2) : F1(FIT_FORWARD(A)(f1)), F2(FIT_FORWARD(B)(f2))
     {}
 
+    template<class X,
+        class=typename std::enable_if<
+        FIT_IS_CONVERTIBLE(X, F1) && 
+        FIT_IS_DEFAULT_CONSTRUCTIBLE(F2)
+    >::type>
+    constexpr conditional_kernel(X&& x) : F1(FIT_FORWARD(X)(x))
+    {} 
+
     template<class... Ts>
     struct select
     : std::conditional
@@ -100,18 +108,15 @@ struct conditional_kernel : F1, F2
     >
     {};
 
-    template<class... Ts>
-    constexpr const typename select<Ts...>::type& select_function() const
-    {
-        return *this;
-    }
-
     FIT_RETURNS_CLASS(conditional_kernel);
 
-    template<class... Ts>
+    template<class... Ts, class F=typename select<Ts...>::type>
     constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
     operator()(Ts && ... x) const
-    FIT_SFINAE_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(FIT_FORWARD(Ts)(x)...));
+    FIT_SFINAE_RETURNS
+    (
+        FIT_RETURNS_STATIC_CAST(const F&)(*FIT_CONST_THIS)(FIT_FORWARD(Ts)(x)...)
+    );
 };
 }
 
@@ -151,6 +156,19 @@ struct conditional_adaptor<F> : F
 
     struct failure
     : failure_for<F>
+    {};
+};
+
+template<class F1, class F2>
+struct conditional_adaptor<F1, F2> 
+: detail::conditional_kernel<F1, F2>
+{
+    typedef detail::conditional_kernel<F1, F2> base;
+    typedef conditional_adaptor fit_rewritable_tag;
+    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, base);
+
+    struct failure
+    : failure_for<F1, F2>
     {};
 };
 

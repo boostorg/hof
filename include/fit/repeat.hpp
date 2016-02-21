@@ -54,6 +54,9 @@
 #include <fit/detail/sfinae.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/decorate.hpp>
+#include <fit/conditional.hpp>
+
+#include <stdexcept>
 
 namespace fit { namespace detail {
 
@@ -78,12 +81,12 @@ struct repeater<0>
     }
 };
 
-struct repeat_decorator
+struct repeat_constant_decorator
 {
-    template<class T, class F, class... Ts>
-    constexpr auto operator()(T, const F& f, Ts&&... xs) const FIT_RETURNS
+    template<class Integral, class F, class... Ts>
+    constexpr auto operator()(Integral, const F& f, Ts&&... xs) const FIT_RETURNS
     (
-        detail::repeater<T::value>()
+        detail::repeater<Integral::type::value>()
         (
             f, 
             FIT_FORWARD(Ts)(xs)...
@@ -91,9 +94,45 @@ struct repeat_decorator
     );
 };
 
+template<int Limit>
+struct repeat_integral_decorator
+{
+    // template<class Integral, class F, class... Ts>
+    // constexpr auto operator()(Integral n, const F& f, Ts&&... xs) const FIT_RETURNS
+    // (
+    //     (n) ? 
+    //         repeat_integral_decorator<!Switch>()(--n, f, f(FIT_FORWARD(Ts)(xs)...)) :
+    //         throw std::runtime_error("")
+    // );
+
+    template<class Integral, class F, class T, class... Ts, class Self=repeat_integral_decorator<Limit-1>>
+    constexpr auto operator()(Integral n, const F& f, T&& x, Ts&&... xs) const FIT_RETURNS
+    (
+        (n) ? 
+            Self()(--n, f, f(FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)) :
+            FIT_FORWARD(T)(x)
+    );
+};
+
+template<>
+struct repeat_integral_decorator<0>
+{
+    template<class Integral, class F, class T, class... Ts, class Self=repeat_integral_decorator<0>>
+    T operator()(Integral n, const F& f, T&& x, Ts&&... xs) const
+    {
+        return (n) ? 
+            Self()(--n, f, f(FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)) :
+            FIT_FORWARD(T)(x);
+    }
+};
+
 }
 
-FIT_DECLARE_STATIC_VAR(repeat, decorate_adaptor<detail::repeat_decorator>);
+FIT_DECLARE_STATIC_VAR(repeat, decorate_adaptor<
+    fit::conditional_adaptor<
+    detail::repeat_constant_decorator, 
+    detail::repeat_integral_decorator<200>
+>>);
 
 } // namespace fit
 

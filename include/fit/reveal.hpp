@@ -190,15 +190,15 @@ struct failure_for
 : with_failures<get_failure<Fs>...>
 {};
 
-template<class F>
+template<class F, class Base=detail::callable_base<F>>
 struct reveal_adaptor
-: detail::traverse_failure<detail::callable_base<F>>, detail::callable_base<F>
+: detail::traverse_failure<Base>, Base
 {
     typedef reveal_adaptor fit_rewritable1_tag;
-    using detail::traverse_failure<detail::callable_base<F>>::operator();
-    using detail::callable_base<F>::operator();
+    using detail::traverse_failure<Base>::operator();
+    using Base::operator();
 
-    FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, detail::callable_base<F>);
+    FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, Base);
 };
 // Avoid double reveals, it causes problem on gcc 4.6
 template<class F>

@@ -109,7 +109,7 @@ struct repeat_integral_decorator
     constexpr auto operator()(Integral n, const F& f, T&& x, Ts&&... xs) const FIT_RETURNS
     (
         (n) ? 
-            Self()(--n, f, f(FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)) :
+            Self()(n-1, f, f(FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)) :
             FIT_FORWARD(T)(x)
     );
 };
@@ -121,7 +121,7 @@ struct repeat_integral_decorator<0>
     T operator()(Integral n, const F& f, T&& x, Ts&&... xs) const
     {
         return (n) ? 
-            Self()(--n, f, f(FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)) :
+            Self()(n-1, f, f(FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)) :
             FIT_FORWARD(T)(x);
     }
 };

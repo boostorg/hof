@@ -52,11 +52,7 @@
 namespace fit { 
 
 namespace detail {
-template<template<class...> class T>
-struct template_holder
-{
-    typedef void type;
-};
+
 
 template<class T, class=void>
 struct has_failure

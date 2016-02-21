@@ -54,37 +54,75 @@
 #include <fit/detail/move.hpp>
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
-
-#ifndef FIT_FIX_HAS_CONSTEXPR
-#define FIT_FIX_HAS_CONSTEXPR 0
-#endif
-
-#if FIT_FIX_HAS_CONSTEXPR
-#define FIT_FIX_CONSTEXPR constexpr
-#else
-#define FIT_FIX_CONSTEXPR
-#endif
+#include <fit/indirect.hpp>
 
 
 namespace fit {
 
 namespace detail{
 
-template<class Derived, class F>
-struct fix_adaptor_base : detail::callable_base<F>
+template<class F>
+struct compute_indirect_ref
+{ typedef indirect_adaptor<const F*> type; };
+
+template<class F>
+struct compute_indirect_ref<indirect_adaptor<F*>>
+{ typedef indirect_adaptor<F*> type; };
+
+template<class F>
+constexpr indirect_adaptor<const F*> make_indirect_ref(const F& f)
 {
-    FIT_INHERIT_CONSTRUCTOR(fix_adaptor_base, detail::callable_base<F>);
+    return indirect_adaptor<const F*>(&f);
+}
+
+template<class F>
+constexpr indirect_adaptor<const F*> make_indirect_ref(const indirect_adaptor<F*>& f)
+{
+    return f;
+}
+
+template<class F, class=void>
+struct fix_result
+{
+    template<class... Ts>
+    struct apply
+    { 
+        typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type; 
+    };
+};
+
+template<class F>
+struct fix_result<F, typename holder<
+    typename F::result_type
+>::type>
+{
+    template<class...>
+    struct apply
+    { 
+        typedef typename F::result_type type; 
+    };
+    
+};
+
+template<class F, class Result, int N>
+struct fix_adaptor_base : F
+{
+    FIT_INHERIT_CONSTRUCTOR(fix_adaptor_base, F);
+
+    typedef typename compute_indirect_ref<F>::type base_ref_type;
+    typedef fix_adaptor_base<base_ref_type, Result, N-1> derived;
+
 
     template<class... Ts>
-    FIT_FIX_CONSTEXPR const detail::callable_base<F>& base_function(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
 
     template<class... Ts>
-    FIT_FIX_CONSTEXPR const Derived& derived_function(Ts&&... xs) const
+    constexpr derived derived_function(Ts&&... xs) const
     {
-        return static_cast<const Derived&>(always_ref(*this)(xs...));
+        return derived(make_indirect_ref(this->base_function(xs...)));
     }
 
     struct fix_failure
@@ -94,33 +132,74 @@ struct fix_adaptor_base : detail::callable_base<F>
         {
             template<class... Ts>
             struct of
-            : Failure::template of<Derived, Ts...>
+            : Failure::template of<derived, Ts...>
             {};
         };
     };
 
     struct failure
-    : failure_map<fix_failure, detail::callable_base<F>>
+    : failure_map<fix_failure, F>
     {};
 
 
     FIT_RETURNS_CLASS(fix_adaptor_base);
 
     template<class... Ts>
-    FIT_FIX_CONSTEXPR FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<const Derived&>, id_<Ts>...) 
+    constexpr FIT_SFINAE_RESULT(const F&, id_<derived>, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...))
-            (FIT_MANGLE_CAST(const Derived&)(FIT_CONST_THIS->derived_function(xs...)), FIT_FORWARD(Ts)(xs)...)
+        FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))
+            (
+                FIT_MANGLE_CAST(derived)(FIT_CONST_THIS->derived_function(xs...)), 
+                FIT_FORWARD(Ts)(xs)...
+            )
     );
+};
+
+template<class F, class Result>
+struct fix_adaptor_base<F, Result, 0> : F
+{
+    FIT_INHERIT_CONSTRUCTOR(fix_adaptor_base, F);
+
+    template<class... Ts>
+    const F& base_function(Ts&&...) const
+    {
+        return *this;
+    }
+
+    struct fix_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            template<class... Ts>
+            struct of
+            : Failure::template of<fix_adaptor_base, Ts...>
+            {};
+        };
+    };
+
+    struct failure
+    : failure_map<fix_failure, F>
+    {};
+
+
+    FIT_RETURNS_CLASS(fix_adaptor_base);
+
+    template<class... Ts>
+    typename Result::template apply<fix_adaptor_base, Ts...>::type
+    operator()(Ts&&... xs) const 
+    {
+        return this->base_function(xs...)(*this, FIT_FORWARD(Ts)(xs)...);
+    }
 };
 }
 
 template<class F>
-struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
+struct fix_adaptor : detail::fix_adaptor_base<F, detail::fix_result<F>, 32>
 {
     typedef fix_adaptor fit_rewritable1_tag;
-    typedef detail::fix_adaptor_base<fix_adaptor<F>, F> base;
+    typedef detail::fix_adaptor_base<F, detail::fix_result<F>, 32> base;
     FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
 };
 

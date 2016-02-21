@@ -16,6 +16,12 @@ struct holder
     typedef void type;
 };
 
+template<template<class...> class T>
+struct template_holder
+{
+    typedef void type;
+};
+
 }} // namespace fit
 
 #endif

@@ -50,16 +50,18 @@
 
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 
-#define FIT_DELGATE_CONSTRUCTOR(C, T, var) \
+#define FIT_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr_, C, T, var) \
     template<class... FitXs, typename fit::detail::enable_if_constructible<C, T, FitXs...>::type = 0> \
-    constexpr C(FitXs&&... fit_xs) : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {}
+    constexpr_ C(FitXs&&... fit_xs) : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {}
     
 #else
-#define FIT_DELGATE_CONSTRUCTOR(C, T, var) \
+#define FIT_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr_, C, T, var) \
     template<class... FitXs, FIT_ENABLE_IF_CONSTRUCTIBLE(T, FitXs&&...)> \
-    constexpr C(FitXs&&... fit_xs) : var(FIT_FORWARD(FitXs)(fit_xs)...) {}
+    constexpr_ C(FitXs&&... fit_xs) : var(FIT_FORWARD(FitXs)(fit_xs)...) {}
 
 #endif
+
+#define FIT_DELGATE_CONSTRUCTOR(C, T, var) FIT_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr, C, T, var)
 
 // Currently its faster to use `FIT_DELGATE_CONSTRUCTOR` than `using
 // Base::Base;`

@@ -88,6 +88,37 @@ struct indirect_adaptor : F
     );
 };
 
+template<class F>
+struct indirect_adaptor<F*>
+{
+    typedef indirect_adaptor fit_rewritable1_tag;
+    F* f;
+    constexpr indirect_adaptor()
+    {}
+
+    constexpr indirect_adaptor(F* x) : f(x)
+    {}
+
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&...) const
+    {
+        return *f;
+    }
+
+    struct failure
+    : failure_for<F>
+    {};
+
+    FIT_RETURNS_CLASS(indirect_adaptor);
+
+    template<class... Ts>
+    constexpr FIT_SFINAE_RESULT(F, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    (
+        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
+    );
+};
+
 FIT_DECLARE_STATIC_VAR(indirect, detail::make<indirect_adaptor>);
 
 } // namespace fit

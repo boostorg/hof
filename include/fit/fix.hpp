@@ -55,6 +55,7 @@
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/indirect.hpp>
+#include <fit/result.hpp>
 
 
 namespace fit {
@@ -201,6 +202,14 @@ struct fix_adaptor : detail::fix_adaptor_base<F, detail::fix_result<F>, 32>
     typedef fix_adaptor fit_rewritable1_tag;
     typedef detail::fix_adaptor_base<F, detail::fix_result<F>, 32> base;
     FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
+};
+
+template<class Result, class F>
+struct result_adaptor<Result, fix_adaptor<F>>
+: fix_adaptor<result_adaptor<Result, F>>
+{
+    typedef fix_adaptor<result_adaptor<Result, F>> base;
+    FIT_INHERIT_CONSTRUCTOR(result_adaptor, base)
 };
 
 FIT_DECLARE_STATIC_VAR(fix, detail::make<fix_adaptor>);

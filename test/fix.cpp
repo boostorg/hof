@@ -37,23 +37,42 @@ struct factorial_move_t
 };
 
 static constexpr fit::fix_adaptor<factorial_t> factorial = {};
-// static constexpr fit::fix_adaptor<factorial_constexpr_t> factorial_constexpr = {};
+static constexpr fit::fix_adaptor<factorial_constexpr_t> factorial_constexpr = {};
 static constexpr fit::static_<fit::fix_adaptor<factorial_move_t> > factorial_move = {};
 
 FIT_TEST_CASE()
 {
-    const int r1 = factorial(5);
-    const int r2 = fit::reveal(factorial)(5);
-    const int r3 = fit::fix(fit::result<int>(factorial_constexpr_t()))(5);
-    FIT_TEST_CHECK(r1 == 5*4*3*2*1);
-    FIT_TEST_CHECK(r2 == 5*4*3*2*1);
+    const int r = factorial(5);
+    FIT_TEST_CHECK(r == 5*4*3*2*1);
+}
 
-    FIT_TEST_CHECK(r3 == 5*4*3*2*1);
+FIT_TEST_CASE()
+{
+    const int r = fit::reveal(factorial)(5);
+    FIT_TEST_CHECK(r == 5*4*3*2*1);
+}
 
+FIT_TEST_CASE()
+{
+    const int r = fit::fix(fit::result<int>(factorial_constexpr_t()))(5);
+    FIT_TEST_CHECK(r == 5*4*3*2*1);
+}
+
+FIT_TEST_CASE()
+{
+    const int r = fit::result<int>(factorial_constexpr)(5);
+    FIT_TEST_CHECK(r == 5*4*3*2*1);
+}
+FIT_TEST_CASE()
+{
     FIT_STATIC_TEST_CHECK(fit::fix(fit::result<int>(factorial_constexpr_t()))(5) == 5*4*3*2*1);
+    FIT_STATIC_TEST_CHECK(fit::result<int>(factorial_constexpr)(5) == 5*4*3*2*1);
+}
+FIT_TEST_CASE()
+{
 #if FIT_HAS_GENERIC_LAMBDA
-    int r4 = fit::fix([](auto s, auto x) -> decltype(x) { return x == 0 ? 1 : x * s(x-1); })(5);
-    FIT_TEST_CHECK(r4 == 5*4*3*2*1);
+    int r = fit::fix([](auto s, auto x) -> decltype(x) { return x == 0 ? 1 : x * s(x-1); })(5);
+    FIT_TEST_CHECK(r == 5*4*3*2*1);
 #endif
 }
 

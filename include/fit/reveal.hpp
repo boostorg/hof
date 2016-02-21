@@ -65,6 +65,17 @@ struct has_failure<T, typename holder<
 >::type>
 : std::true_type
 {};
+
+struct identity_failure
+{
+    template<class T>
+    T operator()(T&& x);
+
+    template<template<class...> class Template, class... Ts>
+    FIT_USING(defer, Template<Ts...>);
+
+};
+
 }
 
 template<class F, class=void>
@@ -88,6 +99,22 @@ struct get_failure<F, typename std::enable_if<detail::has_failure<F>::value>::ty
 : F::failure
 {};
 
+template<template<class...> class Template>
+struct as_failure
+{
+    template<class... Ts>
+    struct of
+    {
+#if FIT_HAS_TEMPLATE_ALIAS
+        template<class Id>
+        using apply = typename Id::template defer<Template, Ts...>::type;
+#else
+        template<class Id, class T=typename Id::template defer<Template, Ts...>>
+        static auto apply(Id) -> typename T::type;
+#endif
+    };
+};
+
 namespace detail {
 template<class Failure, class... Ts>
 FIT_USING_TYPENAME(apply_failure, Failure::template of<Ts...>);
@@ -102,13 +129,19 @@ struct reveal_failure
     // never called
     template<
         class... Ts, 
-        class=typename std::enable_if<(!is_callable<F, Ts...>::value)>::type
-    >
-    constexpr auto operator()(Ts&&... xs) const -> 
+        class=typename std::enable_if<(!is_callable<F, Ts...>::value)>::type,
+        class Id=fit::detail::identity_failure,
 #if FIT_HAS_TEMPLATE_ALIAS
-        typename apply_failure<Failure, Ts...>::template apply<fit::detail::identity_base>;
+        class=typename apply_failure<Failure, Ts...>::template apply<Id>
 #else
-        decltype(apply_failure<Failure, Ts...>::apply(identity));
+        class=void
+#endif
+    >
+    constexpr auto operator()(Ts&&... xs) const
+#if FIT_HAS_TEMPLATE_ALIAS
+        -> typename Id::no_substitution_failure_found;
+#else
+        -> decltype(apply_failure<Failure, Ts...>::apply(Id()));
 #endif
 };
 

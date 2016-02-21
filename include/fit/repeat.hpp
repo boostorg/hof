@@ -93,10 +93,10 @@ struct repeat_constant_decorator
     );
 };
 
-template<int Limit>
+template<int Depth>
 struct repeat_integral_decorator
 {
-    template<class Integral, class F, class T, class... Ts, class Self=repeat_integral_decorator<Limit-1>>
+    template<class Integral, class F, class T, class... Ts, class Self=repeat_integral_decorator<Depth-1>>
     constexpr auto operator()(Integral n, const F& f, T&& x, Ts&&... xs) const FIT_RETURNS
     (
         (n) ? 
@@ -108,11 +108,11 @@ struct repeat_integral_decorator
 template<>
 struct repeat_integral_decorator<0>
 {
-    template<class Integral, class F, class T, class... Ts, class Self=repeat_integral_decorator<0>>
-    T operator()(Integral n, const F& f, T&& x, Ts&&... xs) const
+    template<class Integral, class F, class T, class Self=repeat_integral_decorator<0>>
+    auto operator()(Integral n, const F& f, T&& x) const -> decltype(f(FIT_FORWARD(T)(x)))
     {
         return (n) ? 
-            Self()(n-1, f, f(FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)) :
+            Self()(n-1, f, f(FIT_FORWARD(T)(x))) :
             FIT_FORWARD(T)(x);
     }
 };

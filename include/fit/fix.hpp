@@ -23,7 +23,7 @@
 /// eagerness of `constexpr` to instantiation templates, in some cases, an
 /// explicit return type must be specified in order to avoid reaching the
 /// recursion limits of the compiler. This can be accomplished using
-/// `fit::result`:
+/// [`fit::result`](result.md):
 /// 
 ///     int r = fit::result<int>(factorial)(5;)
 /// 

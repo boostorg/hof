@@ -17,9 +17,15 @@
 /// The `fix` function adaptor implements a fixed-point combinator. This can be
 /// used to write recursive functions. 
 /// 
-/// Note: Compilers are too eager to instantiate templates when using
-/// constexpr, which causes the compiler to reach its internal instantiation
-/// limit. So, unfortunately, `fix` cannot be used for `constexpr` functions.
+/// When using `constexpr`, a function can recurse to a depth that is defined by
+/// `FIT_RECURSIVE_CONSTEXPR_DEPTH`(default is 16). There is no limitiation on
+/// recursion depth for non-constexpr functions. In addition, due to the
+/// eagerness of `constexpr` to instantiation templates, in some cases, an
+/// explicit return type must be specified in order to avoid reaching the
+/// recursion limits of the compiler. This can be accomplished using
+/// `fit::result`:
+/// 
+///     int r = fit::result<int>(factorial)(5;)
 /// 
 /// Synopsis
 /// --------
@@ -30,20 +36,21 @@
 /// Semantics
 /// ---------
 /// 
-///     assert(fix(f)(xs...) == f(f, xs...));
+///     assert(fix(f)(xs...) == f(fix(f), xs...));
 /// 
 /// Requirements
 /// ------------
 /// 
 /// F must be:
 /// 
-/// * [Callable](concepts.md#callable)
+/// * [FunctionObject](concepts.md#functionobject)
 /// * MoveConstructible
 /// 
 /// Example
 /// -------
 /// 
-///     int r = fit::fix([](auto recurse, auto x) -> decltype(x) { return x == 0 ? 1 : x * recurse(x-1); })(5);
+///     auto factorial = fit::fix([](auto recurse, auto x) -> decltype(x) { return x == 0 ? 1 : x * recurse(x-1); });
+///     int r = factorial(5);
 ///     assert(r == 5*4*3*2*1);
 /// 
 

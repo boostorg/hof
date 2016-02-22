@@ -21,6 +21,81 @@
 /// error inside the function. The `reveal` adaptor will expose these error
 /// messages while still keeping the function SFINAE-friendly.
 /// 
+/// Sample
+/// ------
+/// 
+/// If we take the `print` example from the quick start guide like this:
+/// 
+///     namespace adl {
+/// 
+///     using std::begin;
+/// 
+///     template<class R>
+///     auto adl_begin(R&& r) FIT_RETURNS(begin(r));
+///     }
+/// 
+///     FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f) FIT_RETURNS
+///     (
+///         fit::unpack(fit::by(f))(sequence)
+///     );
+/// 
+///     auto print = fit::fix(fit::conditional(
+///         [](auto, const auto& x) -> decltype(std::cout << x, void())
+///         {
+///             std::cout << x << std::endl;
+///         },
+///         [](auto self, const auto& range) -> decltype(self(*adl::adl_begin(range)), void())
+///         {
+///             for(const auto& x:range) self(x);
+///         },
+///         [](auto self, const auto& tuple) -> decltype(for_each_tuple(tuple, self), void())
+///         {
+///             return for_each_tuple(tuple, self);
+///         }
+///     ));
+/// 
+/// Which prints numbers and vectors:
+/// 
+///     print(5);
+/// 
+///     std::vector<int> v = { 1, 2, 3, 4 };
+///     print(v);
+/// 
+/// However, if we pass a type that can't be printed, we get an error like
+/// this:
+/// 
+///     print.cpp:49:5: error: no matching function for call to object of type 'fit::fix_adaptor<fit::conditional_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> >'
+///         print(foo{});
+///         ^~~~~
+///     fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const fit::conditional_adaptor<(lambda at
+///           print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)>'
+///         operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+/// 
+/// Which is short and gives very little information why it can't be called.
+/// It doesn't even show the overloads that were try. However, using the
+/// `reveal` adaptor we can get more info about the error like this:
+/// 
+///     print.cpp:49:5: error: no matching function for call to object of type 'fit::reveal_adaptor<fit::fix_adaptor<fit::conditional_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9),
+///           (lambda at print.cpp:37:9)> >, fit::fix_adaptor<fit::conditional_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> > >'
+///         fit::reveal(print)(foo{});
+///         ^~~~~~~~~~~~~~~~~~
+///     reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:29:9)'
+///         constexpr auto operator()(Ts&&... xs) const
+///                        ^
+///     reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:33:9)'
+///         constexpr auto operator()(Ts&&... xs) const
+///                        ^
+///     reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:37:9)'
+///         constexpr auto operator()(Ts&&... xs) const
+///                        ^
+///     fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const fit::conditional_adaptor<(lambda at
+///           print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)>'
+///         operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+/// 
+/// So now the error has a note for each of the lambda overloads it tried. Of
+/// course this can be improved even further by providing custom reporting of
+/// failures.
+/// 
 /// Synopsis
 /// --------
 /// 

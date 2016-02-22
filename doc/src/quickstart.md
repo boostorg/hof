@@ -114,7 +114,7 @@ So the `-> decltype(std::cout << x, void())` will only make the function callabl
     using std::begin;
 
     template<class R>
-    auto adl_begin(R&& r) -> FIT_RETURNS(begin(r));
+    auto adl_begin(R&& r) FIT_RETURNS(begin(r));
     }
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
@@ -135,7 +135,7 @@ We could extend this to printing tuples as well. We will need to combine a coupl
 
     FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
     {
-        return unpack(by(f))(sequence)
+        return unpack(by(f))(sequence);
     };
 
 So now we can add an overload for tuples:

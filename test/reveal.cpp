@@ -144,6 +144,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(check_failure(foo()) == -1);
 
     static_assert(!fit::is_callable<decltype(check_failure), dont_catch>::value, "Callable");
+    static_assert(!fit::is_callable<decltype(check_failure), int, int>::value, "Callable");
 
     // check_failure(dont_catch());
 }

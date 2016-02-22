@@ -144,19 +144,13 @@ struct reveal_failure
     // never called
     template<
         class... Ts, 
-        class=typename std::enable_if<(!is_callable<F, Ts...>::value)>::type,
-        class Id=fit::detail::identity_failure,
-#if FIT_REVEAL_USE_TEMPLATE_ALIAS
-        class=typename apply_failure<Failure, Ts...>::template apply<Id>
-#else
-        class=void
-#endif
+        class=typename std::enable_if<(!is_callable<F, Ts...>::value)>::type
     >
     constexpr auto operator()(Ts&&... xs) const
 #if FIT_REVEAL_USE_TEMPLATE_ALIAS
-        -> typename Id::no_substitution_failure_found;
+        -> typename apply_failure<Failure, Ts...>::template apply<fit::detail::identity_failure>;
 #else
-        -> decltype(apply_failure<Failure, Ts...>::apply(Id()));
+        -> decltype(apply_failure<Failure, Ts...>::apply(fit::detail::identity_failure()));
 #endif
 };
 

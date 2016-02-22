@@ -64,6 +64,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fit::reveal(lam)(t3()) == 3);
 
     // fit::reveal(lam)(1);
+    // lam(1);
 }
 #endif
 

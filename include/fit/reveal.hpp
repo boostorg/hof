@@ -49,6 +49,14 @@
 #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/using.hpp>
 
+#ifndef FIT_REVEAL_USE_TEMPLATE_ALIAS
+#ifdef __clang__
+#define FIT_REVEAL_USE_TEMPLATE_ALIAS 1
+#else
+#define FIT_REVEAL_USE_TEMPLATE_ALIAS 0
+#endif
+#endif
+
 namespace fit { 
 
 namespace detail {
@@ -71,8 +79,15 @@ struct identity_failure
     template<class T>
     T operator()(T&& x);
 
+    template<class T>
+    static T&& val();
+#if FIT_REVEAL_USE_TEMPLATE_ALIAS
     template<template<class...> class Template, class... Ts>
     FIT_USING(defer, Template<Ts...>);
+#else
+    template<template<class...> class Template, class... Ts>
+    static auto defer(Ts&&...) -> typename Template<Ts...>::type;
+#endif
 
 };
 
@@ -84,7 +99,7 @@ struct get_failure
     template<class... Ts>
     struct of
     {
-#if FIT_HAS_TEMPLATE_ALIAS
+#if FIT_REVEAL_USE_TEMPLATE_ALIAS
         template<class Id>
         using apply = decltype(Id()(std::declval<F>())(std::declval<Ts>()...));
 #else
@@ -105,12 +120,12 @@ struct as_failure
     template<class... Ts>
     struct of
     {
-#if FIT_HAS_TEMPLATE_ALIAS
+#if FIT_REVEAL_USE_TEMPLATE_ALIAS
         template<class Id>
         using apply = typename Id::template defer<Template, Ts...>::type;
 #else
-        template<class Id, class T=typename Id::template defer<Template, Ts...>>
-        static auto apply(Id) -> typename T::type;
+        template<class Id>
+        static auto apply(Id) -> decltype(Id::template defer<Template, Ts...>());
 #endif
     };
 };
@@ -131,14 +146,14 @@ struct reveal_failure
         class... Ts, 
         class=typename std::enable_if<(!is_callable<F, Ts...>::value)>::type,
         class Id=fit::detail::identity_failure,
-#if FIT_HAS_TEMPLATE_ALIAS
+#if FIT_REVEAL_USE_TEMPLATE_ALIAS
         class=typename apply_failure<Failure, Ts...>::template apply<Id>
 #else
         class=void
 #endif
     >
     constexpr auto operator()(Ts&&... xs) const
-#if FIT_HAS_TEMPLATE_ALIAS
+#if FIT_REVEAL_USE_TEMPLATE_ALIAS
         -> typename Id::no_substitution_failure_found;
 #else
         -> decltype(apply_failure<Failure, Ts...>::apply(Id()));

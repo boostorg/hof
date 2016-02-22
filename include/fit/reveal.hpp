@@ -86,7 +86,7 @@ struct identity_failure
     FIT_USING(defer, Template<Ts...>);
 #else
     template<template<class...> class Template, class... Ts>
-    static auto defer(Ts&&...) -> typename Template<Ts...>::type;
+    static auto defer(Ts&&...) -> Template<Ts...>;
 #endif
 
 };
@@ -122,7 +122,7 @@ struct as_failure
     {
 #if FIT_REVEAL_USE_TEMPLATE_ALIAS
         template<class Id>
-        using apply = typename Id::template defer<Template, Ts...>::type;
+        using apply = typename Id::template defer<Template, Ts...>;
 #else
         template<class Id>
         static auto apply(Id) -> decltype(Id::template defer<Template, Ts...>());

@@ -14,7 +14,6 @@ There are several configuration that control the behaviour in the Fit library.
 |                               | callability of functions. On MSVC, this is enabled by default, since it does   |
 |                               | not have full support for expression SFINAE.                                   |
 +-------------------------------+--------------------------------------------------------------------------------+
-|                               |                                                                                |
 | FIT_RECURSIVE_CONSTEXPR_DEPTH | Because C++ instantiates `constexpr` functions eagerly, recursion with         |
 |                               | `constexpr` functions can cause the compiler to reach its internal limits. The |
 |                               | setting is used by Fit to set a limit on recursion depth when using            |

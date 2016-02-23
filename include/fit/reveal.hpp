@@ -110,6 +110,52 @@
 /// * [Callable](concepts.md#callable)
 /// * MoveConstructible
 /// 
+/// Reporting Failures
+/// ==================
+/// 
+/// By default, `reveal` reports the substitution failure by trying to call
+/// the function. However, more detail expressions can be be reported from a
+/// template alias by using `as_failure`. This is done by defining a nested
+/// `failure` struct in the function object and then inheriting from
+/// `as_failure`. Also multiple failures can be reported by using
+/// `with_failures`.
+/// 
+/// Synopsis
+/// --------
+/// 
+///     // Report failure by instantiating the Template
+///     template<template<class...> class Template>
+///     struct as_failure;
+/// 
+///     // Report multiple falures
+///     template<class... Failures>
+///     struct with_failures;
+/// 
+///     // Report the failure for each function
+///     template<class... Fs>
+///     struct failure_for;
+/// 
+///     // Get the failure of a function
+///     template<class F>
+///     struct get_failure;
+/// 
+/// Example
+/// -------
+/// 
+///     struct sum_f
+///     {
+///         template<class T, class U>
+///         using sum_failure = decltype(std::decval<T>()+std::declval<U>());
+/// 
+///         struct failure
+///         : as_failure<sum_failure>
+///         {};
+/// 
+///         template<class T, class U>
+///         auto operator()(T x, U y) const FIT_RETURNS(x+y);
+///     };
+/// 
+/// 
 
 #include <fit/always.hpp>
 #include <fit/returns.hpp>

@@ -37,6 +37,9 @@
 /// the global function object has a unique address across translation units.
 /// This helps prevent possible ODR-violations.
 /// 
+/// By default, all functions defined with `FIT_STATIC_LAMBDA_FUNCTION` use
+/// the `fit::reveal` adaptor to improve error messages.
+/// 
 /// Example
 /// -------
 /// 

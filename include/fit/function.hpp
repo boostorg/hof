@@ -19,6 +19,9 @@
 /// have a unique address across translation units. This helps to avoid ODR
 /// violations. As such, the object that is deduced is default constructed.
 /// 
+/// By default, all functions defined with `FIT_STATIC_FUNCTION` use the
+/// `fit::reveal` adaptor to improve error messages.
+/// 
 /// Example
 /// -------
 /// 

@@ -3,7 +3,7 @@ Configurations
 
 There are several configuration that control the behaviour in the Fit library.
 
-+====
+
 | Name                          | Description                                                                    |
 |-------------------------------|--------------------------------------------------------------------------------|
 | FIT_CHECK_UNPACK_SEQUENCE     | Unpack has extra checks to ensure that the function will be invoked with the   |

@@ -13,6 +13,7 @@ pages:
     - 'Quick Start': 'quickstart.md'
     - 'Overview' : 'overview.md'
     - 'Basic Concepts' : 'concepts.md'
+    - 'Configurations' : 'configurations.md'
     - 'Requirements': 'requirements.md'
     - 'Acknowledgements': 'acknowledgements.md'
     - 'License': 'license.md'

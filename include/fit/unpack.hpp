@@ -109,6 +109,11 @@
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
 
+#ifndef FIT_CHECK_UNPACK_SEQUENCE
+#define FIT_CHECK_UNPACK_SEQUENCE 1
+#endif
+
+
 namespace fit {
 
 template<class Sequence, class=void>
@@ -139,7 +144,7 @@ constexpr auto unpack_impl(F&& f, Sequence&& s) FIT_RETURNS
 );
 
 struct private_unpack_type {};
-
+#if FIT_CHECK_UNPACK_SEQUENCE
 template<class Sequence>
 constexpr int unpack_check()
 {
@@ -152,8 +157,13 @@ constexpr int unpack_check()
     );
     return 0;
 }
+#endif
 
-template<class F, class Sequence, int=(unpack_check<Sequence>())>
+template<class F, class Sequence
+#if FIT_CHECK_UNPACK_SEQUENCE
+, int=(unpack_check<Sequence>())
+#endif
+>
 constexpr auto unpack_simple(F&& f, Sequence&& s) FIT_RETURNS
 (
     unpack_impl(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))

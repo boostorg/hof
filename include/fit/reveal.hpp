@@ -145,7 +145,7 @@
 ///     struct sum_f
 ///     {
 ///         template<class T, class U>
-///         using sum_failure = decltype(std::decval<T>()+std::declval<U>());
+///         using sum_failure = decltype(std::declval<T>()+std::declval<U>());
 /// 
 ///         struct failure
 ///         : as_failure<sum_failure>

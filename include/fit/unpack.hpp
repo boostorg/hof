@@ -85,15 +85,17 @@
 ///     template<class... Ts>
 ///     struct my_sequence;
 /// 
-///     template<class... Ts>
-///     struct fit::unpack_sequence<my_sequence<Ts...>>
-///     {
-///         template<class F, class Sequence>
-///         constexpr static auto apply(F&& f, Sequence&& s) FIT_RETURNS
-///         (
-///             s(std::forward<F>(f))
-///         );
-///     };
+///     namespace fit {
+///         template<class... Ts>
+///         struct unpack_sequence<my_sequence<Ts...>>
+///         {
+///             template<class F, class Sequence>
+///             constexpr static auto apply(F&& f, Sequence&& s) FIT_RETURNS
+///             (
+///                 s(std::forward<F>(f))
+///             );
+///         };
+///     }
 /// 
 
 #include <fit/returns.hpp>

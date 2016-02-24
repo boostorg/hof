@@ -22,8 +22,6 @@
 /// `std::bind(f, x)` except the lazy version can be called in a constexpr
 /// context, as well. The `lazy` adaptor is compatible with `std::bind`, so
 /// most of the time `lazy` and `std::bind` can be used interchangeably.
-/// However, the `lazy` adaptor won't accept member function pointers, like
-/// `std::bind` will.
 /// 
 /// Synopsis
 /// --------

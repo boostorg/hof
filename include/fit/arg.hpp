@@ -19,9 +19,9 @@
 /// Description
 /// -----------
 /// 
-/// The `arg` returns a function object that returns the Nth argument passed
-/// to it. It actually starts at 1, so it is not the zero-based index of the
-/// argument.
+/// The `arg` function returns a function object that returns the Nth argument
+/// passed to it. It actually starts at 1, so it is not the zero-based index
+/// of the argument.
 /// 
 /// Synopsis
 /// --------

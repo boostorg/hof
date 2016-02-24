@@ -25,7 +25,7 @@
 /// recursion limits of the compiler. This can be accomplished using
 /// [`fit::result`](result.md):
 /// 
-///     int r = fit::result<int>(factorial)(5;)
+///     int r = fit::result<int>(factorial)(5);
 /// 
 /// Synopsis
 /// --------
@@ -49,7 +49,11 @@
 /// Example
 /// -------
 /// 
-///     auto factorial = fit::fix([](auto recurse, auto x) -> decltype(x) { return x == 0 ? 1 : x * recurse(x-1); });
+///     auto factorial = fit::fix(
+///         [](auto recurse, auto x) -> decltype(x) { 
+///             return x == 0 ? 1 : x * recurse(x-1); 
+///         }
+///     );
 ///     int r = factorial(5);
 ///     assert(r == 5*4*3*2*1);
 /// 

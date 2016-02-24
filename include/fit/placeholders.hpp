@@ -14,7 +14,7 @@
 /// Description
 /// -----------
 /// 
-/// The placeholders provide `std::bind` compatible placeholders, that
+/// The placeholders provide `std::bind` compatible placeholders that
 /// additionally provide basic C++ operators that creates bind expressions.
 /// Each bind expression supports `constexpr` function evaluation.
 /// 

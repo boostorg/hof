@@ -68,7 +68,7 @@
 ///         int a;
 ///         add_1() : a(1) {}
 ///         
-///         FIT_RETURNS_CLASS(add_1)
+///         FIT_RETURNS_CLASS(add_1);
 ///         
 ///         template<class T>
 ///         auto operator()(T x) const 

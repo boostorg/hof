@@ -26,9 +26,7 @@ Conditional overloading
 -----------------------
 
 Take a look at this example of defining a `stringify` function from
-stackoverflow here:
-
-http://stackoverflow.com/questions/30189926/metaprograming-failure-of-function-definition-defines-a-separate-function/30515874
+stackoverflow [here](http://stackoverflow.com/questions/30189926/metaprograming-failure-of-function-definition-defines-a-separate-function/30515874).
 
 The user would like to write `stringify` to call `to_string` where applicable
 and fallback on using `sstream` ot convert to a string. Most of the top
@@ -42,9 +40,7 @@ this:
     );
 
 In addition, this can be used with the [`fit::if_`](if.md) decorator to create `static_if`-like
-constructs. For example, Baptiste Wicht discusses how one could write `static_if` in C++ here:
-
-http://baptiste-wicht.com/posts/2015/07/simulate-static_if-with-c11c14.html
+constructs. For example, Baptiste Wicht discusses how one could write `static_if` in C++ [here](http://baptiste-wicht.com/posts/2015/07/simulate-static_if-with-c11c14.html).
 
 He wants to be able to write this:
 
@@ -74,7 +70,7 @@ this:
     }
 
 The advantage of using the Fit library instead of the solution in Baptiste
-Wicht's blog is [`conditional`](conditional.md) allows more than just two conditions. So if
+Wicht's blog, is that [`conditional`](conditional.md) allows more than just two conditions. So if
 there was another trait to be checked, such as `is_stack`, it could be written
 like this:
 
@@ -117,10 +113,8 @@ this:
     : decltype(has_pointer_operators(std::declval<T>()))
     {};
 
-Which is much simpler than the other implementations that were written(it was
-about 3 times the amount of code):
-
-https://gist.github.com/lefticus/6fdccb18084a1a3410d5
+Which is much simpler than the other implementations that were written, which were
+about 3 times the amount of code(see [here](https://gist.github.com/lefticus/6fdccb18084a1a3410d5)).
 
 Projections
 -----------

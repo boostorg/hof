@@ -11,6 +11,7 @@ pages:
 - Home: 'index.md'
 - About:
     - 'Quick Start': 'quickstart.md'
+    - 'More examples': 'more_examples.md'
     - 'Overview' : 'overview.md'
     - 'Basic Concepts' : 'concepts.md'
     - 'Configurations' : 'configurations.md'

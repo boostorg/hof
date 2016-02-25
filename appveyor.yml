@@ -28,7 +28,8 @@ build_script:
  - cmd: python setup.py
  - cmd: mkdir build
  - cmd: cd build
- - cmd: cmake .. -G"%GENERATOR%" -DFIT_HAS_GENERIC_LAMBDA=1
+ - cmd: SET CXXFLAGS=/DFIT_HAS_GENERIC_LAMBDA=1
+ - cmd: cmake .. -G"%GENERATOR%"
  - cmd: cmake --build . --config %CONFIG% --target check
 
 # test_script:

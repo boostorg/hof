@@ -47,7 +47,7 @@
 ///         }
 ///     };
 /// 
-///     constexpr auto increment_by_5 = fit::repeat(std::integral_constant<int, 5>())(increment());
+///     auto increment_by_5 = fit::repeat(std::integral_constant<int, 5>())(increment());
 ///     assert(increment_by_5(1) == 6);
 /// 
 

@@ -1,6 +1,8 @@
 #include "test.hpp"
 #include <fit/lift.hpp>
+#include <fit/detail/move.hpp>
 #include <tuple>
+#include <algorithm>
 
 template<class T, class U>
 constexpr T sum(T x, U y)

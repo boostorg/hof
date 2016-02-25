@@ -1,6 +1,7 @@
 #include <fit/returns.hpp>
 #include "test.hpp"
 
+#if !defined (__GNUC__) || defined (__clang__)
 struct add_1
 {
     int a;
@@ -17,3 +18,4 @@ FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(3 == add_1()(2));   
 }
+#endif

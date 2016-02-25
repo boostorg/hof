@@ -28,7 +28,7 @@ matrix:
           compiler: clang
           addons: *clang34
 
-        - env: CLANG_VERSION=3.5 BUILD_TYPE=Debug ASAN=on LIBCXX=on
+        - env: CLANG_VERSION=3.5 BUILD_TYPE=Debug ASAN=on LIBCXX=on HAS_GENERIC_LAMBDA=on
           os: linux
           compiler: clang-3.5
           addons: &clang35
@@ -41,12 +41,12 @@ matrix:
                 - ubuntu-toolchain-r-test
                 - llvm-toolchain-precise-3.5
 
-        - env: CLANG_VERSION=3.5 BUILD_TYPE=Debug ASAN=on LIBCXX=off
+        - env: CLANG_VERSION=3.5 BUILD_TYPE=Debug ASAN=on LIBCXX=off HAS_GENERIC_LAMBDA=on
           os: linux
           compiler: clang-3.5
           addons: *clang35
 
-        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=on BUILD_EXAMPLES=on
+        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=on HAS_GENERIC_LAMBDA=on BUILD_EXAMPLES=on
           os: linux
           compiler: clang-3.7
           addons: &clang37
@@ -60,13 +60,13 @@ matrix:
                 - ubuntu-toolchain-r-test
                 - llvm-toolchain-precise-3.7
 
-        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=off BUILD_EXAMPLES=on
+        - env: CLANG_VERSION=3.7 BUILD_TYPE=Debug ASAN=off LIBCXX=off HAS_GENERIC_LAMBDA=on BUILD_EXAMPLES=on
           os: linux
           compiler: clang-3.7
           addons: *clang37
 
         # Gcc
-        - env: GCC_VERSION=4.9 BUILD_TYPE=Debug ASAN=off LIBCXX=off
+        - env: GCC_VERSION=4.9 BUILD_TYPE=Debug ASAN=off LIBCXX=off HAS_GENERIC_LAMBDA=on
           os: linux
           compiler: gcc-4.9
           addons: &gcc49
@@ -168,6 +168,7 @@ script:
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
     - if [[ "$CXX11" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -std=c++11"; fi
+    - if [[ "$HAS_GENERIC_LAMBDA" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -DFIT_HAS_GENERIC_LAMBDA=1"; fi
     - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1

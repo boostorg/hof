@@ -71,8 +71,8 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
 #if FIT_HAS_GENERIC_LAMBDA
-    auto factorial = fit::fix([](auto s, auto x) -> decltype(x) { return x == 0 ? 1 : x * s(x-1); });
-    int r = fit::result<int>(factorial)(5);
+    auto factorial_ = fit::fix([](auto s, auto x) -> decltype(x) { return x == 0 ? 1 : x * s(x-1); });
+    int r = fit::result<int>(factorial_)(5);
     FIT_TEST_CHECK(r == 5*4*3*2*1);
 #endif
 }

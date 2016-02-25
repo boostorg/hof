@@ -54,7 +54,7 @@
 ///             return x == 0 ? 1 : x * recurse(x-1); 
 ///         }
 ///     );
-///     int r = factorial(5);
+///     int r = fit::result<int>(factorial)(5);
 ///     assert(r == 5*4*3*2*1);
 /// 
 

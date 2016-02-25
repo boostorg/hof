@@ -22,6 +22,9 @@ FIT_TEST_CASE()
 #if FIT_HAS_GENERIC_LAMBDA
 FIT_TEST_CASE()
 {
+    auto my_max = FIT_LIFT(std::max);
+    FIT_TEST_CHECK(my_max(3, 4) == std::max(3, 4));
+    
     FIT_TEST_CHECK(FIT_LIFT(std::max)(3, 4) == std::max(3, 4));
     FIT_TEST_CHECK(FIT_LIFT(sum)(1, 2) == 3);
 }

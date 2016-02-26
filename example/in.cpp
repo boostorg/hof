@@ -9,6 +9,11 @@
 
 using namespace fit;
 
+#ifdef _MSC_VER
+template<class R, class T>
+auto member_find(const R& r, const T& x) FIT_RETURNS(r.find(x));
+#endif
+
 // Function to find an iterator using a containers built-in find if available
 FIT_STATIC_LAMBDA_FUNCTION(find_iterator) = conditional(
     [](const std::string& s, const auto& x)
@@ -17,10 +22,11 @@ FIT_STATIC_LAMBDA_FUNCTION(find_iterator) = conditional(
         if (index == std::string::npos) return s.end();
         else return s.begin() + index;
     },
-    [](const auto& r, const auto& x) -> decltype(r.find(x))
-    {
-        return r.find(x);
-    },
+#ifdef _MSC_VER
+    FIT_LIFT(member_find),
+#else
+    [](const auto& r, const auto& x) FIT_RETURNS(r.find(x)),
+#endif
     [](const auto& r, const auto& x)
     {
         using std::begin;

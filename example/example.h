@@ -62,5 +62,6 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <iso646.h>
 
 #endif

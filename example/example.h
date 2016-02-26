@@ -57,6 +57,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <map>
 #include <memory>
 #include <iostream>
 #include <string>

@@ -104,7 +104,7 @@ add_fit_test(static_def test/static_def2.cpp)
 add_fit_test(tap)
 add_fit_test(unpack)
 
-file(GLOB EXAMPLES examples/*.cpp)
+file(GLOB EXAMPLES example/*.cpp)
 foreach(EXAMPLE ${EXAMPLES})
     get_filename_component(BASE_NAME ${EXAMPLE} NAME_WE)
     add_test_executable(example-${BASE_NAME} ${EXAMPLE})

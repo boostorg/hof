@@ -102,6 +102,16 @@ FIT_TEST_CASE()
     static_assert(!fit::is_unpackable<int>::value, "Unpackable");
     static_assert(!fit::is_unpackable<void>::value, "Unpackable");
 }
+
+FIT_TEST_CASE()
+{
+    typedef std::tuple<int, int> tuple_type;
+    static_assert(fit::is_unpackable<tuple_type>::value, "Not unpackable");
+    static_assert(fit::is_unpackable<tuple_type&>::value, "Not unpackable");
+    static_assert(fit::is_unpackable<const tuple_type&>::value, "Not unpackable");
+    static_assert(fit::is_unpackable<tuple_type&&>::value, "Not unpackable");
+    
+}
 #if FIT_HAS_STATIC_LAMBDA
 FIT_STATIC_AUTO lambda_unary_unpack = fit::unpack(FIT_STATIC_LAMBDA(int x)
 {
@@ -175,7 +185,6 @@ struct deducer
 
 static constexpr fit::unpack_adaptor<deducer> deduce = {};
 
-
 FIT_TEST_CASE()
 {
     STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(std::make_tuple(1, 2))));
@@ -190,4 +199,14 @@ FIT_TEST_CASE()
     STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(fit::pack(1), fit::pack(2))));
     STATIC_ASSERT_SAME(deduce_types<int, int, int>, decltype(deduce(fit::pack(1), fit::pack(2), fit::pack(3))));
     // STATIC_ASSERT_SAME(deduce_types<int&&, int&&>, decltype(deduce(fit::pack_forward(1, 2))));
+}
+
+struct not_unpackable
+{};
+
+FIT_TEST_CASE()
+{
+    auto f = fit::unpack(fit::always(1));
+
+    static_assert(!fit::is_callable<decltype(f), not_unpackable>::value, "SFINAE for unpack failed");
 }

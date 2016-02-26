@@ -126,10 +126,49 @@ struct unpack_sequence
 
 
 namespace detail {
+
+struct unpack_impl_f
+{
+    template<class F, class Sequence>
+    constexpr auto operator()(F&& f, Sequence&& s) const FIT_RETURNS
+    (
+        fit::unpack_sequence<typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type>::
+                apply(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))
+    );
+};
+
+FIT_DECLARE_STATIC_VAR(unpack_impl, unpack_impl_f);
+
+struct private_unpack_type {};
+
+#if FIT_CHECK_UNPACK_SEQUENCE
+template<class Sequence>
+struct unpack_impl_result
+{
+    static_assert(fit::is_callable<unpack_impl_f, decltype(always(private_unpack_type())), Sequence>::value,
+        "Unpack is invalid for this sequence. The function used to unpack this sequence is not callable."
+    );
+    typedef decltype(unpack_impl(always(private_unpack_type()), std::declval<Sequence>())) type;
+};
+
+template<class Sequence>
+struct is_proper_sequence
+: std::is_same<
+    private_unpack_type, 
+    typename unpack_impl_result<Sequence>::type
+>
+{};
+#endif
 template<class Sequence, class=void>
 struct is_unpackable_impl
 : std::true_type
-{};
+{
+#if FIT_CHECK_UNPACK_SEQUENCE
+    static_assert(is_proper_sequence<Sequence>::value,
+        "Unpack is invalid for this sequence. The function used to unpack this sequence does not invoke the function."
+    );
+#endif
+};
 
 template<class Sequence>
 struct is_unpackable_impl<Sequence, typename detail::holder<
@@ -139,33 +178,6 @@ struct is_unpackable_impl<Sequence, typename detail::holder<
 {};
 
 template<class F, class Sequence>
-constexpr auto unpack_impl(F&& f, Sequence&& s) FIT_RETURNS
-(
-    fit::unpack_sequence<typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type>::
-            apply(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))
-);
-
-struct private_unpack_type {};
-#if FIT_CHECK_UNPACK_SEQUENCE
-template<class Sequence>
-constexpr int unpack_check()
-{
-    static_assert(
-        std::is_same<
-            private_unpack_type, 
-            decltype(unpack_impl(always(private_unpack_type()), std::declval<Sequence>()))
-        >::value, 
-        "Unpack is invalid for this sequence. The function used to unpack this sequence does not invoke the function."
-    );
-    return 0;
-}
-#endif
-
-template<class F, class Sequence
-#if FIT_CHECK_UNPACK_SEQUENCE
-, int=(unpack_check<Sequence>())
-#endif
->
 constexpr auto unpack_simple(F&& f, Sequence&& s) FIT_RETURNS
 (
     unpack_impl(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))
@@ -184,7 +196,18 @@ struct is_unpackable
 : detail::is_unpackable_impl<
     typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type
 >
-{};
+{
+#if FIT_CHECK_UNPACK_SEQUENCE
+typedef detail::is_unpackable_impl<
+    typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type
+> base;
+
+typedef std::conditional<base::value, detail::is_proper_sequence<Sequence>, std::true_type> check;
+static_assert(check::type::value,
+    "Unpack is invalid for this sequence. The function used to unpack this sequence does not invoke the function."
+);
+#endif
+};
 
 template<class F>
 struct unpack_adaptor : detail::callable_base<F>
@@ -271,22 +294,31 @@ make_tuple_gens(const Sequence&)
     return {};
 }
 
-template<class F, class... Ts, std::size_t ...N>
-constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> && t, seq<N...>) FIT_RETURNS
-(
-    f(FIT_FORWARD(Ts)(std::get<N>(t))...)
-);
+// template<class F, class... Ts, std::size_t ...N>
+// constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> && t, seq<N...>) FIT_RETURNS
+// (
+//     f(FIT_FORWARD(Ts)(std::get<N>(t))...)
+// );
 
-template<class F, class... Ts, std::size_t ...N>
-constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
-(
-    f(FIT_FORWARD(Ts)(std::get<N>(t))...)
-);
+// template<class F, class... Ts, std::size_t ...N>
+// constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
+// (
+//     // f(FIT_FORWARD(Ts)(std::get<N>(t))...)
+//     f(std::get<N>(t)...)
+// );
 
-template<class F, class... Ts, std::size_t ...N>
-constexpr auto unpack_tuple(F&& f, const std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
+// template<class F, class... Ts, std::size_t ...N>
+// constexpr auto unpack_tuple(F&& f, const std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
+// (
+//     f(std::get<N>(t)...)
+// );
+
+template<class F, class T, std::size_t ...N>
+constexpr auto unpack_tuple(F&& f, T&& t, seq<N...>) FIT_RETURNS
 (
-    f(FIT_FORWARD(Ts)(std::get<N>(t))...)
+    f(
+        FIT_AUTO_FORWARD(std::get<N>(FIT_AUTO_FORWARD(t)))...
+    )
 );
 
 }
@@ -297,8 +329,14 @@ struct unpack_sequence<std::tuple<Ts...>>
     template<class F, class S>
     constexpr static auto apply(F&& f, S&& t) FIT_RETURNS
     (
-        detail::unpack_tuple(FIT_FORWARD(F)(f), t, detail::make_tuple_gens(t))
+        detail::unpack_tuple(FIT_FORWARD(F)(f), FIT_FORWARD(S)(t), detail::make_tuple_gens(t))
     );
+
+    // template<class F, class S>
+    // constexpr static auto apply(F&& f, S&& t)
+    // {
+    //     return detail::unpack_tuple(FIT_FORWARD(F)(f), t, detail::make_tuple_gens(t));
+    // }
 };
 
 template<class T, class... Ts>

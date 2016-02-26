@@ -4,7 +4,7 @@ import os, itertools
 prefix = '/// '
 include_dir = 'include/'
 doc_dir = 'doc/src'
-example_dir = 'examples'
+example_dir = 'example'
 namespace = 'fit'
 declare_template_block = ('struct', 'class', 'template', 'namespace')
 declare_template_stmt = ('FIT_LIFT_CLASS')

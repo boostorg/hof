@@ -8,6 +8,8 @@
 #ifndef FIT_GUARD_FUNCTION_CONSTEXPR_DEDUCE_H
 #define FIT_GUARD_FUNCTION_CONSTEXPR_DEDUCE_H
 
+#include <fit/detail/intrinsics.hpp>
+#include <fit/detail/static_const_var.hpp>
 
 #ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
 #if defined(_MSC_VER)

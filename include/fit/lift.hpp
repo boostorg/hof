@@ -42,11 +42,47 @@
 
 #include <fit/returns.hpp>
 #include <fit/detail/forward.hpp>
+#include <fit/detail/constexpr_deduce.hpp>
+#include <fit/detail/using.hpp>
+
+namespace fit { namespace detail {
+
+template<class F, class G>
+struct lift_holder
+{
+    template<class... Ts>
+    FIT_USING(function_type, decltype(std::declval<F>()(std::declval<Ts>()...)));
+
+    template<class... Ts>
+    FIT_USING(result, decltype(std::declval<G>()(std::declval<Ts>()...)));
+    template<class... Ts>
+    constexpr result<Ts...> operator()(Ts&&... xs) const
+    {
+        return function_type<Ts&&...>()(FIT_FORWARD(Ts)(xs)...);
+    }
+};
+
+template<class F, class G>
+constexpr lift_holder<F, G> lift(F, G)
+{
+    return {};
+}
+
+}}
 
 #ifdef _MSC_VER
-#define FIT_LIFT(...) [] { FIT_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }()
+#define FIT_LIFT(...) FIT_DETAIL_CONSTEXPR_DEDUCE [] { FIT_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }()
 #else
-#define FIT_LIFT(...) [](auto&&... xs) FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(decltype(xs))(xs)...))
+#define FIT_LIFT(...) FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::lift([](auto&&... xs) \
+{ \
+    struct fit_local_t \
+    { \
+        constexpr auto operator()(decltype(xs)... ys) const  \
+        FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(decltype(ys))(ys)...)); \
+    }; \
+    return fit_local_t{}; \
+}, FIT_DETAIL_LIFT(__VA_ARGS__))
+#define FIT_DETAIL_LIFT(...) [](auto&&... xs) FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(decltype(xs))(xs)...))
 #endif
 
 #define FIT_LIFT_CLASS(name, ...) \

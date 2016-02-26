@@ -10,6 +10,13 @@ constexpr T sum(T x, U y)
     return x + y;
 }
 
+template<class T, class U>
+T psum(T x, U y)
+{
+    std::cout << x << ", " << y << "\n";
+    return x + y;
+}
+
 FIT_LIFT_CLASS(max_f, std::max);
 FIT_LIFT_CLASS(sum_f, sum);
 
@@ -29,5 +36,11 @@ FIT_TEST_CASE()
     
     FIT_TEST_CHECK(FIT_LIFT(std::max)(3, 4) == std::max(3, 4));
     FIT_TEST_CHECK(FIT_LIFT(sum)(1, 2) == 3);
+}
+
+FIT_TEST_CASE()
+{
+    constexpr auto sum_c = FIT_LIFT(sum);
+    FIT_STATIC_TEST_CHECK(sum_c(1, 2) == 3);
 }
 #endif

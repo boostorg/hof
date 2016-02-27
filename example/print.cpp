@@ -28,6 +28,31 @@ FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
 };
 
 // Recursively print everything
+#ifdef _MSC_VER
+template<class Self, class T>
+auto print_with_cout(Self, const T& x) -> decltype(std::cout << x, void())
+{
+    std::cout << x << std::endl;
+}
+
+template<class Self, class T>
+auto print_with_range(Self self, const T& range) -> decltype(self(*adl::adl_begin(range)), void())
+{
+    for(const auto& x:range) self(x);
+}
+
+template<class Self, class T>
+auto print_with_tuple(Self self, const T& tuple) -> decltype(for_each_tuple(tuple, self), void())
+{
+    for_each_tuple(tuple, self);
+}
+
+FIT_STATIC_FUNCTION(simple_print) = fix(conditional(
+    FIT_LIFT(print_with_cout),
+    FIT_LIFT(print_with_range),
+    FIT_LIFT(print_with_tuple)
+));
+#else
 FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
     [](auto, const auto& x) -> decltype(std::cout << x, void())
     {
@@ -42,6 +67,7 @@ FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
         for_each_tuple(tuple, self);
     }
 ));
+#endif
 
 // Make print function varidiac
 FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);

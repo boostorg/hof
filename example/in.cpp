@@ -23,6 +23,8 @@ FIT_STATIC_LAMBDA_FUNCTION(find_iterator) = conditional(
         else return s.begin() + index;
     },
 #ifdef _MSC_VER
+    // On MSVC, trailing decltype doesn't work with generic lambdas, so a
+    // seperate function can be used instead.
     FIT_LIFT(member_find),
 #else
     [](const auto& r, const auto& x) FIT_RETURNS(r.find(x)),

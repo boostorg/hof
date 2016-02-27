@@ -27,8 +27,9 @@ FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
     return unpack(by(f))(sequence);
 };
 
-// Recursively print everything
 #ifdef _MSC_VER
+// On MSVC, trailing decltype doesn't work with generic lambdas, so seperate
+// functions can be used instead.
 template<class Self, class T>
 auto print_with_cout(Self, const T& x) -> decltype(std::cout << x, void())
 {
@@ -47,12 +48,14 @@ auto print_with_tuple(Self self, const T& tuple) -> decltype(for_each_tuple(tupl
     for_each_tuple(tuple, self);
 }
 
-FIT_STATIC_FUNCTION(simple_print) = fix(conditional(
+// Recursively print everything
+FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
     FIT_LIFT(print_with_cout),
     FIT_LIFT(print_with_range),
     FIT_LIFT(print_with_tuple)
 ));
 #else
+// Recursively print everything
 FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
     [](auto, const auto& x) -> decltype(std::cout << x, void())
     {
@@ -62,7 +65,7 @@ FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
     {
         for(const auto& x:range) self(x);
     },
-    [](auto self, const auto& tuple) // -> decltype(for_each_tuple(tuple, self), void())
+    [](auto self, const auto& tuple) -> decltype(for_each_tuple(tuple, self), void())
     {
         for_each_tuple(tuple, self);
     }

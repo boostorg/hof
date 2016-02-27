@@ -294,25 +294,6 @@ make_tuple_gens(const Sequence&)
     return {};
 }
 
-// template<class F, class... Ts, std::size_t ...N>
-// constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> && t, seq<N...>) FIT_RETURNS
-// (
-//     f(FIT_FORWARD(Ts)(std::get<N>(t))...)
-// );
-
-// template<class F, class... Ts, std::size_t ...N>
-// constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
-// (
-//     // f(FIT_FORWARD(Ts)(std::get<N>(t))...)
-//     f(std::get<N>(t)...)
-// );
-
-// template<class F, class... Ts, std::size_t ...N>
-// constexpr auto unpack_tuple(F&& f, const std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
-// (
-//     f(std::get<N>(t)...)
-// );
-
 template<class F, class T, std::size_t ...N>
 constexpr auto unpack_tuple(F&& f, T&& t, seq<N...>) FIT_RETURNS
 (
@@ -331,12 +312,6 @@ struct unpack_sequence<std::tuple<Ts...>>
     (
         detail::unpack_tuple(FIT_FORWARD(F)(f), FIT_FORWARD(S)(t), detail::make_tuple_gens(t))
     );
-
-    // template<class F, class S>
-    // constexpr static auto apply(F&& f, S&& t)
-    // {
-    //     return detail::unpack_tuple(FIT_FORWARD(F)(f), t, detail::make_tuple_gens(t));
-    // }
 };
 
 template<class T, class... Ts>

@@ -90,8 +90,8 @@ FIT_TEST_CASE()
     static_assert(std::is_empty<decltype(f)>::value, "Compose function not empty");
     static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(decltype(f)), "Compose function not default constructible");
     int r = f(3);
-    FIT_TEST_CHECK(r == 4);
-    FIT_STATIC_TEST_CHECK(f(3) ==43);
+    FIT_TEST_CHECK(r == 0);
+    FIT_STATIC_TEST_CHECK(f(3) == 0);
 }
 #endif
 
@@ -122,12 +122,20 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(f_compose_single_function(3) == 4);
 }
 
-FIT_STATIC_FUNCTION(f_compose_function) = fit::compose(increment(), negate(), decrement(), decrement());
+FIT_STATIC_FUNCTION(f_compose_function) = fit::compose(increment(), decrement(), increment());
 
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(f_compose_function(3) == 4);
     FIT_STATIC_TEST_CHECK(f_compose_function(3) == 4);
+}
+
+FIT_STATIC_FUNCTION(f_compose_function_4) = fit::compose(increment(), negate(), decrement(), decrement());
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(f_compose_function_4(3) == 0);
+    FIT_STATIC_TEST_CHECK(f_compose_function_4(3) == 0);
 }
 
 FIT_STATIC_LAMBDA_FUNCTION(f_compose_lambda) = fit::compose(

@@ -54,3 +54,24 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == (sum3(1, 2)));
     FIT_STATIC_TEST_CHECK(3 == (sum3(1, 2)));
 }
+
+
+FIT_STATIC_LAMBDA_FUNCTION(sum4) = fit::infix(fit::infix([](int x, int y) { return x + y; }));
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(3 == (1 <sum4> 2));
+
+    FIT_TEST_CHECK(3 == (sum4(1, 2)));
+}
+
+FIT_STATIC_FUNCTION(sum5) = fit::infix(fit::infix(fit::_ + fit::_));
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(3 == (1 <sum5> 2));
+    FIT_STATIC_TEST_CHECK(3 == (1 <sum5> 2));
+
+    FIT_TEST_CHECK(3 == (sum5(1, 2)));
+    FIT_STATIC_TEST_CHECK(3 == (sum5(1, 2)));
+}

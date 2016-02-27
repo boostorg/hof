@@ -57,6 +57,7 @@
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/callable_base.hpp>
 #include <fit/always.hpp>
+#include <fit/reveal.hpp>
 #include <fit/detail/move.hpp>
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
@@ -159,6 +160,12 @@ auto operator<(T&& x, const fit::detail::static_default_function<F>&) FIT_RETURN
     detail::make_postfix_adaptor(FIT_FORWARD(T)(x), fit::move(F().infix_base_function()))
 );
 }
+// This overload is needed for gcc
+template<class T, class F>
+constexpr auto operator<(T&& x, const fit::reveal_adaptor<F>& f) FIT_RETURNS
+(
+    detail::make_postfix_adaptor(FIT_FORWARD(T)(x), f.infix_base_function())
+);
 
 FIT_DECLARE_STATIC_VAR(infix, detail::make<infix_adaptor>);
 

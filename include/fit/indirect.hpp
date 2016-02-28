@@ -32,7 +32,6 @@
 /// 
 /// F must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
 /// * MoveConstructible
 /// * Dereferenceable
 /// 

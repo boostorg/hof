@@ -95,7 +95,7 @@
 ///                 s(std::forward<F>(f))
 ///             );
 ///         };
-///     }
+///     } // namespace fit
 /// 
 
 #include <fit/returns.hpp>

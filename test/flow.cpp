@@ -1,4 +1,6 @@
 #include <fit/flow.hpp>
+#include <fit/function.hpp>
+#include <fit/lambda.hpp>
 #include <memory>
 #include "test.hpp"
 
@@ -95,6 +97,43 @@ FIT_TEST_CASE()
     static_assert(std::is_empty<decltype(f)>::value, "Compose function not empty");
 #endif
     int r = f(3);
+    FIT_TEST_CHECK(r == 4);
+}
+
+
+FIT_STATIC_FUNCTION(f_flow_single_function) = fit::flow(increment());
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(f_flow_single_function(3) == 4);
+    FIT_STATIC_TEST_CHECK(f_flow_single_function(3) == 4);
+}
+
+FIT_STATIC_FUNCTION(f_flow_function) = fit::flow(increment(), decrement(), increment());
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(f_flow_function(3) == 4);
+    FIT_STATIC_TEST_CHECK(f_flow_function(3) == 4);
+}
+
+FIT_STATIC_FUNCTION(f_flow_function_4) = fit::flow(increment(), negate(), decrement(), decrement());
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(f_flow_function_4(3) == -6);
+    FIT_STATIC_TEST_CHECK(f_flow_function_4(3) == -6);
+}
+
+FIT_STATIC_LAMBDA_FUNCTION(f_flow_lambda) = fit::flow(
+    [](int i) { return i+1; }, 
+    [](int i) { return i-1; }, 
+    [](int i) { return i+1; }
+);
+
+FIT_TEST_CASE()
+{
+    int r = f_flow_lambda(3);
     FIT_TEST_CHECK(r == 4);
 }
 }

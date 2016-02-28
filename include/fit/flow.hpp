@@ -101,13 +101,23 @@ struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor, Fs...)>
 {
     typedef flow_adaptor fit_rewritable_tag;
     typedef FIT_JOIN(flow_adaptor, Fs...) tail;
-    typedef detail::flow_kernel<F, tail> base;
+    typedef detail::flow_kernel<F, tail> base_type;
 
-    FIT_INHERIT_DEFAULT(flow_adaptor, base)
+    FIT_INHERIT_DEFAULT(flow_adaptor, base_type)
 
-    template<class X, class... Xs, FIT_ENABLE_IF_CONVERTIBLE(X, F), FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)>
+    template<class X, class... Xs, 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(detail::callable_base<F>, X), 
+        FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)
+    >
     constexpr flow_adaptor(X&& f1, Xs&& ... fs) 
-    : base(FIT_FORWARD(X)(f1), tail(FIT_FORWARD(Xs)(fs)...))
+    : base_type(FIT_FORWARD(X)(f1), tail(FIT_FORWARD(Xs)(fs)...))
+    {}
+
+    template<class X,
+        FIT_ENABLE_IF_CONSTRUCTIBLE(detail::callable_base<F>, X)
+    >
+    constexpr flow_adaptor(X&& f1) 
+    : base_type(FIT_FORWARD(X)(f1))
     {}
 };
 
@@ -122,6 +132,16 @@ struct flow_adaptor<F> : detail::callable_base<F>
     : detail::callable_base<F>(FIT_FORWARD(X)(f1))
     {}
 
+};
+
+template<class F1, class F2>
+struct flow_adaptor<F1, F2>
+: detail::flow_kernel<detail::callable_base<F1>, detail::callable_base<F2>>
+{
+    typedef flow_adaptor fit_rewritable_tag;
+    typedef detail::flow_kernel<detail::callable_base<F1>, detail::callable_base<F2>> base_type;
+
+    FIT_INHERIT_CONSTRUCTOR(flow_adaptor, base_type)
 };
 
 FIT_DECLARE_STATIC_VAR(flow, detail::make<flow_adaptor>);

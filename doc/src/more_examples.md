@@ -29,9 +29,9 @@ Take a look at this example of defining a `stringify` function from
 stackoverflow [here](http://stackoverflow.com/questions/30189926/metaprograming-failure-of-function-definition-defines-a-separate-function/30515874).
 
 The user would like to write `stringify` to call `to_string` where applicable
-and fallback on using `sstream` ot convert to a string. Most of the top
+and fallback on using `sstream` to convert to a string. Most of the top
 answers usually involve some amount of metaprogramming using either `void_t`
-or `is_detected`. However, with the Fit library it can simply be written like
+or `is_detected`(see [n4502](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4502.pdf)). However, with the Fit library it can simply be written like
 this:
 
     FIT_STATIC_LAMBDA_FUNCTION(stringify) = conditional(

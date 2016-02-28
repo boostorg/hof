@@ -41,12 +41,13 @@
 /// 
 
 #include <fit/returns.hpp>
+#include <fit/lambda.hpp>
 #include <fit/detail/forward.hpp>
 
 #ifdef _MSC_VER
-#define FIT_LIFT(...) [] { FIT_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }()
+#define FIT_LIFT(...) (FIT_STATIC_LAMBDA { FIT_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }())
 #else
-#define FIT_LIFT(...) [](auto&&... xs) FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(decltype(xs))(xs)...))
+#define FIT_LIFT(...) (FIT_STATIC_LAMBDA(auto&&... xs) FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(decltype(xs))(xs)...)))
 #endif
 
 #define FIT_LIFT_CLASS(name, ...) \

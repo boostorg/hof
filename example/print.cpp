@@ -49,7 +49,7 @@ auto print_with_tuple(Self self, const T& tuple) -> decltype(for_each_tuple(tupl
 }
 
 // Recursively print everything
-FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
+FIT_STATIC_FUNCTION(simple_print) = fix(conditional(
     FIT_LIFT(print_with_cout),
     FIT_LIFT(print_with_range),
     FIT_LIFT(print_with_tuple)

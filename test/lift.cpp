@@ -1,5 +1,6 @@
 #include "test.hpp"
 #include <fit/lift.hpp>
+#include <fit/function.hpp>
 #include <fit/detail/move.hpp>
 #include <tuple>
 #include <algorithm>
@@ -29,5 +30,15 @@ FIT_TEST_CASE()
     
     FIT_TEST_CHECK(FIT_LIFT(std::max)(3, 4) == std::max(3, 4));
     FIT_TEST_CHECK(FIT_LIFT(sum)(1, 2) == 3);
+}
+
+FIT_STATIC_FUNCTION(psum) = FIT_LIFT(sum);
+FIT_STATIC_FUNCTION(pmax) = FIT_LIFT(std::max);
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(pmax(3, 4) == std::max(3, 4));
+
+    FIT_TEST_CHECK(psum(1, 2) == 3);
 }
 #endif

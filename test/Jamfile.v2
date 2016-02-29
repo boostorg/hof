@@ -1,3 +1,9 @@
+import testing ;
+
+project fit
+    : requirements
+      <include>../include/ 
+    ;
 
 rule test_all
 {

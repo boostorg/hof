@@ -16,6 +16,8 @@ pages:
     - 'Basic Concepts' : 'concepts.md'
     - 'Configurations' : 'configurations.md'
     - 'Requirements': 'requirements.md'
+    - 'FAQ': 'faq.md'
+    - 'Building': 'building.md'
     - 'Acknowledgements': 'acknowledgements.md'
     - 'License': 'license.md'
 - Adaptors:
@@ -63,7 +65,7 @@ pages:
     - 'eval': 'eval.md'
     - 'FIT_STATIC_FUNCTION': 'function.md'
     - 'FIT_STATIC_LAMBDA': 'lambda.md'
-    - 'lift': 'lift.md'
+    - 'FIT_LIFT': 'lift.md'
     - 'is_callable': 'is_callable.md'
     - 'pack': 'pack.md'
     - 'returns': 'returns.md'

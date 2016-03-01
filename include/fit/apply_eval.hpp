@@ -34,7 +34,7 @@
 /// 
 /// F must be:
 /// 
-/// * [Callable](concepts.md#callable)
+/// * [ConstCallable](concepts.md#constcallable)
 /// 
 /// Ts must be:
 /// 

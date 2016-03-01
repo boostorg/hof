@@ -8,8 +8,8 @@
 #ifndef FIT_GUARD_FUNCTION_LIFT_H
 #define FIT_GUARD_FUNCTION_LIFT_H
 
-/// lift
-/// ====
+/// FIT_LIFT
+/// ========
 /// 
 /// Description
 /// -----------

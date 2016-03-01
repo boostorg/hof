@@ -37,7 +37,7 @@
 /// 
 /// F must be a template class, that is a:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [ConstFunctionObject](concepts.md#constfunctionobject)
 /// * DefaultConstructible
 /// 
 /// Example

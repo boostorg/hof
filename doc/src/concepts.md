@@ -1,13 +1,13 @@
 Basic Concepts
 ==============
 
-FunctionObject
---------------
+ConstFunctionObject
+-------------------
 
 Is an object with a `const` call operator:
 
 ```cpp
-concept FunctionObject
+concept ConstFunctionObject
 {
     template<class... Ts>
     auto operator()(Ts&&...) const;
@@ -16,7 +16,7 @@ concept FunctionObject
 
 #### Requirements:
 
-The type `F` satisfies `FunctionObject` if
+The type `F` satisfies `ConstFunctionObject` if
 
 * The type `F` satisfies `std::is_object`, and 
 
@@ -44,7 +44,7 @@ concept NullaryFunctionObject
 
 #### Requirements:
 
-* `FunctionObject`
+* `ConstFunctionObject`
 
 Given
 
@@ -69,7 +69,7 @@ concept UnaryFunctionObject
 
 #### Requirements:
 
-* `FunctionObject`
+* `ConstFunctionObject`
 
 Given
 
@@ -95,7 +95,7 @@ concept UnaryFunctionObject
 
 #### Requirements:
 
-* `FunctionObject`
+* `ConstFunctionObject`
 
 Given
 
@@ -113,7 +113,7 @@ MutableFunctionObject
 Is an object with a `mutable` call operator:
 
 ```cpp
-concept FunctionObject
+concept MutableFunctionObject
 {
     template<class... Ts>
     auto operator()(Ts&&...);
@@ -122,7 +122,7 @@ concept FunctionObject
 
 #### Requirements:
 
-The type `F` satisfies `FunctionObject` if
+The type `F` satisfies `MutableFunctionObject` if
 
 * The type `F` satisfies `std::is_object`, and 
 
@@ -176,6 +176,42 @@ The type `T` satisfies `Callable` if
 
 Given
 
+* `f`, an object of type `T`
+* `Args...`, suitable list of argument types
+
+The following expressions must be valid: 
+
+| Expression                           | Requirements                                          |
+|--------------------------------------|-------------------------------------------------------|
+| `INVOKE(f, std::declval<Args>()...)` | the expression is well-formed in unevaluated context  |
+
+where `INVOKE(f, x, xs...)` is defined as follows:
+
+* if `f` is a pointer to member function of class `T`: 
+
+    - If `std::is_base_of<T, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x, xs...)` is equivalent to `(x.*f)(xs...)`
+    - otherwise, if `std::decay_t<decltype(x)>` is a specialization of `std::reference_wrapper`, then `INVOKE(f, x, xs...)` is equivalent to `(x.get().*f)(xs...)` 
+    - otherwise, if x does not satisfy the previous items, then `INVOKE(f, x, xs...)` is equivalent to `((*x).*f)(xs...)`. 
+
+* otherwise, if `f` is a pointer to data member of class `T`: 
+
+    - If `std::is_base_of<T, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x)` is equivalent to `x.*f`
+    - otherwise, if `std::decay_t<decltype(x)>` is a specialization of `std::reference_wrapper`, then `INVOKE(f, x)` is equivalent to `x.get().*f`
+    - otherwise, if `x` does not satisfy the previous items, then `INVOKE(f, x)` is equivalent to `(*x).*f`
+
+* otherwise, `INVOKE(f, x, xs...)` is equivalent to `f(x, xs...)`
+
+ConstCallable
+-------------
+
+Is an object for which the `INVOKE` operation can be applied.
+
+#### Requirements:
+
+The type `T` satisfies `ConstCallable` if
+
+Given
+
 * `f`, an object of type `const T`
 * `Args...`, suitable list of argument types
 
@@ -208,7 +244,7 @@ Is an object for which the `INVOKE` operation can be applied with one parameter.
 
 #### Requirements:
 
-* `Callable`
+* `ConstCallable`
 
 Given
 
@@ -220,13 +256,13 @@ Given
 | `INVOKE(f, arg)` | the expression is well-formed in unevaluated context  |
 
 BinaryCallable
---------------------
+--------------
 
 Is an object for which the `INVOKE` operation can be applied with two parameters.
 
 #### Requirements:
 
-* `Callable`
+* `ConstCallable`
 
 Given
 

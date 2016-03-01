@@ -30,7 +30,7 @@
 /// 
 /// Predicate must be:
 /// 
-/// * [FunctionObject](concepts.md#functionobject)
+/// * [ConstFunctionObject](concepts.md#constfunctionobject)
 /// * MoveConstructible
 /// 
 /// Example

@@ -17,6 +17,7 @@ pages:
     - 'Configurations' : 'configurations.md'
     - 'Requirements': 'requirements.md'
     - 'FAQ': 'faq.md'
+    - 'Building': 'building.md'
     - 'Acknowledgements': 'acknowledgements.md'
     - 'License': 'license.md'
 - Adaptors:

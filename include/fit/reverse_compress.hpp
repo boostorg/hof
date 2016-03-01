@@ -15,10 +15,11 @@
 /// -----------
 /// 
 /// The `reverse_compress` function adaptor uses a binary function to apply a
-/// reverse fold(ie right fold in functional programming terms) operation to
-/// the arguments passed to the function. Additionally, an optional initial
-/// state can be provided, otherwise the first argument is used as the initial
-/// state.
+/// reverse [fold]
+/// (https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29)(ie right
+/// fold in functional programming terms) operation to the arguments passed to
+/// the function. Additionally, an optional initial state can be provided,
+/// otherwise the first argument is used as the initial state.
 /// 
 /// The arguments to the binary function, take first the state and then the
 /// argument.

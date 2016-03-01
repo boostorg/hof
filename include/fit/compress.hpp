@@ -14,10 +14,11 @@
 /// Description
 /// -----------
 /// 
-/// The `compress` function adaptor uses a binary function to apply a fold
-/// operation to the arguments passed to the function. Additionally, an optional
-/// initial state can be provided, otherwise the first argument is used as the
-/// initial state. 
+/// The `compress` function adaptor uses a binary function to apply a
+/// [fold](https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29)
+/// operation to the arguments passed to the function. Additionally, an
+/// optional initial state can be provided, otherwise the first argument is
+/// used as the initial state.
 /// 
 /// The arguments to the binary function, take first the state and then the
 /// argument.

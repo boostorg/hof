@@ -59,9 +59,9 @@ FIT_STATIC_LAMBDA_FUNCTION(tuple_zip_with) = [](auto&& sequence1, auto&& sequenc
     return unpack(combined)(std::forward<decltype(sequence2)>(sequence2));
 };
 
-FIT_STATIC_LAMBDA_FUNCTION(tuple_dot) = [](auto&& x, auto&& y)
+FIT_STATIC_LAMBDA_FUNCTION(tuple_dot) = [](auto&& a, auto&& b)
 {
-    auto product = tuple_zip_with(x, y, [](auto x, auto y) { return x*y; });
+    auto product = tuple_zip_with(a, b, [](auto x, auto y) { return x*y; });
     return tuple_fold(product, [](auto x, auto y) { return x+y; });
 };
 

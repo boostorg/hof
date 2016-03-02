@@ -10,25 +10,26 @@
 
 using namespace fit;
 
+// Transform each element of a tuple by calling f
 FIT_STATIC_LAMBDA_FUNCTION(tuple_transform) = [](auto&& sequence, auto f)
 {
     return unpack(by(f, construct<std::tuple>()))(std::forward<decltype(sequence)>(sequence));
 };
-
+// Call f on each element of tuple
 FIT_STATIC_LAMBDA_FUNCTION(tuple_for_each) = [](auto&& sequence, auto f)
 {
     return unpack(by(f))(std::forward<decltype(sequence)>(sequence));
 };
-
+// Fold over tuple using a f as the binary operator
 FIT_STATIC_LAMBDA_FUNCTION(tuple_fold) = [](auto&& sequence, auto f)
 {
     return unpack(compress(f))(std::forward<decltype(sequence)>(sequence));
 };
-
+// Concat multiple tuples
 FIT_STATIC_FUNCTION(tuple_cat) = unpack(construct<std::tuple>());
-
+// Join a tuple of tuples into just a tuple
 FIT_STATIC_FUNCTION(tuple_join) = unpack(tuple_cat);
-
+// Filter elements in a tuple using a predicate
 FIT_STATIC_LAMBDA_FUNCTION(tuple_filter) = [](auto&& sequence, auto predicate)
 {
     return compose(tuple_join, tuple_transform)(
@@ -42,7 +43,7 @@ FIT_STATIC_LAMBDA_FUNCTION(tuple_filter) = [](auto&& sequence, auto predicate)
         }
     );
 };
-
+// Zip two tuples together
 FIT_STATIC_LAMBDA_FUNCTION(tuple_zip_with) = [](auto&& sequence1, auto&& sequence2, auto f)
 {
     auto&& functions = tuple_transform(
@@ -58,14 +59,14 @@ FIT_STATIC_LAMBDA_FUNCTION(tuple_zip_with) = [](auto&& sequence1, auto&& sequenc
     auto combined = unpack(capture(construct<std::tuple>())(combine))(functions);
     return unpack(combined)(std::forward<decltype(sequence2)>(sequence2));
 };
-
+// Dot product of a tuple
 FIT_STATIC_LAMBDA_FUNCTION(tuple_dot) = [](auto&& a, auto&& b)
 {
     auto product = tuple_zip_with(a, b, [](auto x, auto y) { return x*y; });
     return tuple_fold(product, [](auto x, auto y) { return x+y; });
 };
 
-void test_tranform()
+void run_transform()
 {
     auto t = std::make_tuple(1, 2);
     auto r = tuple_transform(t, [](int i) { return i*i; });
@@ -73,7 +74,7 @@ void test_tranform()
     (void)r;
 }
 
-void test_filter()
+void run_filter()
 {
     auto t = std::make_tuple(1, 2, 'x', 3);
     auto r = tuple_filter(t, [](auto x) { return std::is_same<int, decltype(x)>(); });
@@ -81,7 +82,7 @@ void test_filter()
     (void)r;
 }
 
-void test_zip()
+void run_zip()
 {
     auto t1 = std::make_tuple(1, 2);
     auto t2 = std::make_tuple(3, 4);
@@ -91,7 +92,7 @@ void test_zip()
     (void)r;
 }
 
-void test_dot()
+void run_dot()
 {
     auto t1 = std::make_tuple(1, 2);
     auto t2 = std::make_tuple(3, 4);
@@ -102,8 +103,8 @@ void test_dot()
 
 int main() 
 {
-    test_tranform();
-    test_filter();
-    test_zip();
+    run_transform();
+    run_filter();
+    run_zip();
 }
 

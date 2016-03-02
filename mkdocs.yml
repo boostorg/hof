@@ -1,4 +1,4 @@
-site_name: Fit
+site_name: Boost.Fit
 docs_dir: doc/src
 site_dir: doc/html/
 repo_url: https://github.com/pfultz2/Fit
@@ -63,9 +63,9 @@ pages:
     - 'apply': 'apply.md'
     - 'apply_eval': 'apply_eval.md'
     - 'eval': 'eval.md'
-    - 'FIT_STATIC_FUNCTION': 'function.md'
-    - 'FIT_STATIC_LAMBDA': 'lambda.md'
-    - 'FIT_LIFT': 'lift.md'
+    - 'BOOST_FIT_STATIC_FUNCTION': 'function.md'
+    - 'BOOST_FIT_STATIC_LAMBDA': 'lambda.md'
+    - 'BOOST_FIT_LIFT': 'lift.md'
     - 'is_callable': 'is_callable.md'
     - 'pack': 'pack.md'
     - 'returns': 'returns.md'

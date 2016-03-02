@@ -1,8 +1,8 @@
-#include <fit/combine.hpp>
+#include <boost/fit/combine.hpp>
 #include "test.hpp"
 
-#include <fit/construct.hpp>
-#include <fit/capture.hpp>
+#include <boost/fit/construct.hpp>
+#include <boost/fit/capture.hpp>
 #include <utility>
 #include <tuple>
 
@@ -14,7 +14,7 @@ struct mini_pair
 
     template<class X, class Y>
     constexpr mini_pair(X&& x, Y&& y)
-    : first(fit::forward<X>(x)), second(fit::forward<Y>(y))
+    : first(boost::fit::forward<X>(x)), second(boost::fit::forward<Y>(y))
     {}
 };
 
@@ -30,32 +30,32 @@ constexpr mini_pair<T, U> make_mini_pair(T x, U y)
     return mini_pair<T, U>(x, y);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(
-        fit::combine(
-            fit::construct<std::tuple>(),
-            fit::capture(1)(fit::construct<std::pair>()),
-            fit::capture(2)(fit::construct<std::pair>())
+    BOOST_FIT_TEST_CHECK(
+        boost::fit::combine(
+            boost::fit::construct<std::tuple>(),
+            boost::fit::capture(1)(boost::fit::construct<std::pair>()),
+            boost::fit::capture(2)(boost::fit::construct<std::pair>())
         )(2, 4) 
         == std::make_tuple(std::make_pair(1, 2), std::make_pair(2, 4)));
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(
-        fit::combine(
-            fit::construct<mini_pair>(),
-            fit::capture(1)(fit::construct<mini_pair>()),
-            fit::capture(2)(fit::construct<mini_pair>())
+    BOOST_FIT_TEST_CHECK(
+        boost::fit::combine(
+            boost::fit::construct<mini_pair>(),
+            boost::fit::capture(1)(boost::fit::construct<mini_pair>()),
+            boost::fit::capture(2)(boost::fit::construct<mini_pair>())
         )(2, 4) 
         == make_mini_pair(make_mini_pair(1, 2), make_mini_pair(2, 4)));
 
-    FIT_STATIC_TEST_CHECK(
-        fit::combine(
-            fit::construct<mini_pair>(),
-            fit::capture(1)(fit::construct<mini_pair>()),
-            fit::capture(2)(fit::construct<mini_pair>())
+    BOOST_FIT_STATIC_TEST_CHECK(
+        boost::fit::combine(
+            boost::fit::construct<mini_pair>(),
+            boost::fit::capture(1)(boost::fit::construct<mini_pair>()),
+            boost::fit::capture(2)(boost::fit::construct<mini_pair>())
         )(2, 4) 
         == make_mini_pair(make_mini_pair(1, 2), make_mini_pair(2, 4)));
 }

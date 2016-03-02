@@ -10,12 +10,12 @@ metaprogramming. Lets take look at some of the use cases for using the Fit libra
 Initialization
 --------------
 
-The [`FIT_STATIC_FUNCTION`](function.md) will help initialize function objects at
+The [`BOOST_FIT_STATIC_FUNCTION`](function.md) will help initialize function objects at
 global scope, and will ensure that it is initialized at compile-time and (on
 platforms that support it) will have a unique address across translation
 units, thereby reducing executable bloat and potential ODR violations.
 
-In addition, [`FIT_STATIC_LAMBDA_FUNCTION`](lambda.md) allows initializing a lambda
+In addition, [`BOOST_FIT_STATIC_LAMBDA_FUNCTION`](lambda.md) allows initializing a lambda
 in the same manner. This allows for simple and compact function definitions
 when working with generic lambdas and function adaptors.
 
@@ -34,12 +34,12 @@ answers usually involve some amount of metaprogramming using either `void_t`
 or `is_detected`(see [n4502](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4502.pdf)). However, with the Fit library it can simply be written like
 this:
 
-    FIT_STATIC_LAMBDA_FUNCTION(stringify) = conditional(
-        [](auto x) FIT_RETURNS(to_string(x)),
-        [](auto x) FIT_RETURNS(static_cast<ostringstream&>(ostringstream() << x).str())
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(stringify) = conditional(
+        [](auto x) BOOST_FIT_RETURNS(to_string(x)),
+        [](auto x) BOOST_FIT_RETURNS(static_cast<ostringstream&>(ostringstream() << x).str())
     );
 
-In addition, this can be used with the [`fit::if_`](if.md) decorator to create `static_if`-like
+In addition, this can be used with the [`boost::fit::if_`](if.md) decorator to create `static_if`-like
 constructs. For example, Baptiste Wicht discusses how one could write `static_if` in C++ [here](http://baptiste-wicht.com/posts/2015/07/simulate-static_if-with-c11c14.html).
 
 He wants to be able to write this:
@@ -102,8 +102,8 @@ this:
         std::true_type{}
     );
 
-    FIT_STATIC_LAMBDA_FUNCTION(has_pointer_operators) = conditional(
-        FIT_LIFT(has_pointer_member),
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(has_pointer_operators) = conditional(
+        BOOST_FIT_LIFT(has_pointer_member),
         [](auto* x) -> bool_constant<(!std::is_void<decltype(*x)>())> { return {}; },
         always(std::false_type{})
     );
@@ -147,13 +147,13 @@ Varidiac parameters
 As shown in the [quick start guide](quickstart.md) the [`by`](by.md) adaptor can be used to apply a function to each
 argument, so we could write a simple varidiac print function like this:
 
-    FIT_STATIC_FUNCTION(print) = by(std::cout << _);
+    BOOST_FIT_STATIC_FUNCTION(print) = by(std::cout << _);
 
 We can also take binary functions and turn them easily into varidiac functions
 as well using [`compress`](compress.md). So a varidiac `max` function could be written like
 this:
 
-    FIT_STATIC_FUNCTION(max) = compress(FIT_LIFT(std::max));
+    BOOST_FIT_STATIC_FUNCTION(max) = compress(BOOST_FIT_LIFT(std::max));
 
 Polymorphic constructors
 ------------------------
@@ -162,7 +162,7 @@ Writing polymorphic constructors(such as `make_tuple`) is a boilerplate that
 has to be written over and over again for template classes. With [`construct`](construct.md)
 this is easier. For example, `make_tuple` can be written simply as this:
 
-    FIT_STATIC_FUNCTION(make_tuple) = construct<std::tuple>().by(decay());
+    BOOST_FIT_STATIC_FUNCTION(make_tuple) = construct<std::tuple>().by(decay());
 
 Extension methods
 -----------------

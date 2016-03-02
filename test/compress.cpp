@@ -1,4 +1,4 @@
-#include <fit/compress.hpp>
+#include <boost/fit/compress.hpp>
 #include "test.hpp"
 
 struct max_f
@@ -19,60 +19,60 @@ struct sum_f
     }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::compress(max_f(), 0)(2, 3, 4, 5) == 5);
-    FIT_TEST_CHECK(fit::compress(max_f(), 0)(5, 4, 3, 2) == 5);
-    FIT_TEST_CHECK(fit::compress(max_f(), 0)(2, 3, 5, 4) == 5);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f(), 0)(2, 3, 4, 5) == 5);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f(), 0)(5, 4, 3, 2) == 5);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f(), 0)(2, 3, 5, 4) == 5);
 
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f(), 0)(2, 3, 4, 5) == 5);
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f(), 0)(5, 4, 3, 2) == 5);
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f(), 0)(2, 3, 5, 4) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f(), 0)(2, 3, 4, 5) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f(), 0)(5, 4, 3, 2) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f(), 0)(2, 3, 5, 4) == 5);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::compress(max_f(), 0)() == 0);
-    FIT_TEST_CHECK(fit::compress(max_f(), 0)(5) == 5);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f(), 0)() == 0);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f(), 0)(5) == 5);
 
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f(), 0)() == 0);
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f(), 0)(5) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f(), 0)() == 0);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f(), 0)(5) == 5);
 }
 
 template<class... Ts>
-constexpr auto find_positive_max(Ts... xs) FIT_RETURNS
+constexpr auto find_positive_max(Ts... xs) BOOST_FIT_RETURNS
 (
-    fit::compress(max_f(), 0)(xs...)
+    boost::fit::compress(max_f(), 0)(xs...)
 );
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(find_positive_max() == 0);
-    FIT_TEST_CHECK(find_positive_max(5) == 5);
+    BOOST_FIT_TEST_CHECK(find_positive_max() == 0);
+    BOOST_FIT_TEST_CHECK(find_positive_max(5) == 5);
 
-    FIT_STATIC_TEST_CHECK(find_positive_max() == 0);
-    FIT_STATIC_TEST_CHECK(find_positive_max(5) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(find_positive_max() == 0);
+    BOOST_FIT_STATIC_TEST_CHECK(find_positive_max(5) == 5);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::compress(max_f())(5) == 5);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f())(5) == 5);
 
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f())(5) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f())(5) == 5);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::compress(max_f())(2, 3, 4, 5) == 5);
-    FIT_TEST_CHECK(fit::compress(max_f())(5, 4, 3, 2) == 5);
-    FIT_TEST_CHECK(fit::compress(max_f())(2, 3, 5, 4) == 5);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f())(2, 3, 4, 5) == 5);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f())(5, 4, 3, 2) == 5);
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(max_f())(2, 3, 5, 4) == 5);
 
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f())(2, 3, 4, 5) == 5);
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f())(5, 4, 3, 2) == 5);
-    FIT_STATIC_TEST_CHECK(fit::compress(max_f())(2, 3, 5, 4) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f())(2, 3, 4, 5) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f())(5, 4, 3, 2) == 5);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::compress(max_f())(2, 3, 5, 4) == 5);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::compress(sum_f(), std::string())("hello", "-", "world") == "hello-world");
+    BOOST_FIT_TEST_CHECK(boost::fit::compress(sum_f(), std::string())("hello", "-", "world") == "hello-world");
 }

@@ -1,4 +1,4 @@
-#include <fit/implicit.hpp>
+#include <boost/fit/implicit.hpp>
 #include "test.hpp"
 
 template<class T>
@@ -18,15 +18,15 @@ struct auto_caster_foo
 
 };
 // TODO: Test template constraint on conversion operator
-static constexpr fit::implicit<auto_caster> auto_cast = {};
+static constexpr boost::fit::implicit<auto_caster> auto_cast = {};
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     float f = 1.5;
     int i = auto_cast(f);
     // auto_caster_foo x = 1;
     auto_caster_foo x = auto_cast(1);
-    FIT_TEST_CHECK(1 == i);
-    FIT_TEST_CHECK(1 == x.i);
+    BOOST_FIT_TEST_CHECK(1 == i);
+    BOOST_FIT_TEST_CHECK(1 == x.i);
 
 }

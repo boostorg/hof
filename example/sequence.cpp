@@ -8,29 +8,29 @@
 #include "example.h"
 #include <tuple>
 
-using namespace fit;
+using namespace boost::fit;
 
 // Transform each element of a tuple by calling f
-FIT_STATIC_LAMBDA_FUNCTION(tuple_transform) = [](auto&& sequence, auto f)
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(tuple_transform) = [](auto&& sequence, auto f)
 {
     return unpack(by(f, construct<std::tuple>()))(std::forward<decltype(sequence)>(sequence));
 };
 // Call f on each element of tuple
-FIT_STATIC_LAMBDA_FUNCTION(tuple_for_each) = [](auto&& sequence, auto f)
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(tuple_for_each) = [](auto&& sequence, auto f)
 {
     return unpack(by(f))(std::forward<decltype(sequence)>(sequence));
 };
 // Fold over tuple using a f as the binary operator
-FIT_STATIC_LAMBDA_FUNCTION(tuple_fold) = [](auto&& sequence, auto f)
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(tuple_fold) = [](auto&& sequence, auto f)
 {
     return unpack(compress(f))(std::forward<decltype(sequence)>(sequence));
 };
 // Concat multiple tuples
-FIT_STATIC_FUNCTION(tuple_cat) = unpack(construct<std::tuple>());
+BOOST_FIT_STATIC_FUNCTION(tuple_cat) = unpack(construct<std::tuple>());
 // Join a tuple of tuples into just a tuple
-FIT_STATIC_FUNCTION(tuple_join) = unpack(tuple_cat);
+BOOST_FIT_STATIC_FUNCTION(tuple_join) = unpack(tuple_cat);
 // Filter elements in a tuple using a predicate
-FIT_STATIC_LAMBDA_FUNCTION(tuple_filter) = [](auto&& sequence, auto predicate)
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(tuple_filter) = [](auto&& sequence, auto predicate)
 {
     return compose(tuple_join, tuple_transform)(
         std::forward<decltype(sequence)>(sequence),
@@ -44,7 +44,7 @@ FIT_STATIC_LAMBDA_FUNCTION(tuple_filter) = [](auto&& sequence, auto predicate)
     );
 };
 // Zip two tuples together
-FIT_STATIC_LAMBDA_FUNCTION(tuple_zip_with) = [](auto&& sequence1, auto&& sequence2, auto f)
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(tuple_zip_with) = [](auto&& sequence1, auto&& sequence2, auto f)
 {
     auto&& functions = tuple_transform(
         std::forward<decltype(sequence1)>(sequence1),
@@ -60,7 +60,7 @@ FIT_STATIC_LAMBDA_FUNCTION(tuple_zip_with) = [](auto&& sequence1, auto&& sequenc
     return unpack(combined)(std::forward<decltype(sequence2)>(sequence2));
 };
 // Dot product of a tuple
-FIT_STATIC_LAMBDA_FUNCTION(tuple_dot) = [](auto&& a, auto&& b)
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(tuple_dot) = [](auto&& a, auto&& b)
 {
     auto product = tuple_zip_with(a, b, [](auto x, auto y) { return x*y; });
     return tuple_fold(product, [](auto x, auto y) { return x+y; });

@@ -15,9 +15,9 @@ Fit is divided into three components:
 * Functions: These return functions that achieve a specific purpose.
 * Utilities: These are general utilities that are useful when defining or using functions
 
-Github: [http://github.com/pfultz2/Fit](http://github.com/pfultz2/Fit)
+Github: [https://github.com/pfultz2/Fit/tree/boost](https://github.com/pfultz2/Fit/tree/boost)
 
-Documentation: [http://fit.readthedocs.org](http://fit.readthedocs.org)
+Documentation: [http://pfultz2.github.io/Fit/doc/html/](http://pfultz2.github.io/Fit/doc/html/)
 Quick Start
 ===========
 
@@ -36,28 +36,28 @@ In C++, a function object is just a class that overrides the call operator like 
         }
     };
 
-There are few things to note about this. First, the call operator member function is always declared `const`, which is generally required to be used with Fit.(Note: The [`mutable_`](http://fit.readthedocs.org/en/latest/mutable/index.html) adaptor can be used to make a mutable function object have a `const` call operator, but this should generally be avoided). Secondly, the `sum_f` class must be constructed first before it can be called:
+There are few things to note about this. First, the call operator member function is always declared `const`, which is generally required to be used with Fit.(Note: The [`mutable_`](http://pfultz2.github.io/Fit/doc/html//en/latest/mutable/index.html) adaptor can be used to make a mutable function object have a `const` call operator, but this should generally be avoided). Secondly, the `sum_f` class must be constructed first before it can be called:
 
     auto three = sum_f()(1, 2);
 
-We can make it behave like a regular function if we construct the class as a global variable. The Fit library provides [`FIT_STATIC_FUNCTION`](http://fit.readthedocs.org/en/latest/function/index.html) to properly initialize the the function object at compile-time to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order) and possible ODR violations:
+We can make it behave like a regular function if we construct the class as a global variable. The Fit library provides [`BOOST_FIT_STATIC_FUNCTION`](http://pfultz2.github.io/Fit/doc/html//en/latest/function/index.html) to properly initialize the the function object at compile-time to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order) and possible ODR violations:
 
-    FIT_STATIC_FUNCTION(sum) = sum_f();
+    BOOST_FIT_STATIC_FUNCTION(sum) = sum_f();
 
 Adaptors
 --------
 
-Now we have defined the function as a function object, we can add new "enhancements" to the function. We could make the function pipable using the [`pipable`](http://fit.readthedocs.org/en/latest/pipable/index.html) adaptor:
+Now we have defined the function as a function object, we can add new "enhancements" to the function. We could make the function pipable using the [`pipable`](http://pfultz2.github.io/Fit/doc/html//en/latest/pipable/index.html) adaptor:
 
-    FIT_STATIC_FUNCTION(sum) = pipable_adaptor<sum_f>();
+    BOOST_FIT_STATIC_FUNCTION(sum) = pipable_adaptor<sum_f>();
 
 This allows the parameters to piped into it, like this:
 
     auto three = 1 | sum(2);
 
-Or we could make it an infix named operator as well using the [`infix`](http://fit.readthedocs.org/en/latest/infix/index.html) adaptor:
+Or we could make it an infix named operator as well using the [`infix`](http://pfultz2.github.io/Fit/doc/html//en/latest/infix/index.html) adaptor:
 
-    FIT_STATIC_FUNCTION(sum) = infix_adaptor<sum_f>();
+    BOOST_FIT_STATIC_FUNCTION(sum) = infix_adaptor<sum_f>();
 
 And it could be called like this:
 
@@ -72,9 +72,9 @@ Additionally each of the adaptors have a corresponding function version without 
 Lambdas
 -------
 
-Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be statically initialized at compile time. So we can use the [`FIT_STATIC_LAMBDA`](http://fit.readthedocs.org/en/latest/lambda/index.html) to initialize them at compile time:
+Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be statically initialized at compile time. So we can use the [`BOOST_FIT_STATIC_LAMBDA`](http://pfultz2.github.io/Fit/doc/html//en/latest/lambda/index.html) to initialize them at compile time:
 
-    FIT_STATIC_FUNCTION(sum) = FIT_STATIC_LAMBDA(auto x, auto y)
+    BOOST_FIT_STATIC_FUNCTION(sum) = BOOST_FIT_STATIC_LAMBDA(auto x, auto y)
     {
         return x + y;
     };
@@ -82,15 +82,15 @@ Instead of writing function objects which can be a little verbose, we can write 
 And we can apply the same adaptors as well:
 
     // Pipable sum
-    FIT_STATIC_FUNCTION(sum) = pipable(FIT_STATIC_LAMBDA(auto x, auto y)
+    BOOST_FIT_STATIC_FUNCTION(sum) = pipable(BOOST_FIT_STATIC_LAMBDA(auto x, auto y)
     {
         return x + y;
     });
 
-We can also use [`FIT_STATIC_LAMBDA_FUNCTION`](http://fit.readthedocs.org/en/latest/lambda.md) so we dont have to repeat [`FIT_STATIC_LAMBDA`](lambda/index.html) for adaptors, and it can help avoid possible ODR violations as well:
+We can also use [`BOOST_FIT_STATIC_LAMBDA_FUNCTION`](http://pfultz2.github.io/Fit/doc/html//en/latest/lambda.md) so we dont have to repeat [`BOOST_FIT_STATIC_LAMBDA`](lambda/index.html) for adaptors, and it can help avoid possible ODR violations as well:
 
     // Pipable sum
-    FIT_STATIC_LAMBDA_FUNCTION(sum) = pipable([](auto x, auto y)
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(sum) = pipable([](auto x, auto y)
     {
         return x + y;
     });
@@ -100,9 +100,9 @@ As we will see, this can help make it cleaner when we are defining several lambd
 Overloading
 -----------
 
-Now, Fit provides two ways of doing overloading. The [`match`](http://fit.readthedocs.org/en/latest/match/index.html) adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:
+Now, Fit provides two ways of doing overloading. The [`match`](http://pfultz2.github.io/Fit/doc/html//en/latest/match/index.html) adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = match(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = match(
         [](int x)
         {
             std::cout << "Integer: " << x << std::endl;
@@ -113,10 +113,10 @@ Now, Fit provides two ways of doing overloading. The [`match`](http://fit.readth
         }
     );
 
-However, when trying to do overloading involving something more generic, it can lead to ambiguities. So the [`conditional`](http://fit.readthedocs.org/en/latest/conditional/index.html) adaptor will pick the first function that is callable. This allows ordering the functions based on which one is more important. Say we would like to write a `print` function that can print not only using `cout` but can also print the values in ranges. We could write something like this:
+However, when trying to do overloading involving something more generic, it can lead to ambiguities. So the [`conditional`](http://pfultz2.github.io/Fit/doc/html//en/latest/conditional/index.html) adaptor will pick the first function that is callable. This allows ordering the functions based on which one is more important. Say we would like to write a `print` function that can print not only using `cout` but can also print the values in ranges. We could write something like this:
 
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -134,10 +134,10 @@ So the `-> decltype(std::cout << x, void())` will only make the function callabl
     using std::begin;
 
     template<class R>
-    auto adl_begin(R&& r) -> FIT_RETURNS(begin(r));
+    auto adl_begin(R&& r) -> BOOST_FIT_RETURNS(begin(r));
     }
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -151,16 +151,16 @@ So the `-> decltype(std::cout << x, void())` will only make the function callabl
 Tuples
 ------
 
-We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which let us call a function for each element. First, the [`by`](http://fit.readthedocs.org/en/latest/by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack/index.html) adaptor will unpack the elements to a tuple and apply them to the argument:
+We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which let us call a function for each element. First, the [`by`](http://pfultz2.github.io/Fit/doc/html//en/latest/by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack/index.html) adaptor will unpack the elements to a tuple and apply them to the argument:
 
-    FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
     {
         return unpack(by(f))(sequence)
     };
 
 So now we can add an overload for tuples:
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -178,14 +178,14 @@ So now we can add an overload for tuples:
         }
     );
 
-Since we can't use a lambda inside of `decltype` we just put [`identity`](http://fit.readthedocs.org/en/latest/identity/index.html) instead.
+Since we can't use a lambda inside of `decltype` we just put [`identity`](http://pfultz2.github.io/Fit/doc/html//en/latest/identity/index.html) instead.
 
 Recursive
 ---------
 
-Even though we are using lambdas, we can easily make this recursive using the [`fix`](http://fit.readthedocs.org/en/latest/fix/index.html) adaptor. This implements a fix point combinator, which passes the function(ie itself) in as the first argument, so we could write this:
+Even though we are using lambdas, we can easily make this recursive using the [`fix`](http://pfultz2.github.io/Fit/doc/html//en/latest/fix/index.html) adaptor. This implements a fix point combinator, which passes the function(ie itself) in as the first argument, so we could write this:
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -205,7 +205,7 @@ Variadic
 
 We can also make this `print` function varidiac, so it prints every argument passed into it. We just rename our original `print` function to `simple_print`:
 
-    FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -220,9 +220,9 @@ We can also make this `print` function varidiac, so it prints every argument pas
         }
     ));
 
-And then apply the [`by`](http://fit.readthedocs.org/en/latest/by/index.html) adaptor to `simple_print`:
+And then apply the [`by`](http://pfultz2.github.io/Fit/doc/html//en/latest/by/index.html) adaptor to `simple_print`:
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
 
 Requirements
 ============

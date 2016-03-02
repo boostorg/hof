@@ -1,7 +1,7 @@
 FAQ
 ===
 
-#### Q: Is the reinterpret cast in FIT_STATIC_LAMBDA undefined behaviour?
+#### Q: Is the reinterpret cast in BOOST_FIT_STATIC_LAMBDA undefined behaviour?
 
 Not really, since the objects are empty, there is no data access. I have a
 static assert to guard against this restriction.

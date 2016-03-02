@@ -168,14 +168,14 @@ script:
     - if [ ! -d build ]; then mkdir build; fi
     - cd build
     - if [[ "$CXX11" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -std=c++11"; fi
-    - if [[ "$HAS_GENERIC_LAMBDA" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -DFIT_HAS_GENERIC_LAMBDA=1"; fi
+    - if [[ "$HAS_GENERIC_LAMBDA" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -DBOOST_FIT_HAS_GENERIC_LAMBDA=1"; fi
     - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
     - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=2 make -j2 check VERBOSE=1
     - make install
     - pkg-config fit --cflags
     - cd ../include
-    - HEADERS=$(echo fit/*.hpp)
+    - HEADERS=$(echo boost/fit/*.hpp)
     - for file in $HEADERS; do echo -e "#include <$file>\nint main() {}" | $CXX -std=gnu++0x `pkg-config fit --cflags` -x c++ -S -; done
     - cd ..
     - rm -rf build/

@@ -2,12 +2,12 @@
 #ifndef GUARD_STATIC_DEF
 #define GUARD_STATIC_DEF
 
-#include <fit/function.hpp>
-#include <fit/lambda.hpp>
+#include <boost/fit/function.hpp>
+#include <boost/fit/lambda.hpp>
 
 namespace fit_test {
-#if FIT_HAS_STATIC_LAMBDA
-FIT_STATIC_LAMBDA_FUNCTION(fit_sum_lambda) = [](int x, int y) 
+#if BOOST_FIT_HAS_STATIC_LAMBDA
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(fit_sum_lambda) = [](int x, int y) 
 {
     return x + y;
 };
@@ -20,14 +20,14 @@ struct fit_sum_f
         return x + y;
     }
 };
-#if FIT_HAS_STATIC_LAMBDA
-FIT_STATIC_LAMBDA_FUNCTION(fit_sum_fo) = fit_sum_f();
+#if BOOST_FIT_HAS_STATIC_LAMBDA
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(fit_sum_fo) = fit_sum_f();
 #endif
-FIT_STATIC_FUNCTION(fit_sum_constexpr_fo) = fit_sum_f();
+BOOST_FIT_STATIC_FUNCTION(fit_sum_constexpr_fo) = fit_sum_f();
 
-FIT_DECLARE_STATIC_VAR(fit_sum_var, fit_sum_f);
+BOOST_FIT_DECLARE_STATIC_VAR(fit_sum_var, fit_sum_f);
 
-// FIT_STATIC_FUNCTION(fit_sum) = [](auto x, auto y) 
+// BOOST_FIT_STATIC_FUNCTION(fit_sum) = [](auto x, auto y) 
 // {
 //     return x + y;
 // };

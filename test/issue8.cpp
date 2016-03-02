@@ -1,8 +1,8 @@
 
 #include "test.hpp"
 #include <vector>
-#include <fit/pipable.hpp>
-#include <fit/placeholders.hpp>
+#include <boost/fit/pipable.hpp>
+#include <boost/fit/placeholders.hpp>
 #include <algorithm>
 
 
@@ -25,18 +25,18 @@ struct filter_fn
     }
 };
 
-static constexpr fit::pipable_adaptor<filter_fn> filter = {};
+static constexpr boost::fit::pipable_adaptor<filter_fn> filter = {};
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::vector<int> data;
     for(int i=0;i<6;i++)
     {
         data.push_back(i);
     }
-    std::vector<int> r1 = data | filter(fit::_1 > 1);
-    FIT_TEST_CHECK(r1.size() == 4);
+    std::vector<int> r1 = data | filter(boost::fit::_1 > 1);
+    BOOST_FIT_TEST_CHECK(r1.size() == 4);
 
-    std::vector<int> r2 = filter(data, fit::_1 > 1);
-    FIT_TEST_CHECK(r2.size() == 4);
+    std::vector<int> r2 = filter(data, boost::fit::_1 > 1);
+    BOOST_FIT_TEST_CHECK(r2.size() == 4);
 }

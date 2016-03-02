@@ -1,6 +1,6 @@
-#include <fit/match.hpp>
-#include <fit/static.hpp>
-#include <fit/lambda.hpp>
+#include <boost/fit/match.hpp>
+#include <boost/fit/static.hpp>
+#include <boost/fit/lambda.hpp>
 #include "test.hpp"
 
 #include <memory>
@@ -26,7 +26,7 @@ namespace test1
         }
     };
 
-    static constexpr fit::static_<fit::match_adaptor<int_class, foo_class> > fun = {};
+    static constexpr boost::fit::static_<boost::fit::match_adaptor<int_class, foo_class> > fun = {};
 
     static_assert(std::is_same<int, decltype(fun(1))>::value, "Failed match");
     static_assert(std::is_same<foo, decltype(fun(foo()))>::value, "Failed match");
@@ -51,45 +51,45 @@ struct foo_class
     }
 };
 
-static constexpr fit::match_adaptor<int_class, foo_class> fun = {};
+static constexpr boost::fit::match_adaptor<int_class, foo_class> fun = {};
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     
-    FIT_TEST_CHECK(fun(1) == 1);
-    FIT_TEST_CHECK(fun(foo()) == 2);
+    BOOST_FIT_TEST_CHECK(fun(1) == 1);
+    BOOST_FIT_TEST_CHECK(fun(foo()) == 2);
 
-    FIT_STATIC_TEST_CHECK(fun(1) == 1);
-    FIT_STATIC_TEST_CHECK(fun(foo()) == 2);
+    BOOST_FIT_STATIC_TEST_CHECK(fun(1) == 1);
+    BOOST_FIT_STATIC_TEST_CHECK(fun(foo()) == 2);
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     
-    FIT_TEST_CHECK(fit::reveal(fun)(1) == 1);
-    FIT_TEST_CHECK(fit::reveal(fun)(foo()) == 2);
+    BOOST_FIT_TEST_CHECK(boost::fit::reveal(fun)(1) == 1);
+    BOOST_FIT_TEST_CHECK(boost::fit::reveal(fun)(foo()) == 2);
 
-    FIT_STATIC_TEST_CHECK(fit::reveal(fun)(1) == 1);
-    FIT_STATIC_TEST_CHECK(fit::reveal(fun)(foo()) == 2);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::reveal(fun)(1) == 1);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::reveal(fun)(foo()) == 2);
 };
-#if FIT_HAS_STATIC_LAMBDA
-FIT_TEST_CASE()
+#if BOOST_FIT_HAS_STATIC_LAMBDA
+BOOST_FIT_TEST_CASE()
 {
     
-    constexpr auto lam = fit::match(
-        FIT_STATIC_LAMBDA(int) { return 1; },
-        FIT_STATIC_LAMBDA(foo) { return 2; }
+    constexpr auto lam = boost::fit::match(
+        BOOST_FIT_STATIC_LAMBDA(int) { return 1; },
+        BOOST_FIT_STATIC_LAMBDA(foo) { return 2; }
     );
     
-    FIT_TEST_CHECK(lam(1) == 1);
-    FIT_TEST_CHECK(lam(foo()) == 2);
+    BOOST_FIT_TEST_CHECK(lam(1) == 1);
+    BOOST_FIT_TEST_CHECK(lam(foo()) == 2);
 };
 #endif
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     int i = 0;
-    auto lam = fit::match(
+    auto lam = boost::fit::match(
         [&](int) { return i+1; },
         [&](foo) { return i+2; }
     );
@@ -97,12 +97,12 @@ FIT_TEST_CASE()
 #ifndef _MSC_VER
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(lam));
 #endif
-    FIT_TEST_CHECK(lam(1) == 1);
-    FIT_TEST_CHECK(lam(foo()) == 2);
+    BOOST_FIT_TEST_CHECK(lam(1) == 1);
+    BOOST_FIT_TEST_CHECK(lam(foo()) == 2);
 };
 
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     struct not_default_constructible
     {
@@ -112,7 +112,7 @@ FIT_TEST_CASE()
     };
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(not_default_constructible);
     not_default_constructible ndc = not_default_constructible(0);
-    auto lam = fit::match(
+    auto lam = boost::fit::match(
         [&](int) { return ndc.i+1; },
         [&](foo) { return ndc.i+2; }
     );
@@ -121,8 +121,8 @@ FIT_TEST_CASE()
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(lam));
 #endif
     
-    FIT_TEST_CHECK(lam(1) == 1);
-    FIT_TEST_CHECK(lam(foo()) == 2);
+    BOOST_FIT_TEST_CHECK(lam(1) == 1);
+    BOOST_FIT_TEST_CHECK(lam(foo()) == 2);
 };
 
 
@@ -148,11 +148,11 @@ struct foo_move_class
     }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    auto fun_move = fit::match(int_move_class(), foo_move_class());
-    FIT_TEST_CHECK(fun_move(1) == 1);
-    FIT_TEST_CHECK(fun_move(foo()) == 2);
+    auto fun_move = boost::fit::match(int_move_class(), foo_move_class());
+    BOOST_FIT_TEST_CHECK(fun_move(1) == 1);
+    BOOST_FIT_TEST_CHECK(fun_move(foo()) == 2);
 
 };
 

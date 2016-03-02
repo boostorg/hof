@@ -15,6 +15,6 @@ Fit is divided into three components:
 * Functions: These return functions that achieve a specific purpose.
 * Utilities: These are general utilities that are useful when defining or using functions
 
-Github: [http://github.com/pfultz2/Fit](http://github.com/pfultz2/Fit)
+Github: [https://github.com/pfultz2/Fit/tree/boost](https://github.com/pfultz2/Fit/tree/boost)
 
-Documentation: [http://fit.readthedocs.org](http://fit.readthedocs.org)
+Documentation: [http://pfultz2.github.io/Fit/doc/html/](http://pfultz2.github.io/Fit/doc/html/)

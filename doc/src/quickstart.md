@@ -20,16 +20,16 @@ There are few things to note about this. First, the call operator member functio
 
     auto three = sum_f()(1, 2);
 
-We can make it behave like a regular function if we construct the class as a global variable. The Fit library provides [`FIT_STATIC_FUNCTION`](function.md) to properly initialize the the function object at compile-time to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order) and possible ODR violations:
+We can make it behave like a regular function if we construct the class as a global variable. The Fit library provides [`BOOST_FIT_STATIC_FUNCTION`](function.md) to properly initialize the the function object at compile-time to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order) and possible ODR violations:
 
-    FIT_STATIC_FUNCTION(sum) = sum_f();
+    BOOST_FIT_STATIC_FUNCTION(sum) = sum_f();
 
 Adaptors
 --------
 
 Now we have defined the function as a function object, we can add new "enhancements" to the function. We could make the function pipable using the [`pipable`](pipable.md) adaptor:
 
-    FIT_STATIC_FUNCTION(sum) = pipable_adaptor<sum_f>();
+    BOOST_FIT_STATIC_FUNCTION(sum) = pipable_adaptor<sum_f>();
 
 This allows the parameters to piped into it, like this:
 
@@ -37,7 +37,7 @@ This allows the parameters to piped into it, like this:
 
 Or we could make it an infix named operator as well using the [`infix`](infix.md) adaptor:
 
-    FIT_STATIC_FUNCTION(sum) = infix_adaptor<sum_f>();
+    BOOST_FIT_STATIC_FUNCTION(sum) = infix_adaptor<sum_f>();
 
 And it could be called like this:
 
@@ -52,9 +52,9 @@ Additionally each of the adaptors have a corresponding function version without 
 Lambdas
 -------
 
-Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be statically initialized at compile time. So we can use the [`FIT_STATIC_LAMBDA`](lambda.md) to initialize them at compile time:
+Instead of writing function objects which can be a little verbose, we can write the functions as lambdas instead. However, by default lambdas cannot be statically initialized at compile time. So we can use the [`BOOST_FIT_STATIC_LAMBDA`](lambda.md) to initialize them at compile time:
 
-    FIT_STATIC_FUNCTION(sum) = FIT_STATIC_LAMBDA(auto x, auto y)
+    BOOST_FIT_STATIC_FUNCTION(sum) = BOOST_FIT_STATIC_LAMBDA(auto x, auto y)
     {
         return x + y;
     };
@@ -62,15 +62,15 @@ Instead of writing function objects which can be a little verbose, we can write 
 And we can apply the same adaptors as well:
 
     // Pipable sum
-    FIT_STATIC_FUNCTION(sum) = pipable(FIT_STATIC_LAMBDA(auto x, auto y)
+    BOOST_FIT_STATIC_FUNCTION(sum) = pipable(BOOST_FIT_STATIC_LAMBDA(auto x, auto y)
     {
         return x + y;
     });
 
-We can also use [`FIT_STATIC_LAMBDA_FUNCTION`](lambda.md) so we dont have to repeat [`FIT_STATIC_LAMBDA`](lambda.md) for adaptors, and it can help avoid possible ODR violations as well:
+We can also use [`BOOST_FIT_STATIC_LAMBDA_FUNCTION`](lambda.md) so we dont have to repeat [`BOOST_FIT_STATIC_LAMBDA`](lambda.md) for adaptors, and it can help avoid possible ODR violations as well:
 
     // Pipable sum
-    FIT_STATIC_LAMBDA_FUNCTION(sum) = pipable([](auto x, auto y)
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(sum) = pipable([](auto x, auto y)
     {
         return x + y;
     });
@@ -82,7 +82,7 @@ Overloading
 
 Now, Fit provides two ways of doing overloading. The [`match`](match.md) adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = match(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = match(
         [](int x)
         {
             std::cout << "Integer: " << x << std::endl;
@@ -96,7 +96,7 @@ Now, Fit provides two ways of doing overloading. The [`match`](match.md) adaptor
 However, when trying to do overloading involving something more generic, it can lead to ambiguities. So the [`conditional`](conditional.md) adaptor will pick the first function that is callable. This allows ordering the functions based on which one is more important. Say we would like to write a `print` function that can print not only using `cout` but can also print the values in ranges. We could write something like this:
 
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -114,10 +114,10 @@ So the `-> decltype(std::cout << x, void())` will only make the function callabl
     using std::begin;
 
     template<class R>
-    auto adl_begin(R&& r) FIT_RETURNS(begin(r));
+    auto adl_begin(R&& r) BOOST_FIT_RETURNS(begin(r));
     }
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -133,14 +133,14 @@ Tuples
 
 We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which let us call a function for each element. First, the [`by`](by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack.md) adaptor will unpack the elements to a tuple and apply them to the argument:
 
-    FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
     {
         return unpack(by(f))(sequence);
     };
 
 So now we can add an overload for tuples:
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -165,7 +165,7 @@ Recursive
 
 Even though we are using lambdas, we can easily make this recursive using the [`fix`](fix.md) adaptor. This implements a fix point combinator, which passes the function(ie itself) in as the first argument, so we could write this:
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -185,7 +185,7 @@ Variadic
 
 We can also make this `print` function varidiac, so it prints every argument passed into it. We just rename our original `print` function to `simple_print`:
 
-    FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -202,5 +202,5 @@ We can also make this `print` function varidiac, so it prints every argument pas
 
 And then apply the [`by`](by.md) adaptor to `simple_print`:
 
-    FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
+    BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
 

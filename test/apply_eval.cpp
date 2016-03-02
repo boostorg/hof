@@ -1,31 +1,31 @@
-#include <fit/apply_eval.hpp>
-#include <fit/always.hpp>
+#include <boost/fit/apply_eval.hpp>
+#include <boost/fit/always.hpp>
 #include "test.hpp"
 
 #include <memory>
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {    
-    FIT_STATIC_TEST_CHECK(fit::apply_eval(binary_class(), fit::always(1), fit::always(2)) == 3);
-    FIT_TEST_CHECK(fit::apply_eval(binary_class(), []{ return 1; }, []{ return 2;}) == 3);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::apply_eval(binary_class(), boost::fit::always(1), boost::fit::always(2)) == 3);
+    BOOST_FIT_TEST_CHECK(boost::fit::apply_eval(binary_class(), []{ return 1; }, []{ return 2;}) == 3);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    fit::apply_eval(fit::always(), fit::always(1), fit::always(2));
+    boost::fit::apply_eval(boost::fit::always(), boost::fit::always(1), boost::fit::always(2));
 }
 
 struct indirect_sum_f
 {
     template<class T, class U>
     auto operator()(T x, U y) const
-    FIT_RETURNS(*x + *y);
+    BOOST_FIT_RETURNS(*x + *y);
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(
-        fit::apply_eval(
+    BOOST_FIT_TEST_CHECK(
+        boost::fit::apply_eval(
             indirect_sum_f(), 
             []{ return std::unique_ptr<int>(new int(1)); }, 
             []{ return std::unique_ptr<int>(new int(2)); })

@@ -5,9 +5,9 @@ prefix = '/// '
 include_dir = 'include/'
 doc_dir = 'doc/src'
 example_dir = 'example'
-namespace = 'fit'
+namespace = 'boost::fit'
 declare_template_block = ('struct', 'class', 'template', 'namespace')
-declare_template_stmt = ('FIT_LIFT_CLASS')
+declare_template_stmt = ('BOOST_FIT_LIFT_CLASS')
 
 def write_to(dir_name, file, lines):
     content = list((line + "\n" for line in lines))

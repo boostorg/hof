@@ -1,18 +1,18 @@
-#include <fit/always.hpp>
+#include <boost/fit/always.hpp>
 #include <memory>
 #include "test.hpp"
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     static const int ten = 10;
-    FIT_STATIC_TEST_CHECK(fit::always(ten)(1,2,3,4,5) == 10);
-    FIT_TEST_CHECK( fit::always(ten)(1,2,3,4,5) == 10 );
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::always(ten)(1,2,3,4,5) == 10);
+    BOOST_FIT_TEST_CHECK( boost::fit::always(ten)(1,2,3,4,5) == 10 );
     
     int i = 10; 
-    FIT_TEST_CHECK( fit::always(std::ref(i))(1,2,3,4,5) == 10 );
-    FIT_TEST_CHECK( &fit::always(std::ref(i))(1,2,3,4,5) == &i );
+    BOOST_FIT_TEST_CHECK( boost::fit::always(std::ref(i))(1,2,3,4,5) == 10 );
+    BOOST_FIT_TEST_CHECK( &boost::fit::always(std::ref(i))(1,2,3,4,5) == &i );
 
-    fit::always()(1, 2);
-    static_assert(std::is_same<decltype(fit::always()(1, 2)), FIT_ALWAYS_VOID_RETURN>::value, "Failed");
+    boost::fit::always()(1, 2);
+    static_assert(std::is_same<decltype(boost::fit::always()(1, 2)), BOOST_FIT_ALWAYS_VOID_RETURN>::value, "Failed");
 }
 

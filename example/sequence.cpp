@@ -70,6 +70,7 @@ void test_tranform()
     auto t = std::make_tuple(1, 2);
     auto r = tuple_transform(t, [](int i) { return i*i; });
     assert(r == std::make_tuple(1, 4));
+    (void)r;
 }
 
 void test_filter()
@@ -77,6 +78,7 @@ void test_filter()
     auto t = std::make_tuple(1, 2, 'x', 3);
     auto r = tuple_filter(t, [](auto x) { return std::is_same<int, decltype(x)>(); });
     assert(r == std::make_tuple(1, 2, 3));
+    (void)r;
 }
 
 void test_zip()
@@ -86,6 +88,7 @@ void test_zip()
     auto p = tuple_zip_with(t1, t2, [](auto x, auto y) { return x*y; });
     int r = tuple_fold(p, [](auto x, auto y) { return x+y; });
     assert(r == (1*3 + 4*2));
+    (void)r;
 }
 
 void test_dot()
@@ -94,6 +97,7 @@ void test_dot()
     auto t2 = std::make_tuple(3, 4);
     int r = tuple_dot(t1, t2);
     assert(r == (1*3 + 4*2));
+    (void)r;
 }
 
 int main() 

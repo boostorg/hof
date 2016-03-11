@@ -131,7 +131,7 @@ So the `-> decltype(std::cout << x, void())` will only make the function callabl
 Tuples
 ------
 
-We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which let us call a function for each element. First, the [`by`](by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack.md) adaptor will unpack the elements to a tuple and apply them to the argument:
+We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which lets us call a function for each element. First, the [`by`](by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack.md) adaptor will unpack the elements of a tuple and apply them to the argument:
 
     FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
     {
@@ -163,7 +163,7 @@ Since we can't use a lambda inside of `decltype` we just put [`identity`](identi
 Recursive
 ---------
 
-Even though we are using lambdas, we can easily make this recursive using the [`fix`](fix.md) adaptor. This implements a fix point combinator, which passes the function(ie itself) in as the first argument, so we could write this:
+Even though we are using lambdas, we can easily make this recursive using the [`fix`](fix.md) adaptor. This implements a fix point combinator, which passes the function(i.e. itself) in as the first argument, so we could write this:
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
@@ -183,7 +183,7 @@ Even though we are using lambdas, we can easily make this recursive using the [`
 Variadic
 --------
 
-We can also make this `print` function varidiac, so it prints every argument passed into it. We just rename our original `print` function to `simple_print`:
+We can also make this `print` function variadic, so it prints every argument passed into it. We just rename our original `print` function to `simple_print`:
 
     FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
         [](auto, const auto& x) -> decltype(std::cout << x, void())

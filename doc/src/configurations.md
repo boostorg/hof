@@ -1,7 +1,7 @@
 Configurations
 ==============
 
-There are several configuration that control the behavior in the Fit library.
+There are several configuration macros that control the behavior of the Fit library.
 
 
 | Name                          | Description                                                                    |

@@ -135,22 +135,22 @@ operator:
 Ordering evaluation of arguments
 --------------------------------
 
-When we write `f(foo(), bar())` there is no guarantee from the standard what
-order the arguments `foo()` and `bar()` are evaluated. So with `apply_eval` we
+When we write `f(foo(), bar())`, the standard does not guarantee the order in
+which the `foo()` and `bar()` arguments are evaluated. So with `apply_eval` we
 can order them from left-to-right:
 
-apply_eval(f, [&]{ return foo(); }, [&]{ return bar(); });
+    apply_eval(f, [&]{ return foo(); }, [&]{ return bar(); });
 
-Varidiac parameters
+Variadic parameters
 -------------------
 
 As shown in the [quick start guide](quickstart.md) the [`by`](by.md) adaptor can be used to apply a function to each
-argument, so we could write a simple varidiac print function like this:
+argument, so we could write a simple variadic print function like this:
 
     FIT_STATIC_FUNCTION(print) = by(std::cout << _);
 
-We can also take binary functions and turn them easily into varidiac functions
-as well using [`compress`](compress.md). So a varidiac `max` function could be written like
+We can also take binary functions and turn them easily into variadic functions
+using [`compress`](compress.md). So a variadic `max` function could be written like
 this:
 
     FIT_STATIC_FUNCTION(max) = compress(FIT_LIFT(std::max));
@@ -167,7 +167,7 @@ this is easier. For example, `make_tuple` can be written simply as this:
 Extension methods
 -----------------
 
-Chaining many function together, like what is done for range based libraries
+Chaining many functions together, like what is done for range based libraries,
 can make things hard to read:
 
     auto r = transform(
@@ -191,7 +191,7 @@ pipable functions can be used. So it can be written like this:
         | filter([](int x) { return x > 2; })
         | transform([](int x) { return x * x; });
 
-Now, if some users feel a little worried about overloading the bit or
+Now, if some users feel a little worried about overloading the _bitwise or_
 operator, pipable functions can also be used with [`flow`](flow.md) like this:
 
     auto r = flow(

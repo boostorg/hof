@@ -1,6 +1,7 @@
 #include <fit/match.hpp>
 #include <fit/static.hpp>
 #include <fit/lambda.hpp>
+#include <fit/placeholders.hpp>
 #include "test.hpp"
 
 #include <memory>
@@ -156,4 +157,12 @@ FIT_TEST_CASE()
 
 };
 
+
+// FIT_TEST_CASE()
+// {
+//     const auto negate = (!fit::_1);
+//     const auto sub = (fit::_1 - fit::_2);
+//     FIT_TEST_CHECK(fit::match(negate, sub)(0) == 0);
+//     FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == -1);
+// }
 

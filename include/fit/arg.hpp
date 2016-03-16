@@ -89,7 +89,7 @@ constexpr auto get_args(Ts&&... xs) FIT_RETURNS
 template<class T, T N>
 struct make_args_f
 {
-    template<class... Ts>
+    template<class... Ts, class=typename std::enable_if<(N <= sizeof...(Ts))>::type>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
         get_args<N>(FIT_FORWARD(Ts)(xs)...)

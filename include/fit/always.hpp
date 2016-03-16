@@ -10,6 +10,7 @@
 
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
+#include <fit/detail/static_constexpr.hpp>
 
 /// always
 /// ======
@@ -59,7 +60,7 @@
 
 
 #ifndef FIT_NO_CONSTEXPR_VOID
-#ifdef __clang__
+#if defined(__clang__) && FIT_HAS_RELAXED_CONSTEXPR
 #define FIT_NO_CONSTEXPR_VOID 0
 #else
 #define FIT_NO_CONSTEXPR_VOID 1

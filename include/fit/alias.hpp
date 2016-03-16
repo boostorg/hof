@@ -90,7 +90,6 @@ constexpr const T& lvalue(const T& x)
 
 }
 
-#define FIT_UNARY_PERFECT_ID(...) __VA_ARGS__
 #define FIT_UNARY_PERFECT_FOREACH(m) \
     m(const&, fit::detail::lvalue) \
     m(&, fit::detail::lvalue) \

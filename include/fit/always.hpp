@@ -58,7 +58,6 @@
 /// 
 
 
-#define FIT_NO_CONSTEXPR_VOID 1
 #ifndef FIT_NO_CONSTEXPR_VOID
 #ifdef __clang__
 #define FIT_NO_CONSTEXPR_VOID 0

@@ -110,7 +110,7 @@ struct eval_helper<void>
 {
     int x;
     template<class F, class... Ts>
-    constexpr eval_helper(const F& f, Ts&&... xs) : x(apply(f, FIT_FORWARD(Ts)(xs)...), 0)
+    constexpr eval_helper(const F& f, Ts&&... xs) : x((apply(f, FIT_FORWARD(Ts)(xs)...), 0))
     {}
 };
 #endif

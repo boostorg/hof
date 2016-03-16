@@ -132,3 +132,8 @@ FIT_TEST_CASE()
 {
     FIT_STATIC_TEST_CHECK(constexpr_check_each()(bool_<true>()));
 }
+
+FIT_TEST_CASE()
+{
+    fit::by(fit::identity, fit::identity)(0);
+}

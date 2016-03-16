@@ -1,5 +1,6 @@
-#include "test.hpp"
 #include <fit/capture.hpp>
+#include <fit/identity.hpp>
+#include "test.hpp"
 
 // TODO: Test empty capture
 
@@ -44,5 +45,10 @@ FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(fit::capture(add_member(1), 2)(&add_member::add)() == 3);
     FIT_TEST_CHECK(fit::capture(add_member(1))(&add_member::add)(2) == 3);
+}
+
+FIT_TEST_CASE()
+{
+    fit::capture(fit::identity)(fit::identity)();
 }
 

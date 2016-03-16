@@ -72,6 +72,7 @@
 #include <fit/detail/move.hpp>
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
+#include <fit/detail/compressed_pair.hpp>
 #include <fit/apply_eval.hpp>
 
 namespace fit {
@@ -160,19 +161,20 @@ template<class Projection, class F=void>
 struct by_adaptor;
 
 template<class Projection, class F>
-struct by_adaptor : detail::callable_base<Projection>, detail::callable_base<F>
+struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>>
 {
     typedef by_adaptor fit_rewritable_tag;
+    typedef detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>> base;
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->second(xs...);;
     }
 
     template<class... Ts>
     constexpr const detail::callable_base<Projection>& base_projection(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->first(xs...);
     }
 
     struct by_failure
@@ -191,12 +193,7 @@ struct by_adaptor : detail::callable_base<Projection>, detail::callable_base<F>
     : failure_map<by_failure, detail::callable_base<F>>
     {};
 
-    FIT_INHERIT_DEFAULT(by_adaptor, detail::callable_base<Projection>, F)
-
-    template<class P, class G, FIT_ENABLE_IF_CONVERTIBLE(P, detail::callable_base<Projection>), FIT_ENABLE_IF_CONVERTIBLE(G, detail::callable_base<F>)>
-    constexpr by_adaptor(P&& p, G&& f) 
-    : detail::callable_base<Projection>(FIT_FORWARD(P)(p)), detail::callable_base<F>(FIT_FORWARD(G)(f))
-    {}
+    FIT_INHERIT_CONSTRUCTOR(by_adaptor, base)
 
     FIT_RETURNS_CLASS(by_adaptor);
 

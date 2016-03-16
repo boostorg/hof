@@ -50,6 +50,11 @@ macro(add_test_executable TEST_NAME)
     set_tests_properties(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
 endmacro(add_test_executable)
 
+macro(add_test_header TEST_NAME HEADER)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp "#include <${HEADER}>\nint main() {}")
+    add_test_executable(header-include-${TEST_NAME} ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp)
+endmacro(add_test_header)
+
 include(CTest)
 
 include_directories(include)
@@ -60,6 +65,12 @@ foreach(TEST ${TESTS})
     add_test_executable(${BASE_NAME} ${TEST})
 endforeach()
 add_test_executable(static_def test/static_def/static_def.cpp test/static_def/static_def2.cpp)
+
+file(GLOB HEADERS include/fit/*.hpp)
+foreach(HEADER ${HEADERS})
+    get_filename_component(BASE_NAME ${HEADER} NAME_WE)
+    add_test_header(${BASE_NAME} fit/${BASE_NAME}.hpp)
+endforeach()
 
 set(BUILD_EXAMPLES on)
 if (CMAKE_COMPILER_IS_GNUCXX)

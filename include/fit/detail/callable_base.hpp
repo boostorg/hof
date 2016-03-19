@@ -38,11 +38,12 @@ struct non_class_function
 
 template<class F>
 struct callable_base_type
-: std::conditional<(FIT_IS_CLASS(F)), F, non_class_function<F>>
+: std::conditional<(FIT_IS_CLASS(F) && !FIT_IS_FINAL(F) && !FIT_IS_POLYMORPHIC(F)), F, non_class_function<F>>
 {};
 #if FIT_HAS_TEMPLATE_ALIAS
 template<class F>
 using callable_base = typename callable_base_type<F>::type;
+// using callable_base = non_class_function<F>;
 #else
 template<class F>
 struct callable_base

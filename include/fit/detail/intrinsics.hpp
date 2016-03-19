@@ -38,7 +38,11 @@
 #define FIT_IS_EMPTY(...) __is_empty(__VA_ARGS__)
 #define FIT_IS_LITERAL(...) __is_literal_type(__VA_ARGS__)
 #define FIT_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
+#if __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_IS_FINAL(...) (false)
+#else
 #define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
+#endif
 #elif defined(_MSC_VER)
 #define FIT_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #define FIT_IS_CONVERTIBLE(...) __is_convertible_to(__VA_ARGS__)

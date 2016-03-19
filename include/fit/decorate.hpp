@@ -83,29 +83,30 @@
 
 namespace fit { namespace detail {
 
-template<class F, class T, class D>
+template<class D, class T, class F>
 struct decorator_invoke
-: compressed_pair<compressed_pair<F, T>, D>
+// : compressed_pair<compressed_pair<F, T>, D>
+: compressed_pair<compressed_pair<D, T>, F>
 {
     // typedef compressed_pair<F, T> base;
-    typedef compressed_pair<compressed_pair<F, T>, D> base;
+    typedef compressed_pair<compressed_pair<D, T>, F> base;
 
     FIT_INHERIT_CONSTRUCTOR(decorator_invoke, base)
 
     template<class... Ts>
-    constexpr const compressed_pair<F, T>& get_pair(Ts&&... xs) const
+    constexpr const compressed_pair<D, T>& get_pair(Ts&&... xs) const
     {
         return this->first(xs...);
     }
 
     template<class... Ts>
-    constexpr const D& get_decorator(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const
     {
         return this->second(xs...);
     }
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const D& get_decorator(Ts&&... xs) const
     {
         return this->get_pair(xs...).first(xs...);
     }
@@ -146,31 +147,30 @@ struct decorator_invoke
     );
 };
 
-template<class T, class D>
+template<class D, class T>
 struct decoration
-: compressed_pair<T, D>
+: compressed_pair<D, T>
 {
-    typedef compressed_pair<T, D> base;
+    typedef compressed_pair<D, T> base;
     FIT_INHERIT_CONSTRUCTOR(decoration, base)
 
     template<class... Ts>
     constexpr const D& get_decorator(Ts&&... xs) const
     {
-        return this->second(xs...);
+        return this->first(xs...);
     }
 
     template<class... Ts>
     constexpr const T& get_data(Ts&&... xs) const
     {
-        return this->first(xs...);
+        return this->second(xs...);
     }
 
     template<class F>
-    constexpr decorator_invoke<detail::callable_base<F>, T, D> operator()(F f) const
+    constexpr decorator_invoke<D, T, detail::callable_base<F>> operator()(F f) const
     {
-        return decorator_invoke<detail::callable_base<F>, T, D>(
-            detail::make_compressed_pair(static_cast<F&&>(f), this->get_data(f)), 
-            this->get_decorator(f)
+        return decorator_invoke<D, T, detail::callable_base<F>>(
+            *this, static_cast<detail::callable_base<F>&&>(f)
         );
     }
 };
@@ -192,9 +192,9 @@ struct decorate_adaptor : detail::callable_base<F>
     // TODO: Add predicate for constraints
 
     template<class T>
-    constexpr detail::decoration<T, detail::callable_base<F>> operator()(T x) const
+    constexpr detail::decoration<detail::callable_base<F>, T> operator()(T x) const
     {
-        return detail::decoration<T, detail::callable_base<F>>(static_cast<T&&>(x), this->base_function(x));
+        return detail::decoration<detail::callable_base<F>, T>(this->base_function(x), static_cast<T&&>(x));
     }
 
 };

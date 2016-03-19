@@ -33,9 +33,17 @@ struct cant_be_called_type
 struct no_type
 {};
 
+template<class F>
+struct is_callable_wrapper_fallback
+{
+    template<class... Ts>
+    auto operator()(Ts&&...) const 
+    -> decltype(std::declval<F>()(std::declval<Ts>()...));
+};
+
 template<class T, class U=typename std::remove_cv<typename std::remove_reference<T>::type>::type>
 struct is_callable_wrapper_base
-: std::conditional<std::is_class<U>::value, U, no_type>
+: std::conditional<FIT_IS_CLASS(U) && !FIT_IS_FINAL(U), U, is_callable_wrapper_fallback<U>>
 {};
 
 template<class F, class... Ts>

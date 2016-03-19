@@ -51,6 +51,7 @@
 #define FIT_IS_EMPTY(...) __is_empty(__VA_ARGS__)
 #define FIT_IS_LITERAL(...) std::is_literal_type<__VA_ARGS__>::value
 #define FIT_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
+#define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
 #else
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
 #define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value

@@ -24,6 +24,9 @@
 
 namespace fit { namespace detail {
 
+template<class First, class Second, class=void>
+struct compressed_pair;
+
 template<int I, class T, class U>
 struct pair_tag
 {};
@@ -34,9 +37,24 @@ struct is_related
 : std::integral_constant<bool, std::is_base_of<T, U>::value || std::is_base_of<U, T>::value>
 {};
 
+template<class T>
+struct is_compressed_pair
+: std::false_type
+{};
+
+template<class First, class Second, class Enable>
+struct is_compressed_pair<compressed_pair<First, Second, Enable>>
+: std::true_type
+{};
+
 template<int I, class T, class U>
 struct pair_holder
-: std::conditional<is_related<T, U>::value, 
+: std::conditional<(
+    is_related<T, U>::value
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+    || is_compressed_pair<T>::value || is_compressed_pair<U>::value
+#endif
+    ), 
     detail::alias_empty<T, pair_tag<I, T, U>>,
     detail::alias_try_inherit<T, pair_tag<I, T, U>>
 >::type
@@ -51,23 +69,22 @@ struct pair_holder
 // TODO: Empty optimizations for MSVC
 template<
     class First, 
-    class Second, 
-    class FirstBase=typename pair_holder<0, First, Second>::type, 
-    class SecondBase=typename pair_holder<1, Second, First>::type,
-    class=void
+    class Second
 >
-struct compressed_pair 
-: FirstBase, SecondBase
+struct compressed_pair<First, Second>
+: pair_holder<0, First, Second>::type, pair_holder<1, Second, First>::type
 {
+    typedef typename pair_holder<0, First, Second>::type first_base;
+    typedef typename pair_holder<1, Second, First>::type second_base;
     template<class X, class Y, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(First, X&&), 
         FIT_ENABLE_IF_CONSTRUCTIBLE(Second, Y&&)
     >
     constexpr compressed_pair(X&& x, Y&& y) 
-    : FirstBase(FIT_FORWARD(X)(x)), SecondBase(FIT_FORWARD(Y)(y))
+    : first_base(FIT_FORWARD(X)(x)), second_base(FIT_FORWARD(Y)(y))
     {}
 
-    FIT_INHERIT_DEFAULT(compressed_pair, FirstBase, SecondBase)
+    FIT_INHERIT_DEFAULT(compressed_pair, first_base, second_base)
 
     template<class Base, class... Xs>
     constexpr const Base& get_base(Xs&&... xs) const
@@ -78,13 +95,13 @@ struct compressed_pair
     template<class... Xs>
     constexpr const First& first(Xs&&... xs) const
     {
-        return alias_value(this->get_base<FirstBase>(xs...), xs...);
+        return alias_value(this->get_base<first_base>(xs...), xs...);
     }
 
     template<class... Xs>
     constexpr const Second& second(Xs&&... xs) const
     {
-        return alias_value(this->get_base<SecondBase>(xs...), xs...);
+        return alias_value(this->get_base<second_base>(xs...), xs...);
     }
 
 };

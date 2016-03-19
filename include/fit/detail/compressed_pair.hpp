@@ -33,39 +33,18 @@ template<class T, class U>
 struct is_related
 : std::integral_constant<bool, std::is_base_of<T, U>::value || std::is_base_of<U, T>::value>
 {};
-template<int I, class T, class U>
-struct pair_holder_related
-: std::conditional<
-        FIT_IS_EMPTY(T) && 
-        FIT_IS_LITERAL(T) && 
-        FIT_IS_DEFAULT_CONSTRUCTIBLE(T), 
-    alias_static<T, pair_tag<I, T, U>>,
-    alias<T, pair_tag<I, T, U>>
->
-{};
-
-template<int I, class T, class U>
-struct pair_holder_non_related
-: std::conditional<FIT_IS_CLASS(T), 
-    alias_inherit<T, pair_tag<I, T, U>>, 
-    alias<T, pair_tag<I, T, U>>
->
-{};
 
 template<int I, class T, class U>
 struct pair_holder
 : std::conditional<is_related<T, U>::value, 
-    pair_holder_related<I, T, U>,
-    pair_holder_non_related<I, T, U>
+    detail::alias_empty<T, pair_tag<I, T, U>>,
+    detail::alias_try_inherit<T, pair_tag<I, T, U>>
 >::type
 {};
 #else
 template<int I, class T, class U>
 struct pair_holder
-: std::conditional<FIT_IS_CLASS(T), 
-    alias_inherit<T, pair_tag<I, T, U>>, 
-    alias<T, pair_tag<I, T, U>>
->
+: detail::alias_try_inherit<T, pair_tag<I, T, U>>
 {};
 #endif
 
@@ -109,6 +88,12 @@ struct compressed_pair
     }
 
 };
+
+template<class T, class U>
+constexpr compressed_pair<T, U> make_compressed_pair(T x, U y)
+{
+    return {static_cast<T&&>(x), static_cast<U&&>(y)};
+}
 
 
 }} // namespace fit

@@ -85,31 +85,35 @@ namespace fit { namespace detail {
 
 template<class F, class T, class D>
 struct decorator_invoke
-: compressed_pair<F, T>, D
+: compressed_pair<compressed_pair<F, T>, D>
 {
-    typedef compressed_pair<F, T> base;
+    // typedef compressed_pair<F, T> base;
+    typedef compressed_pair<compressed_pair<F, T>, D> base;
 
-    template<class X1, class X2, class X3>
-    constexpr decorator_invoke(X1&& x1, X2&& x2, X3&& x3)
-    : base(FIT_FORWARD(X1)(x1), FIT_FORWARD(X2)(x2)), D(FIT_FORWARD(X3)(x3))
-    {}
+    FIT_INHERIT_CONSTRUCTOR(decorator_invoke, base)
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const compressed_pair<F, T>& get_pair(Ts&&... xs) const
     {
         return this->first(xs...);
     }
 
     template<class... Ts>
-    constexpr const T& get_data(Ts&&... xs) const
+    constexpr const D& get_decorator(Ts&&... xs) const
     {
         return this->second(xs...);
     }
 
     template<class... Ts>
-    constexpr const D& get_decorator(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->get_pair(xs...).first(xs...);
+    }
+
+    template<class... Ts>
+    constexpr const T& get_data(Ts&&... xs) const
+    {
+        return this->get_pair(xs...).second(xs...);
     }
 
     FIT_RETURNS_CLASS(decorator_invoke);
@@ -164,7 +168,10 @@ struct decoration
     template<class F>
     constexpr decorator_invoke<detail::callable_base<F>, T, D> operator()(F f) const
     {
-        return decorator_invoke<detail::callable_base<F>, T, D>(static_cast<F&&>(f), this->get_data(f), this->get_decorator(f));
+        return decorator_invoke<detail::callable_base<F>, T, D>(
+            detail::make_compressed_pair(static_cast<F&&>(f), this->get_data(f)), 
+            this->get_decorator(f)
+        );
     }
 };
 

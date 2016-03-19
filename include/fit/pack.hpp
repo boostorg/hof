@@ -76,40 +76,16 @@
 #define FIT_HAS_RVALUE_THIS 1
 #endif
 
-#ifndef FIT_PACK_HAS_EBO
-#ifdef __clang__
-#define FIT_PACK_HAS_EBO 1
-#else
-#define FIT_PACK_HAS_EBO 0
-#endif
-#endif
-
 namespace fit { namespace detail {
 
 template<class...>
 struct pack_tag
 {};
 
-#if FIT_PACK_HAS_EBO
 template<class T, class Tag>
 struct pack_holder
-: std::conditional<FIT_IS_EMPTY(T), 
-    alias_inherit<T, Tag>, 
-    alias<T, Tag>
->
+: detail::alias_empty<T, Tag>
 {};
-#else
-template<class T, class Tag>
-struct pack_holder
-: std::conditional<
-        FIT_IS_EMPTY(T) && 
-        FIT_IS_LITERAL(T) && 
-        is_default_constructible<T>::value,
-    alias_static<T, Tag>,
-    alias<T, Tag>
->
-{};
-#endif
 
 template<class Seq, class... Ts>
 struct pack_base;

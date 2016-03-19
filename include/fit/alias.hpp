@@ -53,6 +53,14 @@
 ///     constexpr auto alias_value(Alias&&);
 /// 
 
+#ifndef FIT_HAS_EBO
+#ifdef __clang__
+#define FIT_HAS_EBO 1
+#else
+#define FIT_HAS_EBO 0
+#endif
+#endif
+
 #ifdef _MSC_VER
 #pragma warning(disable: 4579)
 #endif
@@ -174,6 +182,39 @@ constexpr const T& alias_value(const alias_static<T, Tag>&, Ts&&...)
 template<class T, class Tag>
 struct alias_tag<alias_static<T, Tag>>
 { typedef Tag type; };
+
+namespace detail {
+
+template<class T, class Tag>
+struct alias_try_inherit
+: std::conditional<(FIT_IS_CLASS(T) && !FIT_IS_FINAL(T) && !FIT_IS_POLYMORPHIC(T)), 
+    alias_inherit<T, Tag>, 
+    alias<T, Tag>
+>
+{};
+
+#if FIT_HAS_EBO
+template<class T, class Tag>
+struct alias_empty
+: std::conditional<(FIT_IS_EMPTY(T)), 
+    typename alias_try_inherit<T, Tag>::type, 
+    alias<T, Tag>
+>
+{};
+#else
+template<class T, class Tag>
+struct alias_empty
+: std::conditional<
+        FIT_IS_EMPTY(T) && 
+        FIT_IS_LITERAL(T) && 
+        FIT_IS_DEFAULT_CONSTRUCTIBLE(T),
+    alias_static<T, Tag>,
+    alias<T, Tag>
+>
+{};
+#endif
+
+}
 
 } // namespace fit
 

@@ -51,7 +51,7 @@ macro(add_test_executable TEST_NAME)
 endmacro(add_test_executable)
 
 macro(add_test_header TEST_NAME HEADER)
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp "#include <${HEADER}>\nint main() {}")
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp "#include <${HEADER}>\nint main() {}\n")
     add_test_executable(header-include-${TEST_NAME} ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp)
 endmacro(add_test_header)
 

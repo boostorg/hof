@@ -36,7 +36,7 @@ constexpr const T& static_const_var()
 #endif
 
 #ifndef FIT_NO_UNIQUE_STATIC_VAR
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
 #define FIT_NO_UNIQUE_STATIC_VAR 1
 #else
 #define FIT_NO_UNIQUE_STATIC_VAR 0

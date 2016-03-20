@@ -8,6 +8,8 @@
 #ifndef FIT_GUARD_FUNCTION_CONSTEXPR_DEDUCE_H
 #define FIT_GUARD_FUNCTION_CONSTEXPR_DEDUCE_H
 
+#include <fit/detail/static_const_var.hpp>
+
 
 #ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
 #if defined(_MSC_VER)
@@ -31,6 +33,17 @@ struct constexpr_deduce
     constexpr operator F() const
     {
         return F();
+    }
+};
+
+struct static_constexpr_deduce
+{
+    constexpr static_constexpr_deduce()
+    {}
+    template<class F>
+    constexpr operator const F&() const
+    {
+        return fit::static_const_var<F>();
     }
 };
 
@@ -59,12 +72,19 @@ struct constexpr_deduce_unique
 }} // namespace fit
 
 #define FIT_DETAIL_CONSTEXPR_DEDUCE true ? fit::detail::constexpr_deduce() :
+#define FIT_DETAIL_STATIC_CONSTEXPR_DEDUCE true ? fit::detail::static_constexpr_deduce() :
 #define FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) true ? fit::detail::constexpr_deduce_unique<T>() :
 
 #ifdef _MSC_VER
 #define FIT_DETAIL_MSVC_CONSTEXPR_DEDUCE FIT_DETAIL_CONSTEXPR_DEDUCE
 #else
 #define FIT_DETAIL_MSVC_CONSTEXPR_DEDUCE
+#endif
+
+#ifdef _MSC_VER
+#define FIT_DETAIL_MSVC_STATIC_CONSTEXPR_DEDUCE FIT_DETAIL_STATIC_CONSTEXPR_DEDUCE
+#else
+#define FIT_DETAIL_MSVC_STATIC_CONSTEXPR_DEDUCE
 #endif
 
 #endif

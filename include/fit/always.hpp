@@ -67,7 +67,7 @@
 #endif
 #endif
 
-namespace fit { namespace detail {
+namespace fit { namespace always_detail {
 
 template<class T>
 struct always_base
@@ -81,7 +81,7 @@ struct always_base
     {}
 
     template<class... As>
-    constexpr typename unwrap_reference<T>::type 
+    constexpr typename detail::unwrap_reference<T>::type 
     operator()(As&&...) const
     {
         return this->x;
@@ -116,29 +116,29 @@ struct always_base<void>
 struct always_f
 {
     template<class T>
-    constexpr detail::always_base<T> operator()(T x) const
+    constexpr always_detail::always_base<T> operator()(T x) const
     {
-        return detail::always_base<T>(x);
+        return always_detail::always_base<T>(x);
     }
 
-    constexpr detail::always_base<void> operator()() const
+    constexpr always_detail::always_base<void> operator()() const
     {
-        return detail::always_base<void>();
+        return always_detail::always_base<void>();
     }
 };
 
 struct always_ref_f
 {
     template<class T>
-    constexpr detail::always_base<T&> operator()(T& x) const
+    constexpr always_detail::always_base<T&> operator()(T& x) const
     {
-        return detail::always_base<T&>(x);
+        return always_detail::always_base<T&>(x);
     }
 };
 
 }
-FIT_DECLARE_STATIC_VAR(always, detail::always_f);
-FIT_DECLARE_STATIC_VAR(always_ref, detail::always_ref_f);
+FIT_DECLARE_STATIC_VAR(always, always_detail::always_f);
+FIT_DECLARE_STATIC_VAR(always_ref, always_detail::always_ref_f);
 
 } // namespace fit
 

@@ -98,7 +98,7 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
     operator()(Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))
-            (alias_value<pack_tag<seq<Ns>, Gs...>, Gs>(*FIT_CONST_THIS, xs)(FIT_FORWARD(Ts)(xs))...)
+            (fit::alias_value<pack_tag<seq<Ns>, Gs...>, Gs>(*FIT_CONST_THIS, xs)(FIT_FORWARD(Ts)(xs))...)
     );
 };
 

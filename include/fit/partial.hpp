@@ -133,7 +133,7 @@ struct partial_adaptor_join
     >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        partial
+        fit::partial
         (
             FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
             fit::pack_join(FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), fit::pack_decay(FIT_FORWARD(Ts)(xs)...))
@@ -160,7 +160,7 @@ struct partial_adaptor_pack
     >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        partial
+        fit::partial
         (
             FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
             fit::pack_decay(FIT_FORWARD(Ts)(xs)...)

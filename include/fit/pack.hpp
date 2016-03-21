@@ -107,7 +107,7 @@ template<class T, class Tag, class X, class... Ts, typename std::enable_if<
 , int>::type = 0>
 constexpr T pack_get(X&& x, Ts&&... xs)
 {
-    return static_cast<T>(alias_value<Tag, T>(FIT_FORWARD(X)(x), xs...));
+    return static_cast<T>(fit::alias_value<Tag, T>(FIT_FORWARD(X)(x), xs...));
 }
 
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
@@ -115,7 +115,7 @@ template<class T, class Tag, class X, class... Ts, typename std::enable_if<
 , int>::type = 0>
 constexpr T pack_get(X&& x, Ts&&... xs)
 {
-    return alias_value<Tag, T>(x, xs...);
+    return fit::alias_value<Tag, T>(x, xs...);
 }
 
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
@@ -123,7 +123,7 @@ template<class T, class Tag, class X, class... Ts, typename std::enable_if<
 , int>::type = 0>
 constexpr auto pack_get(X&& x, Ts&&... xs) FIT_RETURNS
 (
-    alias_value<Tag, T>(FIT_FORWARD(X)(x), xs...)
+    fit::alias_value<Tag, T>(FIT_FORWARD(X)(x), xs...)
 );
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
@@ -181,7 +181,7 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
+        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 
     typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
@@ -210,7 +210,7 @@ struct pack_base<seq<0>, T>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(pack_get<T, pack_tag<seq<0>, T>>(*FIT_CONST_THIS, f))
+        f(detail::pack_get<T, pack_tag<seq<0>, T>>(*FIT_CONST_THIS, f))
     );
 
     typedef std::integral_constant<std::size_t, 1> fit_function_param_limit;
@@ -237,7 +237,7 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*this, f)...)
+        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*this, f)...)
     );
 
     typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
@@ -268,7 +268,7 @@ struct pack_base<seq<> >
 #define FIT_DETAIL_UNPACK_PACK_BASE(ref, move) \
 template<class F, std::size_t... Ns, class... Ts> \
 constexpr auto unpack_pack_base(F&& f, pack_base<seq<Ns...>, Ts...> ref x) \
-FIT_RETURNS(f(alias_value<pack_tag<seq<Ns>, Ts...>, Ts>(move(x), f)...))
+FIT_RETURNS(f(fit::alias_value<pack_tag<seq<Ns>, Ts...>, Ts>(move(x), f)...))
 FIT_UNARY_PERFECT_FOREACH(FIT_DETAIL_UNPACK_PACK_BASE)
 
 template<class P1, class P2>
@@ -285,8 +285,8 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
     static constexpr result_type call(P1&& p1, P2&& p2)
     {
         return result_type(
-            pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
-            pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...);
+            detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
+            detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...);
     }
 };
 

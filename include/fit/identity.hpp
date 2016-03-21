@@ -38,7 +38,7 @@
 #include <fit/detail/forward.hpp>
 #include <fit/detail/static_const_var.hpp>
 
-namespace fit { namespace detail {
+namespace fit { namespace identity_detail {
 
 struct identity_base
 {
@@ -51,7 +51,7 @@ struct identity_base
 
 }
 
-FIT_DECLARE_STATIC_VAR(identity, detail::identity_base);
+FIT_DECLARE_STATIC_VAR(identity, identity_detail::identity_base);
 
 } // namespace fit
 

@@ -64,7 +64,7 @@ struct reveal_static_const_factory
     constexpr const reveal_adaptor<F>& operator=(const F&) const
     {
         static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(F), "Static functions must be default constructible");
-        return static_const_var<reveal_adaptor<F>>();
+        return fit::static_const_var<reveal_adaptor<F>>();
     }
 #endif
 };

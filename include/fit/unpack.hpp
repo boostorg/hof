@@ -145,10 +145,10 @@ struct private_unpack_type {};
 template<class Sequence>
 struct unpack_impl_result
 {
-    static_assert(fit::is_callable<unpack_impl_f, decltype(always(private_unpack_type())), Sequence>::value,
+    static_assert(fit::is_callable<unpack_impl_f, decltype(fit::always(private_unpack_type())), Sequence>::value,
         "Unpack is invalid for this sequence. The function used to unpack this sequence is not callable."
     );
-    typedef decltype(unpack_impl(always(private_unpack_type()), std::declval<Sequence>())) type;
+    typedef decltype(detail::unpack_impl(fit::always(private_unpack_type()), std::declval<Sequence>())) type;
 };
 
 template<class Sequence>
@@ -180,7 +180,7 @@ struct is_unpackable_impl<Sequence, typename detail::holder<
 template<class F, class Sequence>
 constexpr auto unpack_simple(F&& f, Sequence&& s) FIT_RETURNS
 (
-    unpack_impl(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))
+    detail::unpack_impl(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))
 )
 
 template<class F, class... Sequences>

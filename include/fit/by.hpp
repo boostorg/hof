@@ -129,7 +129,7 @@ template<class Projection, class F, class... Ts,
     )>
 constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
 {
-    return apply_eval(f, make_project_eval(FIT_FORWARD(Ts)(xs), p)...);
+    return fit::apply_eval(f, make_project_eval(FIT_FORWARD(Ts)(xs), p)...);
 }
 
 #if FIT_NO_ORDERED_BRACE_INIT
@@ -145,7 +145,7 @@ constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
 template<class Projection, class... Ts>
 constexpr FIT_ALWAYS_VOID_RETURN by_void_eval(const Projection& p, Ts&&... xs)
 {
-    return apply_eval(always(), make_project_void_eval(FIT_FORWARD(Ts)(xs), p)...);
+    return fit::apply_eval(fit::always(), detail::make_project_void_eval(FIT_FORWARD(Ts)(xs), p)...);
 }
 
 struct swallow

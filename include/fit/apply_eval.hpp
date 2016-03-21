@@ -87,7 +87,7 @@ constexpr R eval_ordered(const F& f, Pack&& p)
 template<class R, class F, class Pack, class T, class... Ts>
 constexpr R eval_ordered(const F& f, Pack&& p, T&& x, Ts&&... xs)
 {
-    return eval_ordered<R>(f, pack_join(FIT_FORWARD(Pack)(p), fit::pack_forward(fit::eval(x))), FIT_FORWARD(Ts)(xs)...);
+    return detail::eval_ordered<R>(f, pack_join(FIT_FORWARD(Pack)(p), fit::pack_forward(fit::eval(x))), FIT_FORWARD(Ts)(xs)...);
 }
 #else
 template<class R>
@@ -126,10 +126,10 @@ struct apply_eval_f
     {
         return
 #if FIT_NO_ORDERED_BRACE_INIT
-        eval_ordered<R>
+        detail::eval_ordered<R>
             (f, pack(), FIT_FORWARD(Ts)(xs)...);
 #else
-        eval_helper<R>
+        detail::eval_helper<R>
             {f, fit::eval(FIT_FORWARD(Ts)(xs))...}.get_result();
 #endif
     }
@@ -144,10 +144,10 @@ struct apply_eval_f
     {
         return (typename detail::holder<Ts...>::type)
 #if FIT_NO_ORDERED_BRACE_INIT
-        eval_ordered<R>
+        detail::eval_ordered<R>
             (f, pack(), FIT_FORWARD(Ts)(xs)...);
 #else
-        eval_helper<R>
+        detail::eval_helper<R>
             {f, fit::eval(FIT_FORWARD(Ts)(xs))...};
 #endif
     }

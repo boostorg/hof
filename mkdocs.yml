@@ -68,5 +68,5 @@ pages:
     - 'FIT_LIFT': 'lift.md'
     - 'is_callable': 'is_callable.md'
     - 'pack': 'pack.md'
-    - 'returns': 'returns.md'
+    - 'FIT_RETURNS': 'returns.md'
     - 'tap': 'tap.md'

@@ -37,6 +37,7 @@
 /// ---------
 /// 
 ///     assert(by(p, f)(xs...) == f(p(xs)...));
+///     assert(by(p)(xs...) == p(xs)...);
 /// 
 /// Requirements
 /// ------------

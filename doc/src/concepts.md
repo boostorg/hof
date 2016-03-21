@@ -279,7 +279,7 @@ Metafunction
 
 Given
 
-* `f`, a metafunction
+* `f`, a type or a template
 * `args...`, any suitable type, which may be empty
 
 | Expression               | Requirements                               |
@@ -292,7 +292,7 @@ MetafunctionClass
 
 Given
 
-* `f`, is a metafunction class
+* `f`, a type or a template
 * `args...`, any suitable type, which may be empty
 
 | Expression                | Requirements                               |

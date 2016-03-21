@@ -149,16 +149,14 @@ So now we can add an overload for tuples:
         {
             for(const auto& x:range) std::cout << x << std::endl;
         },
-        [](const auto& tuple) -> decltype(for_each_tuple(tuple, identity), void())
+        [](const auto& tuple)
         {
-            return for_each_tuple(tuple, [](const auto& x)
+            for_each_tuple(tuple, [](const auto& x)
             {
                 std::cout << x << std::endl;
             });
         }
     );
-
-Since we can't use a lambda inside of `decltype` we just put [`identity`](identity.md) instead.
 
 Recursive
 ---------

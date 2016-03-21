@@ -53,6 +53,10 @@
 #include <fit/detail/forward.hpp>
 #include <fit/detail/static_const_var.hpp>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4003)
+#endif
 
 namespace fit {
 
@@ -174,5 +178,9 @@ struct apply_f
 FIT_DECLARE_STATIC_VAR(apply, detail::apply_f);
 
 } // namespace fit
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

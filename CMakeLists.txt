@@ -34,7 +34,7 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
 endforeach()
 
 install (DIRECTORY include/fit DESTINATION include)
-install (DIRECTORY include/fit.hpp DESTINATION include)
+install (FILES include/fit.hpp DESTINATION include)
 configure_file(fit.pc.in fit.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
 

@@ -324,4 +324,17 @@ namespace std {
     {};
 }
 
+namespace boost {
+
+    template<class T> 
+    struct is_placeholder;
+
+    template<int N>
+    struct is_placeholder<fit::placeholder<N>>
+    : std::integral_constant<int, N>
+    {};
+
+
+}
+
 #endif

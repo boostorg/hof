@@ -175,7 +175,7 @@ script:
     - make install
     - pkg-config fit --cflags
     - cd ../include
-    - HEADERS=$(echo fit/*.hpp)
+    - HEADERS=$(echo fit.hpp fit/*.hpp)
     - for file in $HEADERS; do echo -e "#include <$file>\nint main() {}" | $CXX -std=gnu++0x `pkg-config fit --cflags` -x c++ -S -; done
     - cd ..
     - rm -rf build/

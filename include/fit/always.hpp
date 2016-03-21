@@ -89,7 +89,7 @@ struct always_base
 };
 
 #if FIT_NO_CONSTEXPR_VOID
-#define FIT_ALWAYS_VOID_RETURN fit::detail::always_base<void>::void_
+#define FIT_ALWAYS_VOID_RETURN fit::always_detail::always_base<void>::void_
 #else
 #define FIT_ALWAYS_VOID_RETURN void
 #endif

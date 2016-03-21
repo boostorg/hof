@@ -20,13 +20,19 @@
 /// 
 /// The `always` function returns a function object that will always return
 /// the value given to it, no matter what parameters are passed to the
-/// function object.
+/// function object. The nullary version(i.e. `always(void)`) will return
+/// `void`. On compilers, that don't support constexpr functions returning
+/// `void`, a private empty type is returned instead. This return type is
+/// specified as `FIT_ALWAYS_VOID_RETURN`.
 /// 
 /// Synopsis
 /// --------
 /// 
 ///     template<class T>
 ///     constexpr auto always(T value);
+/// 
+///     template<class T>
+///     constexpr auto always(void);
 /// 
 /// 
 /// Semantics

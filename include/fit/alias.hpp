@@ -62,6 +62,7 @@
 #endif
 
 #ifdef _MSC_VER
+#pragma warning(push)
 #pragma warning(disable: 4579)
 #endif
 
@@ -217,5 +218,9 @@ struct alias_empty
 }
 
 } // namespace fit
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif

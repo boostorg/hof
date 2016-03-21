@@ -51,9 +51,26 @@ macro(add_test_executable TEST_NAME)
 endmacro(add_test_executable)
 
 macro(add_test_header TEST_NAME HEADER)
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp "#include <${HEADER}>\nint main() {}\n")
-    add_test_executable(header-include-${TEST_NAME} ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp 
+        "#include <${HEADER}>\nint main() {}\n"
+    )
+    add_test_executable(header-include-${TEST_NAME} 
+        ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp
+    )
 endmacro(add_test_header)
+
+macro(add_test_static_header TEST_NAME HEADER)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${TEST_NAME}.cpp 
+        "#include <${HEADER}>\nint main() {}\n"
+    )
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${TEST_NAME}.cpp 
+        "#include <${HEADER}>\n"
+    )
+    add_test_executable(header-static-include-${TEST_NAME} 
+        ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${TEST_NAME}.cpp 
+        ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${TEST_NAME}.cpp
+    )
+endmacro(add_test_static_header)
 
 include(CTest)
 
@@ -71,6 +88,7 @@ foreach(HEADER ${HEADERS})
     get_filename_component(BASE_NAME ${HEADER} NAME_WE)
     add_test_header(${BASE_NAME} fit/${BASE_NAME}.hpp)
 endforeach()
+add_test_static_header(fit fit.hpp)
 
 set(BUILD_EXAMPLES on)
 if (CMAKE_COMPILER_IS_GNUCXX)

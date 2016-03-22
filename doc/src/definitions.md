@@ -1,5 +1,5 @@
-Overview
-========
+Definitions
+===========
 
 Function Adaptor
 ----------------

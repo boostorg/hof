@@ -1,7 +1,5 @@
-Introduction
-============
 
-Fit is a header-only C++11/C++14 library that provides utilities for functions and function objects. 
+Fit is a header-only C++11/C++14 library that provides utilities for functions and function objects, which can solve many problems with much simpler constructs than whats traditionally been done with metaprogramming.
 
 Fit is:
 

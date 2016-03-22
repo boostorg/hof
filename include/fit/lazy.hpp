@@ -16,7 +16,9 @@
 /// 
 /// The `lazy` function adaptor returns a function object call wrapper for a
 /// function. Calling this wrapper is equivalent to invoking the function. It
-/// is a simple form of lambda expressions, but is constexpr friendly.
+/// is a simple form of lambda expressions, but is constexpr friendly. By
+/// default, `lazy` captures all of its variables by value, just like `bind`.
+/// `std::ref` can be used to capture references instead.
 /// 
 /// Ultimately, calling `lazy(f)(x)` is the equivalent to calling
 /// `std::bind(f, x)` except the lazy version can be called in a constexpr

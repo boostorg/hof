@@ -41,6 +41,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <iostream>
+///     using namespace fit;
+/// 
 ///     struct for_ints
 ///     {
 ///         void operator()(int) const
@@ -57,7 +61,9 @@
 ///         }
 ///     };
 /// 
-///     conditional(for_ints(), for_floats())(3.0);
+///     int main() {
+///         conditional(for_ints(), for_floats())(3.0);
+///     }
 /// 
 /// This will print `Int` because the `for_floats` function object won't ever be
 /// called. Due to the conversion rules in C++, the `for_ints` function can be

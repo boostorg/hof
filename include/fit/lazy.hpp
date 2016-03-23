@@ -42,9 +42,15 @@
 /// Example
 /// -------
 /// 
-///     auto add = [](auto x, auto y) { return x+y; };
-///     auto increment = lazy(add)(_1, 1);
-///     assert(increment(5) == 6);
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
+///     int main() {
+///         auto add = [](auto x, auto y) { return x+y; };
+///         auto increment = lazy(add)(_1, 1);
+///         assert(increment(5) == 6);
+///     }
 /// 
 
 #include <fit/arg.hpp>

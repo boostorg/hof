@@ -43,6 +43,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct sum
 ///     {
 ///         template<class T, class U>
@@ -52,7 +56,9 @@
 ///         }
 ///     };
 /// 
-///     assert(3 == partial(sum())(1)(2));
+///     int main() {
+///         assert(3 == partial(sum())(1)(2));
+///     }
 /// 
 
 #include <fit/conditional.hpp>

@@ -50,8 +50,15 @@
 /// Example
 /// -------
 /// 
-///     int ten = 10;
-///     assert( always(ten)(1,2,3,4,5) == 10 );
+///     #include <fit.hpp>
+///     #include <algorithm>
+///     #include <cassert>
+///     using namespace fit;
+/// 
+///     int main() {
+///         int ten = 10;
+///         assert( always(ten)(1,2,3,4,5) == 10 );
+///     }
 /// 
 ///     // Count all
 ///     template<class Iterator, class T>

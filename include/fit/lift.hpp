@@ -34,11 +34,16 @@
 /// Example
 /// -------
 /// 
-///     auto my_max = FIT_LIFT(std::max);
-///     assert(my_max(3, 4) == std::max(3, 4));
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     // Declare the class `max_f`
 ///     FIT_LIFT_CLASS(max_f, std::max);
-///     assert(max_f()(3, 4) == std::max(3, 4));
+///     int main() {
+///         auto my_max = FIT_LIFT(std::max);
+///         assert(my_max(3, 4) == std::max(3, 4));
+///         assert(max_f()(3, 4) == std::max(3, 4));
+///     }
 /// 
 
 #include <fit/returns.hpp>

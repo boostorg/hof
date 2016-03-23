@@ -42,6 +42,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct sum_f
 ///     {
 ///         template<class T>
@@ -53,8 +56,11 @@
 ///             )(x, y);
 ///         }
 ///     };
-///     assert(sum_f()(1, 2) == 3);
-///     assert(sum_f()("", "") == 0);
+/// 
+///     int main() {
+///         assert(sum_f()(1, 2) == 3);
+///         assert(sum_f()("", "") == 0);
+///     }
 /// 
 
 #include <fit/always.hpp>

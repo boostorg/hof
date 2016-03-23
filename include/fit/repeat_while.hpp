@@ -36,6 +36,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct increment
 ///     {
 ///         template<class T>
@@ -58,8 +61,10 @@
 ///     typedef std::integral_constant<int, 1> one;
 ///     typedef std::integral_constant<int, 6> six;
 /// 
-///     auto increment_until_6 = fit::repeat_while(not_6())(increment());
-///     static_assert(std::is_same<six, decltype(increment_until_6(one()))>::value, "Error");
+///     int main() {
+///         auto increment_until_6 = fit::repeat_while(not_6())(increment());
+///         static_assert(std::is_same<six, decltype(increment_until_6(one()))>::value, "Error");
+///     }
 /// 
 
 #include <fit/always.hpp>

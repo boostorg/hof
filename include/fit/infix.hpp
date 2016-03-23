@@ -40,6 +40,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct plus_f
 ///     {
 ///         template<class T, class U>
@@ -49,9 +53,11 @@
 ///         }
 ///     };
 ///     
-///     constexpr infix_adaptor<plus_f> plus = {};
-///     int r = 3 <plus> 2;
-///     assert(r == 5);
+///     int main() {
+///         constexpr infix_adaptor<plus_f> plus = {};
+///         int r = 3 <plus> 2;
+///         assert(r == 5);
+///     }
 /// 
 
 #include <fit/detail/delegate.hpp>

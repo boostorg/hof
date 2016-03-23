@@ -55,13 +55,20 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct foo
 ///     {
 ///         foo(int x_) : x(x_)
 ///         {}
 ///         int x;
 ///     };
-///     assert(fit::by(&foo::x, _ + _)(foo(1), foo(2)) == 3);
+/// 
+///     int main() {
+///         assert(fit::by(&foo::x, _ + _)(foo(1), foo(2)) == 3);
+///     }
 /// 
 
 

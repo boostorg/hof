@@ -49,13 +49,18 @@
 /// Example
 /// -------
 /// 
-///     auto factorial = fit::fix(
-///         [](auto recurse, auto x) -> decltype(x) { 
-///             return x == 0 ? 1 : x * recurse(x-1); 
-///         }
-///     );
-///     int r = fit::result<int>(factorial)(5);
-///     assert(r == 5*4*3*2*1);
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
+///     int main() {
+///         auto factorial = fit::fix(
+///             [](auto recurse, auto x) -> decltype(x) { 
+///                 return x == 0 ? 1 : x * recurse(x-1); 
+///             }
+///         );
+///         int r = fit::result<int>(factorial)(5);
+///         assert(r == 5*4*3*2*1);
+///     }
 /// 
 
 #include <fit/always.hpp>

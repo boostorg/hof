@@ -43,6 +43,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct sum_f
 ///     {
 ///         template<class T, class U>
@@ -51,7 +54,10 @@
 ///             return x+y;
 ///         }
 ///     };
-///     assert(fit::apply_eval(sum_f(), []{ return 1; }, []{ return 2; }) == 3);
+/// 
+///     int main() {
+///         assert(fit::apply_eval(sum_f(), []{ return 1; }, []{ return 2; }) == 3);
+///     }
 /// 
 
 #include <fit/returns.hpp>

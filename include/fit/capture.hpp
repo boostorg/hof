@@ -50,6 +50,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct sum_f
 ///     {
 ///         template<class T, class U>
@@ -58,8 +61,11 @@
 ///             return x+y;
 ///         }
 ///     };
-///     auto add_one = fit::capture(1)(sum_f());
-///     assert(add_one(2) == 3);
+/// 
+///     int main() {
+///         auto add_one = fit::capture(1)(sum_f());
+///         assert(add_one(2) == 3);
+///     }
 /// 
 
 namespace fit {

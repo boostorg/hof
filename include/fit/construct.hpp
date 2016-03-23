@@ -61,8 +61,14 @@
 /// Example
 /// -------
 /// 
-///     auto v = fit::construct<std::vector<int>>()(5, 5);
-///     assert(v.size() == 5);
+///     #include <fit.hpp>
+///     #include <cassert>
+///     #include <vector>
+/// 
+///     int main() {
+///         auto v = fit::construct<std::vector<int>>()(5, 5);
+///         assert(v.size() == 5);
+///     }
 /// 
 
 #include <fit/detail/forward.hpp>

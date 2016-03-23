@@ -32,10 +32,15 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     template<class T, class U>
 ///     auto sum(T x, U y) FIT_RETURNS(x+y);
 /// 
-///     assert(3 == sum(1, 2));
+///     int main() {
+///         assert(3 == sum(1, 2));
+///     }
 /// 
 /// 
 /// Incomplete this
@@ -63,6 +68,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct add_1
 ///     {
 ///         int a;
@@ -75,7 +83,9 @@
 ///         FIT_RETURNS(x+FIT_CONST_THIS->a);
 ///     };
 /// 
-///     assert(3 == add_1()(2));
+///     int main() {
+///         assert(3 == add_1()(2));
+///     }
 /// 
 /// 
 /// Mangling overloads

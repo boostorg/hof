@@ -35,6 +35,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct sum_f
 ///     {
 ///         template<class T, class U>
@@ -45,9 +49,11 @@
 ///     };
 /// 
 ///     const pipable_adaptor<sum_f> sum = {};
-///     // Prints 3
-///     int r = 1 | sum(2) | tap([](int i) { std::cout << i; }) | sum(2);
-///     assert(r == 5);
+///     int main() {
+///         // Prints 3
+///         int r = 1 | sum(2) | tap([](int i) { std::cout << i; }) | sum(2);
+///         assert(r == 5);
+///     }
 /// 
 
 #include <fit/pipable.hpp>

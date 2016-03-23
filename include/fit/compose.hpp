@@ -42,6 +42,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct increment
 ///     {
 ///         template<class T>
@@ -60,8 +64,10 @@
 ///         }
 ///     };
 /// 
-///     int r = compose(increment(), decrement(), increment())(3);
-///     assert(r == 4);
+///     int main() {
+///         int r = compose(increment(), decrement(), increment())(3);
+///         assert(r == 4);
+///     }
 /// 
 
 #include <fit/detail/callable_base.hpp>

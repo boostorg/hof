@@ -38,6 +38,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     // In C++ this class can't be static-initialized, because of the non-
 ///     // trivial default constructor.
 ///     struct times_function
@@ -54,7 +58,9 @@
 /// 
 ///     static_<times_function> times2 = {};
 /// 
-///     assert(6 == times2(3));
+///     int main() {
+///         assert(6 == times2(3));
+///     }
 /// 
 
 #include <fit/detail/result_of.hpp>

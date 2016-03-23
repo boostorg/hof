@@ -38,6 +38,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct increment
 ///     {
 ///         template<class T>
@@ -47,8 +50,10 @@
 ///         }
 ///     };
 /// 
-///     auto increment_by_5 = fit::repeat(std::integral_constant<int, 5>())(increment());
-///     assert(increment_by_5(1) == 6);
+///     int main() {
+///         auto increment_by_5 = fit::repeat(std::integral_constant<int, 5>())(increment());
+///         assert(increment_by_5(1) == 6);
+///     }
 /// 
 
 #include <fit/always.hpp>

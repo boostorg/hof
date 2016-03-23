@@ -43,6 +43,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     template<class T>
 ///     struct auto_caster
 ///     {
@@ -62,11 +66,13 @@
 /// 
 ///     };
 /// 
-///     float f = 1.5;
-///     int i = auto_cast(f);
-///     auto_caster_foo x = auto_cast(1);
-///     assert(1 == i);
-///     assert(1 == x.i);
+///     int main() {
+///         float f = 1.5;
+///         int i = auto_cast(f);
+///         auto_caster_foo x = auto_cast(1);
+///         assert(1 == i);
+///         assert(1 == x.i);
+///     }
 /// 
 
 #include <fit/pack.hpp>

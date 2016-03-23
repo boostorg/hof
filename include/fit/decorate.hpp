@@ -44,6 +44,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct log_f
 ///     {
 ///         template<class F, class... Ts>
@@ -69,8 +73,10 @@
 ///     };
 ///     
 ///     FIT_STATIC_FUNCTION(sum) = sum_f();
-///     // Use the log decorator to print "Calling sum" when the function is called
-///     assert(3 == log("Calling sum")(sum)(1, 2));
+///     int main() {
+///         // Use the log decorator to print "Calling sum" when the function is called
+///         assert(3 == log("Calling sum")(sum)(1, 2));
+///     }
 /// 
 
 #include <fit/reveal.hpp>

@@ -25,6 +25,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct sum_f
 ///     {
 ///         template<class T, class U>
@@ -36,7 +39,10 @@
 /// 
 ///     FIT_STATIC_FUNCTION(sum) = sum_f();
 ///     FIT_STATIC_FUNCTION(partial_sum) = fit::partial(sum_f());
-///     assert(sum(1, 2) == partial_sum(1)(2));
+/// 
+///     int main() {
+///         assert(sum(1, 2) == partial_sum(1)(2));
+///     }
 /// 
 
 #include <fit/reveal.hpp>

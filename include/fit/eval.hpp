@@ -36,7 +36,12 @@
 /// Example
 /// -------
 /// 
-///     assert(fit::eval([]{ return 3; }) == 3);
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
+///     int main() {
+///         assert(fit::eval([]{ return 3; }) == 3);
+///     }
 /// 
 
 #include <fit/always.hpp>

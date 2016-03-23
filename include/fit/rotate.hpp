@@ -39,8 +39,13 @@
 /// Example
 /// -------
 /// 
-///     int r = fit::rotate(fit::_ - fit::_)(2, 5);
-///     assert(r == 3);
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
+///     int main() {
+///         int r = fit::rotate(fit::_ - fit::_)(2, 5);
+///         assert(r == 3);
+///     }
 /// 
 
 #include <fit/detail/result_of.hpp>

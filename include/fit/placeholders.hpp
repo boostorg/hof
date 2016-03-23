@@ -65,8 +65,14 @@
 /// Example
 /// -------
 /// 
-///     auto sum = _ + _;
-///     assert(3 == sum(1, 2));
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
+///     int main() {
+///         auto sum = _ + _;
+///         assert(3 == sum(1, 2));
+///     }
 /// 
 
 #include <fit/lazy.hpp>

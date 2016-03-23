@@ -50,6 +50,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct sum
 ///     {
 ///         template<class T, class U>
@@ -59,8 +63,10 @@
 ///         }
 ///     };
 /// 
-///     int r = pack(3, 2)(sum());
-///     assert(r == 5);
+///     int main() {
+///         int r = pack(3, 2)(sum());
+///         assert(r == 5);
+///     }
 /// 
 
 #include <fit/detail/seq.hpp>

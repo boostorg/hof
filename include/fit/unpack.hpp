@@ -37,6 +37,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct sum
 ///     {
 ///         template<class T, class U>
@@ -46,8 +50,10 @@
 ///         }
 ///     };
 /// 
-///     int r = unpack(sum())(std::make_tuple(3,2));
-///     assert(r == 5);
+///     int main() {
+///         int r = unpack(sum())(std::make_tuple(3,2));
+///         assert(r == 5);
+///     }
 /// 
 /// 
 /// is_unpackable
@@ -65,7 +71,12 @@
 /// Example
 /// -------
 /// 
-///     static_assert(fit::is_unpackable<std::tuple<int>>::value, "Failed");
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
+///     int main() {
+///         static_assert(fit::is_unpackable<std::tuple<int>>::value, "Failed");
+///     }
 /// 
 /// unpack_sequence
 /// ===============
@@ -82,6 +93,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     template<class... Ts>
 ///     struct my_sequence;
 /// 
@@ -96,6 +110,9 @@
 ///             );
 ///         };
 ///     } // namespace fit
+/// 
+///     int main() {
+///     }
 /// 
 
 #include <fit/returns.hpp>

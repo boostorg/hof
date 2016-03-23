@@ -38,8 +38,13 @@
 /// Example
 /// -------
 /// 
-///     int r = fit::flip(fit::_ - fit::_)(2, 5);
-///     assert(r == 3);
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
+///     int main() {
+///         int r = fit::flip(fit::_ - fit::_)(2, 5);
+///         assert(r == 3);
+///     }
 /// 
 
 #include <fit/detail/callable_base.hpp>

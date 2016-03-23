@@ -20,11 +20,17 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     const constexpr auto add_one = FIT_STATIC_LAMBDA(int x)
 ///     {
 ///         return x + 1;
 ///     };
-///     assert(3 == add_one(2));
+/// 
+///     int main() {
+///         assert(3 == add_one(2));
+///     }
 /// 
 /// FIT_STATIC_LAMBDA_FUNCTION
 /// ==========================
@@ -43,11 +49,16 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     FIT_STATIC_LAMBDA_FUNCTION(add_one) = [](int x)
 ///     {
 ///         return x + 1;
 ///     };
-///     assert(3 == add_one(2));
+///     int main() {
+///         assert(3 == add_one(2));
+///     }
 /// 
 
 #include <type_traits>

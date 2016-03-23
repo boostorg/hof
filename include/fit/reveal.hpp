@@ -142,6 +142,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct sum_f
 ///     {
 ///         template<class T, class U>
@@ -155,6 +158,9 @@
 ///         auto operator()(T x, U y) const FIT_RETURNS(x+y);
 ///     };
 /// 
+///     int main() {
+///         assert(sum_f()(1, 2) == 3);
+///     }
 /// 
 
 #include <fit/always.hpp>

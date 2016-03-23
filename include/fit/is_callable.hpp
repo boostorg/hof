@@ -33,6 +33,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     using namespace fit;
+/// 
 ///     struct is_callable_class
 ///     {
 ///         void operator()(int) const
@@ -40,6 +43,8 @@
 ///         }
 ///     };
 ///     static_assert(is_callable<is_callable_class, int>(), "Not callable");
+/// 
+///     int main() {}
 /// 
 
 

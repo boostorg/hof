@@ -37,6 +37,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct id
 ///     {
 ///         template<class T>
@@ -46,8 +49,10 @@
 ///         }
 ///     };
 /// 
-///     auto int_result = fit::result<int>(id());
-///     static_assert(std::is_same<decltype(int_result(true)), int>::value, "Not the same type");
+///     int main() {
+///         auto int_result = fit::result<int>(id());
+///         static_assert(std::is_same<decltype(int_result(true)), int>::value, "Not the same type");
+///     }
 /// 
 
 #include <fit/detail/callable_base.hpp>

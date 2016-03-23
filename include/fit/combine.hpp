@@ -40,11 +40,18 @@
 /// Example
 /// -------
 /// 
-///     auto f = fit::combine(
-///         fit::construct<std::tuple>(),
-///         fit::capture(1)(fit::construct<std::pair>()),
-///         fit::capture(2)(fit::construct<std::pair>()));
-///     assert(f(3, 7) == std::make_tuple(std::make_pair(1, 3), std::make_pair(2, 7)));
+///     #include <fit.hpp>
+///     #include <cassert>
+///     #include <tuple>
+///     #include <pair>
+/// 
+///     int main() {
+///         auto f = fit::combine(
+///             fit::construct<std::tuple>(),
+///             fit::capture(1)(fit::construct<std::pair>()),
+///             fit::capture(2)(fit::construct<std::pair>()));
+///         assert(f(3, 7) == std::make_tuple(std::make_pair(1, 3), std::make_pair(2, 7)));
+///     }
 /// 
 
 #include <fit/pack.hpp>

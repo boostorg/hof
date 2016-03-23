@@ -36,7 +36,13 @@
 /// Example
 /// -------
 /// 
-///     assert(arg(std::integral_constant<int, 3>())(1,2,3,4,5) == 3);
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
+///     int main() {
+///         assert(arg(std::integral_constant<int, 3>())(1,2,3,4,5) == 3);
+///     }
 /// 
 
 namespace fit {

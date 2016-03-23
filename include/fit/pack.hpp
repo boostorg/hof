@@ -72,10 +72,6 @@
 #include <fit/alias.hpp>
 #include <fit/decay.hpp>
 
-#ifndef FIT_HAS_RVALUE_THIS
-#define FIT_HAS_RVALUE_THIS 1
-#endif
-
 namespace fit { namespace detail {
 
 template<class...>

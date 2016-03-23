@@ -2,6 +2,7 @@
 #include <fit/static.hpp>
 #include <fit/lambda.hpp>
 #include <fit/placeholders.hpp>
+#include <fit/limit.hpp>
 #include "test.hpp"
 
 #include <memory>
@@ -167,5 +168,14 @@ FIT_TEST_CASE()
     // parameters than what are used by the placeholders. So negate(0, 1) is a
     // valid call, which makes the following test fail with ambigous overload.
     // FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == sub(0, 1));
+}
+
+FIT_TEST_CASE()
+{
+    const auto negate = fit::limit_c<1>(!fit::_1);
+    const auto sub = fit::limit_c<2>(fit::_1 - fit::_2);
+    FIT_TEST_CHECK(fit::match(negate, sub)(0) == negate(0));
+    // This test will pass because we have limited the number of parameters.
+    FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == sub(0, 1));
 }
 

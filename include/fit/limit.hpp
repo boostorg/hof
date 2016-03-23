@@ -74,17 +74,35 @@
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/move.hpp>
 #include <fit/detail/static_const_var.hpp>
+#include <fit/always.hpp>
 #include <cstdint>
 
 namespace fit {
 
 namespace detail {
-
+// TODO: Make this work with fit_rewritable1_tag
 template<std::size_t N, class F>
 struct limit_adaptor : detail::callable_base<F>
 {
     typedef std::integral_constant<std::size_t, N> fit_function_param_limit;
     FIT_INHERIT_CONSTRUCTOR(limit_adaptor, detail::callable_base<F>)
+
+    template<class... Ts>
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    {
+        return always_ref(*this)(xs...);
+    }
+
+    FIT_RETURNS_CLASS(limit_adaptor);
+
+    template<class... Ts, class=typename std::enable_if<(sizeof...(Ts) <= N)>::type>
+    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    (
+        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))
+            (FIT_FORWARD(Ts)(xs)...)
+    );
+
 };
 
 template<std::size_t N>

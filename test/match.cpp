@@ -158,11 +158,14 @@ FIT_TEST_CASE()
 };
 
 
-// FIT_TEST_CASE()
-// {
-//     const auto negate = (!fit::_1);
-//     const auto sub = (fit::_1 - fit::_2);
-//     FIT_TEST_CHECK(fit::match(negate, sub)(0) == 0);
-//     FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == -1);
-// }
+FIT_TEST_CASE()
+{
+    const auto negate = (!fit::_1);
+    const auto sub = (fit::_1 - fit::_2);
+    FIT_TEST_CHECK(fit::match(negate, sub)(0) == negate(0));
+    // This is test is disabled because its invalid. It is valid to give more
+    // parameters than what are used by the placeholders. So negate(0, 1) is a
+    // valid call, which makes the following test fail with ambigous overload.
+    // FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == sub(0, 1));
+}
 

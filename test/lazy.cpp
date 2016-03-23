@@ -163,3 +163,14 @@ FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(fit::lazy(deref())(std::unique_ptr<int>(new int(3)))() == 3);
 }
+
+FIT_TEST_CASE()
+{
+    auto lazy_f_1 = fit::lazy(f_1())(std::placeholders::_1);
+    static_assert(fit::is_callable<decltype(lazy_f_1), long>::value, "Callable");
+    static_assert(fit::is_callable<decltype(lazy_f_1), long, long>::value, "Callable");
+    
+    auto lazy_f_2 = fit::lazy(f_2())(std::placeholders::_1, std::placeholders::_2);
+    static_assert(fit::is_callable<decltype(lazy_f_2), long, long>::value, "Callable");
+    static_assert(!fit::is_callable<decltype(lazy_f_2), long>::value, "Not SFINAE-friendly");
+}

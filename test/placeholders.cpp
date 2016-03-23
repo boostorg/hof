@@ -227,6 +227,15 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(f_not_(false) == x_not_);
     FIT_TEST_CHECK(f_not_(false) == x_not_);
 
+    const auto x_not_0 = !0;
+    FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_not_0 = !fit::_1;
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 6   
+    static_assert(std::is_copy_constructible<decltype(f_not_0)>::value, "Not copyable");
+#endif
+    static_assert(fit::detail::is_default_constructible<decltype(f_not_0)>::value, "Not default constructible");
+    FIT_STATIC_TEST_CHECK(f_not_0(0) == x_not_0);
+    FIT_TEST_CHECK(f_not_0(0) == x_not_0);
+
     const auto x_compl_ = ~2;
     FIT_PLACEHOLDER_TEST_CONSTEXPR auto f_compl_ = ~fit::_1;
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ > 6   

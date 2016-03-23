@@ -184,8 +184,10 @@ It would be nice to write this:
         .filter([](int x) { return x > 2; })
         .transform([](int x) { return x * x; });
 
-However, UFCS in C++17 won't allow this to be done generically. So instead
-pipable functions can be used. So it can be written like this:
+The proposal [N4165](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4165.pdf) 
+for Unified Call Syntax(UFCS) in C++17 would have allowed a function call of `x.f(y)` to become
+`f(x, y)`. However, this was rejected by the comittee. So instead pipable functions can be
+used to achieve extension methods. So it can be written like this:
 
     auto r = numbers
         | filter([](int x) { return x > 2; })

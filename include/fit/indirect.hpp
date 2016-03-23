@@ -99,7 +99,7 @@ struct indirect_adaptor<F*>
     {}
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&...) const
+    constexpr F& base_function(Ts&&...) const
     {
         return *f;
     }
@@ -114,7 +114,7 @@ struct indirect_adaptor<F*>
     constexpr FIT_SFINAE_RESULT(F, id_<Ts>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
+        (FIT_MANGLE_CAST(F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
     );
 };
 

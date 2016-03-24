@@ -40,7 +40,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -VV -C ${CMAKE_CFG_INTDIR})
 
-macro(add_test_executable TEST_NAME)
+function(add_test_executable TEST_NAME)
     add_executable (${TEST_NAME} EXCLUDE_FROM_ALL ${ARGN})
     if(WIN32)
         add_test(NAME ${TEST_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
@@ -49,18 +49,25 @@ macro(add_test_executable TEST_NAME)
     endif()
     add_dependencies(check ${TEST_NAME})
     set_tests_properties(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
-endmacro(add_test_executable)
+endfunction(add_test_executable)
 
-macro(add_test_header TEST_NAME HEADER)
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp 
+function(create_executable NAME CONTENT)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp "${CONTENT}")
+    add_executable(${NAME} ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp)
+endfunction()
+
+function(create_test_executable NAME CONTENT)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp "${CONTENT}")
+    add_test_executable(${NAME} ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp)
+endfunction()
+
+function(add_test_header TEST_NAME HEADER)
+    create_test_executable(header-include-${TEST_NAME} 
         "#include <${HEADER}>\nint main() {}\n"
     )
-    add_test_executable(header-include-${TEST_NAME} 
-        ${CMAKE_CURRENT_BINARY_DIR}/header-include-${TEST_NAME}.cpp
-    )
-endmacro(add_test_header)
+endfunction(add_test_header)
 
-macro(add_test_static_header TEST_NAME HEADER)
+function(add_test_static_header TEST_NAME HEADER)
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${TEST_NAME}.cpp 
         "#include <${HEADER}>\nint main() {}\n"
     )
@@ -71,7 +78,7 @@ macro(add_test_static_header TEST_NAME HEADER)
         ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${TEST_NAME}.cpp 
         ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${TEST_NAME}.cpp
     )
-endmacro(add_test_static_header)
+endfunction(add_test_static_header)
 
 include(CTest)
 
@@ -120,9 +127,8 @@ function(build_example SECTIONCONTENT NAME)
     if(NOT CONTENT MATCHES "int main")
         string(APPEND CONTENT "int main() {}")
     endif()
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}.cpp "${CONTENT}\n")
     message(STATUS "Adding example: ${TARGET_NAME}")
-    add_test_executable(${TARGET_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}.cpp)
+    create_test_executable(${TARGET_NAME} "${CONTENT}\n")
 endfunction()
 
 function(extract_example SOURCE)

@@ -1,10 +1,6 @@
 language: cpp
 script: cmake
 
-env:
-  global:
-  - TERM=dumb
-
 matrix:
     include:
         # OSX
@@ -174,7 +170,7 @@ script:
         mkdir "build-$build_type"
         cd "build-$build_type"
         cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_EXAMPLES=$BUILD_EXAMPLES -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
-        CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 make -j4 check VERBOSE=1
+        CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 make -j4 check
         if [[ "$build_type" == "release" ]]; then make install; fi
         cd ..
         rm -rf "build-$build_type"

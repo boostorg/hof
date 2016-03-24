@@ -56,7 +56,7 @@
 ///         }
 ///     };
 /// 
-///     static_<times_function> times2 = {};
+///     static constexpr static_<times_function> times2 = {};
 /// 
 ///     int main() {
 ///         assert(6 == times2(3));

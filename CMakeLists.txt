@@ -98,13 +98,6 @@ foreach(HEADER ${HEADERS})
 endforeach()
 add_test_static_header(fit fit.hpp)
 
-set(BUILD_EXAMPLES on)
-if (CMAKE_COMPILER_IS_GNUCXX)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
-        set(BUILD_EXAMPLES off)
-    endif()
-endif()
-
 function(extract_doc SOURCE OUTPUTVAR)
     file(READ ${SOURCE} CONTENT)
     string(REGEX REPLACE "(\n(/[^/][^/]|//[^/]|[^/][^/][^/])([^\n])*)" "" CONTENT "\n${CONTENT}")
@@ -162,6 +155,8 @@ function(extract_example SOURCE)
         build_example("${SECTION}" ${BASE_NAME})
     endif()
 endfunction()
+
+set(BUILD_EXAMPLES off CACHE BOOL "Set this to build the examples")
 
 if (BUILD_EXAMPLES)
     file(GLOB EXAMPLES example/*.cpp)

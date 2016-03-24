@@ -42,6 +42,10 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
 ///     struct sum_f
 ///     {
 ///         template<class T>
@@ -51,7 +55,10 @@
 ///         }
 ///     };
 ///     FIT_STATIC_FUNCTION(sum) = limit_c<2>(sum_f());
-///     assert(3 == sum(1, 2));
+/// 
+///     int main() {
+///         assert(3 == sum(1, 2));
+///     }
 /// 
 /// function_param_limit
 /// ====================

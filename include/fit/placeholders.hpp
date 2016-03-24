@@ -42,8 +42,14 @@
 /// Example
 /// -------
 /// 
-///     auto sum = _1 + _2;
-///     assert(3 == sum(1, 2));
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
+///     int main() {
+///         auto sum = _1 + _2;
+///         assert(3 == sum(1, 2));
+///     }
 /// 
 /// 
 /// unamed placeholder

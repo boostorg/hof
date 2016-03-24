@@ -56,6 +56,9 @@
 /// Example
 /// -------
 /// 
+///     #include <fit.hpp>
+///     #include <cassert>
+/// 
 ///     struct max_f
 ///     {
 ///         template<class T, class U>
@@ -64,7 +67,10 @@
 ///             return x > y ? x : y;
 ///         }
 ///     };
-///     assert(fit::reverse_compress(max_f())(2, 3, 4, 5) == 5);
+/// 
+///     int main() {
+///         assert(fit::reverse_compress(max_f())(2, 3, 4, 5) == 5);
+///     }
 /// 
 
 #include <fit/detail/callable_base.hpp>

@@ -43,7 +43,7 @@
 ///     #include <fit.hpp>
 ///     #include <cassert>
 ///     #include <tuple>
-///     #include <pair>
+///     #include <utility>
 /// 
 ///     int main() {
 ///         auto f = fit::combine(

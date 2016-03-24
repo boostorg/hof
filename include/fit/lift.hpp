@@ -36,9 +36,11 @@
 /// 
 ///     #include <fit.hpp>
 ///     #include <cassert>
+///     #include <algorithm>
 /// 
 ///     // Declare the class `max_f`
 ///     FIT_LIFT_CLASS(max_f, std::max);
+/// 
 ///     int main() {
 ///         auto my_max = FIT_LIFT(std::max);
 ///         assert(my_max(3, 4) == std::max(3, 4));

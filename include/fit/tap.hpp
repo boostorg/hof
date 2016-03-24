@@ -37,6 +37,7 @@
 /// 
 ///     #include <fit.hpp>
 ///     #include <cassert>
+///     #include <iostream>
 ///     using namespace fit;
 /// 
 ///     struct sum_f

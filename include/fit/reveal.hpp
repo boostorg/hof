@@ -151,7 +151,7 @@
 ///         using sum_failure = decltype(std::declval<T>()+std::declval<U>());
 /// 
 ///         struct failure
-///         : as_failure<sum_failure>
+///         : fit::as_failure<sum_failure>
 ///         {};
 /// 
 ///         template<class T, class U>

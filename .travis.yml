@@ -173,12 +173,12 @@ script:
         CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=32 make -j32 check VERBOSE=1
         if [[ "$build_type" == "release" ]]; then make install; fi
         cd ..
+        rm -rf "build-$build_type"
       done
     - pkg-config fit --cflags
-    - cd ../include
+    - cd include
     - HEADERS=$(echo fit.hpp fit/*.hpp)
-    - for file in $HEADERS; do echo -e "#include <$file>\nint main() {}" | $CXX -std=gnu++0x `pkg-config fit --cflags` -x c++ -S -; done
     - cd ..
-    - rm -rf build/
+    - for file in $HEADERS; do echo -e "#include <$file>\nint main() {}" | $CXX -std=gnu++0x `pkg-config fit --cflags` -x c++ -S -; done
     - rm -rf "$INSTALL_PREFIX_PATH"
 

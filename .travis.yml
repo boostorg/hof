@@ -161,19 +161,28 @@ script:
     - mkdir -p "$INSTALL_PREFIX_PATH"
     - export PKG_CONFIG_PATH="$INSTALL_PREFIX_PATH/lib/pkgconfig"
     - cd $CHECKOUT_PATH
+    - export ASANFLAGS="-fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"
     - if [[ "$CXX11" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -std=c++11"; fi
     - if [[ "$HAS_GENERIC_LAMBDA" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -DFIT_HAS_GENERIC_LAMBDA=1"; fi
-    # - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
+    - export ASANVARIANT="off"
+    - if [[ "$ASAN" == "on" ]]; then export ASANVARIANT="${ASANVARIANT} on"; fi
     
     - |
       for build_type in debug minsizerel relwithdebinfo release; do
-        mkdir "build-$build_type"
-        cd "build-$build_type"
-        cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_EXAMPLES=$BUILD_EXAMPLES -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
-        CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 make -j4 check
-        if [[ "$build_type" == "release" ]]; then make install; fi
-        cd ..
-        rm -rf "build-$build_type"
+        for asan_type in ASANVARIANT; do
+          build_dir="build-$build_type-asan-$asan_type"
+          mkdir $build_dir
+          cd $build_dir
+          if [[ "$asan_type" == "on" ]]; then 
+            CXXFLAGS="$CXXFLAGS $ASANFLAGS" cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_EXAMPLES=$BUILD_EXAMPLES -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
+          else
+            cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_EXAMPLES=$BUILD_EXAMPLES -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
+          fi
+          CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 make -j4 check
+          if [[ "$build_type" == "release" ]]; then make install; fi
+          cd ..
+          rm -rf $build_dir
+        done
       done
     - pkg-config fit --cflags
     - cd include

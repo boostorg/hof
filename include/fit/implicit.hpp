@@ -57,7 +57,7 @@
 ///         }
 ///     };
 /// 
-///     implicit<auto_caster> auto_cast = {};
+///     static constexpr implicit<auto_caster> auto_cast = {};
 /// 
 ///     struct auto_caster_foo
 ///     {

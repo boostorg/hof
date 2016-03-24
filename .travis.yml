@@ -1,6 +1,10 @@
 language: cpp
 script: cmake
 
+env:
+  global:
+  - TERM=dumb
+
 matrix:
     include:
         # OSX

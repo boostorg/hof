@@ -166,7 +166,7 @@ script:
     # - if [[ "$ASAN" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
     
     - |
-      for build_type in debug minsizerel relwithdebinfo release;
+      for build_type in debug minsizerel relwithdebinfo release; do
         mkdir "build-$build_type"
         cd "build-$build_type"
         cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_EXAMPLES=$BUILD_EXAMPLES -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..

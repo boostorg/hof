@@ -47,6 +47,7 @@
 ///     #include <fit.hpp>
 ///     #include <cassert>
 ///     #include <iostream>
+///     #include <string>
 ///     using namespace fit;
 /// 
 ///     struct logger_f

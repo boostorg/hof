@@ -49,7 +49,7 @@
 ///     #include <iostream>
 ///     using namespace fit;
 /// 
-///     struct log_f
+///     struct logger_f
 ///     {
 ///         template<class F, class... Ts>
 ///         auto operator()(const std::string& message, F&& f, Ts&&... xs) const 
@@ -61,8 +61,8 @@
 ///             return f(std::forward<Ts>(xs)...);
 ///         }
 ///     };
-///     // The log decorator
-///     FIT_STATIC_FUNCTION(log) = fit::decorate(log_f());
+///     // The logger decorator
+///     FIT_STATIC_FUNCTION(logger) = fit::decorate(logger_f());
 ///     
 ///     struct sum_f
 ///     {
@@ -75,8 +75,8 @@
 ///     
 ///     FIT_STATIC_FUNCTION(sum) = sum_f();
 ///     int main() {
-///         // Use the log decorator to print "Calling sum" when the function is called
-///         assert(3 == log("Calling sum")(sum)(1, 2));
+///         // Use the logger decorator to print "Calling sum" when the function is called
+///         assert(3 == logger("Calling sum")(sum)(1, 2));
 ///     }
 /// 
 

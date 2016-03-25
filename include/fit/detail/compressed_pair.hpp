@@ -15,11 +15,7 @@
 #include <fit/alias.hpp>
 
 #ifndef FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND
-#ifdef __clang__
-#define FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND 0
-#else
-#define FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND 1
-#endif
+#define FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND !FIT_USE_EBO
 #endif
 
 namespace fit { namespace detail {

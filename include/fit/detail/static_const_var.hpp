@@ -37,6 +37,12 @@ constexpr const T& static_const_var()
 #define FIT_STATIC_AUTO_REF static constexpr auto&
 #endif
 
+#if FIT_HAS_RELAXED_CONSTEXPR || defined(_MSC_VER)
+#define FIT_STATIC_CONSTEXPR const constexpr
+#else
+#define FIT_STATIC_CONSTEXPR static constexpr
+#endif
+
 #if FIT_NO_UNIQUE_STATIC_VAR
 #define FIT_DECLARE_STATIC_VAR(name, ...) static constexpr __VA_ARGS__ name = {}
 #else

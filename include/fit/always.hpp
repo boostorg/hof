@@ -10,7 +10,6 @@
 
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
-#include <fit/detail/static_constexpr.hpp>
 
 /// always
 /// ======

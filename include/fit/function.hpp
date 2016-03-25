@@ -46,7 +46,6 @@
 /// 
 
 #include <fit/reveal.hpp>
-#include <fit/detail/static_constexpr.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/constexpr_deduce.hpp>
 

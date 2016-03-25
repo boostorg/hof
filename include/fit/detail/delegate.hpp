@@ -10,19 +10,13 @@
 
 #include <type_traits>
 #include <utility>
+#include <fit/config.hpp>
 #include <fit/detail/and.hpp>
 #include <fit/detail/holder.hpp>
 #include <fit/detail/forward.hpp>
 #include <fit/detail/using.hpp>
 #include <fit/detail/intrinsics.hpp>
 
-#ifndef FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE 1
-#else
-#define FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE 0
-#endif
-#endif
 
 #define FIT_ENABLE_IF_CONVERTIBLE(...) \
     class=typename std::enable_if<FIT_IS_CONVERTIBLE(__VA_ARGS__)>::type

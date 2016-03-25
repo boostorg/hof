@@ -12,6 +12,7 @@
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/move.hpp>
 #include <fit/detail/holder.hpp>
+#include <fit/config.hpp>
 
 /// alias
 /// =====
@@ -52,14 +53,6 @@
 ///     template<class Alias>
 ///     constexpr auto alias_value(Alias&&);
 /// 
-
-#ifndef FIT_HAS_EBO
-#ifdef __clang__
-#define FIT_HAS_EBO 1
-#else
-#define FIT_HAS_EBO 0
-#endif
-#endif
 
 #ifdef _MSC_VER
 #pragma warning(push)

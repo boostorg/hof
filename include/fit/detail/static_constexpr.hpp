@@ -8,17 +8,7 @@
 #ifndef FIT_GUARD_STATIC_CONSTEXPR_H
 #define FIT_GUARD_STATIC_CONSTEXPR_H
 
-#ifndef FIT_HAS_RELAXED_CONSTEXPR
-#ifdef __clang__
-#if __has_feature(cxx_relaxed_constexpr)
-#define FIT_HAS_RELAXED_CONSTEXPR 1
-#else
-#define FIT_HAS_RELAXED_CONSTEXPR 0
-#endif
-#else
-#define FIT_HAS_RELAXED_CONSTEXPR 0
-#endif
-#endif
+#include <fit/config.hpp>
 
 #if FIT_HAS_RELAXED_CONSTEXPR || defined(_MSC_VER)
 #define FIT_STATIC_CONSTEXPR const constexpr

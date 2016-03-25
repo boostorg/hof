@@ -10,14 +10,7 @@
 
 #include <type_traits>
 #include <fit/detail/holder.hpp>
-
-#ifndef FIT_NO_STD_DEFAULT_CONSTRUCTIBLE
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_NO_STD_DEFAULT_CONSTRUCTIBLE 1
-#else
-#define FIT_NO_STD_DEFAULT_CONSTRUCTIBLE 0
-#endif
-#endif
+#include <fit/config.hpp>
 
 #if defined(__clang__)
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value

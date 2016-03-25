@@ -60,19 +60,12 @@
 ///     }
 /// 
 
+#include <fit/config.hpp>
 #include <fit/returns.hpp>
 #include <fit/detail/forward.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/apply.hpp>
 #include <fit/eval.hpp>
-
-#ifndef FIT_NO_ORDERED_BRACE_INIT
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 9) || defined(_MSC_VER)
-#define FIT_NO_ORDERED_BRACE_INIT 1
-#else
-#define FIT_NO_ORDERED_BRACE_INIT 0
-#endif 
-#endif
 
 #if FIT_NO_ORDERED_BRACE_INIT
 #include <fit/pack.hpp>

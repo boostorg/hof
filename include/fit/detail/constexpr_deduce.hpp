@@ -8,14 +8,7 @@
 #ifndef FIT_GUARD_FUNCTION_CONSTEXPR_DEDUCE_H
 #define FIT_GUARD_FUNCTION_CONSTEXPR_DEDUCE_H
 
-
-#ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
-#if defined(_MSC_VER)
-#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 1
-#else
-#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
-#endif
-#endif
+#include <fit/config.hpp>
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 

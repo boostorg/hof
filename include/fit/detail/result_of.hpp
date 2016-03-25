@@ -9,15 +9,7 @@
 #define FIT_GUARD_DETAIL_RESULT_OF_H
 
 #include <fit/returns.hpp>
-#include <fit/detail/sfinae.hpp>
-
-#ifndef FIT_HAS_MANUAL_DEDUCTION
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
-#define FIT_HAS_MANUAL_DEDUCTION 1
-#else
-#define FIT_HAS_MANUAL_DEDUCTION 0
-#endif
-#endif
+#include <fit/config.hpp>
 
 #if FIT_HAS_MANUAL_DEDUCTION || FIT_NO_EXPRESSION_SFINAE
 

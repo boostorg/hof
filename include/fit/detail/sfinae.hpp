@@ -8,12 +8,6 @@
 #ifndef FIT_GUARD_FUNCTION_DETAIL_SFINAE_H
 #define FIT_GUARD_FUNCTION_DETAIL_SFINAE_H
 
-#ifndef FIT_NO_EXPRESSION_SFINAE
-#ifdef _MSC_VER
-#define FIT_NO_EXPRESSION_SFINAE 1
-#else
-#define FIT_NO_EXPRESSION_SFINAE 0
-#endif
-#endif
+#include <fit/config.hpp>
 
 #endif

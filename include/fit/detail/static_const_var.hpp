@@ -8,6 +8,8 @@
 #ifndef FIT_GUARD_STATIC_CONST_H
 #define FIT_GUARD_STATIC_CONST_H
 
+#include <fit/config.hpp>
+
 namespace fit { namespace detail {
 
 template<class T>
@@ -33,14 +35,6 @@ constexpr const T& static_const_var()
 #define FIT_STATIC_AUTO_REF static auto&
 #else
 #define FIT_STATIC_AUTO_REF static constexpr auto&
-#endif
-
-#ifndef FIT_NO_UNIQUE_STATIC_VAR
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
-#define FIT_NO_UNIQUE_STATIC_VAR 1
-#else
-#define FIT_NO_UNIQUE_STATIC_VAR 0
-#endif
 #endif
 
 #if FIT_NO_UNIQUE_STATIC_VAR

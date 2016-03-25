@@ -115,22 +115,7 @@
 /// 
 
 
-#ifndef FIT_HAS_MANGLE_OVERLOAD
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_HAS_MANGLE_OVERLOAD 0
-#else
-#define FIT_HAS_MANGLE_OVERLOAD 1
-#endif
-#endif
-
-#ifndef FIT_HAS_COMPLETE_DECLTYPE
-#if !FIT_HAS_MANGLE_OVERLOAD || (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
-#define FIT_HAS_COMPLETE_DECLTYPE 0
-#else
-#define FIT_HAS_COMPLETE_DECLTYPE 1
-#endif
-#endif
-
+#include <fit/config.hpp>
 #include <utility>
 #include <fit/detail/forward.hpp>
 

@@ -60,7 +60,6 @@
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/result_of.hpp>
 #include <fit/detail/move.hpp>
-#include <fit/detail/sfinae.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/decorate.hpp>
 #include <fit/conditional.hpp>

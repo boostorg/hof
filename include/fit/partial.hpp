@@ -176,7 +176,7 @@ struct partial_adaptor_pack
 template<class F, class Pack>
 struct partial_adaptor_base 
 {
-    typedef conditional_adaptor
+    typedef basic_conditional_adaptor
     <
         partial_adaptor_invoke<partial_adaptor<F, Pack>, F, Pack>,
         partial_adaptor_join<partial_adaptor<F, Pack>, F, Pack> 
@@ -186,7 +186,7 @@ struct partial_adaptor_base
 template<class Derived, class F>
 struct partial_adaptor_pack_base
 {
-    typedef conditional_adaptor
+    typedef basic_conditional_adaptor
     <
         F,
         partial_adaptor_pack<Derived, F> 

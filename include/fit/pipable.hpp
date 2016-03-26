@@ -154,9 +154,9 @@ constexpr auto operator|(A&& a, const pipe_closure<F, Pack>& p) FIT_RETURNS
 
 template<class F>
 struct pipable_adaptor 
-: conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> >
+: detail::basic_conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> >
 {
-    typedef conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> > base;
+    typedef detail::basic_conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> > base;
     typedef pipable_adaptor fit_rewritable_tag;
 
     FIT_INHERIT_CONSTRUCTOR(pipable_adaptor, base);

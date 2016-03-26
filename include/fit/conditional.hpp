@@ -74,6 +74,7 @@
 /// to how the function is chosen.
 
 #include <fit/reveal.hpp>
+#include <fit/detail/compressed_pair.hpp>
 #include <fit/detail/callable_base.hpp>
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/join.hpp>
@@ -86,14 +87,14 @@ namespace fit {
 namespace detail {
 
 template<class F1, class F2>
-struct conditional_kernel : F1, F2
+struct basic_conditional_adaptor : F1, F2
 {
-    FIT_INHERIT_DEFAULT(conditional_kernel, F1, F2)
+    FIT_INHERIT_DEFAULT(basic_conditional_adaptor, F1, F2)
 
     template<class A, class B,
         FIT_ENABLE_IF_CONVERTIBLE(A, F1),
         FIT_ENABLE_IF_CONVERTIBLE(B, F2)>
-    constexpr conditional_kernel(A&& f1, B&& f2) : F1(FIT_FORWARD(A)(f1)), F2(FIT_FORWARD(B)(f2))
+    constexpr basic_conditional_adaptor(A&& f1, B&& f2) : F1(FIT_FORWARD(A)(f1)), F2(FIT_FORWARD(B)(f2))
     {}
 
     template<class X,
@@ -101,8 +102,53 @@ struct conditional_kernel : F1, F2
         FIT_IS_CONVERTIBLE(X, F1) && 
         FIT_IS_DEFAULT_CONSTRUCTIBLE(F2)
     >::type>
-    constexpr conditional_kernel(X&& x) : F1(FIT_FORWARD(X)(x))
+    constexpr basic_conditional_adaptor(X&& x) : F1(FIT_FORWARD(X)(x))
     {} 
+
+    template<class... Ts>
+    struct select
+    : std::conditional
+    <
+        is_callable<F1, Ts...>::value, 
+        F1,
+        F2
+    >
+    {};
+
+    FIT_RETURNS_CLASS(basic_conditional_adaptor);
+
+    template<class... Ts, class F=typename select<Ts...>::type>
+    constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
+    operator()(Ts && ... xs) const
+    FIT_SFINAE_RETURNS
+    (
+        FIT_RETURNS_STATIC_CAST(const F&)(*FIT_CONST_THIS)(FIT_FORWARD(Ts)(xs)...)
+    );
+};
+
+struct low_rank {};
+
+struct high_rank : low_rank {};
+
+template <class ...Ts, class F1, class F2, class = typename std::enable_if<(
+    is_callable<F1, Ts...>::value
+)>::type>
+constexpr F1&& which(high_rank, holder<Ts...>, F1&& f1, F2&&) 
+{ 
+    return FIT_FORWARD(F1)(f1); 
+}
+
+template <class ...Ts, class F1, class F2>
+constexpr F2&& which(low_rank, holder<Ts...>, F1&&, F2&& f2) 
+{ 
+    return FIT_FORWARD(F2)(f2); 
+}
+
+template<class F1, class F2>
+struct conditional_kernel : compressed_pair<F1, F2>
+{
+    typedef compressed_pair<F1, F2> base;
+    FIT_INHERIT_CONSTRUCTOR(conditional_kernel, base)
 
     template<class... Ts>
     struct select
@@ -116,12 +162,18 @@ struct conditional_kernel : F1, F2
 
     FIT_RETURNS_CLASS(conditional_kernel);
 
-    template<class... Ts, class F=typename select<Ts...>::type>
+    template<class... Ts>
     constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
-    operator()(Ts && ... x) const
+    operator()(Ts && ... xs) const
     FIT_SFINAE_RETURNS
     (
-        FIT_RETURNS_STATIC_CAST(const F&)(*FIT_CONST_THIS)(FIT_FORWARD(Ts)(x)...)
+        detail::which(
+            high_rank{}, 
+            holder<Ts...>{},
+            FIT_CONST_THIS->first(xs...),
+            FIT_CONST_THIS->second(xs...)
+        )
+        (FIT_FORWARD(Ts)(xs)...)
     );
 };
 }

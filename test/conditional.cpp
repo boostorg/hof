@@ -114,4 +114,9 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(static_fun(t3()) == 3);
 }
 #endif
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::conditional(fit::identity, fit::identity)(3) == 3);
+}
 }

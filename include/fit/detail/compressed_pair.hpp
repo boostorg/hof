@@ -87,7 +87,7 @@ struct compressed_pair<First, Second>
     FIT_INHERIT_DEFAULT(compressed_pair, first_base, second_base)
 
     template<class Base, class... Xs>
-    constexpr const Base& get_base(Xs&&... xs) const
+    constexpr const Base& get_alias_base(Xs&&... xs) const
     {
         return always_ref(*this)(xs...);
     }
@@ -95,13 +95,13 @@ struct compressed_pair<First, Second>
     template<class... Xs>
     constexpr const First& first(Xs&&... xs) const
     {
-        return alias_value(this->get_base<first_base>(xs...), xs...);
+        return alias_value(this->get_alias_base<first_base>(xs...), xs...);
     }
 
     template<class... Xs>
     constexpr const Second& second(Xs&&... xs) const
     {
-        return alias_value(this->get_base<second_base>(xs...), xs...);
+        return alias_value(this->get_alias_base<second_base>(xs...), xs...);
     }
 
 };

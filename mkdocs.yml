@@ -15,7 +15,6 @@ pages:
     - 'Definitions' : 'definitions.md'
     - 'Basic Concepts' : 'concepts.md'
     - 'Configurations' : 'configurations.md'
-    - 'Requirements': 'requirements.md'
     - 'FAQ': 'faq.md'
     - 'Building': 'building.md'
     - 'Acknowledgements': 'acknowledgements.md'

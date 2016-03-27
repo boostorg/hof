@@ -4,7 +4,7 @@ FAQ
 #### Q: Why is `const` required for the call operator on function objects?
 
 Mutable function objects are not prohibited, they just need to be explicit by
-using the `mutable_adaptor`. The main reason for this, is that it can lead to
+using the [`mutable_adaptor`](mutable.md). The main reason for this, is that it can lead to
 many suprising behaviours. Many times function objects are copied by value
 everywhere. For example,
 

@@ -38,7 +38,7 @@ FIT_TEST_CASE()
     static_assert(!fit::is_callable<fit::reveal_adaptor<f_type>, int>::value, "Callable");
     // fit::reveal(f)(1);
 }
-#if FIT_HAS_STATIC_LAMBDA
+
 #ifndef _MSC_VER
 static constexpr auto lam = fit::conditional(
     FIT_STATIC_LAMBDA(t1)
@@ -99,7 +99,6 @@ FIT_TEST_CASE()
 
     // fit::reveal(static_fun)(1);
 }
-#endif
 
 struct integral_type
 {

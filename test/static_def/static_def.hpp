@@ -6,12 +6,11 @@
 #include <fit/lambda.hpp>
 
 namespace fit_test {
-#if FIT_HAS_STATIC_LAMBDA
+
 FIT_STATIC_LAMBDA_FUNCTION(fit_sum_lambda) = [](int x, int y) 
 {
     return x + y;
 };
-#endif
 
 struct fit_sum_f
 {
@@ -20,9 +19,9 @@ struct fit_sum_f
         return x + y;
     }
 };
-#if FIT_HAS_STATIC_LAMBDA
+
 FIT_STATIC_LAMBDA_FUNCTION(fit_sum_fo) = fit_sum_f();
-#endif
+
 FIT_STATIC_FUNCTION(fit_sum_constexpr_fo) = fit_sum_f();
 
 FIT_DECLARE_STATIC_VAR(fit_sum_var, fit_sum_f);

@@ -69,8 +69,6 @@
 #include <fit/detail/static_const_var.hpp>
 
 
-#define FIT_HAS_STATIC_LAMBDA 1
-
 #ifndef FIT_REWRITE_STATIC_LAMBDA
 #ifdef _MSC_VER
 #define FIT_REWRITE_STATIC_LAMBDA 1

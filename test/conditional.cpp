@@ -91,7 +91,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(lam(t3()) == 3);
 }
 #endif
-#if FIT_HAS_STATIC_LAMBDA
+
 FIT_STATIC_LAMBDA_FUNCTION(static_fun) = fit::conditional(
     [](t1)
     {
@@ -113,7 +113,6 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(static_fun(t2()) == 2);
     FIT_TEST_CHECK(static_fun(t3()) == 3);
 }
-#endif
 
 FIT_TEST_CASE()
 {

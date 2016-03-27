@@ -17,6 +17,13 @@ Github: [http://github.com/pfultz2/Fit](http://github.com/pfultz2/Fit)
 
 Documentation: [http://fit.readthedocs.org](http://fit.readthedocs.org)
 
+Motivation
+==========
+
+- Improve the expressiveness and capabilities of functions, including first-class citzens for function overload set, extension methods, infix operators and much more.
+- Simplify constructs in C++ that have generally required metaprogramming
+- Workaround the limitations of lambdas
+
 Requirements
 ============
 

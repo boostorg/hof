@@ -52,7 +52,7 @@ The `FIT_STATIC_FUNCTION` declares a global variable following the best practice
 Adaptors
 --------
 
-Now we have defined the function as a function object, we can add new "enhancements" to the function. One enhancement is to write "exentsion" methods. The proposal [N4165](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4165.pdf) for Unified Call Syntax(UFCS) in C++17 would have allowed a function call of `x.f(y)` to become `f(x, y)`. Instead we can use pipable function which would transform `x | f(y)` into `f(x, y)`. We could make the `sum` function pipable using the [`pipable`](pipable.md) adaptor:
+Now we have defined the function as a function object, we can add new "enhancements" to the function. One enhancement is to write "exentsion" methods. The proposal [N4165](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4165.pdf) for Unified Call Syntax(UFCS) in C++17 would have allowed a function call of `x.f(y)` to become `f(x, y)`. Without UFCS in C++, we can instead use pipable function which would transform `x | f(y)` into `f(x, y)`. To make `sum_f` function pipable using the [`pipable`](pipable.md) adaptor, we can simply write :
 
     FIT_STATIC_FUNCTION(sum) = pipable(sum_f());
 

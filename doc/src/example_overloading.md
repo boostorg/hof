@@ -62,7 +62,7 @@ this:
         ));
     }
 
-The `id` parameter passed to the lambda is the [`identity`](identity.md) function. As explained in the article, this is used to delay the lookup of types by making it a dependent type(i.e. the type depends on a template parameter), which is necessary to avoid compile errors.
+The `id` parameter passed to the lambda is the [`identity`](identity.md) function. As explained in the article, this is used to delay the lookup of types by making it a dependent type(i.e. the type depends on a template parameter), which is necessary to avoid compile errors. The [`eval`](eval.md) function that is called will pass this `identity` function to the lambdas.
 
 The advantage of using the Fit library instead of the solution in Baptiste
 Wicht's blog, is that [`conditional`](conditional.md) allows more than just two conditions. So if

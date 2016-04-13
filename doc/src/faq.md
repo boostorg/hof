@@ -50,7 +50,7 @@ rather than `constexpr`.
 
 #### Q: Is the reinterpret cast in FIT_STATIC_LAMBDA undefined behaviour?
 
-Not really, since the objects are empty, there is no data access. There is
+Not really, since the objects are empty, there is no data access. There is a
 static assert to guard against this restriction.
 
 Now there could be an insane implementation where this doesn't work(perhaps
@@ -59,3 +59,20 @@ have to apply a different technique to make it work. However, this is quite
 unlikely considering that C++ will probably get constexpr lambdas and inline
 variables in the future.
 
+Alternatively, the factory pattern can be used instead of
+`FIT_STATIC_LAMBDA_FUNCTION`, which doesn't require an reinterpret cast:
+
+```cpp
+struct sum_factory
+{
+    auto operator*() const
+    {
+        return [](auto x, auto y)
+        {
+            return x + y;
+        };
+    }
+}
+
+FIT_STATIC_FUNCTION(sum) = fit::indirect(sum_factory{});
+```

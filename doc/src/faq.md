@@ -44,7 +44,7 @@ Which will print the expected value.
 Another reason why `const` is required is because of supporting `constexpr` on
 C++11 compilers. In C++11, `constexpr` implies `const`, so it would be
 impossible to provide a non-const overload for functions that is `constexpr`.
-Instead `constexpr` would have to be made explicit. Considering the pitfalls
+Instead, `constexpr` would have to be made explicit. Considering the pitfalls
 of mutable function objects, it would be better to make mutability explicit
 rather than `constexpr`.
 

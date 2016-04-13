@@ -22,7 +22,7 @@ Motivation
 
 - Improve the expressiveness and capabilities of functions, including first-class citzens for function overload set, extension methods, infix operators and much more.
 - Simplify constructs in C++ that have generally required metaprogramming
-- Workaround the limitations of lambdas
+- Workaround the limitations of lambdas in C++14
 
 Requirements
 ============

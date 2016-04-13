@@ -60,14 +60,21 @@ Another alternative to defining a function object, is to lift the templated func
 
 However, due to limitations in C++14 this will not preserve `constexpr`. In those cases, its better to use a function object.
 
-Declare functions
------------------
+Declaring functions
+-------------------
 
 Now, this is useful for local functions. However, many times we want to write functions and make them available for others to use. The Fit library provides [`FIT_STATIC_FUNCTION`](function.md) to declare the function object at the global or namespace scope:
 
     FIT_STATIC_FUNCTION(sum) = sum_f();
 
-The [`FIT_STATIC_FUNCTION`](function.md) declares a global variable following the best practices as outlined in [N4381](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html). This includes compile-time initialization of the function object to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order) and an external address of the function object that is the same across translation units to avoid possible One-Definition-Rule(ODR) violations.
+The [`FIT_STATIC_FUNCTION`](function.md) declares a global variable following the best practices as outlined in [N4381](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html). This includes compile-time initialization of the function object to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order) and an external address of the function object that is the same across translation units to avoid possible One-Definition-Rule(ODR) violations. In C++14, this can also be achieved by using a reference to a template variable:
+
+    template <class T>
+    constexpr T static_function{};
+
+    static constexpr auto&& sum = static_function<sum_f>;
+
+The [`FIT_STATIC_FUNCTION`](function.md) macro provides a portable way to do this that supports C++11 and MSVC, and allows supporting inline variables(in [N4424](http://open-std.org/JTC1/SC22/WG21/docs/papers/2015/n4424.pdf)) in future versions of C++.
 
 Adaptors
 --------

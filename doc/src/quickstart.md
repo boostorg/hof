@@ -103,7 +103,7 @@ And it could be called like this:
 
     auto three = 1 <sum> 2;
 
-In addition, adaptors are provided that support simple functional operations such as partial application and function composition:
+In addition, adaptors are provided that support simple functional operations such as [partial application](https://en.wikipedia.org/wiki/Partial_application) and [function composition](https://en.wikipedia.org/wiki/Function_composition):
 
     auto add_1 = partial(sum)(1);
     auto add_2 = compose(add_1, add_1);

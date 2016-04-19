@@ -1,5 +1,6 @@
 #include <fit/placeholders.hpp>
 #include "test.hpp"
+#include <sstream>
 
 // TODO: Test assign operators
 
@@ -27,6 +28,20 @@ FIT_TEST_CASE()
     FIT_FOREACH_BINARY_OP(CHECK_DEFAULT_CONSTRUCTION_OP)
     FIT_FOREACH_ASSIGN_OP(CHECK_DEFAULT_CONSTRUCTION_OP)
     FIT_FOREACH_UNARY_OP(CHECK_DEFAULT_CONSTRUCTION_OP)
+}
+
+FIT_TEST_CASE()
+{
+    auto simple_print = fit::reveal(std::ref(std::cout) << fit::_);
+    simple_print("Hello");
+}
+
+FIT_TEST_CASE()
+{
+    std::stringstream ss;
+    auto simple_print = fit::reveal(std::ref(ss) << fit::_);
+    simple_print("Hello");
+    FIT_TEST_CHECK(ss.str() == "Hello");
 }
 
 FIT_TEST_CASE()

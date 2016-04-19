@@ -37,7 +37,11 @@ namespace fit { namespace detail {
 
 struct decay_f
 {
-    template<class T>
+    template<
+        class T, 
+        class Result=typename unwrap_reference<typename std::decay<T>::type>::type, 
+        class=typename std::enable_if<(std::is_constructible<Result, T>())>::type
+    >
     constexpr typename unwrap_reference<typename std::decay<T>::type>::type 
     operator()(T&& x) const
     {

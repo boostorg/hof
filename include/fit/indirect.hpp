@@ -62,14 +62,56 @@
 #include <fit/detail/result_of.hpp>
 #include <fit/reveal.hpp>
 #include <fit/always.hpp>
+#include <fit/detail/compressed_pair.hpp>
 #include <fit/detail/move.hpp>
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
 
 namespace fit {
+
+template<class F, class Op=void>
+struct indirect_adaptor : detail::compressed_pair<F, detail::callable_base<Op>>
+{
+    typedef indirect_adaptor fit_rewritable_tag;
+    typedef detail::callable_base<Op> base_op_type;
+    typedef detail::compressed_pair<F, base_op_type> base;
+    FIT_INHERIT_CONSTRUCTOR(indirect_adaptor, base);
+
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&... xs) const
+    {
+        return this->first(xs...);;
+    }
+
+    template<class... Ts>
+    constexpr const base_op_type& base_op(Ts&&... xs) const
+    {
+        return this->second(xs...);
+    }
+
+    struct failure
+    : failure_for<decltype(std::declval<base_op_type>()(std::declval<F>()))>
+    {};
+
+    FIT_RETURNS_CLASS(indirect_adaptor);
+
+    template<class... Ts>
+    constexpr FIT_SFINAE_RESULT(decltype(std::declval<base_op_type>()(std::declval<F>())), id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    (
+        (
+            FIT_MANGLE_CAST(const base_op_type&)(FIT_CONST_THIS->base_op(xs...))
+            (
+                FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))
+            )
+        )
+        (FIT_FORWARD(Ts)(xs)...)
+    );
+};
+
 // TODO: Support non-classes as well
 template<class F>
-struct indirect_adaptor : F
+struct indirect_adaptor<F, void> : F
 {
     typedef indirect_adaptor fit_rewritable1_tag;
     FIT_INHERIT_CONSTRUCTOR(indirect_adaptor, F);
@@ -95,7 +137,7 @@ struct indirect_adaptor : F
 };
 
 template<class F>
-struct indirect_adaptor<F*>
+struct indirect_adaptor<F*, void>
 {
     typedef indirect_adaptor fit_rewritable1_tag;
     F* f;

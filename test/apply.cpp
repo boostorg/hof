@@ -60,3 +60,25 @@ FIT_TEST_CASE()
     std::unique_ptr<member_sum_f_derived> mspd(new member_sum_f_derived(3));
     FIT_TEST_CHECK(fit::apply(&member_sum_f::i, mspd) == 3);
 }
+
+struct nullary_fo
+{
+    constexpr int operator()() const
+    {
+        return 3;
+    }
+};
+
+constexpr int nullary_f()
+{
+    return 3;
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(3 == fit::apply(nullary_fo{}));
+    FIT_STATIC_TEST_CHECK(3 == fit::apply(nullary_fo{}));
+
+    FIT_TEST_CHECK(3 == fit::apply(&nullary_f));
+    FIT_STATIC_TEST_CHECK(3 == fit::apply(&nullary_f));
+}

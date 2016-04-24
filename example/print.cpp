@@ -85,6 +85,6 @@ int main()
     auto t = std::make_tuple(1, 2, 3, 4);
     print(t);
 
-    // auto m = std::make_tuple(3, v, t);
-    // print(m);
+    auto m = std::make_tuple(3, v, t);
+    print(m);
 }

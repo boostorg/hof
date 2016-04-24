@@ -9,20 +9,22 @@ extra_javascript: [js/configure.js]
 theme: readthedocs
 pages:
 - Home: 'index.md'
-- About:
+- Introduction:
     - 'Quick Start': 'quickstart.md'
+    - 'Point-free style' : 'point_free.md'
     - 'Definitions' : 'definitions.md'
     - 'Basic Concepts' : 'concepts.md'
+- Examples:
+    - 'Print': 'example_print.md'
+    - 'Conditional overloading': 'example_overloading.md'
+    - 'Polymorphic constructors': 'example_polymorphic_constructors.md'
+    - 'More examples': 'more_examples.md'
+- About:
     - 'Configurations' : 'configurations.md'
-    - 'Point-free style' : 'point_free.md'
     - 'FAQ': 'faq.md'
     - 'Building': 'building.md'
     - 'Acknowledgements': 'acknowledgements.md'
     - 'License': 'license.md'
-- Examples:
-    - 'Conditional overloading': 'example_overloading.md'
-    - 'Polymorphic constructors': 'example_polymorphic_constructors.md'
-    - 'More examples': 'more_examples.md'
 - Adaptors:
     - 'by': 'by.md'
     - 'compose': 'compose.md'

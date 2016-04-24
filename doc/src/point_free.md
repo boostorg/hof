@@ -43,13 +43,13 @@ Of course, this puts all the output together, but we can further extend this to 
 
     FIT_STATIC_FUNCTION(print_lines) = by(flow(simple_print, _ << std::integral_constant<char, '\n'>{}));
 
-The [flow](flow.md) adaptor does function composition but the functions are called from left-to-right. That is `flow(f, g)(x)` is equivalent to `g(f(x))`. So in this case, it will call `simple_print` on the argument which returns `std::cout` and then pass that to the next function which call the stream with the newline character. In the above, we write `std::integral_constant<char, '\n'>{}` instead of just `'\n'` because the function is statically defined, so all values must be defined statically.
+The [flow](flow.md) adaptor does function composition but the functions are called from left-to-right. That is `flow(f, g)(x)` is equivalent to `g(f(x))`. So in this case, it will call `simple_print` on the argument which returns `std::cout` and then pass that to the next function which calls the stream with the newline character. In the above, we write `std::integral_constant<char, '\n'>{}` instead of just `'\n'` because the function is statically defined, so all values must be defined statically.
 
 So now calling `print_lines`:
 
     print_lines("Hello", "World");
 
-Will print out:
+It will print out:
 
     Hello
     World

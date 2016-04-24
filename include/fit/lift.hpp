@@ -55,7 +55,7 @@
 #ifdef _MSC_VER
 #define FIT_LIFT(...) (FIT_STATIC_LAMBDA { FIT_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }())
 #else
-#define FIT_LIFT(...) (FIT_STATIC_LAMBDA(auto&&... xs) FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(decltype(xs))(xs)...)))
+#define FIT_LIFT(...) (FIT_STATIC_LAMBDA(auto&&... xs) FIT_RETURNS((__VA_ARGS__)(FIT_FORWARD(decltype(xs))(xs)...)))
 #endif
 
 #define FIT_LIFT_CLASS(name, ...) \
@@ -63,7 +63,7 @@ struct name \
 { \
     template<class... Ts> \
     constexpr auto operator()(Ts&&... xs) const \
-    FIT_RETURNS(__VA_ARGS__(FIT_FORWARD(Ts)(xs)...)) \
+    FIT_RETURNS((__VA_ARGS__)(FIT_FORWARD(Ts)(xs)...)) \
 }
 
 #endif

@@ -40,10 +40,9 @@ struct decay_f
     template<
         class T, 
         class Result=typename unwrap_reference<typename std::decay<T>::type>::type, 
-        class=typename std::enable_if<(std::is_constructible<Result, T>())>::type
+        class=typename std::enable_if<(std::is_constructible<Result, T>::value)>::type
     >
-    constexpr typename unwrap_reference<typename std::decay<T>::type>::type 
-    operator()(T&& x) const
+    constexpr Result operator()(T&& x) const
     {
         return FIT_FORWARD(T)(x);
     }

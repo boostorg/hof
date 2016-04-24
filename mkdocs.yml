@@ -21,7 +21,6 @@ pages:
     - 'License': 'license.md'
 - Examples:
     - 'Conditional overloading': 'example_overloading.md'
-    - 'Variadic parameters': 'example_variadic_parameters.md'
     - 'Polymorphic constructors': 'example_polymorphic_constructors.md'
     - 'More examples': 'more_examples.md'
 - Adaptors:

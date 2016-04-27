@@ -9,6 +9,20 @@
 #define FIT_GUARD_CONFIG_HPP
 
 
+// Check for std version
+#if __cplusplus >= 201402
+#define FIT_HAS_STD_14 1
+#else
+#define FIT_HAS_STD_14 0
+#endif
+
+#if __cplusplus >= 201103
+#define FIT_HAS_STD_11 1
+#else
+#define FIT_HAS_STD_11 0
+#endif
+
+
 // This determines if it safe to use inheritance for EBO. On every platform
 // except clang, compilers have problems with ambigous base conversion. So
 // this configures the library to use a different technique to achieve empty
@@ -50,7 +64,7 @@
 #define FIT_HAS_RELAXED_CONSTEXPR 0
 #endif
 #else
-#define FIT_HAS_RELAXED_CONSTEXPR 0
+#define FIT_HAS_RELAXED_CONSTEXPR !FIT_HAS_STD_14
 #endif
 #endif
 
@@ -59,7 +73,7 @@
 #if defined(__cpp_generic_lambdas) || defined(_MSC_VER)
 #define FIT_HAS_GENERIC_LAMBDA 1
 #else
-#define FIT_HAS_GENERIC_LAMBDA 0
+#define FIT_HAS_GENERIC_LAMBDA !FIT_HAS_STD_14
 #endif
 #endif
 

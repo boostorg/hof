@@ -10,7 +10,7 @@ theme: readthedocs
 pages:
 - Home: 'index.md'
 - Introduction:
-    - 'Quick Start': 'quickstart.md'
+    - 'Getting started': 'quickstart.md'
     - 'Point-free style' : 'point_free.md'
     - 'Definitions' : 'definitions.md'
     - 'Basic Concepts' : 'concepts.md'

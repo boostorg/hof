@@ -1,5 +1,5 @@
-Quick Start
-===========
+Getting started
+===============
 
 Function Objects
 ----------------

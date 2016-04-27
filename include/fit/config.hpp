@@ -43,8 +43,8 @@
 
 // Whether the compiler has relaxed constexpr.
 #ifndef FIT_HAS_RELAXED_CONSTEXPR
-#ifdef __clang__
-#if __has_feature(cxx_relaxed_constexpr)
+#ifdef __cpp_constexpr
+#if __cpp_constexpr >= 201304
 #define FIT_HAS_RELAXED_CONSTEXPR 1
 #else
 #define FIT_HAS_RELAXED_CONSTEXPR 0
@@ -54,9 +54,18 @@
 #endif
 #endif
 
+// Whether the compiler supports generic lambdas
+#ifndef FIT_HAS_GENERIC_LAMBDA
+#if defined(__cpp_generic_lambdas) || defined(_MSC_VER)
+#define FIT_HAS_GENERIC_LAMBDA 1
+#else
+#define FIT_HAS_GENERIC_LAMBDA 0
+#endif
+#endif
+
 // Whether a constexpr function can use a void return type
 #ifndef FIT_NO_CONSTEXPR_VOID
-#if defined(__clang__) && FIT_HAS_RELAXED_CONSTEXPR
+#if FIT_HAS_RELAXED_CONSTEXPR
 #define FIT_NO_CONSTEXPR_VOID 0
 #else
 #define FIT_NO_CONSTEXPR_VOID 1

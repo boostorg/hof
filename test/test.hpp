@@ -17,19 +17,6 @@
 #endif
 #endif
 
-#ifndef FIT_HAS_GENERIC_LAMBDA
-#ifdef __clang__
-#if __has_feature(cxx_generic_lambdas)
-#define FIT_HAS_GENERIC_LAMBDA 1
-#else
-#define FIT_HAS_GENERIC_LAMBDA 0
-#endif
-#else
-#define FIT_HAS_GENERIC_LAMBDA 0
-#endif
-
-
-#endif
 
 #define FIT_PP_CAT(x, y) FIT_PP_PRIMITIVE_CAT(x, y)
 #define FIT_PP_PRIMITIVE_CAT(x, y) x ## y

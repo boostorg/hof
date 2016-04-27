@@ -49,6 +49,22 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    fit::capture(fit::identity)(fit::identity)();
+    auto id = fit::identity;
+    auto f = fit::capture_decay(fit::identity)(fit::identity);
+    static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(decltype(id)), "Id not default constructible");
+    static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(decltype(f)), "Not default constructible");
+    f();
+}
+
+FIT_TEST_CASE()
+{
+    auto f = fit::capture(fit::identity)(fit::identity);
+    f();
+}
+
+FIT_TEST_CASE()
+{
+    auto f = fit::capture_forward(fit::identity)(fit::identity);
+    f();
 }
 

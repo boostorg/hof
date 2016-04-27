@@ -9,6 +9,7 @@
 #define FIT_GUARD_CAPTURE_H
 
 #include <fit/detail/callable_base.hpp>
+#include <fit/detail/compressed_pair.hpp>
 #include <fit/reveal.hpp>
 #include <fit/pack.hpp>
 #include <fit/always.hpp>
@@ -73,22 +74,21 @@ namespace fit {
 namespace detail {
 
 template<class F, class Pack>
-struct capture_invoke : detail::callable_base<F>, Pack
+struct capture_invoke : detail::compressed_pair<detail::callable_base<F>, Pack>
 {
     typedef capture_invoke fit_rewritable1_tag;
-    template<class X, class Y>
-    constexpr capture_invoke(X&& x, Y&& y) : detail::callable_base<F>(FIT_FORWARD(X)(x)), Pack(FIT_FORWARD(Y)(y))
-    {}
+    typedef detail::compressed_pair<detail::callable_base<F>, Pack> base;
+    FIT_INHERIT_CONSTRUCTOR(capture_invoke, base)
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->first(xs...);
     }
 
     template<class... Ts>
     constexpr const Pack& get_pack(Ts&&...xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->second(xs...);
     }
 
     template<class Failure, class... Ts>

@@ -163,7 +163,6 @@ script:
     - cd $CHECKOUT_PATH
     - export ASANFLAGS="-fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"
     - if [[ "$CXX11" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -std=c++11"; fi
-    - if [[ "$HAS_GENERIC_LAMBDA" == "on" ]]; then export CXXFLAGS="${CXXFLAGS} -DFIT_HAS_GENERIC_LAMBDA=1"; fi
     - export ASANVARIANT="off"
     - if [[ "$ASAN" == "on" ]]; then export ASANVARIANT="${ASANVARIANT} on"; fi
     

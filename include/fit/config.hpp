@@ -64,7 +64,7 @@
 #define FIT_HAS_RELAXED_CONSTEXPR 0
 #endif
 #else
-#define FIT_HAS_RELAXED_CONSTEXPR !FIT_HAS_STD_14
+#define FIT_HAS_RELAXED_CONSTEXPR FIT_HAS_STD_14
 #endif
 #endif
 
@@ -73,7 +73,16 @@
 #if defined(__cpp_generic_lambdas) || defined(_MSC_VER)
 #define FIT_HAS_GENERIC_LAMBDA 1
 #else
-#define FIT_HAS_GENERIC_LAMBDA !FIT_HAS_STD_14
+#define FIT_HAS_GENERIC_LAMBDA FIT_HAS_STD_14
+#endif
+#endif
+
+// Whether the compiler supports variable templates
+#ifndef FIT_HAS_VARIABLE_TEMPLATES
+#if defined(__cpp_variable_templates) || defined(_MSC_VER)
+#define FIT_HAS_VARIABLE_TEMPLATES 1
+#else
+#define FIT_HAS_VARIABLE_TEMPLATES FIT_HAS_STD_14
 #endif
 #endif
 

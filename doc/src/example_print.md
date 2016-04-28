@@ -13,21 +13,6 @@ However, there is lot of things that don't print directly to `std::cout` such as
 Overloading
 -----------
 
-Now, Fit provides two ways of doing overloading. The [`match`](match.md) adaptor will call a function based on C++ overload resolution, which tries to find the best match, like this:
-
-    FIT_STATIC_LAMBDA_FUNCTION(print) = match(
-        [](int x)
-        {
-            std::cout << "Integer: " << x << std::endl;
-        },
-        [](const std::string& x)
-        {
-            std::cout << "String: " << x << std::endl;
-        }
-    );
-
-However, when trying to do overloading involving something more generic, it can lead to ambiguities. 
-
 The Fit library provides several ways to do overloading. One of the ways is with the [`conditional`](conditional.md) adaptor which will pick the first function that is callable. This allows ordering the functions based on which one is more important. So then the first function will print to `std::cout` if possible otherwise we will add an overload to print a range:
 
 

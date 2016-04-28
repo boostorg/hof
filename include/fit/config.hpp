@@ -79,7 +79,7 @@
 
 // Whether the compiler supports variable templates
 #ifndef FIT_HAS_VARIABLE_TEMPLATES
-#if defined(__cpp_variable_templates) || defined(_MSC_VER)
+#if defined(__cpp_variable_templates)
 #define FIT_HAS_VARIABLE_TEMPLATES 1
 #else
 #define FIT_HAS_VARIABLE_TEMPLATES FIT_HAS_STD_14

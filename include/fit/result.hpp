@@ -106,12 +106,29 @@ struct result_adaptor<void, F> : detail::callable_base<F>
     };
 };
 
-// TODO: Make this a variable template in C++14
+#if FIT_HAS_VARIABLE_TEMPLATES
+namespace result_detail {
+template<class Result>
+struct result_f
+{
+    template<class F>
+    constexpr result_adaptor<Result, F> operator()(F f) const
+    {
+        return result_adaptor<Result, F>(std::move(f));
+    }
+};
+
+}
+
+template<class Result>
+static constexpr auto result = result_detail::result_f<Result>{};
+#else
 template<class Result, class F>
 constexpr result_adaptor<Result, F> result(F f)
 {
     return result_adaptor<Result, F>(std::move(f));
 }
+#endif
 
 } // namespace fit
 

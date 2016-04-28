@@ -112,12 +112,16 @@ struct arg_f
 };
 
 }
-
+#if FIT_HAS_VARIABLE_TEMPLATES
+template<std::size_t N>
+static constexpr auto arg_c = detail::make_args_f<std::size_t, N>{};
+#else
 template<std::size_t N, class... Ts>
 constexpr auto arg_c(Ts&&... xs) FIT_RETURNS
 (
     detail::get_args<N>(FIT_FORWARD(Ts)(xs)...)
 );
+#endif
 
 FIT_DECLARE_STATIC_VAR(arg, detail::arg_f);
 

@@ -117,12 +117,16 @@ struct if_f
 };
 
 }
-
+#if FIT_HAS_VARIABLE_TEMPLATES
+template<bool B>
+static constexpr auto if_c = detail::make_if_f<B>{};
+#else
 template<bool B, class F>
 constexpr detail::if_adaptor<B, F> if_c(F f)
 {
     return detail::if_adaptor<B, F>(static_cast<F&&>(f));
 }
+#endif
 
 FIT_DECLARE_STATIC_VAR(if_, detail::if_f);
 

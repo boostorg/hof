@@ -16,7 +16,7 @@
 /// 
 /// The `limit` function decorator annotates the function with the max number of
 /// parameters. The `limit_c` version can be used to give the max number
-/// directly(instead of relying on dependent typing).
+/// directly(instead of relying on an integral constant).
 /// 
 /// Synopsis
 /// --------

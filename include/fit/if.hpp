@@ -16,7 +16,7 @@
 /// 
 /// The `if_` function decorator makes the function callable if the boolean
 /// condition is true. The `if_c` version can be used to give a boolean
-/// condition directly(instead of relying on dependent typing).
+/// condition directly(instead of relying on an integral constant).
 /// 
 /// Synopsis
 /// --------

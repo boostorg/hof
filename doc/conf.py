@@ -31,7 +31,7 @@ from recommonmark.parser import CommonMarkParser
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.githubpages',
+    # 'sphinx.ext.githubpages',
     # 'sphinx.ext.autosectionlabel',
 ]
 

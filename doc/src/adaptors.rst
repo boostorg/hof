@@ -4,27 +4,27 @@ Function Adaptors
 .. toctree::
     :maxdepth: 1
     
-    by <../../include/fit/by>
-    compose <../../include/fit/compose>
-    conditional <../../include/fit/conditional>
-    combine <../../include/fit/combine>
-    compress <../../include/fit/compress>
-    decorate <../../include/fit/decorate>
-    fix <../../include/fit/fix>
-    flip <../../include/fit/flip>
-    flow <../../include/fit/flow>
-    implicit <../../include/fit/implicit>
-    indirect <../../include/fit/indirect>
-    infix <../../include/fit/infix>
-    lazy <../../include/fit/lazy>
-    match <../../include/fit/match>
-    mutable <../../include/fit/mutable>
-    partial <../../include/fit/partial>
-    pipable <../../include/fit/pipable>
-    protect <../../include/fit/protect>
-    result <../../include/fit/result>
-    reveal <../../include/fit/reveal>
-    reverse_compress <../../include/fit/reverse_compress>
-    rotate <../../include/fit/rotate>
-    static <../../include/fit/static>
-    unpack <../../include/fit/unpack>
+    ../../include/fit/by
+    ../../include/fit/compose
+    ../../include/fit/conditional
+    ../../include/fit/combine
+    ../../include/fit/compress
+    ../../include/fit/decorate
+    ../../include/fit/fix
+    ../../include/fit/flip
+    ../../include/fit/flow
+    ../../include/fit/implicit
+    ../../include/fit/indirect
+    ../../include/fit/infix
+    ../../include/fit/lazy
+    ../../include/fit/match
+    ../../include/fit/mutable
+    ../../include/fit/partial
+    ../../include/fit/pipable
+    ../../include/fit/protect
+    ../../include/fit/result
+    ../../include/fit/reveal
+    ../../include/fit/reverse_compress
+    ../../include/fit/rotate
+    ../../include/fit/static
+    ../../include/fit/unpack

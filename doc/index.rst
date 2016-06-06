@@ -14,10 +14,10 @@ Fit documentation contents
     src/definitions
     src/concepts
 
-
     src/adaptors
     src/decorators
     src/functions
+    src/traits
     src/utilities
 
     src/configurations

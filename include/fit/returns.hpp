@@ -8,8 +8,8 @@
 #ifndef FIT_GUARD_RETURNS_H
 #define FIT_GUARD_RETURNS_H
 
-/// returns
-/// =======
+/// FIT_RETURNS
+/// ===========
 /// 
 /// Description
 /// -----------
@@ -44,7 +44,7 @@
 /// 
 /// 
 /// Incomplete this
-/// ===============
+/// ---------------
 /// 
 /// Description
 /// -----------
@@ -89,7 +89,7 @@
 /// 
 /// 
 /// Mangling overloads
-/// ==================
+/// ------------------
 /// 
 /// Description
 /// -----------

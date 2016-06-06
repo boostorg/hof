@@ -111,7 +111,7 @@
 /// * MoveConstructible
 /// 
 /// Reporting Failures
-/// ==================
+/// ------------------
 /// 
 /// By default, `reveal` reports the substitution failure by trying to call
 /// the function. However, more detail expressions can be be reported from a

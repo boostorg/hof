@@ -10,7 +10,6 @@ Utilities
     ../../include/fit/function
     ../../include/fit/lambda
     ../../include/fit/lift
-    ../../include/fit/is_callable
     ../../include/fit/pack
     ../../include/fit/returns
     ../../include/fit/tap

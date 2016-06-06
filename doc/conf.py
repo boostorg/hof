@@ -18,7 +18,7 @@
 #
 import os
 from recommonmark.parser import CommonMarkParser
-# from recommonmark.transform import AutoStructify
+from recommonmark.transform import AutoStructify
 
 # -- General configuration ------------------------------------------------
 
@@ -378,7 +378,7 @@ def extract_doc(app, docname, source):
 def setup(app):
     app.srcdir = os.path.abspath(os.path.join(app.srcdir, os.pardir))
     app.connect('source-read', extract_doc)
-    # app.add_config_value('recommonmark_config', {
-    #         'auto_toc_tree_section': 'Contents',
-    #         }, True)
-    # app.add_transform(AutoStructify)
+    app.add_config_value('recommonmark_config', {
+            'enable_eval_rst': True,
+            }, True)
+    app.add_transform(AutoStructify)

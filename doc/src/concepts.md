@@ -25,10 +25,13 @@ Given
 * `f`, an object of type `const F`
 * `args...`, suitable argument list, which may be empty 
 
-| Expression   | Requirements             |
-|--------------|--------------------------|
-| `f(args...)` | performs a function call |
-
+```eval_rst
++----------------+--------------------------+
+| Expression     | Requirements             |
++================+==========================+
+| ``f(args...)`` | performs a function call |
++----------------+--------------------------+
+```
 
 NullaryFunctionObject
 ---------------------
@@ -50,9 +53,13 @@ Given
 
 * `f`, an object of type `const F`
 
-| Expression | Requirements             |
-|------------|--------------------------|
-| `f()`      | performs a function call |
+```eval_rst
++----------------+--------------------------+
+| Expression     | Requirements             |
++================+==========================+
+| ``f()``        | performs a function call |
++----------------+--------------------------+
+```
 
 UnaryFunctionObject
 -------------------
@@ -76,9 +83,13 @@ Given
 * `f`, an object of type `const F`
 * `arg`, a single argument
 
-| Expression | Requirements             |
-|------------|--------------------------|
-| `f(arg)`   | performs a function call |
+```eval_rst
++----------------+--------------------------+
+| Expression     | Requirements             |
++================+==========================+
+| ``f(arg)``     | performs a function call |
++----------------+--------------------------+
+```
 
 BinaryFunctionObject
 --------------------
@@ -103,9 +114,13 @@ Given
 * `arg1`, a single argument
 * `arg2`, a single argument
 
-| Expression      | Requirements             |
-|-----------------|--------------------------|
-| `f(arg1, arg2)` | performs a function call |
+```eval_rst
++-------------------+--------------------------+
+| Expression        | Requirements             |
++===================+==========================+
+| ``f(arg1, arg2)`` | performs a function call |
++-------------------+--------------------------+
+```
 
 MutableFunctionObject
 ---------------------
@@ -131,9 +146,13 @@ Given
 * `f`, an object of type `F`
 * `args...`, suitable argument list, which may be empty 
 
-| Expression   | Requirements             |
-|--------------|--------------------------|
-| `f(args...)` | performs a function call |
+```eval_rst
++----------------+--------------------------+
+| Expression     | Requirements             |
++================+==========================+
+| ``f(args...)`` | performs a function call |
++----------------+--------------------------+
+```
 
 EvaluatableFunctionObject
 -------------------------
@@ -148,9 +167,13 @@ Given
 
 * `f`, an object of type `const F`
 
-| Expression | Requirements             |
-|------------|--------------------------|
-| `f()`      | performs a function call |
+```eval_rst
++----------------+--------------------------+
+| Expression     | Requirements             |
++================+==========================+
+| ``f()``        | performs a function call |
++----------------+--------------------------+
+```
 
 Or:
 
@@ -161,9 +184,13 @@ Given
 * `f`, an object of type `const F`
 * `identity`, which is the identity function
 
-| Expression    | Requirements             |
-|---------------|--------------------------|
-| `f(identity)` | performs a function call |
+```eval_rst
++-----------------+--------------------------+
+| Expression      | Requirements             |
++=================+==========================+
+| ``f(identity)`` | performs a function call |
++-----------------+--------------------------+
+```
 
 Callable
 --------
@@ -181,9 +208,13 @@ Given
 
 The following expressions must be valid: 
 
-| Expression                           | Requirements                                          |
-|--------------------------------------|-------------------------------------------------------|
-| `INVOKE(f, std::declval<Args>()...)` | the expression is well-formed in unevaluated context  |
+```eval_rst
++----------------------------------------+-------------------------------------------------------+
+| Expression                             | Requirements                                          |
++========================================+=======================================================+
+| ``INVOKE(f, std::declval<Args>()...)`` | the expression is well-formed in unevaluated context  |
++----------------------------------------+-------------------------------------------------------+
+```
 
 where `INVOKE(f, x, xs...)` is defined as follows:
 
@@ -217,9 +248,13 @@ Given
 
 The following expressions must be valid: 
 
-| Expression                           | Requirements                                          |
-|--------------------------------------|-------------------------------------------------------|
-| `INVOKE(f, std::declval<Args>()...)` | the expression is well-formed in unevaluated context  |
+```eval_rst
++----------------------------------------+-------------------------------------------------------+
+| Expression                             | Requirements                                          |
++========================================+=======================================================+
+| ``INVOKE(f, std::declval<Args>()...)`` | the expression is well-formed in unevaluated context  |
++----------------------------------------+-------------------------------------------------------+
+```
 
 where `INVOKE(f, x, xs...)` is defined as follows:
 
@@ -251,9 +286,13 @@ Given
 * `f`, an object of type `const F`
 * `arg`, a single argument
 
-| Expression       | Requirements                                          |
-|------------------|-------------------------------------------------------|
-| `INVOKE(f, arg)` | the expression is well-formed in unevaluated context  |
+```eval_rst
++----------------------------------------+-------------------------------------------------------+
+| Expression                             | Requirements                                          |
++========================================+=======================================================+
+| ``INVOKE(f, arg)``                     | the expression is well-formed in unevaluated context  |
++----------------------------------------+-------------------------------------------------------+
+```
 
 BinaryCallable
 --------------
@@ -270,9 +309,13 @@ Given
 * `arg1`, a single argument
 * `arg2`, a single argument
 
-| Expression              | Requirements                                          |
-|-------------------------|-------------------------------------------------------|
-| `INVOKE(f, arg1, arg2)` | the expression is well-formed in unevaluated context  |
+```eval_rst
++----------------------------------------+-------------------------------------------------------+
+| Expression                             | Requirements                                          |
++========================================+=======================================================+
+| ``INVOKE(f, arg1, arg2)``              | the expression is well-formed in unevaluated context  |
++----------------------------------------+-------------------------------------------------------+
+```
 
 Metafunction
 ------------
@@ -282,10 +325,15 @@ Given
 * `f`, a type or a template
 * `args...`, any suitable type, which may be empty
 
+```eval_rst
++--------------------------+--------------------------------------------+
 | Expression               | Requirements                               |
-|--------------------------|--------------------------------------------|
-| `f::type`                | The type is the result of the metafunction |
-| `f<args...>::type`       | The type is the result of the metafunction |
++==========================+============================================+
+| ``f::type``              | The type is the result of the metafunction |
++--------------------------+--------------------------------------------+
+| ``f<args...>::type``     | The type is the result of the metafunction |
++--------------------------+--------------------------------------------+
+```
 
 MetafunctionClass
 -----------------
@@ -295,10 +343,12 @@ Given
 * `f`, a type or a template
 * `args...`, any suitable type, which may be empty
 
-| Expression                | Requirements                               |
-|---------------------------|--------------------------------------------|
-| `f::apply::type`          | The type is the result of the metafunction |
-| `f::apply<args...>::type` | The type is the result of the metafunction |
-
-
-
+```eval_rst
++-----------------------------+--------------------------------------------+
+| Expression                  | Requirements                               |
++=============================+============================================+
+| ``f::apply::type``          | The type is the result of the metafunction |
++-----------------------------+--------------------------------------------+
+| ``f::apply<args...>::type`` | The type is the result of the metafunction |
++-----------------------------+--------------------------------------------+
+```

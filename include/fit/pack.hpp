@@ -74,6 +74,7 @@
 #include <fit/detail/remove_rvalue_reference.hpp>
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
+#include <fit/unpack_sequence.hpp>
 #include <fit/returns.hpp>
 #include <fit/alias.hpp>
 #include <fit/decay.hpp>
@@ -379,6 +380,16 @@ FIT_DECLARE_STATIC_VAR(pack_forward, detail::pack_forward_f);
 FIT_DECLARE_STATIC_VAR(pack_decay, detail::pack_decay_f);
 
 FIT_DECLARE_STATIC_VAR(pack_join, detail::pack_join_f);
+
+template<class T, class... Ts>
+struct unpack_sequence<detail::pack_base<T, Ts...>>
+{
+    template<class F, class P>
+    constexpr static auto apply(F&& f, P&& p) FIT_RETURNS
+    (
+        fit::detail::unpack_pack_base(FIT_FORWARD(F)(f), FIT_FORWARD(P)(p))
+    );
+};
 
 } // namespace fit
 

@@ -1,2 +1,2 @@
-recommonmark >= 0.4.0
+git+https://github.com/pfultz2/recommonmark@develop
 Sphinx

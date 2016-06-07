@@ -355,6 +355,11 @@ texinfo_documents = [
 # texinfo_no_detailmenu = False
 
 def insert_header(lines, f):
+    title = f.replace('.', '_').replace('/', '_')
+    yield '```eval_rst'
+    yield '.. _{0}:'.format(title)
+    yield '```'
+    yield ''
     for line in lines:
         yield line
         if line.startswith('=='):
@@ -377,8 +382,10 @@ def extract_doc(app, docname, source):
 # app setup hook
 def setup(app):
     app.srcdir = os.path.abspath(os.path.join(app.srcdir, os.pardir))
-    app.connect('source-read', extract_doc)
     app.add_config_value('recommonmark_config', {
             'enable_eval_rst': True,
+            'enable_auto_doc_ref': True,
+            'commonmark_suffixes': ['.md', '.hpp'],
             }, True)
     app.add_transform(AutoStructify)
+    app.connect('source-read', extract_doc)

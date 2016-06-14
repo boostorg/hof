@@ -1,9 +1,12 @@
 cmake_minimum_required (VERSION 2.8)
 project (Fit)
- 
-# The version number.
-set (Fit_VERSION_MAJOR 0)
-set (Fit_VERSION_MINOR 4)
+
+foreach(level MAJOR MINOR PATCH)
+    file(STRINGS include/fit/version.hpp
+                 _define_${level}
+                 REGEX "#define FIT_${level}_VERSION")
+    string(REGEX MATCH "([0-9]+)" Fit_VERSION_${level} "${_define_${level}}")
+endforeach() 
 
 include(CheckCXXCompilerFlag)
 enable_language(CXX)

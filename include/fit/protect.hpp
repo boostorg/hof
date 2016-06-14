@@ -15,10 +15,11 @@
 /// -----------
 /// 
 /// The `protect` function adaptor can be used to make a bind expression be
-/// treated as a normal function instead. Both `bind` and [`lazy`](lazy.md)
-/// eargerly evaluates nested bind expressions. The `protect` adaptor masks
-/// the type so `bind` or [`lazy`](lazy.md) no longer recognizes the function
-/// as bind expression and evaluates it.
+/// treated as a normal function instead. Both `bind` and
+/// [`lazy`](/include/fit/lazy) eargerly evaluates nested bind expressions.
+/// The `protect` adaptor masks the type so `bind` or
+/// [`lazy`](/include/fit/lazy) no longer recognizes the function as bind
+/// expression and evaluates it.
 /// 
 /// Synopsis
 /// --------
@@ -31,7 +32,7 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 

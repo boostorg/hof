@@ -10,12 +10,12 @@ metaprogramming. Lets take look at some of the use cases for using the Fit libra
 Initialization
 --------------
 
-The [`FIT_STATIC_FUNCTION`](function.md) will help initialize function objects at
+The [`FIT_STATIC_FUNCTION`](/include/fit/function) will help initialize function objects at
 global scope, and will ensure that it is initialized at compile-time and (on
 platforms that support it) will have a unique address across translation
 units, thereby reducing executable bloat and potential ODR violations.
 
-In addition, [`FIT_STATIC_LAMBDA_FUNCTION`](lambda.md) allows initializing a lambda
+In addition, [`FIT_STATIC_LAMBDA_FUNCTION`](/include/fit/lambda) allows initializing a lambda
 in the same manner. This allows for simple and compact function definitions
 when working with generic lambdas and function adaptors.
 
@@ -33,7 +33,7 @@ Instead of writing the projection multiple times in algorithms:
                 return a.year_of_birth < b.year_of_birth;
               });
 
-We can use the [`by`](by.md) adaptor to project `year_of_birth` on the comparison
+We can use the [`by`](/include/fit/by) adaptor to project `year_of_birth` on the comparison
 operator:
 
     std::sort(std::begin(people), std::end(people),
@@ -78,7 +78,7 @@ used to achieve extension methods. So it can be written like this:
         | transform([](int x) { return x * x; });
 
 Now, if some users feel a little worried about overloading the _bitwise or_
-operator, pipable functions can also be used with [`flow`](flow.md) like this:
+operator, pipable functions can also be used with [`flow`](/include/fit/flow) like this:
 
     auto r = flow(
         filter([](int x) { return x > 2; }),

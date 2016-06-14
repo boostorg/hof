@@ -13,7 +13,7 @@ However, there is lot of things that don't print directly to `std::cout` such as
 Overloading
 -----------
 
-The Fit library provides several ways to do overloading. One of the ways is with the [`conditional`](conditional.md) adaptor which will pick the first function that is callable. This allows ordering the functions based on which one is more important. So then the first function will print to `std::cout` if possible otherwise we will add an overload to print a range:
+The Fit library provides several ways to do overloading. One of the ways is with the [`conditional`](/include/fit/conditional) adaptor which will pick the first function that is callable. This allows ordering the functions based on which one is more important. So then the first function will print to `std::cout` if possible otherwise we will add an overload to print a range:
 
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = conditional(
@@ -72,7 +72,7 @@ And print out:
 Tuples
 ------
 
-We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which lets us call a function for each element. First, the [`by`](by.md) adaptor will let us apply a function to each argument passed in, and the [`unpack`](unpack.md) adaptor will unpack the elements of a tuple and apply them to the function:
+We could extend this to printing tuples as well. We will need to combine a couple of functions to make a `for_each_tuple`, which lets us call a function for each element. First, the [`by`](/include/fit/by) adaptor will let us apply a function to each argument passed in, and the [`unpack`](/include/fit/unpack) adaptor will unpack the elements of a tuple and apply them to the function:
 
     FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
     {
@@ -125,9 +125,9 @@ And it will print out:
 Recursive
 ---------
 
-Even though this will print for ranges and tuples, if we were to nest a range into a tuple this would not work. What we need to do is make the function call itself recursively. Even though we are using lambdas, we can easily make this recursive using the [`fix`](fix.md) adaptor. This implements a fix point combinator, which passes the function(i.e. itself) in as the first argument. 
+Even though this will print for ranges and tuples, if we were to nest a range into a tuple this would not work. What we need to do is make the function call itself recursively. Even though we are using lambdas, we can easily make this recursive using the [`fix`](/include/fit/fix) adaptor. This implements a fix point combinator, which passes the function(i.e. itself) in as the first argument. 
 
-So now we add an additional arguments called `self` which is the `print` function itself. This extra argument is called by the [`fix`](fix.md) adaptor, and so the user would still call this function with a single argument:
+So now we add an additional arguments called `self` which is the `print` function itself. This extra argument is called by the [`fix`](/include/fit/fix) adaptor, and so the user would still call this function with a single argument:
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
@@ -166,7 +166,7 @@ Which outputs this:
 Variadic
 --------
 
-We can also make this `print` function variadic, so it prints every argument passed into it. We can use the [`by`](by.md) adaptor, which already calls the function on every argument passed in. First, we just rename our original `print` function to `simple_print`:
+We can also make this `print` function variadic, so it prints every argument passed into it. We can use the [`by`](/include/fit/by) adaptor, which already calls the function on every argument passed in. First, we just rename our original `print` function to `simple_print`:
 
     FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
@@ -183,7 +183,7 @@ We can also make this `print` function variadic, so it prints every argument pas
         }
     ));
 
-And then apply the [`by`](by.md) adaptor to `simple_print`:
+And then apply the [`by`](/include/fit/by) adaptor to `simple_print`:
 
     FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
 

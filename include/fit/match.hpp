@@ -16,7 +16,7 @@
 /// 
 /// The `match` function adaptor combines several functions together and
 /// resolves which one should be called by using C++ overload resolution. This
-/// is different than the [`conditional`](conditional.md) adaptor which resolves
+/// is different than the [`conditional`](/include/fit/conditional) adaptor which resolves
 /// them based on order.
 /// 
 /// Synopsis
@@ -30,7 +30,7 @@
 /// 
 /// Fs must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example

@@ -32,7 +32,7 @@ from recommonmark.transform import AutoStructify
 extensions = [
     'sphinx.ext.autodoc',
     # 'sphinx.ext.githubpages',
-    # 'sphinx.ext.autosectionlabel',
+    'sphinx.ext.autosectionlabel',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -384,7 +384,7 @@ def setup(app):
     app.srcdir = os.path.abspath(os.path.join(app.srcdir, os.pardir))
     app.add_config_value('recommonmark_config', {
             'enable_eval_rst': True,
-            'enable_auto_doc_ref': True,
+            # 'enable_auto_doc_ref': True,
             'commonmark_suffixes': ['.md', '.hpp'],
             }, True)
     app.add_transform(AutoStructify)

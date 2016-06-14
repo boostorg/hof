@@ -49,7 +49,7 @@
 /// 
 /// F must be:
 /// 
-/// * [BinaryCallable](concepts.md#binarycallable)
+/// * [BinaryCallable](BinaryCallable)
 /// * MoveConstructible
 /// 
 /// Example

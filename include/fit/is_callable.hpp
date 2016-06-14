@@ -22,7 +22,7 @@
 /// 
 /// F must be:
 /// 
-/// * [Callable](concepts.md#callable)
+/// * [Callable](Callable)
 /// 
 /// Synopsis
 /// --------

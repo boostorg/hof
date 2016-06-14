@@ -355,11 +355,6 @@ texinfo_documents = [
 # texinfo_no_detailmenu = False
 
 def insert_header(lines, f):
-    title = f.replace('.', '_').replace('/', '_')
-    yield '```eval_rst'
-    yield '.. _{0}:'.format(title)
-    yield '```'
-    yield ''
     for line in lines:
         yield line
         if line.startswith('=='):

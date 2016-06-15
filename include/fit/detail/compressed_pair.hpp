@@ -11,11 +11,12 @@
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/move.hpp>
 #include <fit/detail/forward.hpp>
+#include <fit/config.hpp>
 #include <fit/always.hpp>
 #include <fit/alias.hpp>
 
 #ifndef FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND
-#define FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND !FIT_USE_EBO
+#define FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND !FIT_HAS_EBO
 #endif
 
 namespace fit { namespace detail {

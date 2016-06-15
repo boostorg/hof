@@ -163,8 +163,8 @@ struct conditional_kernel : compressed_pair<F1, F2>
     (
         detail::which(
             FIT_RETURNS_CONSTRUCT(holder<typename select<Ts...>::type>)(),
-            FIT_CONST_THIS->first(xs...),
-            FIT_CONST_THIS->second(xs...)
+            FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...)),
+            FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))
         )
         (FIT_FORWARD(Ts)(xs)...)
     );

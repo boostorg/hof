@@ -112,7 +112,7 @@ In addition, adaptors are provided that support simple functional operations suc
 Lambdas
 -------
 
-Writing function objects can be a little verbose. C++ provides lambdas which have a much terser syntax for defining functions. Of course, lambdas can work with all the adaptors in the library, however, if we want to declare a function using lambdas, [`FIT_STATIC_FUNCTION`](/include/fit/function) won't work. Instead, [`FIT_STATIC_LAMBDA_FUNCTION`](/include/fit/lambda) can be used to the declare the lambda as a function instead, this will initialize the function at compile-time and avoid possible ODR violations:
+Writing function objects can be a little verbose. C++ provides lambdas which have a much terser syntax for defining functions. Of course, lambdas can work with all the adaptors in the library, however, if we want to declare a function using lambdas, [`FIT_STATIC_FUNCTION`](/include/fit/function) won't work. Instead, [`FIT_STATIC_LAMBDA_FUNCTION`](FIT_STATIC_LAMBDA_FUNCTION) can be used to the declare the lambda as a function instead, this will initialize the function at compile-time and avoid possible ODR violations:
 
     FIT_STATIC_LAMBDA_FUNCTION(sum) = [](auto x, auto y)
     {

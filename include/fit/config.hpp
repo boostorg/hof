@@ -98,11 +98,7 @@
 // Whether static variables will be a unique address across translation units.
 // This can affect PCH on MSVC, so its currently disabled.
 #ifndef FIT_NO_UNIQUE_STATIC_VAR
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
 #define FIT_NO_UNIQUE_STATIC_VAR 1
-#else
-#define FIT_NO_UNIQUE_STATIC_VAR 0
-#endif
 #endif
 
 // Whether static variables from lambdas will be a unique address across

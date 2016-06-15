@@ -81,6 +81,7 @@
 ///     }
 /// 
 
+#include <fit/returns.hpp>
 #include <fit/lazy.hpp>
 #include <fit/protect.hpp>
 

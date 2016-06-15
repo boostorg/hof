@@ -8,7 +8,7 @@
 #ifndef FIT_GUARD_STATIC_CONST_H
 #define FIT_GUARD_STATIC_CONST_H
 
-#include <fit/config.hpp>
+#include <fit/detail/inline_var.hpp>
 
 namespace fit { namespace detail {
 
@@ -37,16 +37,16 @@ constexpr const T& static_const_var()
 #define FIT_STATIC_AUTO_REF static constexpr auto&
 #endif
 
-#if FIT_HAS_RELAXED_CONSTEXPR || defined(_MSC_VER)
-#define FIT_STATIC_CONSTEXPR const constexpr
+#if FIT_HAS_INLINE_VAR
+#define FIT_STATIC_CONST_VAR(name) FIT_INLINE_CONST_VAR(name)
 #else
-#define FIT_STATIC_CONSTEXPR static constexpr
+#define FIT_STATIC_CONST_VAR(name) static constexpr auto& name
 #endif
 
 #if FIT_NO_UNIQUE_STATIC_VAR
 #define FIT_DECLARE_STATIC_VAR(name, ...) static constexpr __VA_ARGS__ name = {}
 #else
-#define FIT_DECLARE_STATIC_VAR(name, ...) static constexpr auto& name = fit::static_const_var<__VA_ARGS__>()
+#define FIT_DECLARE_STATIC_VAR(name, ...) FIT_STATIC_CONST_VAR(name) = fit::static_const_var<__VA_ARGS__>()
 #endif
 
 

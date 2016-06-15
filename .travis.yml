@@ -178,6 +178,10 @@ script:
             cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_EXAMPLES=$BUILD_EXAMPLES -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX_PATH ..
           fi
           CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 make -j4 check
+          if [ $? -ne 0 ]
+          then
+            exit
+          fi
           if [[ "$build_type" == "release" ]]; then make install; fi
           cd ..
           rm -rf $build_dir

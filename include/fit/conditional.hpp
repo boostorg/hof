@@ -126,22 +126,16 @@ struct basic_conditional_adaptor : F1, F2
     );
 };
 
-struct low_rank {};
-
-struct high_rank : low_rank {};
-
-template <class ...Ts, class F1, class F2, class = typename std::enable_if<(
-    is_callable<F1, Ts...>::value
-)>::type>
-constexpr F1&& which(high_rank, holder<Ts...>, F1&& f1, F2&&) 
+template <class F1, class F2>
+constexpr const F1& which(holder<F1>, const F1& f1, const F2&) 
 { 
-    return FIT_FORWARD(F1)(f1); 
+    return f1; 
 }
 
-template <class ...Ts, class F1, class F2>
-constexpr F2&& which(low_rank, holder<Ts...>, F1&&, F2&& f2) 
+template <class F1, class F2>
+constexpr const F2& which(holder<F2>, const F1&, const F2& f2) 
 { 
-    return FIT_FORWARD(F2)(f2); 
+    return f2; 
 }
 
 template<class F1, class F2>
@@ -168,8 +162,7 @@ struct conditional_kernel : compressed_pair<F1, F2>
     FIT_SFINAE_RETURNS
     (
         detail::which(
-            high_rank{}, 
-            holder<Ts...>{},
+            FIT_RETURNS_CONSTRUCT(holder<typename select<Ts...>::type>)(),
             FIT_CONST_THIS->first(xs...),
             FIT_CONST_THIS->second(xs...)
         )

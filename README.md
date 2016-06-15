@@ -1,4 +1,7 @@
 
+Introduction
+============
+
 Fit is a header-only C++11/C++14 library that provides utilities for functions and function objects, which can solve many problems with much simpler constructs than whats traditionally been done with metaprogramming.
 
 Fit is:
@@ -34,6 +37,7 @@ Contexpr support
 ----------------
 
 Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the implementation of constexpr. However, constexpr initialization of functions is supported when using the `FIT_STATIC_FUNCTION` and `FIT_STATIC_LAMBDA_FUNCTION` constructs.
+
 Building
 ========
 
@@ -60,14 +64,13 @@ The tests can be built and run by using the `check` target:
 Documentation
 -------------
 
-The documentation is built using mkdocs. Mkdocs can be easily installed by using `pip`:
+The documentation is built using Sphinx. First, install the requirements needed for the documentation using `pip`:
 
-    pip install mkdocs
+    pip install -r doc/requirements.txt
 
-Then the docs can be built using these commands:
+Then html documentation can be generated using `sphinx-build`:
 
-    python setup.py
-    mkdocs build
+    sphinx-build -b html doc/ doc/html/
 
 The final docs will be in the `doc/html` folder.
 

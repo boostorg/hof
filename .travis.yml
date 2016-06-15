@@ -180,7 +180,7 @@ script:
           CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 make -j4 check
           if [ $? -ne 0 ]
           then
-            exit
+            exit 1
           fi
           if [[ "$build_type" == "release" ]]; then make install; fi
           cd ..

@@ -1,5 +1,5 @@
-Basic Concepts
-==============
+Concepts
+========
 
 ConstFunctionObject
 -------------------

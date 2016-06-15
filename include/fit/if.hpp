@@ -119,7 +119,7 @@ struct if_f
 }
 #if FIT_HAS_VARIABLE_TEMPLATES
 template<bool B>
-static constexpr auto if_c = detail::make_if_f<B>{};
+static constexpr detail::make_if_f<B> if_c = {};
 #else
 template<bool B, class F>
 constexpr detail::if_adaptor<B, F> if_c(F f)

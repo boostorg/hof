@@ -114,7 +114,7 @@ struct arg_f
 }
 #if FIT_HAS_VARIABLE_TEMPLATES
 template<std::size_t N>
-static constexpr detail::make_args_f<std::size_t, N> arg_c = {};
+FIT_STATIC_CONSTEXPR detail::make_args_f<std::size_t, N> arg_c = {};
 #else
 template<std::size_t N, class... Ts>
 constexpr auto arg_c(Ts&&... xs) FIT_RETURNS

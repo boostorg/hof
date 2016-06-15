@@ -79,7 +79,9 @@
 
 // Whether the compiler supports variable templates
 #ifndef FIT_HAS_VARIABLE_TEMPLATES
-#if defined(__cpp_variable_templates)
+#if defined(__clang__) && __clang_major__ == 3 && __clang_minor__ < 5
+#define FIT_HAS_VARIABLE_TEMPLATES 0
+#elif defined(__cpp_variable_templates)
 #define FIT_HAS_VARIABLE_TEMPLATES 1
 #else
 #define FIT_HAS_VARIABLE_TEMPLATES FIT_HAS_STD_14

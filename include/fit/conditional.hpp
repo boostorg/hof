@@ -127,13 +127,13 @@ struct basic_conditional_adaptor : F1, F2
 };
 
 template <class F1, class F2>
-constexpr const F1& which(holder<F1>, const F1& f1, const F2&) 
+constexpr const F1& which(std::true_type, const F1& f1, const F2&) 
 { 
     return f1; 
 }
 
 template <class F1, class F2>
-constexpr const F2& which(holder<F2>, const F1&, const F2& f2) 
+constexpr const F2& which(std::false_type, const F1&, const F2& f2) 
 { 
     return f2; 
 }
@@ -162,7 +162,7 @@ struct conditional_kernel : compressed_pair<F1, F2>
     FIT_SFINAE_RETURNS
     (
         detail::which(
-            FIT_RETURNS_CONSTRUCT(holder<typename select<Ts...>::type>)(),
+            FIT_RETURNS_CONSTRUCT(is_callable<F1, Ts...>)(),
             FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...)),
             FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))
         )

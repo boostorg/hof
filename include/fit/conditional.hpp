@@ -156,13 +156,13 @@ struct conditional_kernel : compressed_pair<F1, F2>
 
     FIT_RETURNS_CLASS(conditional_kernel);
 
-    template<class... Ts>
+    template<class... Ts, class PickFirst=is_callable<F1, Ts...>>
     constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
     operator()(Ts && ... xs) const
     FIT_SFINAE_RETURNS
     (
         detail::which(
-            FIT_RETURNS_CONSTRUCT(is_callable<F1, Ts...>)(),
+            FIT_RETURNS_CONSTRUCT(PickFirst)(),
             FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...)),
             FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))
         )

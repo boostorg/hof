@@ -12,8 +12,8 @@
 
 #ifdef __ELF__
 
-#define FIT_INLINE_VAR(var) __attribute__((weak)) static auto var
-#define FIT_INLINE_CONST_VAR(var) __attribute__((weak)) FIT_STATIC_CONSTEXPR auto var
+#define FIT_INLINE_VAR(var) __attribute__((weak)) auto var
+#define FIT_INLINE_CONST_VAR(var) __attribute__((weak)) constexpr auto var
 
 #define FIT_HAS_INLINE_VAR 1
 

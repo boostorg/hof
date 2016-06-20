@@ -57,29 +57,15 @@ struct reveal_static_const_factory
 {
     constexpr reveal_static_const_factory()
     {}
-#if FIT_NO_UNIQUE_STATIC_VAR
     template<class F>
     constexpr reveal_adaptor<F> operator=(const F& f) const
     {
         static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(F), "Static functions must be default constructible");
         return reveal_adaptor<F>(f);
     }
-#else
-    template<class F>
-    constexpr const reveal_adaptor<F>& operator=(const F&) const
-    {
-        static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(F), "Static functions must be default constructible");
-        return fit::static_const_var<reveal_adaptor<F>>();
-    }
-#endif
 };
 }} // namespace fit
 
-#if FIT_NO_UNIQUE_STATIC_VAR
-#define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONSTEXPR auto name = FIT_DETAIL_MSVC_CONSTEXPR_DEDUCE fit::detail::reveal_static_const_factory()
-#else
 #define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONST_VAR(name) = FIT_DETAIL_MSVC_CONSTEXPR_DEDUCE fit::detail::reveal_static_const_factory()
-#endif
-
 
 #endif

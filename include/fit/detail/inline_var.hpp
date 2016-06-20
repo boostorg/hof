@@ -19,8 +19,8 @@
 
 #elif defined(_WIN32)
 
-#define FIT_INLINE_VAR(var) __declspec(selectany) static auto var
-#define FIT_INLINE_CONST_VAR(var) __declspec(selectany) FIT_STATIC_CONSTEXPR auto var
+#define FIT_INLINE_VAR(var) extern __declspec(selectany) static auto var
+#define FIT_INLINE_CONST_VAR(var) extern __declspec(selectany) FIT_STATIC_CONSTEXPR auto var
 #define FIT_HAS_INLINE_VAR 1
 
 #else

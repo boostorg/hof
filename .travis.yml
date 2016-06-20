@@ -4,7 +4,7 @@ script: cmake
 matrix:
     include:
         # OSX
-        - env: ASAN=off LIBCXX=off
+        - env: ASAN=off LIBCXX=off CXXFLAGS='-DFIT_HAS_VARIABLE_TEMPLATES=0'
           os: osx
           compiler: clang
 

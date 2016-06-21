@@ -32,7 +32,7 @@ struct constexpr_deduce_unique
 {
     constexpr constexpr_deduce_unique()
     {}
-#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+#ifdef _MSC_VER
     template<class F>
     constexpr operator F() const
     {

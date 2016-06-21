@@ -218,12 +218,6 @@ struct reveal_static_lambda_function_wrapper_factor
 
 }} // namespace fit
 
-#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR || FIT_REWRITE_STATIC_LAMBDA
-#define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR auto
-#else
-#define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_AUTO_REF
-#endif
-
 #define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
 
 #if FIT_HAS_INLINE_VAR
@@ -232,7 +226,7 @@ struct reveal_static_lambda_function_wrapper_factor
 #define FIT_DETAIL_MAKE_REVEAL_STATIC(T) FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>()
 #define FIT_STATIC_LAMBDA_FUNCTION(name) \
 struct fit_private_static_function_ ## name {}; \
-FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
+static constexpr auto& name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 #endif
 #define FIT_STATIC_LAMBDA FIT_DETAIL_MAKE_STATIC = []
 

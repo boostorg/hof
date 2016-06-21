@@ -107,11 +107,7 @@
 // translation units. This is only supported on compilers that can do a
 // constexpr reintrepret_cast.
 #ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
-#if defined(_MSC_VER)
 #define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 1
-#else
-#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
-#endif
 #endif
 
 // Whether to use template aliases

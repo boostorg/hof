@@ -10,14 +10,14 @@
 
 #include <fit/detail/static_constexpr.hpp>
 
-#if defined(__clang__) || defined(__GNUC__)
+#if defined(__GNUC__) && !defined(__clang__)
 
 #define FIT_INLINE_VAR(var) extern __attribute__((weak)) auto var
 #define FIT_INLINE_CONST_VAR(var) extern __attribute__((weak)) constexpr auto var
 
 #define FIT_HAS_INLINE_VAR 1
 
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__clang__)
 
 #define FIT_INLINE_VAR(var) extern __declspec(selectany) static auto var
 #define FIT_INLINE_CONST_VAR(var) extern const __declspec(selectany) auto var

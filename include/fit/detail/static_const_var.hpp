@@ -45,13 +45,14 @@ constexpr const T& static_const_var()
 } // namespace fit
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_STATIC_AUTO_REF static auto&
+#define FIT_STATIC_AUTO_REF extern __attribute__((weak)) constexpr auto
 #else
 #define FIT_STATIC_AUTO_REF static constexpr auto&
 #endif
 
-#if FIT_HAS_INLINE_VAR
-#define FIT_STATIC_CONST_VAR(name) FIT_INLINE_CONST_VAR(name)
+// On gcc 4.6 use weak variables
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_STATIC_CONST_VAR(name) extern __attribute__((weak)) constexpr auto name
 #else
 #define FIT_STATIC_CONST_VAR(name) static constexpr auto& name = fit::detail::static_const_var_factory()
 #endif

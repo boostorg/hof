@@ -100,7 +100,7 @@
 // Whether static variables will be a unique address across translation units.
 // This can affect PCH on MSVC, so its currently disabled.
 #ifndef FIT_NO_UNIQUE_STATIC_VAR
-#define FIT_NO_UNIQUE_STATIC_VAR 1
+#define FIT_NO_UNIQUE_STATIC_VAR 0
 #endif
 
 // Whether static variables from lambdas will be a unique address across

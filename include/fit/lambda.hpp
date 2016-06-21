@@ -201,7 +201,7 @@ struct reveal_static_lambda_function_wrapper_factor
     {
         return reveal_adaptor<typename rewrite_lambda<F>::type>();
     }
-#elif FIT_HAS_INLINE_VAR
+#elif FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
     template<class F>
     constexpr reveal_adaptor<static_function_wrapper<F>> operator=(const F&) const
     {
@@ -218,9 +218,8 @@ struct reveal_static_lambda_function_wrapper_factor
 
 }} // namespace fit
 
-#define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
 
-#if FIT_HAS_INLINE_VAR
+#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
 #define FIT_STATIC_LAMBDA_FUNCTION(name) FIT_STATIC_FUNCTION(name) = fit::detail::reveal_static_lambda_function_wrapper_factor<void>()
 #else
 #define FIT_DETAIL_MAKE_REVEAL_STATIC(T) FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>()
@@ -228,6 +227,8 @@ struct reveal_static_lambda_function_wrapper_factor
 struct fit_private_static_function_ ## name {}; \
 static constexpr auto& name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 #endif
+
+#define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
 #define FIT_STATIC_LAMBDA FIT_DETAIL_MAKE_STATIC = []
 
 

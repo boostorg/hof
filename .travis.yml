@@ -168,7 +168,7 @@ script:
     
     - |
       for build_type in debug minsizerel release; do
-        for asan_type in ASANVARIANT; do
+        for asan_type in $ASANVARIANT; do
           build_dir="build-$build_type-asan-$asan_type"
           mkdir $build_dir
           cd $build_dir

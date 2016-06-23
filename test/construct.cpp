@@ -32,11 +32,39 @@ struct tuple_meta_class
     };
 };
 
+struct implicit_default
+{
+    int mem1;
+    std::string mem2;
+};
+ 
+struct user_default
+{
+    int mem1;
+    std::string mem2;
+    user_default() { }
+};
+
+
 FIT_TEST_CASE()
 {
     auto v = fit::construct<std::vector<int>>()(5, 5);
     FIT_TEST_CHECK(v.size() == 5);
     FIT_TEST_CHECK(v == std::vector<int>{5, 5, 5, 5, 5});
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct<implicit_default>()();
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct<user_default>()();
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
 }
 
 FIT_TEST_CASE()

@@ -97,19 +97,6 @@
 #endif
 #endif
 
-// Whether static variables will be a unique address across translation units.
-// This can affect PCH on MSVC, so its currently disabled.
-#ifndef FIT_NO_UNIQUE_STATIC_VAR
-#define FIT_NO_UNIQUE_STATIC_VAR 0
-#endif
-
-// Whether static variables from lambdas will be a unique address across
-// translation units. This is only supported on compilers that can do a
-// constexpr reintrepret_cast.
-#ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
-#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
-#endif
-
 // Whether to use template aliases
 #ifndef FIT_HAS_TEMPLATE_ALIAS
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
@@ -148,7 +135,7 @@
 #endif
 #endif
 
-// SOme type expansion failures on gcc 4.6
+// Some type expansion failures on gcc 4.6
 #ifndef FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
 #define FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE 1

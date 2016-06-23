@@ -8,7 +8,7 @@
 #ifndef FIT_GUARD_STATIC_CONST_H
 #define FIT_GUARD_STATIC_CONST_H
 
-#include <fit/detail/inline_var.hpp>
+#include <fit/detail/intrinsics.hpp>
 
 namespace fit { namespace detail {
 
@@ -29,7 +29,7 @@ struct static_const_var_factory
     template<class T>
     constexpr const T& operator=(const T&) const
     {
-        // static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(T), "Static const variable must be default constructible");
+        static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(T), "Static const variable must be default constructible");
         return static_const_storage<T>::value;
     }
 };
@@ -43,6 +43,12 @@ constexpr const T& static_const_var()
 
 
 } // namespace fit
+
+#if FIT_HAS_RELAXED_CONSTEXPR || defined(_MSC_VER)
+#define FIT_STATIC_CONSTEXPR const constexpr
+#else
+#define FIT_STATIC_CONSTEXPR static constexpr
+#endif
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
 #define FIT_STATIC_AUTO_REF extern __attribute__((weak)) constexpr auto

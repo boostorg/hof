@@ -197,7 +197,7 @@ struct construct_template_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(FIT_FORWARD(Ts)(xs)...);
+        return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>
@@ -224,7 +224,7 @@ struct construct_meta_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(FIT_FORWARD(Ts)(xs)...);
+        return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>
@@ -245,7 +245,7 @@ struct construct_meta_template_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(FIT_FORWARD(Ts)(xs)...);
+        return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>

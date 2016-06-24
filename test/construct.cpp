@@ -52,6 +52,14 @@ struct user_construct
     user_construct(int) { }
 };
 
+template<class T>
+struct template_user_construct
+{
+    int mem1;
+    std::string mem2;
+    template_user_construct(T) { }
+};
+
 
 FIT_TEST_CASE()
 {
@@ -77,6 +85,13 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
     auto x = fit::construct<user_construct>()(3);
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct<template_user_construct>()(3);
     FIT_TEST_CHECK(x.mem1 == 0);
     FIT_TEST_CHECK(x.mem2 == "");
 }

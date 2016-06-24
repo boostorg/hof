@@ -99,3 +99,88 @@ FIT_STATIC_TEST_CASE()
     static_assert(not fit::is_callable<is_callable_rank_class>::value, "callable failed");
     static_assert(not fit::is_callable<is_callable_rank_class, int, int>::value, "callable failed");
 };
+
+FIT_STATIC_TEST_CASE()
+{
+    typedef int(callable_rank<0>::*fn)(int);
+
+    static_assert(fit::is_callable<fn, callable_rank<0>&, int>::value, "Failed");
+    static_assert(fit::is_callable<fn, callable_rank<1>&, int>::value, "Failed");
+    static_assert(!fit::is_callable<fn, callable_rank<0>&>::value, "Failed");
+    static_assert(!fit::is_callable<fn, callable_rank<0> const&, int>::value, "Failed");
+};
+
+FIT_STATIC_TEST_CASE()
+{
+    typedef int(callable_rank<0>::*fn)(int);
+
+    typedef callable_rank<0>* T;
+    typedef callable_rank<1>* DT;
+    typedef const callable_rank<0>* CT;
+    typedef std::unique_ptr<callable_rank<0>> ST;
+
+    static_assert(fit::is_callable<fn, T&, int>::value, "");
+    static_assert(fit::is_callable<fn, DT&, int>::value, "");
+    static_assert(fit::is_callable<fn, const T&, int>::value, "");
+    static_assert(fit::is_callable<fn, T&&, int>::value, "");
+    static_assert(fit::is_callable<fn, ST, int>::value, "");
+    static_assert(!fit::is_callable<fn, CT&, int>::value, "");
+
+};
+
+FIT_STATIC_TEST_CASE()
+{
+    typedef int(callable_rank<0>::*fn);
+
+    static_assert(!fit::is_callable<fn>::value, "Failed");
+};
+
+FIT_STATIC_TEST_CASE()
+{
+    typedef int(callable_rank<0>::*fn);
+
+    static_assert(fit::is_callable<fn, callable_rank<0>&>::value, "Failed");
+    static_assert(fit::is_callable<fn, callable_rank<0>&&>::value, "Failed");
+    static_assert(fit::is_callable<fn, const callable_rank<0>&>::value, "Failed");
+    static_assert(fit::is_callable<fn, callable_rank<1>&>::value, "Failed");
+};
+
+FIT_STATIC_TEST_CASE()
+{
+    typedef int(callable_rank<0>::*fn);
+
+    typedef callable_rank<0>* T;
+    typedef callable_rank<1>* DT;
+    typedef const callable_rank<0>* CT;
+    typedef std::unique_ptr<callable_rank<0>> ST;
+
+    static_assert(fit::is_callable<fn, T&>::value, "Failed");
+    static_assert(fit::is_callable<fn, DT&>::value, "Failed");
+    static_assert(fit::is_callable<fn, const T&>::value, "Failed");
+    static_assert(fit::is_callable<fn, T&&>::value, "Failed");
+    static_assert(fit::is_callable<fn, ST>::value, "Failed");
+    static_assert(fit::is_callable<fn, CT&>::value, "Failed");
+
+};
+
+FIT_STATIC_TEST_CASE()
+{
+    typedef void(*fp)(callable_rank<0>&, int);
+
+    static_assert(fit::is_callable<fp, callable_rank<0>&, int>::value, "Failed");
+    static_assert(fit::is_callable<fp, callable_rank<1>&, int>::value, "Failed");
+    static_assert(!fit::is_callable<fp, const callable_rank<0>&, int>::value, "Failed");
+    static_assert(!fit::is_callable<fp>::value, "Failed");
+    static_assert(!fit::is_callable<fp, callable_rank<0>&>::value, "Failed");
+};
+
+FIT_STATIC_TEST_CASE()
+{
+    typedef void(&fp)(callable_rank<0>&, int);
+
+    static_assert(fit::is_callable<fp, callable_rank<0>&, int>::value, "Failed");
+    static_assert(fit::is_callable<fp, callable_rank<1>&, int>::value, "Failed");
+    static_assert(!fit::is_callable<fp, const callable_rank<0>&, int>::value, "Failed");
+    static_assert(!fit::is_callable<fp>::value, "Failed");
+    static_assert(!fit::is_callable<fp, callable_rank<0>&>::value, "Failed");
+};

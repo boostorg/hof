@@ -119,12 +119,12 @@ FIT_STATIC_TEST_CASE()
     typedef const callable_rank<0>* CT;
     typedef std::unique_ptr<callable_rank<0>> ST;
 
-    static_assert(fit::is_callable<fn, T&, int>::value, "");
-    static_assert(fit::is_callable<fn, DT&, int>::value, "");
-    static_assert(fit::is_callable<fn, const T&, int>::value, "");
-    static_assert(fit::is_callable<fn, T&&, int>::value, "");
-    static_assert(fit::is_callable<fn, ST, int>::value, "");
-    static_assert(!fit::is_callable<fn, CT&, int>::value, "");
+    static_assert(fit::is_callable<fn, T&, int>::value, "Failed");
+    static_assert(fit::is_callable<fn, DT&, int>::value, "Failed");
+    static_assert(fit::is_callable<fn, const T&, int>::value, "Failed");
+    static_assert(fit::is_callable<fn, T&&, int>::value, "Failed");
+    static_assert(fit::is_callable<fn, ST, int>::value, "Failed");
+    static_assert(!fit::is_callable<fn, CT&, int>::value, "Failed");
 
 };
 

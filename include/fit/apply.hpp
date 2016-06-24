@@ -74,7 +74,9 @@ struct apply_mem_fn
     struct convertible_args;
 
     template<class T, class U, class=void>
-    struct is_convertible_args;
+    struct is_convertible_args
+    : std::false_type
+    {};
 
     template<class... Ts, class... Us>
     struct is_convertible_args<

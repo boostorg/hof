@@ -73,11 +73,17 @@ struct apply_mem_fn
     template<class...>
     struct convertible_args;
 
-    template<class T, class U>
+    template<class T, class U, class=void>
     struct is_convertible_args;
 
     template<class... Ts, class... Us>
-    struct is_convertible_args<convertible_args<Ts...>, convertible_args<Us...>>
+    struct is_convertible_args<
+        convertible_args<Ts...>, 
+        convertible_args<Us...>, 
+        typename std::enable_if<(
+            sizeof...(Ts) == sizeof...(Us)
+        )>::type
+    >
     : and_<std::is_convertible<Ts, Us>...>
     {};
 

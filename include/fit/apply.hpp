@@ -87,9 +87,17 @@ struct apply_mem_fn
     : and_<std::is_convertible<Ts, Us>...>
     {};
 
+    template<class From, class To>
+    struct is_compatible
+    : std::is_convertible<
+        typename std::add_pointer<typename std::remove_reference<From>::type>::type,
+        typename std::add_pointer<typename std::remove_reference<To>::type>::type
+    >
+    {};
+
 #define FIT_APPLY_MEM_FN_CALL(cv) \
     template <class R, class Base, class Derived, class... Ts, class... Us, class=typename std::enable_if<and_< \
-        std::is_base_of<Base, typename std::decay<Derived>::type>, \
+        is_compatible<Derived, Base>, \
         is_convertible_args<convertible_args<Us...>, convertible_args<Ts...>> \
     >::value>::type> \
     constexpr R operator()(R (Base::*mf)(Ts...) cv, Derived&& ref, Us &&... xs) const \

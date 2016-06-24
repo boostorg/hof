@@ -99,7 +99,7 @@ struct apply_mem_fn
 
 #define FIT_APPLY_MEM_FN_CALL(cv) \
     template <class R, class Base, class Derived, class... Ts, class... Us, class=typename std::enable_if<and_< \
-        is_compatible<Derived, Base>, \
+        is_compatible<Derived, cv Base>, \
         is_convertible_args<convertible_args<Us...>, convertible_args<Ts...>> \
     >::value>::type> \
     constexpr R operator()(R (Base::*mf)(Ts...) cv, Derived&& ref, Us &&... xs) const \

@@ -64,6 +64,12 @@
 #pragma warning(disable: 4003)
 #endif
 
+#define FIT_DETAIL_FOREACH_QUAL(m, data) \
+    m(, data) \
+    m(const, data) \
+    m(volatile, data) \
+    m(const volatile, data)
+
 namespace fit {
 
 namespace detail {
@@ -97,7 +103,7 @@ struct apply_mem_fn
     >
     {};
 
-#define FIT_APPLY_MEM_FN_CALL(cv) \
+#define FIT_APPLY_MEM_FN_CALL(cv, data) \
     template <class R, class Base, class Derived, class... Ts, class... Us, class=typename std::enable_if<and_< \
         is_compatible<Derived, cv Base>, \
         is_convertible_args<convertible_args<Us...>, convertible_args<Ts...>> \
@@ -106,18 +112,29 @@ struct apply_mem_fn
     { \
         return (FIT_FORWARD(Derived)(ref).*mf)(FIT_FORWARD(Us)(xs)...); \
     }
-    FIT_APPLY_MEM_FN_CALL()
-    FIT_APPLY_MEM_FN_CALL(const)
-    FIT_APPLY_MEM_FN_CALL(volatile)
-    FIT_APPLY_MEM_FN_CALL(const volatile)
+    FIT_DETAIL_FOREACH_QUAL(FIT_APPLY_MEM_FN_CALL, ~)
 };
 
 struct apply_mem_data
 {
+    template<class T, class R>
+    struct match_qualifier
+    { typedef R type; };
+
+#define FIT_APPLY_MEM_DATA_MATCH(cv, ref) \
+    template<class T, class R> \
+    struct match_qualifier<cv T ref, R> \
+    : match_qualifier<T, cv R ref> \
+    {};
+
+    FIT_DETAIL_FOREACH_QUAL(FIT_APPLY_MEM_DATA_MATCH,&)
+    FIT_DETAIL_FOREACH_QUAL(FIT_APPLY_MEM_DATA_MATCH,&&)
+
     template <class Base, class R, class Derived, class=typename std::enable_if<(
         std::is_base_of<Base, typename std::decay<Derived>::type>::value
     )>::type>
-    constexpr R operator()(R Base::*pmd, Derived&& ref) const
+    constexpr typename match_qualifier<Derived&&, R>::type 
+    operator()(R Base::*pmd, Derived&& ref) const
     {
         return FIT_FORWARD(Derived)(ref).*pmd;
     }

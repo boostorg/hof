@@ -133,7 +133,7 @@ struct apply_mem_data
     template <class Base, class R, class Derived, class=typename std::enable_if<(
         std::is_base_of<Base, typename std::decay<Derived>::type>::value
     )>::type>
-    constexpr typename match_qualifier<Derived&&, R>::type 
+    constexpr typename match_qualifier<Derived, R>::type 
     operator()(R Base::*pmd, Derived&& ref) const
     {
         return FIT_FORWARD(Derived)(ref).*pmd;

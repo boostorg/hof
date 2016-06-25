@@ -32,11 +32,68 @@ struct tuple_meta_class
     };
 };
 
+struct implicit_default
+{
+    int mem1;
+    std::string mem2;
+};
+ 
+struct user_default
+{
+    int mem1;
+    std::string mem2;
+    user_default() { }
+};
+
+struct user_construct
+{
+    int mem1;
+    std::string mem2;
+    user_construct(int) { }
+};
+
+template<class T>
+struct template_user_construct
+{
+    int mem1;
+    std::string mem2;
+    template_user_construct(T) { }
+};
+
+
 FIT_TEST_CASE()
 {
     auto v = fit::construct<std::vector<int>>()(5, 5);
     FIT_TEST_CHECK(v.size() == 5);
     FIT_TEST_CHECK(v == std::vector<int>{5, 5, 5, 5, 5});
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct<implicit_default>()();
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct<user_default>()();
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct<user_construct>()(3);
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct<template_user_construct>()(3);
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
 }
 
 FIT_TEST_CASE()

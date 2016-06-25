@@ -85,8 +85,75 @@ struct by_adaptor;
 
 namespace detail {
 
-template<class T>
+template<class T, class=void>
 struct construct_f
+{
+    typedef typename std::aligned_storage<sizeof(T)>::type storage;
+
+    struct storage_holder
+    {
+        storage * s;
+        storage_holder(storage* x) : s(x)
+        {}
+
+        T& data()
+        {
+            return *reinterpret_cast<T*>(s);
+        }
+
+        ~storage_holder()
+        {
+            this->data().~T();
+        }
+    };
+
+    constexpr construct_f()
+    {}
+    template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(T, Ts...)>
+    T operator()(Ts&&... xs) const
+    {
+        storage buffer{};
+        new(&buffer) T(FIT_FORWARD(Ts)(xs)...);
+        storage_holder h(&buffer);
+        return h.data();
+    }
+
+    template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&&)>
+    T operator()(std::initializer_list<X>&& x) const
+    {
+        storage buffer{};
+        new(&buffer) T(static_cast<std::initializer_list<X>&&>(x));
+        storage_holder h(&buffer);
+        return h.data();
+    }
+
+    template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&)>
+    T operator()(std::initializer_list<X>& x) const
+    {
+        storage buffer{};
+        new(&buffer) T(x);
+        storage_holder h(&buffer);
+        return h.data();
+    }
+
+    template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, const std::initializer_list<X>&)>
+    T operator()(const std::initializer_list<X>& x) const
+    {
+        storage buffer{};
+        new(&buffer) T(x);
+        storage_holder h(&buffer);
+        return h.data();
+    }
+
+    template<class F>
+    constexpr by_adaptor<F, construct_f> by(F f) const
+    {
+        return by_adaptor<F, construct_f>(static_cast<F&&>(f), *this);
+    }
+};
+
+template<class T>
+struct construct_f<T, typename std::enable_if<FIT_IS_LITERAL(T)>::type>
 {
     constexpr construct_f()
     {}
@@ -130,7 +197,7 @@ struct construct_template_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(FIT_FORWARD(Ts)(xs)...);
+        return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>
@@ -157,7 +224,7 @@ struct construct_meta_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(FIT_FORWARD(Ts)(xs)...);
+        return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>
@@ -178,7 +245,7 @@ struct construct_meta_template_f
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
-        return Result(FIT_FORWARD(Ts)(xs)...);
+        return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class F>

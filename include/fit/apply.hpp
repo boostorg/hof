@@ -167,6 +167,15 @@ struct apply_f
         apply_mem_fn()(f, *FIT_FORWARD(T)(obj), FIT_FORWARD(Ts)(xs)...)
     );
 
+    template<class F, class T, class... Ts, class=typename std::enable_if<(
+        std::is_member_function_pointer<typename std::decay<F>::type>::value
+    )>::type>
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_fn, id_<F>, id_<T&>, id_<Ts>...) 
+    operator()(F&& f, const std::reference_wrapper<T>& ref, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
+    (
+        apply_mem_fn()(f, ref.get(), FIT_FORWARD(Ts)(xs)...)
+    );
+
     template<class F, class T, class=typename std::enable_if<(
         std::is_member_object_pointer<typename std::decay<F>::type>::value
     )>::type>
@@ -184,6 +193,15 @@ struct apply_f
     (
         apply_mem_data()(f, *FIT_FORWARD(T)(obj))
     );
+    
+    template<class F, class T, class=typename std::enable_if<(
+        std::is_member_object_pointer<typename std::decay<F>::type>::value
+    )>::type>
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_data, id_<F>, id_<T&>) 
+    operator()(F&& f, const std::reference_wrapper<T>& ref) const FIT_SFINAE_MANUAL_RETURNS
+    (
+        apply_mem_data()(f, ref.get())
+    );
 
 #else
 
@@ -194,6 +212,10 @@ struct apply_f
     template <class PMD, class Pointer>
     constexpr auto operator()(PMD&& pmd, Pointer&& ptr) const
     FIT_RETURNS((*FIT_FORWARD(Pointer)(ptr)).*FIT_FORWARD(PMD)(pmd));
+
+    template <class Base, class T, class Derived>
+    constexpr auto operator()(T Base::*pmd, const std::reference_wrapper<Derived>& ref) const
+    FIT_RETURNS(ref.get().*pmd);
      
     template <class Base, class T, class Derived, class... Args>
     constexpr auto operator()(T Base::*pmf, Derived&& ref, Args&&... args) const
@@ -202,6 +224,10 @@ struct apply_f
     template <class PMF, class Pointer, class... Args>
     constexpr auto operator()(PMF&& pmf, Pointer&& ptr, Args&&... args) const
     FIT_RETURNS(((*FIT_FORWARD(Pointer)(ptr)).*FIT_FORWARD(PMF)(pmf))(FIT_FORWARD(Args)(args)...));
+
+    template <class Base, class T, class Derived, class... Args>
+    constexpr auto operator()(T Base::*pmf, const std::reference_wrapper<Derived>& ref, Args&&... args) const
+    FIT_RETURNS((ref.get().*pmf)(FIT_FORWARD(Args)(args)...));
 
 #endif
     template<class F, class... Ts>

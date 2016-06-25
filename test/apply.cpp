@@ -373,3 +373,25 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK( fit::apply( &dm_t::m, pcx ) == 603 );
 
 }
+
+
+struct X_ref
+{
+    int f()
+    {
+        return 1;
+    }
+
+    int g() const
+    {
+        return 2;
+    }
+};
+
+FIT_TEST_CASE()
+{
+    X_ref x;
+
+    FIT_TEST_CHECK( fit::apply( &X_ref::f, std::ref( x ) ) == 1 );
+    FIT_TEST_CHECK( fit::apply( &X_ref::g, std::cref( x ) ) == 2 );
+}

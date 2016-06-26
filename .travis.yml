@@ -98,12 +98,12 @@ matrix:
               sources:
                 - ubuntu-toolchain-r-test
 
-cache:
-  directories:
-    - ${TRAVIS_BUILD_DIR}/deps/llvm-3.5.2
-    - ${TRAVIS_BUILD_DIR}/deps/llvm-3.6.2
-    - ${TRAVIS_BUILD_DIR}/deps/llvm-3.7.1
-    - ${TRAVIS_BUILD_DIR}/deps/llvm-3.8.0
+# cache:
+#   directories:
+#     - ${TRAVIS_BUILD_DIR}/deps/llvm-3.5.2
+#     - ${TRAVIS_BUILD_DIR}/deps/llvm-3.6.2
+#     - ${TRAVIS_BUILD_DIR}/deps/llvm-3.7.1
+#     - ${TRAVIS_BUILD_DIR}/deps/llvm-3.8.0
 
 install:
     - export CHECKOUT_PATH=`pwd`;

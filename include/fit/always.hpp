@@ -95,7 +95,7 @@ struct always_base
 };
 
 template<class T>
-struct always_base<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+struct always_base<T, typename std::enable_if<!FIT_IS_EMPTY(T)>::type>
 {
     T x;
 

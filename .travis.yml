@@ -1,3 +1,4 @@
+dist: trusty
 language: cpp
 script: cmake
 
@@ -9,21 +10,21 @@ matrix:
           compiler: clang
 
         # Clang
-        - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off
-          os: linux
-          compiler: clang
-          addons: &clang34
-            apt:
-              packages:
-                - g++-4.9
-                - valgrind
-              sources:
-                - ubuntu-toolchain-r-test
+        # - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off
+        #   os: linux
+        #   compiler: clang
+        #   addons: &clang34
+        #     apt:
+        #       packages:
+        #         - g++-4.9
+        #         - valgrind
+        #       sources:
+        #         - ubuntu-toolchain-r-test
 
-        - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off CXX11=on
-          os: linux
-          compiler: clang
-          addons: *clang34
+        # - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off CXX11=on
+        #   os: linux
+        #   compiler: clang
+        #   addons: *clang34
 
         - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
           os: linux

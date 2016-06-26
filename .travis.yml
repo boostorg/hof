@@ -129,12 +129,12 @@ install:
     - |
       if [[ "${LLVM_VERSION}" != "" ]]; then
         export PATH="${LLVM_DIR}/bin:${PATH}"
+        mkdir -p ${LLVM_DIR}
         if [[ -z "$(ls -A ${LLVM_DIR})" ]]; then
           LLVM_URL="http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz"
-          mkdir -p ${LLVM_DIR}
           travis_retry wget --quiet -O - ${LLVM_URL}      | tar --strip-components=1 -xJ -C ${LLVM_DIR}
+          ls -lR ${LLVM_DIR}
         fi
-        - ls -lR ${LLVM_DIR}
       fi
     # Show compiler info
     - $CXX --version

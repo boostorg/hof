@@ -128,6 +128,7 @@ install:
     - if [[ "${CLANG_VERSION}" == "3.8" ]]; then LLVM_VERSION="3.8.0"; fi
     - |
       if [[ "${LLVM_VERSION}" != "" ]]; then
+        mkdir -p ${LLVM_DIR}
         export PATH="${LLVM_DIR}/clang/bin:${PATH}"
         if [[ -z "$(ls -A ${LLVM_DIR})" ]]; then
           LLVM_URL="http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz"

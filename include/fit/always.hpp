@@ -79,12 +79,28 @@
 
 namespace fit { namespace always_detail {
 
-template<class T>
+template<class T, class=void>
 struct always_base
 {
     T x;
 
     FIT_DELGATE_CONSTRUCTOR(always_base, T, x)
+
+    template<class... As>
+    constexpr typename detail::unwrap_reference<T>::type 
+    operator()(As&&...) const
+    {
+        return this->x;
+    }
+};
+
+template<class T>
+struct always_base<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+{
+    T x;
+
+    constexpr always_base(T xp) : x(xp)
+    {}
 
     template<class... As>
     constexpr typename detail::unwrap_reference<T>::type 

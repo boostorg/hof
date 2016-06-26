@@ -31,3 +31,9 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(ten(1,2,3,4,5) == 10);
     FIT_TEST_CHECK(ten(1,2,3,4,5) == 10);
 }
+
+FIT_TEST_CASE()
+{
+    auto f = fit::always(10);
+    STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(f));
+}

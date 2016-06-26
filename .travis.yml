@@ -134,6 +134,7 @@ install:
           mkdir -p ${LLVM_DIR}
           travis_retry wget --quiet -O - ${LLVM_URL}      | tar --strip-components=1 -xJ -C ${LLVM_DIR}
         fi
+        - ls -lR ${LLVM_DIR}
       fi
     # Show compiler info
     - $CXX --version

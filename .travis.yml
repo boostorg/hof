@@ -156,10 +156,10 @@ install:
     # Use libc++
     - |
       if [[ "$LIBCXX" == "on" ]]; then
-        export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
-        export CFLAGS="${CFLAGS} -stdlib=libc++ -nostdinc++ -isystem ${DEPS_DIR}/usr/include/c++/v1"
-        export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -nostdinc++ -isystem ${DEPS_DIR}/usr/include/c++/v1"
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"
+        export LDFLAGS="-L${LLVM_DIR}/usr/lib -lc++ -lc++abi"
+        export CFLAGS="${CFLAGS} -stdlib=libc++ -nostdinc++ -isystem ${LLVM_DIR}/usr/include/c++/v1"
+        export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -nostdinc++ -isystem ${LLVM_DIR}/usr/include/c++/v1"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${LLVM_DIR}/usr/lib"
       fi
     # Show files that have been installed
     - ls -lR ${DEPS_DIR}/usr

@@ -25,7 +25,7 @@ matrix:
           compiler: clang
           addons: *clang34
 
-        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=on
+        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
           os: linux
           compiler: clang
           addons: &clang
@@ -37,17 +37,27 @@ matrix:
               sources:
                 - ubuntu-toolchain-r-test
 
-        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
-          os: linux
-          compiler: clang
-          addons: *clang
+        # - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
+        #   os: linux
+        #   compiler: clang
+        #   addons: *clang
 
-        - env: CLANG_VERSION=3.7 ASAN=off LIBCXX=on BUILD_EXAMPLES=on
-          os: linux
-          compiler: clang
-          addons: *clang
+        # - env: CLANG_VERSION=3.7 ASAN=off LIBCXX=on BUILD_EXAMPLES=on
+        #   os: linux
+        #   compiler: clang
+        #   addons: *clang
 
         - env: CLANG_VERSION=3.7 ASAN=off LIBCXX=off BUILD_EXAMPLES=on
+          os: linux
+          compiler: clang
+          addons: *clang
+
+        - env: CLANG_VERSION=3.8 ASAN=off LIBCXX=on BUILD_EXAMPLES=on
+          os: linux
+          compiler: clang
+          addons: *clang
+
+        - env: CLANG_VERSION=3.8 ASAN=off LIBCXX=off BUILD_EXAMPLES=on
           os: linux
           compiler: clang
           addons: *clang

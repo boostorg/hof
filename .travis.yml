@@ -128,20 +128,11 @@ install:
     - LLVM_DIR=${DEPS_DIR}/llvm-${LLVM_VERSION}
     - |
       if [[ "${LLVM_VERSION}" != "" ]]; then
-        mkdir -p ${LLVM_DIR}
-        export PATH="${LLVM_DIR}/clang/bin:${PATH}"
+        export PATH="${LLVM_DIR}/bin:${PATH}"
         if [[ -z "$(ls -A ${LLVM_DIR})" ]]; then
           LLVM_URL="http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz"
-          LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
-          LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
-          mkdir -p ${LLVM_DIR} ${LLVM_DIR}/build ${LLVM_DIR}/projects/libcxx ${LLVM_DIR}/projects/libcxxabi ${LLVM_DIR}/clang
-          travis_retry wget --quiet -O - ${LLVM_URL}      | tar --strip-components=1 -xJ -C ${LLVM_DIR}/clang
-          travis_retry wget --quiet -O - ${LIBCXX_URL}    | tar --strip-components=1 -xJ -C ${LLVM_DIR}/projects/libcxx
-          travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -xJ -C ${LLVM_DIR}/projects/libcxxabi
-
-          (cd ${LLVM_DIR}/build && cmake .. -DCMAKE_INSTALL_PREFIX=${LLVM_DIR}/usr -DCMAKE_CXX_COMPILER=clang++)
-          (cd ${LLVM_DIR}/build/projects/libcxx && make install -j4)
-          (cd ${LLVM_DIR}/build/projects/libcxxabi && make install -j4)
+          mkdir -p ${LLVM_DIR}
+          travis_retry wget --quiet -O - ${LLVM_URL}      | tar --strip-components=1 -xJ -C ${LLVM_DIR}
         fi
       fi
     # Show compiler info
@@ -157,10 +148,10 @@ install:
     # Use libc++
     - |
       if [[ "$LIBCXX" == "on" ]]; then
-        export LDFLAGS="-L${LLVM_DIR}/usr/lib -lc++ -lc++abi"
-        export CFLAGS="${CFLAGS} -stdlib=libc++ -nostdinc++ -isystem ${LLVM_DIR}/usr/include/c++/v1"
-        export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -nostdinc++ -isystem ${LLVM_DIR}/usr/include/c++/v1"
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${LLVM_DIR}/usr/lib"
+        export LDFLAGS="-L${LLVM_DIR}/lib -lc++ -lc++abi"
+        export CFLAGS="${CFLAGS} -stdlib=libc++ -nostdinc++ -isystem ${LLVM_DIR}/include/c++/v1"
+        export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -nostdinc++ -isystem ${LLVM_DIR}/include/c++/v1"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${LLVM_DIR}/lib"
       fi
     # Show files that have been installed
     - ls -lR ${DEPS_DIR}/usr

@@ -112,7 +112,7 @@ install:
     - if [[ "$CLANG_VERSION" == "3.4" ]]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
     # Setup deps directory
     - export DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-    - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+    - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
     - mkdir usr
     - export PATH=${DEPS_DIR}/usr/bin:${PATH}
     # Install cmake

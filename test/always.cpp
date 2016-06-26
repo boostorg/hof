@@ -1,4 +1,5 @@
 #include <fit/always.hpp>
+#include <fit/function.hpp>
 #include <memory>
 #include "test.hpp"
 
@@ -21,4 +22,12 @@ FIT_TEST_CASE()
     int i = 10; 
     FIT_TEST_CHECK( fit::always_ref(i)(1,2,3,4,5) == 10 );
     FIT_TEST_CHECK( &fit::always_ref(i)(1,2,3,4,5) == &i );
+}
+
+FIT_STATIC_FUNCTION(ten) = fit::always(std::integral_constant<int, 10>{});
+
+FIT_TEST_CASE()
+{
+    FIT_STATIC_TEST_CHECK(ten(1,2,3,4,5) == 10);
+    FIT_TEST_CHECK(ten(1,2,3,4,5) == 10);
 }

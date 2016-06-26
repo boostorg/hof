@@ -8,6 +8,7 @@
 #ifndef FIT_GUARD_FUNCTION_ALWAYS_H
 #define FIT_GUARD_FUNCTION_ALWAYS_H
 
+#include <fit/detail/delegate.hpp>
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
 
@@ -82,9 +83,8 @@ template<class T>
 struct always_base
 {
     T x;
-    
-    constexpr always_base(T xp) : x(xp)
-    {}
+
+    FIT_DELGATE_CONSTRUCTOR(always_base, T, x)
 
     template<class... As>
     constexpr typename detail::unwrap_reference<T>::type 

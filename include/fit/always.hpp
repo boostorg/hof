@@ -83,9 +83,6 @@ struct always_base
 {
     T x;
     
-    constexpr always_base()
-    {}
-    
     constexpr always_base(T xp) : x(xp)
     {}
 

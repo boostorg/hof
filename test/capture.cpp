@@ -21,11 +21,11 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(fit::capture_forward(one)(binary_class())(two) == 3);
     FIT_TEST_CHECK(fit::capture_forward(1)(binary_class())(2) == 3);
 
-    FIT_STATIC_TEST_CHECK(fit::capture_decay(1, 2)(binary_class())() == 3);
-    FIT_TEST_CHECK(fit::capture_decay(1, 2)(binary_class())() == 3);
+    FIT_STATIC_TEST_CHECK(fit::capture(1, 2)(binary_class())() == 3);
+    FIT_TEST_CHECK(fit::capture(1, 2)(binary_class())() == 3);
 
-    FIT_STATIC_TEST_CHECK(fit::capture_decay(1)(binary_class())(2) == 3);
-    FIT_TEST_CHECK(fit::capture_decay(1)(binary_class())(2) == 3);
+    FIT_STATIC_TEST_CHECK(fit::capture(1)(binary_class())(2) == 3);
+    FIT_TEST_CHECK(fit::capture(1)(binary_class())(2) == 3);
 }
 
 struct add_member
@@ -50,7 +50,7 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
     auto id = fit::identity;
-    auto f = fit::capture_decay(fit::identity)(fit::identity);
+    auto f = fit::capture(fit::identity)(fit::identity);
     static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(decltype(id)), "Id not default constructible");
     static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(decltype(f)), "Not default constructible");
     f();

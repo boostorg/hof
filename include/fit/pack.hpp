@@ -22,17 +22,17 @@
 /// Synopsis
 /// --------
 /// 
-///     // Capture lvalues by reference and rvalues by value.
+///     // Decay everything before capturing
 ///     template<class... Ts>
 ///     constexpr auto pack(Ts&&... xs);
 /// 
 ///     // Capture lvalues by reference and rvalue reference by reference
 ///     template<class... Ts>
-///     constexpr auto pack_basic_forward(Ts&&... xs);
+///     constexpr auto pack_forward(Ts&&... xs);
 /// 
-///     // Decay everything before capturing
+///     // Capture lvalues by reference and rvalues by value.
 ///     template<class... Ts>
-///     constexpr auto pack_decay(Ts&&... xs);
+///     constexpr auto pack_basic(Ts&&... xs);
 /// 
 ///     // Join multiple packs together
 ///     template<class... Ts>
@@ -320,7 +320,7 @@ struct pack_forward_f
     );
 };
 
-struct pack_decay_f
+struct pack_f
 {
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
@@ -377,7 +377,7 @@ struct pack_join_f
 
 FIT_DECLARE_STATIC_VAR(pack_basic, detail::pack_basic_f);
 FIT_DECLARE_STATIC_VAR(pack_forward, detail::pack_forward_f);
-FIT_DECLARE_STATIC_VAR(pack_decay, detail::pack_decay_f);
+FIT_DECLARE_STATIC_VAR(pack, detail::pack_f);
 
 FIT_DECLARE_STATIC_VAR(pack_join, detail::pack_join_f);
 

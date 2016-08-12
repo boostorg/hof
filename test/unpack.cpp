@@ -29,15 +29,15 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(3 == fit::unpack(unary_class())(fit::pack_decay(3)));
-    FIT_TEST_CHECK(3 == unary_unpack(fit::pack_decay(3)));
-    FIT_TEST_CHECK(3 == unary_unpack_reveal(fit::pack_decay(3)));
+    FIT_TEST_CHECK(3 == fit::unpack(unary_class())(fit::pack(3)));
+    FIT_TEST_CHECK(3 == unary_unpack(fit::pack(3)));
+    FIT_TEST_CHECK(3 == unary_unpack_reveal(fit::pack(3)));
     int ifu = 3;
     FIT_TEST_CHECK(3 == unary_unpack(fit::pack_forward(ifu)));
 
-    FIT_STATIC_TEST_CHECK(3 == fit::unpack(unary_class())(fit::pack_decay(3)));
-    FIT_STATIC_TEST_CHECK(3 == unary_unpack_constexpr(fit::pack_decay(3)));
-    FIT_STATIC_TEST_CHECK(3 == unary_unpack_reveal(fit::pack_decay(3)));
+    FIT_STATIC_TEST_CHECK(3 == fit::unpack(unary_class())(fit::pack(3)));
+    FIT_STATIC_TEST_CHECK(3 == unary_unpack_constexpr(fit::pack(3)));
+    FIT_STATIC_TEST_CHECK(3 == unary_unpack_reveal(fit::pack(3)));
 }
 
 FIT_TEST_CASE()
@@ -93,7 +93,7 @@ FIT_TEST_CASE()
     static_assert(fit::is_unpackable<decltype(p2)>::value, "Not unpackable");
     static_assert(fit::is_unpackable<decltype((p2))>::value, "Not unpackable");
 
-    auto p3 = fit::pack_decay(1, 2);
+    auto p3 = fit::pack(1, 2);
     static_assert(fit::is_unpackable<decltype(p3)>::value, "Not unpackable");
     static_assert(fit::is_unpackable<decltype((p3))>::value, "Not unpackable");
 
@@ -125,7 +125,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(3 == lambda_unary_unpack(fit::pack_decay(3)));
+    FIT_TEST_CHECK(3 == lambda_unary_unpack(fit::pack(3)));
 }
 
 struct unary_move
@@ -152,8 +152,8 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(3 == fit::unpack(unary_move())(fit::pack_decay(1)));
-    FIT_TEST_CHECK(3 == unary_move_unpack(fit::pack_decay(1)));
+    FIT_TEST_CHECK(3 == fit::unpack(unary_move())(fit::pack(1)));
+    FIT_TEST_CHECK(3 == unary_move_unpack(fit::pack(1)));
 }
 
 struct indirect_sum_f
@@ -169,7 +169,7 @@ FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_basic(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
     FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_forward(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
-    FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_decay(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
+    FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
     FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(std::make_tuple(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
 }
 

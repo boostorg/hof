@@ -30,7 +30,7 @@
 /// Synopsis
 /// --------
 /// 
-///     // Capture lvalues by reference and rvalues by value.
+///     // Capture by decaying each value
 ///     template<class... Ts>
 ///     constexpr auto capture(Ts&&... xs);
 /// 
@@ -38,9 +38,9 @@
 ///     template<class... Ts>
 ///     constexpr auto capture_forward(Ts&&... xs);
 /// 
-///     // Capture by decaying each value
+///     // Capture lvalues by reference and rvalues by value.
 ///     template<class... Ts>
-///     constexpr auto capture_decay(Ts&&... xs);
+///     constexpr auto capture_basic(Ts&&... xs);
 /// 
 /// Semantics
 /// ---------
@@ -180,7 +180,7 @@ struct capture_f
 
 FIT_DECLARE_STATIC_VAR(capture_basic, detail::capture_f<detail::pack_basic_f>);
 FIT_DECLARE_STATIC_VAR(capture_forward, detail::capture_f<detail::pack_forward_f>);
-FIT_DECLARE_STATIC_VAR(capture_decay, detail::capture_f<detail::pack_decay_f>);
+FIT_DECLARE_STATIC_VAR(capture, detail::capture_f<detail::pack_f>);
 
 } // namespace fit
 

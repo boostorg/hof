@@ -15,19 +15,35 @@
 /// -----------
 /// 
 /// The `construct` function returns a function object that will construct the
-/// object when the called. A template can also be givien, which it will deduce
+/// object when the called. A template can also be given, which it will deduce
 /// the parameters to the template. The `construct_meta` can be used to
 /// construct the object from a metafunction.
 /// 
 /// Synopsis
 /// --------
 /// 
+///     // Construct by decaying each value
 ///     template<class T>
 ///     constexpr auto construct();
 /// 
 ///     template<template<class...> class Template>
 ///     constexpr auto construct();
 /// 
+///     // Construct by deducing lvalues by reference and rvalue reference by reference
+///     template<class T>
+///     constexpr auto construct_forward();
+/// 
+///     template<template<class...> class Template>
+///     constexpr auto construct_forward();
+/// 
+///     // Construct by deducing lvalues by reference and rvalues by value.
+///     template<class T>
+///     constexpr auto construct_basic();
+/// 
+///     template<template<class...> class Template>
+///     constexpr auto construct_basic();
+/// 
+///     // Construct by deducing the object from a metafunction
 ///     template<class MetafunctionClass>
 ///     constexpr auto construct_meta();
 /// 

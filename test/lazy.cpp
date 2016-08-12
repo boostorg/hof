@@ -19,11 +19,11 @@ FIT_TEST_CASE()
 
     static_assert(std::is_reference<decltype(fit::detail::ref_transformer()(std::ref(i))(0,0,0))>::value, "Reference wrapper failed");
     static_assert(std::is_reference<decltype(fit::detail::pick_transformer(std::ref(i))(0,0,0))>::value, "Reference wrapper failed");
-    static_assert(std::is_reference<decltype(fit::detail::lazy_transform(std::ref(i), fit::pack(0,0,0)))>::value, "Reference wrapper failed");
+    static_assert(std::is_reference<decltype(fit::detail::lazy_transform(std::ref(i), fit::pack_basic(0,0,0)))>::value, "Reference wrapper failed");
 
     FIT_TEST_CHECK(&fit::detail::ref_transformer()(std::ref(i))(0,0,0) == &i);
     FIT_TEST_CHECK(&fit::detail::pick_transformer(std::ref(i))(0,0,0) == &i);
-    FIT_TEST_CHECK(&fit::detail::lazy_transform(std::ref(i), fit::pack(0,0,0)) == &i);
+    FIT_TEST_CHECK(&fit::detail::lazy_transform(std::ref(i), fit::pack_basic(0,0,0)) == &i);
 }
 
 FIT_TEST_CASE()
@@ -32,7 +32,7 @@ FIT_TEST_CASE()
 
     FIT_TEST_CHECK(fit::detail::id_transformer()(i)(0,0,0) == i);
     FIT_TEST_CHECK(fit::detail::pick_transformer(i)(0,0,0) == i);
-    FIT_TEST_CHECK(fit::detail::lazy_transform(i, fit::pack(0,0,0)) == i);
+    FIT_TEST_CHECK(fit::detail::lazy_transform(i, fit::pack_basic(0,0,0)) == i);
 }
 
 FIT_TEST_CASE()
@@ -42,7 +42,7 @@ FIT_TEST_CASE()
 
     FIT_TEST_CHECK(fit::detail::bind_transformer()(fi)(0,0,0) == id(5));
     FIT_TEST_CHECK(fit::detail::pick_transformer(fi)(0,0,0) == id(5));
-    FIT_TEST_CHECK(fit::detail::lazy_transform(fi, fit::pack(0,0,0)) == id(5));
+    FIT_TEST_CHECK(fit::detail::lazy_transform(fi, fit::pack_basic(0,0,0)) == id(5));
 }
 
 struct f_0 {

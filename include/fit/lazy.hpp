@@ -247,7 +247,7 @@ struct lazy_adaptor : detail::callable_base<F>
     constexpr auto operator()(T x, Ts... xs) const FIT_RETURNS
     (
         fit::detail::make_lazy_invoker(FIT_RETURNS_C_CAST(detail::callable_base<F>&&)(FIT_CONST_THIS->base_function(x, xs...)), 
-            pack(FIT_RETURNS_STATIC_CAST(T&&)(x), FIT_RETURNS_STATIC_CAST(Ts&&)(xs)...))
+            fit::pack_basic(FIT_RETURNS_STATIC_CAST(T&&)(x), FIT_RETURNS_STATIC_CAST(Ts&&)(xs)...))
     );
 
     // Workaround for gcc 4.7

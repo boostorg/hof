@@ -85,7 +85,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    auto p1 = fit::pack(1, 2);
+    auto p1 = fit::pack_basic(1, 2);
     static_assert(fit::is_unpackable<decltype(p1)>::value, "Not unpackable");
     static_assert(fit::is_unpackable<decltype((p1))>::value, "Not unpackable");
 
@@ -167,7 +167,7 @@ struct indirect_sum_f
 
 FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
+    FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_basic(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
     FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_forward(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
     FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(fit::pack_decay(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
     FIT_TEST_CHECK(3 == fit::unpack(indirect_sum_f())(std::make_tuple(MAKE_UNIQUE_PTR(1), MAKE_UNIQUE_PTR(2))));
@@ -195,9 +195,9 @@ FIT_TEST_CASE()
     // STATIC_ASSERT_SAME(deduce_types<int&&, int&&>, decltype(deduce(std::forward_as_tuple(1, 2))));
 
 
-    STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(fit::pack(1, 2))));
-    STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(fit::pack(1), fit::pack(2))));
-    STATIC_ASSERT_SAME(deduce_types<int, int, int>, decltype(deduce(fit::pack(1), fit::pack(2), fit::pack(3))));
+    STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(fit::pack_basic(1, 2))));
+    STATIC_ASSERT_SAME(deduce_types<int, int>, decltype(deduce(fit::pack_basic(1), fit::pack_basic(2))));
+    STATIC_ASSERT_SAME(deduce_types<int, int, int>, decltype(deduce(fit::pack_basic(1), fit::pack_basic(2), fit::pack_basic(3))));
     // STATIC_ASSERT_SAME(deduce_types<int&&, int&&>, decltype(deduce(fit::pack_forward(1, 2))));
 }
 

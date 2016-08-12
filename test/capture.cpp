@@ -6,11 +6,11 @@
 
 FIT_TEST_CASE()
 {    
-    FIT_STATIC_TEST_CHECK(fit::capture(1, 2)(binary_class())() == 3);
-    FIT_TEST_CHECK(fit::capture(1, 2)(binary_class())() == 3);
+    FIT_STATIC_TEST_CHECK(fit::capture_basic(1, 2)(binary_class())() == 3);
+    FIT_TEST_CHECK(fit::capture_basic(1, 2)(binary_class())() == 3);
 
-    FIT_STATIC_TEST_CHECK(fit::capture(1)(binary_class())(2) == 3);
-    FIT_TEST_CHECK(fit::capture(1)(binary_class())(2) == 3);
+    FIT_STATIC_TEST_CHECK(fit::capture_basic(1)(binary_class())(2) == 3);
+    FIT_TEST_CHECK(fit::capture_basic(1)(binary_class())(2) == 3);
 
     static const int one = 1;
     static const int two = 2;
@@ -43,8 +43,8 @@ struct add_member
 
 FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::capture(add_member(1), 2)(&add_member::add)() == 3);
-    FIT_TEST_CHECK(fit::capture(add_member(1))(&add_member::add)(2) == 3);
+    FIT_TEST_CHECK(fit::capture_basic(add_member(1), 2)(&add_member::add)() == 3);
+    FIT_TEST_CHECK(fit::capture_basic(add_member(1))(&add_member::add)(2) == 3);
 }
 
 FIT_TEST_CASE()
@@ -58,7 +58,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    auto f = fit::capture(fit::identity)(fit::identity);
+    auto f = fit::capture_basic(fit::identity)(fit::identity);
     f();
 }
 

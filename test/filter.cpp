@@ -26,8 +26,8 @@ struct integer_predicate
     constexpr auto operator()(T x) const FIT_RETURNS
     (
         fit::conditional(
-            fit::if_(std::is_integral<T>())(fit::pack),
-            fit::always(fit::pack())
+            fit::if_(std::is_integral<T>())(fit::pack_basic),
+            fit::always(fit::pack_basic())
         )(fit::move(x))
     )
 };
@@ -46,9 +46,9 @@ struct filter_integers
 
 FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(filter_integers()(fit::pack(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
+    FIT_TEST_CHECK(filter_integers()(fit::pack_basic(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
 #if FIT_HAS_CONSTEXPR_TUPLE
-    FIT_STATIC_TEST_CHECK(filter_integers()(fit::pack(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
+    FIT_STATIC_TEST_CHECK(filter_integers()(fit::pack_basic(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
 #endif
 }
 

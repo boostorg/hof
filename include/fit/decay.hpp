@@ -35,6 +35,11 @@
 
 namespace fit { namespace detail {
 
+template<class T>
+struct decay_mf
+: unwrap_reference<typename std::decay<T>::type>
+{};
+
 struct decay_f
 {
     template<

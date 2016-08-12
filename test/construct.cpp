@@ -70,6 +70,20 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    auto v = fit::construct_basic<std::vector<int>>()(5, 5);
+    FIT_TEST_CHECK(v.size() == 5);
+    FIT_TEST_CHECK(v == std::vector<int>{5, 5, 5, 5, 5});
+}
+
+FIT_TEST_CASE()
+{
+    auto v = fit::construct_forward<std::vector<int>>()(5, 5);
+    FIT_TEST_CHECK(v.size() == 5);
+    FIT_TEST_CHECK(v == std::vector<int>{5, 5, 5, 5, 5});
+}
+
+FIT_TEST_CASE()
+{
     auto x = fit::construct<implicit_default>()();
     FIT_TEST_CHECK(x.mem1 == 0);
     FIT_TEST_CHECK(x.mem2 == "");
@@ -98,10 +112,16 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    auto make = fit::construct<std::vector<int>>().by(fit::_1 * fit::_1);
-    auto v = make(3, 3);
-    FIT_TEST_CHECK(v.size() == 9);
-    FIT_TEST_CHECK(v == std::vector<int>{9, 9, 9, 9, 9, 9, 9, 9, 9});
+    auto x = fit::construct_forward<template_user_construct>()(3);
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct_basic<template_user_construct>()(3);
+    FIT_TEST_CHECK(x.mem1 == 0);
+    FIT_TEST_CHECK(x.mem2 == "");
 }
 
 FIT_TEST_CASE()
@@ -135,14 +155,6 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    auto make = fit::construct<std::tuple>().by(fit::_1 * fit::_1);
-    auto t = make(1, 2, 3);
-    static_assert(std::is_same<std::tuple<int, int, int>, decltype(t)>::value, "");
-    FIT_TEST_CHECK(t == std::make_tuple(1, 4, 9));
-}
-
-FIT_TEST_CASE()
-{
     auto f = fit::conditional(fit::construct<std::pair>(), fit::identity);
     FIT_TEST_CHECK(f(1, 2) == std::make_pair(1, 2));
     FIT_TEST_CHECK(f(1) == 1);
@@ -154,6 +166,30 @@ FIT_TEST_CASE()
     static_assert(std::is_same<ac<int>, decltype(x)>::value, "");
     FIT_TEST_CHECK(x.value == ac<int>(1).value);
     FIT_STATIC_TEST_CHECK(ac<int>(1).value == fit::construct<ac>()(1).value);
+}
+
+FIT_TEST_CASE()
+{
+    auto x = fit::construct_basic<ac>()(1);
+    static_assert(std::is_same<ac<int>, decltype(x)>::value, "");
+    FIT_TEST_CHECK(x.value == ac<int>(1).value);
+    FIT_STATIC_TEST_CHECK(ac<int>(1).value == fit::construct<ac>()(1).value);
+}
+
+FIT_TEST_CASE()
+{
+    int i = 1;
+    auto x = fit::construct_forward<ac>()(i);
+    static_assert(std::is_same<ac<int&>, decltype(x)>::value, "");
+    FIT_TEST_CHECK(&x.value == &i);
+}
+
+FIT_TEST_CASE()
+{
+    int i = 1;
+    auto x = fit::construct_basic<ac>()(i);
+    static_assert(std::is_same<ac<int&>, decltype(x)>::value, "");
+    FIT_TEST_CHECK(&x.value == &i);
 }
 
 FIT_TEST_CASE()
@@ -176,21 +212,5 @@ FIT_TEST_CASE()
 #if defined (__clang__) || !(defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
     FIT_STATIC_TEST_CHECK(std::make_tuple(1, 2, 3) == fit::construct_meta<tuple_meta_class>()(1, 2, 3));
 #endif
-}
-
-FIT_TEST_CASE()
-{
-    auto make = fit::construct_meta<tuple_meta>().by(fit::_1 * fit::_1);
-    auto t = make(1, 2, 3);
-    static_assert(std::is_same<std::tuple<int, int, int>, decltype(t)>::value, "");
-    FIT_TEST_CHECK(t == std::make_tuple(1, 4, 9));
-}
-
-FIT_TEST_CASE()
-{
-    auto make = fit::construct_meta<tuple_meta_class>().by(fit::_1 * fit::_1);
-    auto t = make(1, 2, 3);
-    static_assert(std::is_same<std::tuple<int, int, int>, decltype(t)>::value, "");
-    FIT_TEST_CHECK(t == std::make_tuple(1, 4, 9));
 }
 

@@ -75,13 +75,12 @@
 #include <fit/detail/move.hpp>
 #include <fit/detail/delegate.hpp>
 #include <fit/detail/join.hpp>
+#include <fit/detail/remove_rvalue_reference.hpp>
+#include <fit/decay.hpp>
 
 #include <initializer_list>
 
 namespace fit { 
-
-template<class Projection, class F>
-struct by_adaptor;
 
 namespace detail {
 
@@ -144,12 +143,6 @@ struct construct_f
         storage_holder h(&buffer);
         return h.data();
     }
-
-    template<class F>
-    constexpr by_adaptor<F, construct_f> by(F f) const
-    {
-        return by_adaptor<F, construct_f>(static_cast<F&&>(f), *this);
-    }
 };
 
 template<class T>
@@ -180,30 +173,18 @@ struct construct_f<T, typename std::enable_if<FIT_IS_LITERAL(T)>::type>
     {
         return T(x);
     }
-
-    template<class F>
-    constexpr by_adaptor<F, construct_f> by(F f) const
-    {
-        return by_adaptor<F, construct_f>(static_cast<F&&>(f), *this);
-    }
 };
 
-template<template<class...> class Template>
+template<template<class...> class Template, template<class...> class D>
 struct construct_template_f
 {
     constexpr construct_template_f()
     {}
-    template<class... Ts, class Result=FIT_JOIN(Template, Ts...), 
+    template<class... Ts, class Result=FIT_JOIN(Template, typename D<Ts>::type...), 
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const
     {
         return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
-    }
-
-    template<class F>
-    constexpr by_adaptor<F, construct_template_f> by(F f) const
-    {
-        return by_adaptor<F, construct_template_f>(static_cast<F&&>(f), *this);
     }
 };
 
@@ -226,12 +207,6 @@ struct construct_meta_f
     {
         return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
-
-    template<class F>
-    constexpr by_adaptor<F, construct_meta_f> by(F f) const
-    {
-        return by_adaptor<F, construct_meta_f>(static_cast<F&&>(f), *this);
-    }
 };
 
 template<template<class...> class MetafunctionTemplate>
@@ -247,16 +222,14 @@ struct construct_meta_template_f
     {
         return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
-
-    template<class F>
-    constexpr by_adaptor<F, construct_meta_template_f> by(F f) const
-    {
-        return by_adaptor<F, construct_meta_template_f>(static_cast<F&&>(f), *this);
-    }
 };
 
 
-
+template<class T>
+struct construct_id
+{
+    typedef T type;
+};
 
 }
 
@@ -265,9 +238,33 @@ constexpr detail::construct_f<T> construct()
 {
     return {};
 }
+// These overloads are provide for consistency
+template<class T>
+constexpr detail::construct_f<T> construct_forward()
+{
+    return {};
+}
+
+template<class T>
+constexpr detail::construct_f<T> construct_basic()
+{
+    return {};
+}
 
 template<template<class...> class Template>
-constexpr detail::construct_template_f<Template> construct()
+constexpr detail::construct_template_f<Template, detail::decay_mf> construct()
+{
+    return {};
+}
+
+template<template<class...> class Template>
+constexpr detail::construct_template_f<Template, detail::construct_id> construct_forward()
+{
+    return {};
+}
+
+template<template<class...> class Template>
+constexpr detail::construct_template_f<Template, detail::remove_rvalue_reference> construct_basic()
 {
     return {};
 }

@@ -48,9 +48,7 @@ template<class F>
 struct protect_adaptor : detail::callable_base<F>
 {
     typedef protect_adaptor fit_rewritable1_tag;
-    template<class... Ts>
-    constexpr protect_adaptor(Ts&&... xs) : detail::callable_base<F>(FIT_FORWARD(Ts)(xs)...)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(protect_adaptor, detail::callable_base<F>)
 };
 
 FIT_DECLARE_STATIC_VAR(protect, detail::make<protect_adaptor>);

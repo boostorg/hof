@@ -16,6 +16,7 @@ matrix:
           addons: &clang34
             apt:
               packages:
+                - g++-4.9
                 - clang-3.4
                 - valgrind
               sources:
@@ -110,7 +111,7 @@ matrix:
 install:
     - export CHECKOUT_PATH=`pwd`;
     - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
-    - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
+    # - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
     - if [[ "$CLANG_VERSION" == "3.4" ]]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
     # Setup deps directory
     - export DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"

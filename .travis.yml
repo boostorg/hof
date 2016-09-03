@@ -1,3 +1,4 @@
+dist: trusty
 language: cpp
 script: cmake
 
@@ -15,7 +16,7 @@ matrix:
           addons: &clang34
             apt:
               packages:
-                - g++-4.9
+                - clang-3.4
                 - valgrind
               sources:
                 - ubuntu-toolchain-r-test
@@ -25,42 +26,40 @@ matrix:
           compiler: clang
           addons: *clang34
 
-        # - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=on
-        #   os: linux
-        #   compiler: clang-3.5
-        #   addons: &clang35
-        #     apt:
-        #       packages:
-        #         - util-linux
-        #         - clang-3.5
-        #         - valgrind
-        #       sources:
-        #         - ubuntu-toolchain-r-test
-        #         - llvm-toolchain-precise-3.5
+        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=on
+          os: linux
+          compiler: clang-3.5
+          addons: &clang35
+            apt:
+              packages:
+                - util-linux
+                - clang-3.5
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
 
-        # - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
-        #   os: linux
-        #   compiler: clang-3.5
-        #   addons: *clang35
+        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
+          os: linux
+          compiler: clang-3.5
+          addons: *clang35
 
-        # - env: CLANG_VERSION=3.7 ASAN=off LIBCXX=on BUILD_EXAMPLES=on
-        #   os: linux
-        #   compiler: clang-3.7
-        #   addons: &clang37
-        #     apt:
-        #       packages:
-        #         - util-linux
-        #         - clang-3.7
-        #         - valgrind
-        #         - python
-        #       sources:
-        #         - ubuntu-toolchain-r-test
-        #         - llvm-toolchain-precise-3.7
+        - env: CLANG_VERSION=3.8 ASAN=off LIBCXX=on BUILD_EXAMPLES=on
+          os: linux
+          compiler: clang-3.8
+          addons: &clang38
+            apt:
+              packages:
+                - util-linux
+                - clang-3.8
+                - valgrind
+                - python
+              sources:
+                - ubuntu-toolchain-r-test
 
-        # - env: CLANG_VERSION=3.7 ASAN=off LIBCXX=off BUILD_EXAMPLES=on
-        #   os: linux
-        #   compiler: clang-3.7
-        #   addons: *clang37
+        - env: CLANG_VERSION=3.8 ASAN=off LIBCXX=off BUILD_EXAMPLES=on
+          os: linux
+          compiler: clang-3.8
+          addons: *clang38
 
         # Gcc
         - env: GCC_VERSION=4.9 ASAN=off LIBCXX=off

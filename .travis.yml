@@ -11,35 +11,35 @@ matrix:
           compiler: clang
 
         # Clang
-        - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off
-          os: linux
-          compiler: clang
-          addons: &clang34
-            apt:
-              packages:
-                - g++-4.9
-                - clang-3.4
-                - valgrind
-              sources:
-                - ubuntu-toolchain-r-test
+        # - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off
+        #   os: linux
+        #   compiler: clang
+        #   addons: &clang34
+        #     apt:
+        #       packages:
+        #         - g++-4.9
+        #         - clang-3.4
+        #         - valgrind
+        #       sources:
+        #         - ubuntu-toolchain-r-test
 
         # - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off CXX11=on
         #   os: linux
         #   compiler: clang
         #   addons: *clang34
 
-        # - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=on
-        #   os: linux
-        #   compiler: clang-3.5
-        #   addons: &clang35
-        #     apt:
-        #       packages:
-        #         - util-linux
-        #         - g++-4.9
-        #         - clang-3.5
-        #         - valgrind
-        #       sources:
-        #         - ubuntu-toolchain-r-test
+        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=on
+          os: linux
+          compiler: clang-3.5
+          addons: &clang35
+            apt:
+              packages:
+                - util-linux
+                - g++-4.9
+                - clang-3.5
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
 
         - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
           os: linux

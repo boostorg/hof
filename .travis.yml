@@ -23,23 +23,23 @@ matrix:
               sources:
                 - ubuntu-toolchain-r-test
 
-        - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off CXX11=on
-          os: linux
-          compiler: clang
-          addons: *clang34
+        # - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off CXX11=on
+        #   os: linux
+        #   compiler: clang
+        #   addons: *clang34
 
-        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=on
-          os: linux
-          compiler: clang-3.5
-          addons: &clang35
-            apt:
-              packages:
-                - util-linux
-                - g++-4.9
-                - clang-3.5
-                - valgrind
-              sources:
-                - ubuntu-toolchain-r-test
+        # - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=on
+        #   os: linux
+        #   compiler: clang-3.5
+        #   addons: &clang35
+        #     apt:
+        #       packages:
+        #         - util-linux
+        #         - g++-4.9
+        #         - clang-3.5
+        #         - valgrind
+        #       sources:
+        #         - ubuntu-toolchain-r-test
 
         - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
           os: linux
@@ -137,6 +137,7 @@ install:
         if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
         if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
         if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
+        if [[ "${CLANG_VERSION}" == "3.8" ]]; then LLVM_VERSION="3.8.1"; fi
         LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
         LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
         LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"

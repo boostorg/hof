@@ -140,7 +140,7 @@ struct pipe_pack
     FIT_RETURNS_CLASS(pipe_pack);
 
     template<class... Ts, class=typename std::enable_if<
-        sizeof...(Ts) < function_param_limit<F>::value
+        (sizeof...(Ts) < function_param_limit<F>::value)
     >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (make_pipe_closure(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), fit::pack_forward(FIT_FORWARD(Ts)(xs)...)));

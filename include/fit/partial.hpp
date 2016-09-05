@@ -135,7 +135,7 @@ struct partial_adaptor_join
     FIT_RETURNS_CLASS(partial_adaptor_join);
 
     template<class... Ts, class=typename std::enable_if<
-        (sizeof...(Ts) + Pack::fit_function_param_limit::value) < function_param_limit<F>::value
+        ((sizeof...(Ts) + Pack::fit_function_param_limit::value) < function_param_limit<F>::value)
     >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
@@ -162,7 +162,7 @@ struct partial_adaptor_pack
     FIT_RETURNS_CLASS(partial_adaptor_pack);
 
     template<class... Ts, class=typename std::enable_if<
-        sizeof...(Ts) < function_param_limit<F>::value
+        (sizeof...(Ts) < function_param_limit<F>::value)
     >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (

@@ -66,6 +66,12 @@ FIT_STATIC_LAMBDA_FUNCTION(tuple_dot) = [](auto&& a, auto&& b)
     return tuple_fold(product, [](auto x, auto y) { return x+y; });
 };
 
+void run_each()
+{
+    auto t = std::make_tuple(1, 2);
+    tuple_for_each(t, [](int i) { std::cout << i << std::endl; });
+}
+
 void run_transform()
 {
     auto t = std::make_tuple(1, 2);

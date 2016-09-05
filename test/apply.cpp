@@ -7,6 +7,12 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(fit::apply(binary_class(), 1, 2) == 3);
 }
 
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::apply(fit::apply, binary_class(), 1, 2) == 3);
+    FIT_STATIC_TEST_CHECK(fit::apply(fit::apply, binary_class(), 1, 2) == 3);
+}
+
 struct member_sum_f
 {
     int i;

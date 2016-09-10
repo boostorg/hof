@@ -71,16 +71,8 @@ namespace detail {
 
 struct placeholder_transformer
 {
-    template<class T>
-    struct transformer
-    {
-        template<class... Ts>
-        constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-        (fit::arg_c<std::is_placeholder<T>::value>(FIT_FORWARD(Ts)(xs)...));
-    };
-
     template<class T, typename std::enable_if<(std::is_placeholder<T>::value > 0), int>::type = 0>
-    constexpr transformer<T> operator()(const T&) const
+    constexpr detail::make_args_f<std::size_t, std::is_placeholder<T>::value> operator()(const T&) const
     {
         return {};
     }

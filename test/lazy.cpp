@@ -638,7 +638,7 @@ FIT_TEST_CASE()
 }
 
 
-struct fun
+struct by_value_fn
 {
     template<typename T, typename U>
     void operator()(T &&, U &&) const
@@ -649,5 +649,5 @@ struct fun
 
 FIT_TEST_CASE()
 {
-    fit::lazy(fun{})(std::placeholders::_1, 42)("hello");
+    fit::lazy(by_value_fn{})(std::placeholders::_1, 42)("hello");
 }

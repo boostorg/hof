@@ -107,8 +107,8 @@ struct ref_transformer
 struct id_transformer
 {
     template<class T>
-    constexpr auto operator()(const T& x) const 
-    FIT_SFINAE_RETURNS(always_ref(x));
+    constexpr auto operator()(T&& x) const 
+    FIT_SFINAE_RETURNS(always_detail::always_base<T>(FIT_FORWARD(T)(x)));
 };
 
 FIT_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer>);

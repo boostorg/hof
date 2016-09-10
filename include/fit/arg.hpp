@@ -84,7 +84,7 @@ constexpr args_at<N...> make_args_at(seq<N...>)
 template<std::size_t N, class... Ts>
 constexpr auto get_args(Ts&&... xs) FIT_RETURNS
 (
-    detail::make_args_at(typename gens<N>::type())(nullptr, perfect_ref<Ts>{xs}...)
+    detail::make_args_at(typename gens<N>::type())(nullptr, FIT_RETURNS_CONSTRUCT(perfect_ref<Ts>)(xs)...)
 );
 
 template<class T, T N>

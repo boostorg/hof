@@ -1,7 +1,10 @@
 #include <fit/protect.hpp>
 #include <fit/lazy.hpp>
+#include <fit/placeholders.hpp>
 #include <memory>
 #include "test.hpp"
+
+#include <fit/function.hpp>
 
 int f(int x)
 {
@@ -267,4 +270,27 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(constify(fit::protect(fit::lazy(f)(std::placeholders::_2)))(i[0], 1) == 1);
     FIT_TEST_CHECK(constify(fit::protect(fit::lazy(f)(std::placeholders::_1)))(0, i[1]) == 0);
     FIT_TEST_CHECK(constify(fit::protect(fit::lazy(f)(std::placeholders::_2)))(0, i[1]) == 1);
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(fit::_1)), fit::_1)(17) == 17);
+    FIT_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(fit::_1)), 17)() == 17);
+    FIT_STATIC_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(fit::_1)), fit::_1)(17) == 17);
+    FIT_STATIC_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(fit::_1)), 17)() == 17);
+}
+
+namespace test1 {
+
+int id(int x)
+{
+    return x;
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(id)(std::placeholders::_1)), std::placeholders::_1)(17) == 17);
+    FIT_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(id)(std::placeholders::_1)), 17)() == 17);
+}
+
 }

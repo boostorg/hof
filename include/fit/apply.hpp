@@ -231,8 +231,8 @@ struct apply_f
 
 #endif
     template<class F, class... Ts>
-    constexpr FIT_SFINAE_RESULT(F, id_<Ts>...) 
-    operator()(F&& f, Ts&&... xs) const FIT_SFINAE_RETURNS
+    constexpr FIT_SFINAE_MANUAL_RESULT(F, id_<Ts>...) 
+    operator()(F&& f, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         f(FIT_FORWARD(Ts)(xs)...)
     );

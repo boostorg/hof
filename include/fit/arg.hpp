@@ -52,17 +52,12 @@ namespace detail {
 template<class T>
 struct perfect_ref
 {
-    typedef T&& type;
+    typedef T type;
+    typedef typename std::remove_reference<T>::type value_type;
     T&& value;
-    constexpr perfect_ref(T&& x) : value(FIT_FORWARD(T)(x))
+    constexpr perfect_ref(value_type& x) : value(FIT_FORWARD(T)(x))
     {}
 };
-
-template<class T>
-constexpr perfect_ref<T> make_perfect_ref(T&& x)
-{
-    return { FIT_FORWARD(T)(x) };
-}
 
 template<std::size_t N>
 struct ignore
@@ -89,7 +84,7 @@ constexpr args_at<N...> make_args_at(seq<N...>)
 template<std::size_t N, class... Ts>
 constexpr auto get_args(Ts&&... xs) FIT_RETURNS
 (
-    detail::make_args_at(typename gens<N>::type())(nullptr, make_perfect_ref(FIT_FORWARD(Ts)(xs))...)
+    detail::make_args_at(typename gens<N>::type())(nullptr, FIT_RETURNS_CONSTRUCT(perfect_ref<Ts>)(xs)...)
 );
 
 template<class T, T N>

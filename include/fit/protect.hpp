@@ -35,6 +35,19 @@
 /// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
+/// Example
+/// -------
+/// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
+///     int main() {
+///         auto lazy_id = lazy(identity)(_1);
+///         auto lazy_apply = lazy(apply)(protect(lazy_id), _1);
+///         assert(lazy_apply(3) == 3);
+///     }
+/// 
 
 #include <utility>
 #include <fit/reveal.hpp>
@@ -48,9 +61,7 @@ template<class F>
 struct protect_adaptor : detail::callable_base<F>
 {
     typedef protect_adaptor fit_rewritable1_tag;
-    template<class... Ts>
-    constexpr protect_adaptor(Ts&&... xs) : detail::callable_base<F>(FIT_FORWARD(Ts)(xs)...)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(protect_adaptor, detail::callable_base<F>)
 };
 
 FIT_DECLARE_STATIC_VAR(protect, detail::make<protect_adaptor>);

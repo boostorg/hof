@@ -636,3 +636,18 @@ FIT_TEST_CASE()
     auto b = fit::lazy(dummy_unary_fn())(bad_unary_fn());
     b(0);
 }
+
+
+struct fun
+{
+    template<typename T, typename U>
+    void operator()(T &&, U &&) const
+    {
+        static_assert(std::is_same<U, int>::value, "");
+    }
+};
+
+FIT_TEST_CASE()
+{
+    fit::lazy(fun{})(std::placeholders::_1, 42)("hello");
+}

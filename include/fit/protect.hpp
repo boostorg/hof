@@ -35,6 +35,19 @@
 /// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
+/// Example
+/// -------
+/// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
+///     int main() {
+///         auto lazy_id = lazy(identity)(_1);
+///         auto lazy_apply = lazy(apply)(protect(lazy_id), _1);
+///         assert(lazy_apply(3) == 3);
+///     }
+/// 
 
 #include <utility>
 #include <fit/reveal.hpp>

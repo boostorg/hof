@@ -275,8 +275,8 @@ FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(std::placeholders::_1)), std::placeholders::_1)(17) == 17);
     FIT_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(std::placeholders::_1)), 17)() == 17);
-    // FIT_STATIC_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(std::placeholders::_1)), std::placeholders::_1)(17) == 17);
-    // FIT_STATIC_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(std::placeholders::_1)), 17)() == 17);
+    FIT_STATIC_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(std::placeholders::_1)), std::placeholders::_1)(17) == 17);
+    FIT_STATIC_TEST_CHECK(fit::lazy(fit::apply)(fit::protect(fit::lazy(fit::identity)(std::placeholders::_1)), 17)() == 17);
 }
 
 namespace test1 {

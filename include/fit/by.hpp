@@ -236,8 +236,8 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
 
     FIT_RETURNS_CLASS(by_adaptor);
 
-    template<class... Ts>
-    constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const
+    template<class... Ts, class=detail::holder<decltype(std::declval<Projection>()(std::declval<Ts>()))...>>
+    constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const 
     {
 #if FIT_NO_ORDERED_BRACE_INIT
         return detail::by_void_eval(this->base_projection(xs...), FIT_FORWARD(Ts)(xs)...);

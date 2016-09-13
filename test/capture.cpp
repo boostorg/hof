@@ -68,3 +68,9 @@ FIT_TEST_CASE()
     f();
 }
 
+FIT_TEST_CASE()
+{
+    auto f = fit::capture(fit::identity)(add_member{1});
+    static_assert(!fit::is_callable<decltype(f), int>::value, "Not sfinae friendly");
+}
+

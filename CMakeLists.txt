@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 project (Fit)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 foreach(level MAJOR MINOR PATCH)
     file(STRINGS include/fit/version.hpp
@@ -41,65 +42,23 @@ install (FILES include/fit.hpp DESTINATION include)
 configure_file(fit.pc.in fit.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -VV -C ${CMAKE_CFG_INTDIR})
-
-function(add_test_executable TEST_NAME)
-    add_executable (${TEST_NAME} EXCLUDE_FROM_ALL ${ARGN})
-    if(WIN32)
-        add_test(NAME ${TEST_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
-    else()
-        add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
-    endif()
-    add_dependencies(check ${TEST_NAME})
-    set_tests_properties(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
-endfunction(add_test_executable)
-
-function(create_executable NAME CONTENT)
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp "${CONTENT}")
-    add_executable(${NAME} ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp)
-endfunction()
-
-function(create_test_executable NAME CONTENT)
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp "${CONTENT}")
-    add_test_executable(${NAME} ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp)
-endfunction()
-
-function(add_test_header TEST_NAME HEADER)
-    create_test_executable(header-include-${TEST_NAME} 
-        "#include <${HEADER}>\nint main() {}\n"
-    )
-endfunction(add_test_header)
-
-function(add_test_static_header TEST_NAME HEADER)
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${TEST_NAME}.cpp 
-        "#include <${HEADER}>\nint main() {}\n"
-    )
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${TEST_NAME}.cpp 
-        "#include <${HEADER}>\n"
-    )
-    add_test_executable(header-static-include-${TEST_NAME} 
-        ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${TEST_NAME}.cpp 
-        ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${TEST_NAME}.cpp
-    )
-endfunction(add_test_static_header)
-
-include(CTest)
+include(BCMTest)
 
 include_directories(include)
 
 file(GLOB TESTS test/*.cpp)
 foreach(TEST ${TESTS})
     get_filename_component(BASE_NAME ${TEST} NAME_WE)
-    add_test_executable(${BASE_NAME} ${TEST})
+    bcm_add_test(NAME ${BASE_NAME} SOURCES ${TEST})
 endforeach()
-add_test_executable(static_def test/static_def/static_def.cpp test/static_def/static_def2.cpp)
+bcm_add_test(NAME static_def SOURCES test/static_def/static_def.cpp test/static_def/static_def2.cpp)
 
 file(GLOB HEADERS include/fit/*.hpp)
 foreach(HEADER ${HEADERS})
     get_filename_component(BASE_NAME ${HEADER} NAME_WE)
-    add_test_header(${BASE_NAME} fit/${BASE_NAME}.hpp)
+    bcm_test_header(NAME ${BASE_NAME} HEADER fit/${BASE_NAME}.hpp)
 endforeach()
-add_test_static_header(fit fit.hpp)
+bcm_test_header(NAME fit HEADER fit.hpp)
 
 function(extract_doc SOURCE OUTPUTVAR)
     file(READ ${SOURCE} CONTENT)
@@ -124,7 +83,7 @@ function(build_example SECTIONCONTENT NAME)
         string(APPEND CONTENT "int main() {}")
     endif()
     message(STATUS "Adding example: ${TARGET_NAME}")
-    create_test_executable(${TARGET_NAME} "${CONTENT}\n")
+    bcm_add_test(NAME ${TARGET_NAME} CONTENT "${CONTENT}\n")
 endfunction()
 
 function(extract_example SOURCE)
@@ -165,7 +124,7 @@ if (BUILD_EXAMPLES)
     file(GLOB EXAMPLES example/*.cpp)
     foreach(EXAMPLE ${EXAMPLES})
         get_filename_component(BASE_NAME ${EXAMPLE} NAME_WE)
-        add_test_executable(example-${BASE_NAME} ${EXAMPLE})
+        bcm_add_test(NAME example-${BASE_NAME} SOURCES ${EXAMPLE})
     endforeach()
     foreach(HEADER ${HEADERS})
         extract_example(${HEADER})

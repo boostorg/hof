@@ -53,6 +53,12 @@ foreach(TEST ${TESTS})
 endforeach()
 bcm_add_test(NAME static_def SOURCES test/static_def/static_def.cpp test/static_def/static_def2.cpp)
 
+file(GLOB FAIL_TESTS test/fail/*.cpp)
+foreach(TEST ${FAIL_TESTS})
+    get_filename_component(BASE_NAME ${TEST} NAME_WE)
+    bcm_add_test(NAME fail-${BASE_NAME} COMPILE_ONLY WILL_FAIL SOURCES ${TEST})
+endforeach()
+
 file(GLOB HEADERS include/fit/*.hpp)
 foreach(HEADER ${HEADERS})
     get_filename_component(BASE_NAME ${HEADER} NAME_WE)

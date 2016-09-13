@@ -39,18 +39,22 @@ function(bcm_add_test)
     endif()
 
     if(PARSE_COMPILE_ONLY)
-        if(WILL_FAIL)
+        if(PARSE_WILL_FAIL)
             add_library(_${PARSE_NAME}_TEST_FAIL STATIC EXCLUDE_FROM_ALL ${SOURCES})
-            add_custom_target(${PARSE_NAME} _${PARSE_NAME}_TEST_FAIL)
+            add_custom_target(${PARSE_NAME} 
+                COMMAND ${CMAKE_COMMAND} --build . --target _${PARSE_NAME}_TEST_FAIL --config $<CONFIGURATION>
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
             add_test(NAME ${PARSE_NAME}
-                 COMMAND ${CMAKE_COMMAND} --build . --target ${PARSE_NAME} --config $<CONFIGURATION>
-                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+                COMMAND ${CMAKE_COMMAND} --build . --target _${PARSE_NAME}_TEST_FAIL --config $<CONFIGURATION>
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
             set_tests_properties(${PARSE_NAME} PROPERTIES WILL_FAIL TRUE)
         else()
             add_library(${PARSE_NAME} STATIC ${SOURCES})
+            bcm_mark_as_test(${PARSE_NAME})
         endif()
     else()
         add_executable (${PARSE_NAME} ${SOURCES})
+        bcm_mark_as_test(${PARSE_NAME})
         if(WIN32)
             add_test(NAME ${PARSE_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${PARSE_NAME}${CMAKE_EXECUTABLE_SUFFIX})
         else()
@@ -60,7 +64,6 @@ function(bcm_add_test)
             set_tests_properties(${PARSE_NAME} PROPERTIES WILL_FAIL TRUE)
         endif()
     endif()
-    bcm_mark_as_test(${PARSE_NAME})
 endfunction(bcm_add_test)
 
 function(bcm_test_header)

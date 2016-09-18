@@ -1,3 +1,4 @@
+include(CMakeParseArguments)
 include(CTest)
 
 option(BUILD_TESTING off)

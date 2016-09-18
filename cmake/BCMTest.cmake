@@ -10,7 +10,6 @@ endif()
 if(NOT TARGET tests)
     add_custom_target(tests COMMENT "Build all tests.")
     add_dependencies(check tests)
-    # add_dependencies(tests check)
 endif()
 
 function(bcm_mark_as_test)

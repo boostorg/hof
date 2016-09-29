@@ -66,6 +66,28 @@ matrix:
           addons: *clang38
 
         # Gcc
+        - env: GCC_VERSION=6 ASAN=off LIBCXX=off
+          os: linux
+          compiler: gcc-6
+          addons: &gcc6
+            apt:
+              packages:
+                - g++-6
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
+        - env: GCC_VERSION=5 ASAN=off LIBCXX=off
+          os: linux
+          compiler: gcc-5
+          addons: &gcc5
+            apt:
+              packages:
+                - g++-5
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
         - env: GCC_VERSION=4.9 ASAN=off LIBCXX=off
           os: linux
           compiler: gcc-4.9

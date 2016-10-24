@@ -12,7 +12,7 @@
 /// ===============
 /// 
 /// How to unpack a sequence can be defined by specializing `unpack_sequence`.
-/// By default, `std::tuple` can be used with unpack.
+/// By default, `std::tuple` is already specialized.
 /// 
 /// Synopsis
 /// --------

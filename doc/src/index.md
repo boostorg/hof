@@ -36,5 +36,5 @@ This requires a C++11 compiler. There are no third-party dependencies. This has 
 Contexpr support
 ----------------
 
-Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the implementation of constexpr. However, constexpr initialization of functions is supported when using the `FIT_STATIC_FUNCTION` and `FIT_STATIC_LAMBDA_FUNCTION` constructs.
+Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the implementation of constexpr. However, constexpr initialization of functions is supported when using the [`FIT_STATIC_FUNCTION`](FIT_STATIC_FUNCTION) and [`FIT_STATIC_LAMBDA_FUNCTION`](FIT_STATIC_LAMBDA_FUNCTION) constructs.
 

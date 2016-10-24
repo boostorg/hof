@@ -27,7 +27,7 @@ The Fit library provides several ways to do overloading. One of the ways is with
         }
     );
 
-The `-> decltype(std::cout << x, void())` is added to the function to constrain it on whether `std::cout << x` is a valid expression. Then the `void()` is used to return `void` from the function. So, now the function can called with a vector:
+The `-> decltype(std::cout << x, void())` is added to the function to constrain it on whether `std::cout << x` is a valid expression. Then the `void()` is used to return `void` from the function. So, now the function can be called with a vector:
 
     std::vector<int> v = { 1, 2, 3, 4 };
     print(v);

@@ -29,4 +29,4 @@ has to be written over and over again for template classes:
 
 The [`construct`](include/fit/construct) function takes care of all this boilerplate, and the above can be simply written like this:
 
-    FIT_STATIC_FUNCTION(make_tuple) = construct<std::tuple>().by(decay());
+    FIT_STATIC_FUNCTION(make_tuple) = construct<std::tuple>();

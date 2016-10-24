@@ -12,17 +12,38 @@ stackoverflow [here](http://stackoverflow.com/questions/30189926/metaprograming-
 The user would like to write `stringify` to call `to_string` where applicable
 and fallback on using `sstream` to convert to a string. Most of the top
 answers usually involve some amount of metaprogramming using either `void_t`
-or `is_detected`(see [n4502](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4502.pdf)). However, with the Fit library it can simply be written like
+or `is_detected`(see [n4502](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4502.pdf)): 
+
+    template<class T>
+    using to_string_t = decltype(std::to_string(std::declval<T>()));
+
+    template<class T>
+    using has_to_string = std::experimental::is_detected<to_string_t, T>;
+
+    template<typename T> 
+    typename std::enable_if<has_to_string<T>{}, std::string>::type 
+    stringify(T t)
+    {
+        return std::to_string(t);
+    }
+    template<typename T> 
+    typename std::enable_if<!has_to_string<T>{}, std::string>::type 
+    stringify(T t)
+    {
+        return static_cast<std::ostringstream&>(std::ostringstream() << t).str();
+    }
+
+However, with the Fit library it can simply be written like
 this:
 
     FIT_STATIC_LAMBDA_FUNCTION(stringify) = conditional(
-        [](auto x) FIT_RETURNS(to_string(x)),
-        [](auto x) FIT_RETURNS(static_cast<ostringstream&>(ostringstream() << x).str())
+        [](auto x) FIT_RETURNS(std::to_string(x)),
+        [](auto x) FIT_RETURNS(static_cast<std::ostringstream&>(std::ostringstream() << x).str())
     );
 
-So, using [`FIT_RETURNS`](/include/fit/returns) no only deduces the return type for the function, but it also constrains the function on whether the expression is valid or not either. So by writing `FIT_RETURNS(to_string(x))` then the first function will try to call `to_string` function if possible. If not, then the second function will be called. 
+So, using [`FIT_RETURNS`](/include/fit/returns) not only deduces the return type for the function, but it also constrains the function on whether the expression is valid or not either. So by writing `FIT_RETURNS(std::to_string(x))` then the first function will try to call `std::to_string` function if possible. If not, then the second function will be called. 
 
-The second function still uses [`FIT_RETURNS`](/include/fit/returns), so the function will still be constrained by whether the `<<` stream operator can be used. Although it may seem unnecsarry because there is not another function, however, this makes the function composable. So we could use this to define a `serialize` function that tries to call stringify first, otherwise it looks for the member `.serialize()`:
+The second function still uses [`FIT_RETURNS`](/include/fit/returns), so the function will still be constrained by whether the `<<` stream operator can be used. Although it may seem unnecessary because there is not another function, however, this makes the function composable. So we could use this to define a `serialize` function that tries to call `stringify` first, otherwise it looks for the member `.serialize()`:
 
     FIT_STATIC_LAMBDA_FUNCTION(serialize) = conditional(
         [](auto x) FIT_RETURNS(stringify(x)),

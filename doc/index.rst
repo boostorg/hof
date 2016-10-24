@@ -6,21 +6,11 @@ Fit
 **Paul Fultz II**
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
-    src/index
-    src/building
-    src/gettingstarted
-    src/examples
-    src/point_free
-    src/definitions
-    src/concepts
-
-    src/adaptors
-    src/decorators
-    src/functions
-    src/traits
-    src/utilities
+    src/intro
+    src/overview
+    src/reference
 
     src/configurations
     src/faq

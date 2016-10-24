@@ -1,7 +1,9 @@
 .. _contents:
 
-Fit documentation contents
-==========================
+Fit
+===
+
+**Paul Fultz II**
 
 .. toctree::
     :maxdepth: 2

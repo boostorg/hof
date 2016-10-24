@@ -19,6 +19,7 @@
 import os
 from recommonmark.parser import CommonMarkParser
 from recommonmark.transform import AutoStructify
+import sphinx_boost
 
 # -- General configuration ------------------------------------------------
 
@@ -142,7 +143,7 @@ exclude_patterns = [
 highlight_language = 'cpp'
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'tango'
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -159,7 +160,8 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'pyramid'
+# html_theme = 'alabaster'
+html_theme = 'boost'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -168,7 +170,7 @@ html_theme = 'pyramid'
 # html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-# html_theme_path = []
+html_theme_path = [sphinx_boost.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
@@ -182,7 +184,7 @@ html_theme = 'pyramid'
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #
-# html_logo = None
+html_logo = 'boost-proposed.png'
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32

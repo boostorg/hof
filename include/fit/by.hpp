@@ -81,6 +81,7 @@
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/compressed_pair.hpp>
+#include <fit/detail/result_type.hpp>
 #include <fit/apply_eval.hpp>
 
 namespace fit {
@@ -169,7 +170,7 @@ template<class Projection, class F=void>
 struct by_adaptor;
 
 template<class Projection, class F>
-struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>>
+struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>>, detail::function_result_type<F>
 {
     typedef by_adaptor fit_rewritable_tag;
     typedef detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>> base;

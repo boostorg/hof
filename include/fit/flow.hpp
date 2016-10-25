@@ -78,12 +78,13 @@
 #include <tuple>
 #include <fit/detail/move.hpp>
 #include <fit/detail/make.hpp>
+#include <fit/detail/result_type.hpp>
 #include <fit/detail/static_const_var.hpp>
 
 namespace fit { namespace detail {
 
 template<class F1, class F2>
-struct flow_kernel : detail::compressed_pair<detail::callable_base<F1>, detail::callable_base<F2>>
+struct flow_kernel : detail::compressed_pair<detail::callable_base<F1>, detail::callable_base<F2>>, compose_function_result_type<F2, F1>
 {
     typedef detail::compressed_pair<detail::callable_base<F1>, detail::callable_base<F2>> base_type;
 

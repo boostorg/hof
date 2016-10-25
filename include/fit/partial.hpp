@@ -216,8 +216,7 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
 
     using base::operator();
 
-    constexpr partial_adaptor()
-    {}
+    FIT_INHERIT_DEFAULT(partial_adaptor, base, F, Pack);
 
     template<class X, class S>
     constexpr partial_adaptor(X&& x, S&& seq) : F(FIT_FORWARD(X)(x)), Pack(FIT_FORWARD(S)(seq))

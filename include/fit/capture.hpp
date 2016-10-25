@@ -14,6 +14,7 @@
 #include <fit/pack.hpp>
 #include <fit/always.hpp>
 #include <fit/detail/move.hpp>
+#include <fit/detail/result_type.hpp>
 
 /// capture
 /// =======
@@ -74,7 +75,7 @@ namespace fit {
 namespace detail {
 
 template<class F, class Pack>
-struct capture_invoke : detail::compressed_pair<detail::callable_base<F>, Pack>
+struct capture_invoke : detail::compressed_pair<detail::callable_base<F>, Pack>, detail::function_result_type<F>
 {
     typedef capture_invoke fit_rewritable1_tag;
     typedef detail::compressed_pair<detail::callable_base<F>, Pack> base;

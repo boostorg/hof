@@ -130,7 +130,7 @@ struct unpack_adaptor : detail::callable_base<F>
 
             template<class... Ts>
             struct of
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined (_MSC_VER)
             : std::enable_if<true, decltype(apply::deduce(std::declval<Ts>()...))>::type
 #else
             : decltype(apply::deduce(std::declval<Ts>()...))

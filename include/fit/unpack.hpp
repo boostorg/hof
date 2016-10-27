@@ -110,12 +110,17 @@ struct unpack_adaptor : detail::callable_base<F>
                 template<class... Ts>
                 typename Failure::template of<Ts...> operator()(Ts&&...) const;
             };
+#ifdef _MSC_VER
+#define FIT_UNPACK_DEDUCE_RETURNS FIT_SFINAE_RETURNS
+#else
+#define FIT_UNPACK_DEDUCE_RETURNS FIT_RETURNS
+#endif
 
             template<class T, class=typename std::enable_if<(
                 is_unpackable<T>::value
             )>::type>
             static auto deduce(T&& x)
-            FIT_RETURNS
+            FIT_UNPACK_DEDUCE_RETURNS
             (
                 detail::unpack_simple(deducer(), FIT_FORWARD(T)(x))
             );
@@ -123,7 +128,7 @@ struct unpack_adaptor : detail::callable_base<F>
             template<class T, class... Ts, class=typename std::enable_if<(
                 is_unpackable<T>::value && FIT_AND_UNPACK(is_unpackable<Ts>::value)
             )>::type>
-            static auto deduce(T&& x, Ts&&... xs) FIT_RETURNS
+            static auto deduce(T&& x, Ts&&... xs) FIT_UNPACK_DEDUCE_RETURNS
             (
                 detail::unpack_join(deducer(), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
             );

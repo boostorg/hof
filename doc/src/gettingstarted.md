@@ -1,10 +1,17 @@
 Getting started
 ===============
 
+Higher-order functions
+----------------------
+
+A core part of this library is higher-order functions. A higher-order function is a function that either takes a function as its argument or returns a function. To be able to define higher-order functions, we must be able to refer functions as first-class objects. 
+
+One way to refer to a function is to use a function pointer(or a member function pointer). However, a function pointer can only refer to one function in an overload set of functions, and it requires explicit casting to select that overload. Instead a function object can be used to refer to the entire overload set.
+
 Function Objects
 ----------------
 
-The Fit library can work with all different types of functions in C++, including static functions, member functions, lambdas, and function objects. To refer to the function a function pointer(or member function pointer) can be used. However, a function pointer can only refer to one function in an overload set of functions, and it requires explicit casting to select that overload. For example, if we had a templated `sum` function, we would need an explicit cast to pass that function to the `std::accumulate`: 
+For example, if we had a templated `sum` function that we want to pass to `std::accumulate`. Since its templated we would need an explicit cast: 
 
     template<class T, class U>
     auto sum(T x, U y)
@@ -67,7 +74,7 @@ Now, this is useful for local functions. However, many times we want to write fu
 
     FIT_STATIC_FUNCTION(sum) = sum_f();
 
-The [`FIT_STATIC_FUNCTION`](/include/fit/function) declares a global variable following the best practices as outlined in [N4381](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html). This includes compile-time initialization of the function object to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order) and an external address of the function object that is the same across translation units to avoid possible One-Definition-Rule(ODR) violations. In C++14, this can also be achieved by using a reference to a template variable:
+The [`FIT_STATIC_FUNCTION`](/include/fit/function) declares a global variable following the best practices as outlined in [N4381](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html). This includes using `const` to avoid global state, compile-time initialization of the function object to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order), and an external address of the function object that is the same across translation units to avoid possible One-Definition-Rule(ODR) violations. In C++14, this can also be achieved by using a reference to a template variable:
 
     template <class T>
     constexpr T static_function{};

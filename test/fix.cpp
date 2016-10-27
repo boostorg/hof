@@ -52,6 +52,7 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(r == 5*4*3*2*1);
 }
 
+#if !FIT_NO_EXPRESSION_SFINAE
 FIT_TEST_CASE()
 {
     const int r = fit::fix(fit::result<int>(factorial_constexpr_t()))(5);
@@ -68,6 +69,7 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(fit::fix(fit::result<int>(factorial_constexpr_t()))(5) == 5*4*3*2*1);
     FIT_STATIC_TEST_CHECK(fit::result<int>(factorial_constexpr)(5) == 5*4*3*2*1);
 }
+#endif
 FIT_TEST_CASE()
 {
 #if FIT_HAS_GENERIC_LAMBDA

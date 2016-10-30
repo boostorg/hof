@@ -40,7 +40,7 @@ struct and_<>
 : std::true_type
 {};
 
-#define FIT_AND_UNPACK(Bs) fit::detail::and_c(Bs...)
+#define FIT_AND_UNPACK(Bs) (fit::detail::and_c(Bs...))
 #else
 template<bool...> struct bool_seq {};
 template<class... Ts>

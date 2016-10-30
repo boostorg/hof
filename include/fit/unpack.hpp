@@ -110,17 +110,12 @@ struct unpack_adaptor : detail::callable_base<F>
                 template<class... Ts>
                 typename Failure::template of<Ts...> operator()(Ts&&...) const;
             };
-#ifdef _MSC_VER
-#define FIT_UNPACK_DEDUCE_RETURNS FIT_SFINAE_RETURNS
-#else
-#define FIT_UNPACK_DEDUCE_RETURNS FIT_RETURNS
-#endif
 
             template<class T, class=typename std::enable_if<(
                 is_unpackable<T>::value
             )>::type>
             static auto deduce(T&& x)
-            FIT_UNPACK_DEDUCE_RETURNS
+            FIT_RETURNS
             (
                 detail::unpack_simple(deducer(), FIT_FORWARD(T)(x))
             );
@@ -128,11 +123,16 @@ struct unpack_adaptor : detail::callable_base<F>
             template<class T, class... Ts, class=typename std::enable_if<(
                 is_unpackable<T>::value && FIT_AND_UNPACK(is_unpackable<Ts>::value)
             )>::type>
-            static auto deduce(T&& x, Ts&&... xs) FIT_UNPACK_DEDUCE_RETURNS
+            static auto deduce(T&& x, Ts&&... xs) FIT_RETURNS
             (
                 detail::unpack_join(deducer(), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
             );
-
+#ifdef _MSC_VER
+            template<class... Ts, class=typename std::enable_if<(
+                !FIT_AND_UNPACK(is_unpackable<Ts>::value)
+            )>::type>
+            static with_failures<> deduce(Ts&&... xs);
+#endif
             template<class... Ts>
             struct of
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined (_MSC_VER)

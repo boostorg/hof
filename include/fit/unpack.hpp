@@ -128,10 +128,12 @@ struct unpack_adaptor : detail::callable_base<F>
                 detail::unpack_join(deducer(), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
             );
 #ifdef _MSC_VER
+            template<class... Ts>
+            struct nop_failure;
             template<class... Ts, class=typename std::enable_if<(
                 !FIT_AND_UNPACK(is_unpackable<Ts>::value)
             )>::type>
-            static with_failures<> deduce(Ts&&... xs);
+            static as_failure<nop_failure> deduce(Ts&&... xs);
 #endif
             template<class... Ts>
             struct of

@@ -4,14 +4,22 @@ Getting started
 Higher-order functions
 ----------------------
 
-A core part of this library is higher-order functions. A higher-order function is a function that either takes a function as its argument or returns a function. To be able to define higher-order functions, we must be able to refer functions as first-class objects. 
+A core part of this library is higher-order functions. A higher-order function is a function that either takes a function as its argument or returns a function. To be able to define higher-order functions, we must be able to refer functions as first-class objects. One example of a higher-order function is `std::accumulate`. It takes a custom binary operator as a parameter. 
 
-One way to refer to a function is to use a function pointer(or a member function pointer). However, a function pointer can only refer to one function in an overload set of functions, and it requires explicit casting to select that overload. Instead a function object can be used to refer to the entire overload set.
+One way to refer to a function is to use a function pointer(or a member function pointer). So if we had our own custom `sum` function, we could pass it directly to `std::accumulate`:
 
-Function Objects
-----------------
+    int sum(int x, int y)
+    {
+        return x + y;
+    }
+    // Pass sum to accumulate
+    std::vector<int> v = { 1, 2, 3 };
+    int total = std::accumulate(v.begin(), v.end(), 0, &sum);
 
-For example, if we had a templated `sum` function that we want to pass to `std::accumulate`. Since its templated we would need an explicit cast: 
+
+However, a function pointer can only refer to one function in an overload set of functions, and it requires explicit casting to select that overload. 
+
+For example, if we had a templated `sum` function that we want to pass to `std::accumulate`, we would need an explicit cast:
 
     template<class T, class U>
     auto sum(T x, U y)
@@ -27,7 +35,10 @@ For example, if we had a templated `sum` function that we want to pass to `std::
     int total = std::accumulate(v.begin(), v.end(), 0, sum_int);
 
 
-Instead, a function object allows the ability to encapsulate an entire overload set into one object. This can be done by defining a class that overrides the call operator like this:
+Function Objects
+----------------
+
+A function object allows the ability to encapsulate an entire overload set into one object. This can be done by defining a class that overrides the call operator like this:
 
     // A sum function object
     struct sum_f

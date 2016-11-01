@@ -157,6 +157,13 @@ FIT_TEST_CASE()
 
 };
 
+FIT_TEST_CASE()
+{
+    const auto negate = (!fit::_);
+    const auto sub = (fit::_ - fit::_);
+    FIT_TEST_CHECK(fit::match(negate, sub)(0) == negate(0));
+    FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == sub(0, 1));
+}
 
 FIT_TEST_CASE()
 {

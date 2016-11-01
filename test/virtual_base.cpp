@@ -1,4 +1,7 @@
 #include <fit/flip.hpp>
+#include <fit/by.hpp>
+#include <fit/construct.hpp>
+#include <fit/pipable.hpp>
 #include "test.hpp"
 
 struct base { 
@@ -22,4 +25,5 @@ derived::~derived() {}
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(fit::flip(derived())(nullptr, 2) == 2);
+    FIT_TEST_CHECK((2 | fit::pipable(derived())(nullptr)) == 2);
 }

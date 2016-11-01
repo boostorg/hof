@@ -74,8 +74,8 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::repeat_while(not_limit())(increment())(1) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
-#if FIT_HAS_RELAXED_CONSTEXPR
     FIT_TEST_CHECK(fit::repeat_while(not_limit())(increment())(1) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
+#if FIT_HAS_RELAXED_CONSTEXPR
+    FIT_STATIC_TEST_CHECK(fit::repeat_while(not_limit())(increment())(1) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
 #endif
 }

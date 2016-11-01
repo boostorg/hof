@@ -1,4 +1,5 @@
 #include <fit/repeat.hpp>
+#include <limits>
 #include "test.hpp"
 
 // TODO: Add tests for multiple parameters

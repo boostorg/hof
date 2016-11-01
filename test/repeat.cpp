@@ -34,6 +34,7 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
     static const int i = 5;
+    FIT_TEST_CHECK(fit::repeat(i)(increment())(1) == 6);
     FIT_STATIC_TEST_CHECK(fit::repeat(i)(increment())(1) == 6);
 }
 

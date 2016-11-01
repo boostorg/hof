@@ -160,14 +160,16 @@ struct repeat_while_integral_decorator<0>
 };
 }
 
+#if FIT_HAS_RELAXED_CONSTEXPR
+#define FIT_REPEAT_WHILE_CONSTEXPR_DEPTH 1
+#else
+#define FIT_REPEAT_WHILE_CONSTEXPR_DEPTH FIT_RECURSIVE_CONSTEXPR_DEPTH
+#endif
+
 FIT_DECLARE_STATIC_VAR(repeat_while, decorate_adaptor<
     fit::conditional_adaptor<
         detail::repeat_while_constant_decorator,
-#if FIT_HAS_RELAXED_CONSTEXPR
-        detail::repeat_while_integral_decorator<1>
-#else
-        detail::repeat_while_integral_decorator<FIT_RECURSIVE_CONSTEXPR_DEPTH>
-#endif
+        detail::repeat_while_integral_decorator<FIT_REPEAT_WHILE_CONSTEXPR_DEPTH>
     >
 >);
 

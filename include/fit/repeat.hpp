@@ -117,12 +117,19 @@ template<>
 struct repeat_integral_decorator<0>
 {
     template<class Integral, class F, class T, class Self=repeat_integral_decorator<0>>
-    auto operator()(Integral n, const F& f, T&& x) const -> decltype(f(FIT_FORWARD(T)(x)))
+#if FIT_HAS_RELAXED_CONSTEXPR
+    constexpr
+#endif
+    auto operator()(Integral n, const F& f, T x) const -> decltype(f(FIT_FORWARD(T)(x)))
     {
-        return (n) ? 
-            Self()(n-1, f, f(FIT_FORWARD(T)(x))) :
-            FIT_FORWARD(T)(x);
+        while(n > 0)
+        {
+            n--;
+            x = f(FIT_FORWARD(T)(x));
+        }
+        return x;
     }
+    // TODO: Add overload for lvalue
 };
 
 }
@@ -130,7 +137,11 @@ struct repeat_integral_decorator<0>
 FIT_DECLARE_STATIC_VAR(repeat, decorate_adaptor<
     fit::conditional_adaptor<
     detail::repeat_constant_decorator, 
+#if FIT_HAS_RELAXED_CONSTEXPR
+    detail::repeat_integral_decorator<1>
+#else
     detail::repeat_integral_decorator<FIT_RECURSIVE_CONSTEXPR_DEPTH>
+#endif
 >>);
 
 } // namespace fit

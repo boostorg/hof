@@ -62,6 +62,11 @@
 ///         assert(r == 5*4*3*2*1);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Fixed-point combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator)
+/// 
 
 #include <fit/always.hpp>
 #include <fit/detail/callable_base.hpp>

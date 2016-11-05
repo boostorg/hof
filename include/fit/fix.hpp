@@ -66,6 +66,7 @@
 /// ----------
 /// 
 /// * [Fixed-point combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator)
+/// * [Recursive](Recursive)
 /// 
 
 #include <fit/always.hpp>

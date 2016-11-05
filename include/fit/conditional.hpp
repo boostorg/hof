@@ -78,6 +78,7 @@
 /// 
 /// * [POO51](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0051r2.pdf) - Proposal for C++
 ///   Proposal for C++ generic overload function
+/// * [Conditional overloading](<Conditional overloading>)
 /// 
 
 #include <fit/reveal.hpp>

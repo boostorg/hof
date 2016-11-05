@@ -60,6 +60,11 @@
 ///         assert(3 == pipable(sum())(1, 2));
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Extension methods](<Extension methods>)
+/// 
 
 #include <fit/conditional.hpp>
 #include <fit/pack.hpp>

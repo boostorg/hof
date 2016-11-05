@@ -69,6 +69,11 @@
 ///         assert(r == 4);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Function composition](https://en.wikipedia.org/wiki/Function_composition)
+/// 
 
 #include <fit/detail/callable_base.hpp>
 #include <fit/always.hpp>

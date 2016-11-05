@@ -70,6 +70,12 @@
 ///         assert(fit::compress(max_f())(2, 3, 4, 5) == 5);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Fold](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
+/// * [Variadic sum](<Variadic sum>)
+/// 
 
 #include <fit/detail/callable_base.hpp>
 #include <fit/detail/delegate.hpp>

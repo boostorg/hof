@@ -72,6 +72,12 @@
 ///         assert(fit::reverse_compress(max_f())(2, 3, 4, 5) == 5);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Projections](Projections)
+/// * [Variadic print](<Variadic print>)
+/// 
 
 #include <fit/detail/callable_base.hpp>
 #include <fit/detail/delegate.hpp>

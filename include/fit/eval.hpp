@@ -43,6 +43,14 @@
 ///         assert(fit::eval([]{ return 3; }) == 3);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [POO51](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0051r2.pdf) - Proposal for C++
+///   Proposal for C++ generic overload function
+/// * [static_if](static_if)
+/// * [Ordering evaluation of arguments](<Ordering evaluation of arguments>)
+/// 
 
 #include <fit/always.hpp>
 #include <fit/identity.hpp>

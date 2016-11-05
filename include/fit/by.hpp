@@ -70,6 +70,12 @@
 ///         assert(fit::by(&foo::x, _ + _)(foo(1), foo(2)) == 3);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Projections](Projections)
+/// * [Variadic print](<Variadic print>)
+/// 
 
 
 

@@ -62,6 +62,11 @@
 ///         assert(sum_f()("", "") == 0);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [static_if](static_if)
+/// 
 
 #include <fit/always.hpp>
 #include <fit/detail/callable_base.hpp>

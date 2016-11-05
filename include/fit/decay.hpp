@@ -28,6 +28,11 @@
 ///         }
 ///     } decay;
 /// 
+/// References
+/// ----------
+/// 
+/// * [n3255](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3255.html) - Proposal for `decay_copy`
+/// 
 
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>

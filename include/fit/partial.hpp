@@ -60,6 +60,12 @@
 ///         assert(3 == partial(sum())(1)(2));
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Partial application](https://en.wikipedia.org/wiki/Partial_application)
+/// * [Currying](https://en.wikipedia.org/wiki/Currying)
+/// 
 
 #include <fit/conditional.hpp>
 #include <fit/static.hpp>

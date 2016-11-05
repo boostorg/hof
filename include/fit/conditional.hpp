@@ -72,6 +72,13 @@
 /// 
 /// So, the order of the functions in the `conditional_adaptor` are very important
 /// to how the function is chosen.
+/// 
+/// References
+/// ----------
+/// 
+/// * [POO51](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0051r2.pdf) - Proposal for C++
+///   Proposal for C++ generic overload function
+/// 
 
 #include <fit/reveal.hpp>
 #include <fit/detail/compressed_pair.hpp>

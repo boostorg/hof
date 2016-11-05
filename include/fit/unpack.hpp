@@ -55,6 +55,11 @@
 ///         assert(r == 5);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [std::apply](http://en.cppreference.com/w/cpp/utility/apply) - C++17 function to unpack a tuple
+/// 
 /// 
 
 #include <fit/unpack_sequence.hpp>

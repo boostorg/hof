@@ -42,6 +42,10 @@ install (FILES include/fit.hpp DESTINATION include)
 configure_file(fit.pc.in fit.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
 
+include(SphinxDoc)
+
+add_sphinx_doc(${CMAKE_CURRENT_SOURCE_DIR}/doc HTML_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc/html)
+
 include(BCMTest)
 
 include_directories(include)

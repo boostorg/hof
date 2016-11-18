@@ -122,9 +122,15 @@
 #define FIT_EAT(...)
 #define FIT_REM(...) __VA_ARGS__
 
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(__VA_ARGS__))
+#else
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...)
+#endif
+
 #if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
 #define FIT_RETURNS(...) \
-noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) \
+FIT_RETURNS_DEDUCE_NOEXCEPT(decltype(__VA_ARGS__)(__VA_ARGS__)) \
 -> decltype(__VA_ARGS__) { return __VA_ARGS__; }
 #define FIT_THIS this
 #define FIT_CONST_THIS this
@@ -147,7 +153,10 @@ void fit_returns_class_check() \
 #define FIT_RETURNS_RETURN(...) return FIT_RETURNS_RETURN_X(FIT_PP_WALL(__VA_ARGS__))
 #define FIT_RETURNS_RETURN_X(...) __VA_ARGS__
 
-#define FIT_RETURNS_DECLTYPE(...) decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))
+#define FIT_RETURNS_DECLTYPE(...) \
+FIT_RETURNS_DEDUCE_NOEXCEPT(decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))) \
+-> decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))
+
 
 #define FIT_RETURNS_DECLTYPE_CONTEXT(...) FIT_RETURNS_DECLTYPE_CONTEXT_X(FIT_PP_WALL(__VA_ARGS__))
 #define FIT_RETURNS_DECLTYPE_CONTEXT_X(...) __VA_ARGS__
@@ -162,7 +171,7 @@ void fit_returns_class_check() \
 
 #define FIT_RETURNS_CLASS(...) typedef __VA_ARGS__* fit_this_type; typedef const __VA_ARGS__* fit_const_this_type
 
-#define FIT_RETURNS(...) -> FIT_RETURNS_DECLTYPE(__VA_ARGS__) { FIT_RETURNS_RETURN(__VA_ARGS__); }
+#define FIT_RETURNS(...) FIT_RETURNS_DECLTYPE(__VA_ARGS__) { FIT_RETURNS_RETURN(__VA_ARGS__); }
 
 
 namespace fit { namespace detail {

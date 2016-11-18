@@ -236,11 +236,15 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)>
     constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(FIT_FORWARD(Xs)(xs))...
     {}
+
+    // typedef pack_base<seq<Ns...>, Ts...> self_t;
+
+    FIT_RETURNS_CLASS(pack_base);
   
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*this, f)...)
+        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 
     typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;

@@ -124,13 +124,15 @@ struct compress_adaptor
         return this->second(xs...);
     }
 
+    FIT_RETURNS_CLASS(compress_adaptor);
+
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const detail::callable_base<F>&>, id_<State>, id_<Ts>...)
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::v_fold()(
-            FIT_MANGLE_CAST(const detail::callable_base<F>&)(this->base_function(xs...)), 
-            FIT_MANGLE_CAST(State)(this->get_state(xs...)), 
+            FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)), 
+            FIT_MANGLE_CAST(State)(FIT_CONST_THIS->get_state(xs...)), 
             FIT_FORWARD(Ts)(xs)...
         )
     )
@@ -149,12 +151,14 @@ struct compress_adaptor<F, void>
         return always_ref(*this)(xs...);
     }
 
+    FIT_RETURNS_CLASS(compress_adaptor);
+
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const detail::callable_base<F>&>, id_<Ts>...)
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::v_fold()(
-            FIT_MANGLE_CAST(const detail::callable_base<F>&)(this->base_function(xs...)), 
+            FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)), 
             FIT_FORWARD(Ts)(xs)...
         )
     )

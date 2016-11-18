@@ -123,7 +123,9 @@
 #define FIT_REM(...) __VA_ARGS__
 
 #if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
-#define FIT_RETURNS(...) -> decltype(__VA_ARGS__) { return __VA_ARGS__; }
+#define FIT_RETURNS(...) \
+noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) \
+-> decltype(__VA_ARGS__) { return __VA_ARGS__; }
 #define FIT_THIS this
 #define FIT_CONST_THIS this
 #define FIT_RETURNS_CLASS(...) \

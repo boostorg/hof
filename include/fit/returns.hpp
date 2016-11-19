@@ -123,7 +123,13 @@
 #define FIT_REM(...) __VA_ARGS__
 
 #if FIT_HAS_NOEXCEPT_DEDUCTION
+#ifdef _MSC_VER
+// Since decltype can't be used in noexcept on MSVC, we can't check for noexcept
+// move constructors.
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(__VA_ARGS__))
+#else
 #define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))
+#endif
 #else
 #define FIT_RETURNS_DEDUCE_NOEXCEPT(...)
 #endif

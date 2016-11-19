@@ -48,12 +48,46 @@
 ///     }
 /// 
 
+#include <fit/detail/delegate.hpp>
 #include <fit/returns.hpp>
 #include <fit/lambda.hpp>
 #include <fit/detail/forward.hpp>
 
-#ifdef _MSC_VER
+namespace fit { namespace detail {
+
+template<class F, class NoExcept>
+struct lift_noexcept : F
+{
+    FIT_INHERIT_CONSTRUCTOR(lift_noexcept, F);
+
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const
+    noexcept(decltype(std::declval<NoExcept>()(FIT_FORWARD(Ts)(xs)...)){})
+    -> decltype(std::declval<F>()(FIT_FORWARD(Ts)(xs)...))
+    { return F(*this)(FIT_FORWARD(Ts)(xs)...);}
+};
+
+template<class F, class NoExcept>
+constexpr lift_noexcept<F, NoExcept> make_lift_noexcept(F f, NoExcept)
+{
+    return {f};
+}
+
+}
+
+} // namespace fit
+
+#define FIT_LIFT_IS_NOEXCEPT(...) std::integral_constant<bool, noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))>{}
+
+#if defined (_MSC_VER)
 #define FIT_LIFT(...) (FIT_STATIC_LAMBDA { FIT_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }())
+#elif defined (__clang__)
+#define FIT_LIFT(...) (make_lift_noexcept( \
+    FIT_STATIC_LAMBDA(auto&&... xs) \
+    -> decltype((__VA_ARGS__)(FIT_FORWARD(decltype(xs))(xs)...)) \
+    { return (__VA_ARGS__)(FIT_FORWARD(decltype(xs))(xs)...); }, \
+    FIT_STATIC_LAMBDA(auto&&... xs) { return FIT_LIFT_IS_NOEXCEPT((__VA_ARGS__)(FIT_FORWARD(decltype(xs))(xs)...)); } \
+))
 #else
 #define FIT_LIFT(...) (FIT_STATIC_LAMBDA(auto&&... xs) FIT_RETURNS((__VA_ARGS__)(FIT_FORWARD(decltype(xs))(xs)...)))
 #endif

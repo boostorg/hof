@@ -123,14 +123,14 @@
 #define FIT_REM(...) __VA_ARGS__
 
 #if FIT_HAS_NOEXCEPT_DEDUCTION
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(__VA_ARGS__))
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))
 #else
 #define FIT_RETURNS_DEDUCE_NOEXCEPT(...)
 #endif
 
 #if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
 #define FIT_RETURNS(...) \
-FIT_RETURNS_DEDUCE_NOEXCEPT(decltype(__VA_ARGS__)(__VA_ARGS__)) \
+FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__) \
 -> decltype(__VA_ARGS__) { return __VA_ARGS__; }
 #define FIT_THIS this
 #define FIT_CONST_THIS this

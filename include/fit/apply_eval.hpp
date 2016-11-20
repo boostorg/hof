@@ -14,8 +14,8 @@
 /// Description
 /// -----------
 /// 
-/// The `apply_eval` function work like [`apply`](apply.md), except it calls
-/// [`eval`](eval.md) on each of its arguments. Each [`eval`](eval.md) call is
+/// The `apply_eval` function work like [`apply`](/include/fit/apply), except it calls
+/// [`eval`](/include/fit/eval) on each of its arguments. Each [`eval`](/include/fit/eval) call is
 /// always ordered from left-to-right.
 /// 
 /// Synopsis
@@ -34,11 +34,11 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// 
 /// Ts must be:
 /// 
-/// * [EvaluatableFunctionObject](concepts.md#evaluatablefunctionobject)
+/// * [EvaluatableFunctionObject](EvaluatableFunctionObject)
 /// 
 /// Example
 /// -------

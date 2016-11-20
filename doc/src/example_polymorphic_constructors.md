@@ -27,6 +27,6 @@ has to be written over and over again for template classes:
         return std::tuple<typename unwrap_ref_decay<Types>::type...>(std::forward<Types>(args)...);
     }
 
-The [`construct`](construct.md) function takes care of all this boilerplate, and the above can be simply written like this:
+The [`construct`](include/fit/construct) function takes care of all this boilerplate, and the above can be simply written like this:
 
-    FIT_STATIC_FUNCTION(make_tuple) = construct<std::tuple>().by(decay());
+    FIT_STATIC_FUNCTION(make_tuple) = construct<std::tuple>();

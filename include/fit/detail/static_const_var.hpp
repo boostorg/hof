@@ -8,7 +8,7 @@
 #ifndef FIT_GUARD_STATIC_CONST_H
 #define FIT_GUARD_STATIC_CONST_H
 
-#include <fit/config.hpp>
+#include <fit/detail/intrinsics.hpp>
 
 namespace fit { namespace detail {
 
@@ -21,6 +21,18 @@ struct static_const_storage
 template<class T>
 constexpr T static_const_storage<T>::value;
 
+struct static_const_var_factory
+{
+    constexpr static_const_var_factory()
+    {}
+
+    template<class T>
+    constexpr const T& operator=(const T&) const
+    {
+        static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(T), "Static const variable must be default constructible");
+        return static_const_storage<T>::value;
+    }
+};
 }
 
 template<class T>
@@ -29,13 +41,8 @@ constexpr const T& static_const_var()
     return detail::static_const_storage<T>::value;
 }
 
-} // namespace fit
 
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_STATIC_AUTO_REF static auto&
-#else
-#define FIT_STATIC_AUTO_REF static constexpr auto&
-#endif
+} // namespace fit
 
 #if FIT_HAS_RELAXED_CONSTEXPR || defined(_MSC_VER)
 #define FIT_STATIC_CONSTEXPR const constexpr
@@ -43,11 +50,19 @@ constexpr const T& static_const_var()
 #define FIT_STATIC_CONSTEXPR static constexpr
 #endif
 
-#if FIT_NO_UNIQUE_STATIC_VAR
-#define FIT_DECLARE_STATIC_VAR(name, ...) static constexpr __VA_ARGS__ name = {}
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_STATIC_AUTO_REF extern __attribute__((weak)) constexpr auto
 #else
-#define FIT_DECLARE_STATIC_VAR(name, ...) static constexpr auto& name = fit::static_const_var<__VA_ARGS__>()
+#define FIT_STATIC_AUTO_REF static constexpr auto&
 #endif
 
+// On gcc 4.6 use weak variables
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_STATIC_CONST_VAR(name) extern __attribute__((weak)) constexpr auto name
+#else
+#define FIT_STATIC_CONST_VAR(name) static constexpr auto& name = fit::detail::static_const_var_factory()
+#endif
+
+#define FIT_DECLARE_STATIC_VAR(name, ...) FIT_STATIC_CONST_VAR(name) = __VA_ARGS__{}
 
 #endif

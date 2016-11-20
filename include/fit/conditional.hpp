@@ -35,7 +35,7 @@
 /// 
 /// Fs must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -72,6 +72,14 @@
 /// 
 /// So, the order of the functions in the `conditional_adaptor` are very important
 /// to how the function is chosen.
+/// 
+/// References
+/// ----------
+/// 
+/// * [POO51](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0051r2.pdf) - Proposal for C++
+///   Proposal for C++ generic overload function
+/// * [Conditional overloading](<Conditional overloading>)
+/// 
 
 #include <fit/reveal.hpp>
 #include <fit/detail/compressed_pair.hpp>
@@ -126,22 +134,16 @@ struct basic_conditional_adaptor : F1, F2
     );
 };
 
-struct low_rank {};
-
-struct high_rank : low_rank {};
-
-template <class ...Ts, class F1, class F2, class = typename std::enable_if<(
-    is_callable<F1, Ts...>::value
-)>::type>
-constexpr F1&& which(high_rank, holder<Ts...>, F1&& f1, F2&&) 
+template <class F1, class F2>
+constexpr const F1& which(std::true_type, const F1& f1, const F2&) 
 { 
-    return FIT_FORWARD(F1)(f1); 
+    return f1; 
 }
 
-template <class ...Ts, class F1, class F2>
-constexpr F2&& which(low_rank, holder<Ts...>, F1&&, F2&& f2) 
+template <class F1, class F2>
+constexpr const F2& which(std::false_type, const F1&, const F2& f2) 
 { 
-    return FIT_FORWARD(F2)(f2); 
+    return f2; 
 }
 
 template<class F1, class F2>
@@ -162,16 +164,15 @@ struct conditional_kernel : compressed_pair<F1, F2>
 
     FIT_RETURNS_CLASS(conditional_kernel);
 
-    template<class... Ts>
+    template<class... Ts, class PickFirst=is_callable<F1, Ts...>>
     constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
     operator()(Ts && ... xs) const
     FIT_SFINAE_RETURNS
     (
         detail::which(
-            high_rank{}, 
-            holder<Ts...>{},
-            FIT_CONST_THIS->first(xs...),
-            FIT_CONST_THIS->second(xs...)
+            FIT_RETURNS_CONSTRUCT(PickFirst)(),
+            FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...)),
+            FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))
         )
         (FIT_FORWARD(Ts)(xs)...)
     );

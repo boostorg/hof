@@ -22,7 +22,7 @@
 /// Synopsis
 /// --------
 /// 
-///     // Capture lvalues by reference and rvalues by value.
+///     // Decay everything before capturing
 ///     template<class... Ts>
 ///     constexpr auto pack(Ts&&... xs);
 /// 
@@ -30,9 +30,9 @@
 ///     template<class... Ts>
 ///     constexpr auto pack_forward(Ts&&... xs);
 /// 
-///     // Decay everything before capturing
+///     // Capture lvalues by reference and rvalues by value.
 ///     template<class... Ts>
-///     constexpr auto pack_decay(Ts&&... xs);
+///     constexpr auto pack_basic(Ts&&... xs);
 /// 
 ///     // Join multiple packs together
 ///     template<class... Ts>
@@ -74,6 +74,7 @@
 #include <fit/detail/remove_rvalue_reference.hpp>
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
+#include <fit/unpack_sequence.hpp>
 #include <fit/returns.hpp>
 #include <fit/alias.hpp>
 #include <fit/decay.hpp>
@@ -235,11 +236,15 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)>
     constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(FIT_FORWARD(Xs)(xs))...
     {}
+
+    // typedef pack_base<seq<Ns...>, Ts...> self_t;
+
+    FIT_RETURNS_CLASS(pack_base);
   
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*this, f)...)
+        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 
     typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
@@ -301,7 +306,7 @@ struct pack_join_result
 {};
 
 
-struct pack_f
+struct pack_basic_f
 {
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
@@ -319,12 +324,12 @@ struct pack_forward_f
     );
 };
 
-struct pack_decay_f
+struct pack_f
 {
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        pack_f()(decay(FIT_FORWARD(Ts)(xs))...)
+        pack_basic_f()(decay(FIT_FORWARD(Ts)(xs))...)
     );
 };
 
@@ -374,11 +379,21 @@ struct pack_join_f
 
 }
 
-FIT_DECLARE_STATIC_VAR(pack, detail::pack_f);
+FIT_DECLARE_STATIC_VAR(pack_basic, detail::pack_basic_f);
 FIT_DECLARE_STATIC_VAR(pack_forward, detail::pack_forward_f);
-FIT_DECLARE_STATIC_VAR(pack_decay, detail::pack_decay_f);
+FIT_DECLARE_STATIC_VAR(pack, detail::pack_f);
 
 FIT_DECLARE_STATIC_VAR(pack_join, detail::pack_join_f);
+
+template<class T, class... Ts>
+struct unpack_sequence<detail::pack_base<T, Ts...>>
+{
+    template<class F, class P>
+    constexpr static auto apply(F&& f, P&& p) FIT_RETURNS
+    (
+        fit::detail::unpack_pack_base(FIT_FORWARD(F)(f), FIT_FORWARD(P)(p))
+    );
+};
 
 } // namespace fit
 

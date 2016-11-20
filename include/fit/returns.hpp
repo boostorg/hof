@@ -8,20 +8,21 @@
 #ifndef FIT_GUARD_RETURNS_H
 #define FIT_GUARD_RETURNS_H
 
-/// returns
-/// =======
+/// FIT_RETURNS
+/// ===========
 /// 
 /// Description
 /// -----------
 /// 
-/// The `FIT_RETURNS` macro helps deduce the return type of an expression
-/// using the trailing return type. Instead of repeating the expression for
-/// the return type and using the expression in the function body, this macro
-/// helps reduce the code duplication from that.
+/// The `FIT_RETURNS` macro defines the function as the expression
+/// equivalence. It does this by deducing `noexcept` and the return type by
+/// using a trailing `decltype`. Instead of repeating the expression for the
+/// return type, `noexcept` clause and the function body, this macro will
+/// reduce the code duplication from that.
 /// 
 /// Note: The expression used to deduce the return the type will also
-/// constrain the template function as well, which is different behaviour than
-/// using C++14's return type deduction.
+/// constrain the template function and deduce `noexcept` as well, which is
+/// different behaviour than using C++14's return type deduction.
 /// 
 /// Synopsis
 /// --------
@@ -44,14 +45,15 @@
 /// 
 /// 
 /// Incomplete this
-/// ===============
+/// ---------------
 /// 
 /// Description
 /// -----------
 /// 
-/// On older compilers the `this` variable cannot be used inside the
-/// `FIT_RETURNS` macro because it is considered an incomplete type. So the
-/// following macros are provided to help workaround the issue.
+/// On some non-conformant compilers, such as gcc, the `this` variable cannot
+/// be used inside the `FIT_RETURNS` macro because it is considered an
+/// incomplete type. So the following macros are provided to help workaround
+/// the issue.
 /// 
 /// 
 /// Synopsis
@@ -89,7 +91,7 @@
 /// 
 /// 
 /// Mangling overloads
-/// ==================
+/// ------------------
 /// 
 /// Description
 /// -----------
@@ -122,8 +124,22 @@
 #define FIT_EAT(...)
 #define FIT_REM(...) __VA_ARGS__
 
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+#ifdef _MSC_VER
+// Since decltype can't be used in noexcept on MSVC, we can't check for noexcept
+// move constructors.
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(__VA_ARGS__))
+#else
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))
+#endif
+#else
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...)
+#endif
+
 #if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
-#define FIT_RETURNS(...) -> decltype(__VA_ARGS__) { return __VA_ARGS__; }
+#define FIT_RETURNS(...) \
+FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__) \
+-> decltype(__VA_ARGS__) { return __VA_ARGS__; }
 #define FIT_THIS this
 #define FIT_CONST_THIS this
 #define FIT_RETURNS_CLASS(...) \
@@ -145,7 +161,10 @@ void fit_returns_class_check() \
 #define FIT_RETURNS_RETURN(...) return FIT_RETURNS_RETURN_X(FIT_PP_WALL(__VA_ARGS__))
 #define FIT_RETURNS_RETURN_X(...) __VA_ARGS__
 
-#define FIT_RETURNS_DECLTYPE(...) decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))
+#define FIT_RETURNS_DECLTYPE(...) \
+FIT_RETURNS_DEDUCE_NOEXCEPT(decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))) \
+-> decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))
+
 
 #define FIT_RETURNS_DECLTYPE_CONTEXT(...) FIT_RETURNS_DECLTYPE_CONTEXT_X(FIT_PP_WALL(__VA_ARGS__))
 #define FIT_RETURNS_DECLTYPE_CONTEXT_X(...) __VA_ARGS__
@@ -160,7 +179,7 @@ void fit_returns_class_check() \
 
 #define FIT_RETURNS_CLASS(...) typedef __VA_ARGS__* fit_this_type; typedef const __VA_ARGS__* fit_const_this_type
 
-#define FIT_RETURNS(...) -> FIT_RETURNS_DECLTYPE(__VA_ARGS__) { FIT_RETURNS_RETURN(__VA_ARGS__); }
+#define FIT_RETURNS(...) FIT_RETURNS_DECLTYPE(__VA_ARGS__) { FIT_RETURNS_RETURN(__VA_ARGS__); }
 
 
 namespace fit { namespace detail {

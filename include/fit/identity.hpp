@@ -35,6 +35,7 @@
 /// 
 
 #include <utility>
+#include <initializer_list>
 #include <fit/detail/forward.hpp>
 #include <fit/detail/static_const_var.hpp>
 
@@ -46,6 +47,24 @@ struct identity_base
     constexpr T operator()(T&& x) const
     {
         return FIT_FORWARD(T)(x);
+    }
+
+    template<class T>
+    constexpr std::initializer_list<T>& operator()(std::initializer_list<T>& x) const
+    {
+        return x;
+    }
+
+    template<class T>
+    constexpr const std::initializer_list<T>& operator()(const std::initializer_list<T>& x) const
+    {
+        return x;
+    }
+
+    template<class T>
+    constexpr std::initializer_list<T> operator()(std::initializer_list<T>&& x) const
+    {
+        return FIT_FORWARD(std::initializer_list<T>)(x);
     }
 };
 

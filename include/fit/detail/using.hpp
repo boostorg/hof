@@ -14,7 +14,7 @@
 #define FIT_USING(name, ...) using name = __VA_ARGS__
 #define FIT_USING_TYPENAME(name, ...) using name = typename __VA_ARGS__
 #else
-#define FIT_USING(name, ...) struct name : __VA_ARGS__ {}
+#define FIT_USING(name, ...) struct name : std::enable_if<true, __VA_ARGS__>::type {}
 #define FIT_USING_TYPENAME(name, ...) struct name : __VA_ARGS__ {}
 #endif
 

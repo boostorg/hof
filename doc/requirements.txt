@@ -1,0 +1,3 @@
+git+https://github.com/pfultz2/recommonmark@develop
+git+https://github.com/pfultz2/sphinx@develop
+sphinx-boost>0.0.2

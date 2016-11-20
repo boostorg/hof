@@ -15,10 +15,11 @@
 /// -----------
 /// 
 /// The `protect` function adaptor can be used to make a bind expression be
-/// treated as a normal function instead. Both `bind` and [`lazy`](lazy.md)
-/// eargerly evaluates nested bind expressions. The `protect` adaptor masks
-/// the type so `bind` or [`lazy`](lazy.md) no longer recognizes the function
-/// as bind expression and evaluates it.
+/// treated as a normal function instead. Both `bind` and
+/// [`lazy`](/include/fit/lazy) eargerly evaluates nested bind expressions.
+/// The `protect` adaptor masks the type so `bind` or
+/// [`lazy`](/include/fit/lazy) no longer recognizes the function as bind
+/// expression and evaluates it.
 /// 
 /// Synopsis
 /// --------
@@ -31,8 +32,21 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
+/// 
+/// Example
+/// -------
+/// 
+///     #include <fit.hpp>
+///     #include <cassert>
+///     using namespace fit;
+/// 
+///     int main() {
+///         auto lazy_id = lazy(identity)(_1);
+///         auto lazy_apply = lazy(apply)(protect(lazy_id), _1);
+///         assert(lazy_apply(3) == 3);
+///     }
 /// 
 
 #include <utility>
@@ -47,9 +61,7 @@ template<class F>
 struct protect_adaptor : detail::callable_base<F>
 {
     typedef protect_adaptor fit_rewritable1_tag;
-    template<class... Ts>
-    constexpr protect_adaptor(Ts&&... xs) : detail::callable_base<F>(FIT_FORWARD(Ts)(xs)...)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(protect_adaptor, detail::callable_base<F>)
 };
 
 FIT_DECLARE_STATIC_VAR(protect, detail::make<protect_adaptor>);

@@ -6,15 +6,15 @@
 
 FIT_TEST_CASE()
 {
-    auto p1 = fit::pack(1, 2);
+    auto p1 = fit::pack_basic(1, 2);
     auto p2 = p1;
     FIT_TEST_CHECK(p2(binary_class()) == p1(binary_class()));
     
+    FIT_STATIC_TEST_CHECK(fit::pack_basic(1, 2)(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_basic(1, 2)(binary_class()) == 3 );
+
     FIT_STATIC_TEST_CHECK(fit::pack(1, 2)(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack(1, 2)(binary_class()) == 3 );
-
-    FIT_STATIC_TEST_CHECK(fit::pack_decay(1, 2)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_decay(1, 2)(binary_class()) == 3 );
 
     FIT_STATIC_TEST_CHECK(fit::pack_forward(1, 2)(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_forward(1, 2)(binary_class()) == 3 );
@@ -25,17 +25,17 @@ FIT_TEST_CASE()
     static constexpr int x = 1;
     static constexpr int y = 2;
 
-    auto p1 = fit::pack(x, y);
+    auto p1 = fit::pack_basic(x, y);
     static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Pack default constructible");
     
-    FIT_STATIC_TEST_CHECK(fit::pack(x, y)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack(x, y)(binary_class()) == 3 );
+    FIT_STATIC_TEST_CHECK(fit::pack_basic(x, y)(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_basic(x, y)(binary_class()) == 3 );
 
-    auto p2 = fit::pack_decay(std::ref(x), std::ref(y));
+    auto p2 = fit::pack(std::ref(x), std::ref(y));
     static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Pack default constructible");
 
-    FIT_STATIC_TEST_CHECK(fit::pack_decay(x, y)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_decay(std::ref(x), std::ref(y))(binary_class()) == 3 );
+    FIT_STATIC_TEST_CHECK(fit::pack(x, y)(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack(std::ref(x), std::ref(y))(binary_class()) == 3 );
 
     auto p3 = fit::pack_forward(x, y);
     static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Pack default constructible");
@@ -46,23 +46,23 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack()(fit::always(3)) == 3);
-    FIT_TEST_CHECK(fit::pack()(fit::always(3)) == 3 );
+    FIT_STATIC_TEST_CHECK(fit::pack_basic()(fit::always(3)) == 3);
+    FIT_TEST_CHECK(fit::pack_basic()(fit::always(3)) == 3 );
 }
 
 FIT_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack(3)(fit::identity) == 3);
-    FIT_TEST_CHECK(fit::pack(3)(fit::identity) == 3 );
+    FIT_STATIC_TEST_CHECK(fit::pack_basic(3)(fit::identity) == 3);
+    FIT_TEST_CHECK(fit::pack_basic(3)(fit::identity) == 3 );
 }
 
 FIT_TEST_CASE()
 {
+    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(2))(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(2))(binary_class()) == 3 );
+
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(2))(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(2))(binary_class()) == 3 );
-
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_decay(1), fit::pack_decay(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(1), fit::pack_decay(2))(binary_class()) == 3 );
 
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(2))(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(2))(binary_class()) == 3 );
@@ -70,11 +70,11 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(1, 2))(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(1, 2))(binary_class()) == 3 );
+
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(1, 2))(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(1, 2))(binary_class()) == 3 );
-
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_decay(), fit::pack_decay(1, 2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(), fit::pack_decay(1, 2))(binary_class()) == 3 );
 
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(1, 2))(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(1, 2))(binary_class()) == 3 );
@@ -82,11 +82,11 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(1, 2), fit::pack_basic())(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(1, 2), fit::pack_basic())(binary_class()) == 3 );
+
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(1, 2), fit::pack())(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack(1, 2), fit::pack())(binary_class()) == 3 );
-
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_decay(1, 2), fit::pack_decay())(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(1, 2), fit::pack_decay())(binary_class()) == 3 );
 
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(1, 2), fit::pack_forward())(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1, 2), fit::pack_forward())(binary_class()) == 3 );
@@ -94,11 +94,11 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2))(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2))(binary_class()) == 3 );
+
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(), fit::pack(2))(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(), fit::pack(2))(binary_class()) == 3 );
-
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_decay(1), fit::pack_decay(), fit::pack_decay(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(1), fit::pack_decay(), fit::pack_decay(2))(binary_class()) == 3 );
 
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2))(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2))(binary_class()) == 3 );
@@ -106,11 +106,11 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2))(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2))(binary_class()) == 3 );
+
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(1), fit::pack(), fit::pack(2))(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(1), fit::pack(), fit::pack(2))(binary_class()) == 3 );
-
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_decay(), fit::pack_decay(1), fit::pack_decay(), fit::pack_decay(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(), fit::pack_decay(1), fit::pack_decay(), fit::pack_decay(2))(binary_class()) == 3 );
 
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2))(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2))(binary_class()) == 3 );
@@ -118,11 +118,11 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2), fit::pack_basic())(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2), fit::pack_basic())(binary_class()) == 3 );
+
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(), fit::pack(2), fit::pack())(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(), fit::pack(2), fit::pack())(binary_class()) == 3 );
-
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_decay(1), fit::pack_decay(), fit::pack_decay(2), fit::pack_decay())(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(1), fit::pack_decay(), fit::pack_decay(2), fit::pack_decay())(binary_class()) == 3 );
 
     FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2), fit::pack_forward())(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2), fit::pack_forward())(binary_class()) == 3 );
@@ -139,16 +139,16 @@ struct deref
 FIT_TEST_CASE()
 {
     std::unique_ptr<int> i(new int(3));
-    FIT_TEST_CHECK(fit::pack(i)(deref()) == 3);
-    FIT_TEST_CHECK(fit::pack(std::unique_ptr<int>(new int(3)))(deref()) == 3);
+    FIT_TEST_CHECK(fit::pack_basic(i)(deref()) == 3);
+    FIT_TEST_CHECK(fit::pack_basic(std::unique_ptr<int>(new int(3)))(deref()) == 3);
     FIT_TEST_CHECK(fit::pack_forward(std::unique_ptr<int>(new int(3)))(deref()) == 3);
-    FIT_TEST_CHECK(fit::pack_decay(std::unique_ptr<int>(new int(3)))(deref()) == 3);
-    auto p = fit::pack(std::unique_ptr<int>(new int(3)));
+    FIT_TEST_CHECK(fit::pack(std::unique_ptr<int>(new int(3)))(deref()) == 3);
+    auto p = fit::pack_basic(std::unique_ptr<int>(new int(3)));
     FIT_TEST_CHECK(p(deref()) == 3);
 
-    FIT_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(std::unique_ptr<int>(new int(3))))(deref()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(std::unique_ptr<int>(new int(3))))(deref()) == 3);
     FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(std::unique_ptr<int>(new int(3))))(deref()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_decay(), fit::pack_decay(std::unique_ptr<int>(new int(3))))(deref()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(std::unique_ptr<int>(new int(3))))(deref()) == 3);
     // FIT_TEST_CHECK(p(deref()) == 3);
 }
 
@@ -172,14 +172,14 @@ struct check_rvalue
 
 FIT_TEST_CASE()
 {
-    auto p = fit::pack(std::string{"abcdef"});
+    auto p = fit::pack_basic(std::string{"abcdef"});
     p(move_rvalue{});
     p(check_rvalue{});
 }
 
 FIT_TEST_CASE()
 {
-    auto p = fit::pack_decay(std::string{"abcdef"});
+    auto p = fit::pack(std::string{"abcdef"});
     p(move_rvalue{});
     p(check_rvalue{});
 }
@@ -197,7 +197,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    static constexpr auto p = fit::pack(empty1());
+    static constexpr auto p = fit::pack_basic(empty1());
     FIT_TEST_CHECK(p(fit::always(0)) == 0);
     FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
@@ -209,7 +209,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    static constexpr auto p = fit::pack(empty1(), empty2());
+    static constexpr auto p = fit::pack_basic(empty1(), empty2());
     FIT_TEST_CHECK(p(fit::always(0)) == 0);
     FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
@@ -220,7 +220,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    static constexpr auto p = fit::pack(fit::pack(), fit::pack());
+    static constexpr auto p = fit::pack_basic(fit::pack_basic(), fit::pack_basic());
     FIT_TEST_CHECK(p(fit::always(0)) == 0);
     FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
@@ -231,7 +231,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    static constexpr auto p = fit::pack(empty1(), empty2(), empty1());
+    static constexpr auto p = fit::pack_basic(empty1(), empty2(), empty1());
     FIT_TEST_CHECK(p(fit::always(0)) == 0);
     FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
@@ -242,7 +242,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    static constexpr auto p = fit::pack(empty1(), fit::pack(empty1(), empty2()));
+    static constexpr auto p = fit::pack_basic(empty1(), fit::pack_basic(empty1(), empty2()));
     FIT_TEST_CHECK(p(fit::always(0)) == 0);
     FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
@@ -253,7 +253,7 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    static constexpr auto p = fit::pack(fit::pack(), fit::pack(fit::pack()), empty1(), fit::pack(empty1(), empty2()));
+    static constexpr auto p = fit::pack_basic(fit::pack_basic(), fit::pack_basic(fit::pack_basic()), empty1(), fit::pack_basic(empty1(), empty2()));
     FIT_TEST_CHECK(p(fit::always(0)) == 0);
     FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
 #ifndef _MSC_VER
@@ -293,7 +293,7 @@ struct select_i
 FIT_TEST_CASE()
 {
     static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
-    auto p = fit::pack(not_default_constructible(3));
+    auto p = fit::pack_basic(not_default_constructible(3));
     static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
     auto p1 = fit::pack_forward(p);
     static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
@@ -302,13 +302,13 @@ FIT_TEST_CASE()
     auto p3 = fit::pack_forward(p, p, p);
     static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
     FIT_TEST_CHECK(p(select_i()) == 3);
-    FIT_STATIC_TEST_CHECK(fit::pack(not_default_constructible(3))(select_i()) == 3);
+    FIT_STATIC_TEST_CHECK(fit::pack_basic(not_default_constructible(3))(select_i()) == 3);
 }
 
 FIT_TEST_CASE()
 {
     static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
-    auto p = fit::pack(not_default_constructible(1), not_default_constructible(2));
+    auto p = fit::pack_basic(not_default_constructible(1), not_default_constructible(2));
     static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
     auto p1 = fit::pack_forward(p);
     static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
@@ -317,13 +317,13 @@ FIT_TEST_CASE()
     auto p3 = fit::pack_forward(p, p, p);
     static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
     FIT_TEST_CHECK(p(select_i()) == 3);
-    FIT_STATIC_TEST_CHECK(fit::pack(not_default_constructible(1), not_default_constructible(2))(select_i()) == 3);
+    FIT_STATIC_TEST_CHECK(fit::pack_basic(not_default_constructible(1), not_default_constructible(2))(select_i()) == 3);
 }
 
 FIT_TEST_CASE()
 {
     static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
-    auto p = fit::pack(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1));
+    auto p = fit::pack_basic(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1));
     static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
     auto p1 = fit::pack_forward(p);
     static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
@@ -332,7 +332,7 @@ FIT_TEST_CASE()
     auto p3 = fit::pack_forward(p, p, p);
     static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
     FIT_TEST_CHECK(p(select_i()) == 3);
-    FIT_STATIC_TEST_CHECK(fit::pack(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1))(select_i()) == 3);
+    FIT_STATIC_TEST_CHECK(fit::pack_basic(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1))(select_i()) == 3);
 }
 
 

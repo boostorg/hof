@@ -24,14 +24,13 @@ The tests can be built and run by using the `check` target:
 Documentation
 -------------
 
-The documentation is built using mkdocs. Mkdocs can be easily installed by using `pip`:
+The documentation is built using Sphinx. First, install the requirements needed for the documentation using `pip`:
 
-    pip install mkdocs
+    pip install -r doc/requirements.txt
 
-Then the docs can be built using these commands:
+Then html documentation can be generated using `sphinx-build`:
 
-    python setup.py
-    mkdocs build
+    sphinx-build -b html doc/ doc/html/
 
 The final docs will be in the `doc/html` folder.
 

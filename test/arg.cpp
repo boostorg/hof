@@ -22,3 +22,11 @@ FIT_TEST_CASE()
     static_assert(!fit::is_callable<decltype(at_3), int, int>::value, "Not SFINAE-friendly");
     static_assert(!fit::is_callable<decltype(at_3), int>::value, "Not SFINAE-friendly");
 }
+
+struct foo {};
+
+FIT_TEST_CASE()
+{
+    static_assert(!fit::is_callable<decltype(fit::arg), int>::value, "Not sfinae friendly");
+    static_assert(!fit::is_callable<decltype(fit::arg), foo>::value, "Not sfinae friendly");
+}

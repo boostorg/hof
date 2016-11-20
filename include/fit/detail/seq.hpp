@@ -15,16 +15,30 @@ namespace fit {
 namespace detail {
 
 template<std::size_t ...>
-struct seq {};
-
-template<std::size_t N, std::size_t ...S>
-struct gens : gens<N-1, N-1, S...> {};
-
-template<std::size_t ...S>
-struct gens<0, S...> 
+struct seq 
 {
-  typedef seq<S...> type;
+    typedef seq type;
 };
+
+template <class, class>
+struct merge_seq;
+
+template <size_t... Xs, size_t... Ys>
+struct merge_seq<seq<Xs...>, seq<Ys...>>
+: seq<Xs..., (sizeof...(Xs)+Ys)...>
+{};
+
+template<std::size_t N>
+struct gens 
+: merge_seq<
+    typename gens<N/2>::type,
+    typename gens<N - N/2>::type
+> 
+{};
+
+template<> struct gens<0> : seq<> {}; 
+template<> struct gens<1> : seq<0> {}; 
+
 
 }
 } // namespace fit

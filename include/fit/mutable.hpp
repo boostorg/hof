@@ -34,7 +34,7 @@
 /// 
 /// F must be:
 /// 
-/// * [MutableFunctionObject](concepts.md#mutablefunctionobject)
+/// * [MutableFunctionObject](MutableFunctionObject)
 /// * MoveConstructible
 /// 
 

@@ -137,3 +137,22 @@ FIT_TEST_CASE()
 {
     fit::by(fit::identity, fit::identity)(0);
 }
+
+struct bar {};
+
+FIT_TEST_CASE()
+{
+    auto f = fit::by(bar{});
+    static_assert(!fit::is_callable<decltype(f), int>::value, "Not sfinae friendly");
+    static_assert(!fit::is_callable<decltype(f), int, int>::value, "Not sfinae friendly");
+    static_assert(!fit::is_callable<decltype(f), int, int, int>::value, "Not sfinae friendly");
+}
+
+FIT_TEST_CASE()
+{
+    auto f = fit::by(bar{}, bar{});
+    static_assert(!fit::is_callable<decltype(f), int>::value, "Not sfinae friendly");
+    static_assert(!fit::is_callable<decltype(f), int, int>::value, "Not sfinae friendly");
+    static_assert(!fit::is_callable<decltype(f), int, int, int>::value, "Not sfinae friendly");
+    static_assert(!fit::is_callable<decltype(f)>::value, "Not sfinae friendly");
+}

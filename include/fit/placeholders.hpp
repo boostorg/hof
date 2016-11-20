@@ -81,6 +81,7 @@
 ///     }
 /// 
 
+#include <fit/returns.hpp>
 #include <fit/lazy.hpp>
 #include <fit/protect.hpp>
 
@@ -162,6 +163,9 @@ struct call
 #define FIT_BINARY_OP(op, name) \
     struct name \
     { \
+        template<class T, class U> \
+        FIT_USING(ex_failure, decltype(std::declval<T>() op std::declval<U>())); \
+        struct failure : as_failure<ex_failure> {}; \
         template<class T, class U> \
         constexpr auto operator()(T&& x, U&& y) const FIT_RETURNS \
         (FIT_FORWARD(T)(x) op FIT_FORWARD(U)(y)); \
@@ -278,25 +282,69 @@ struct partial_ap
 
     FIT_RETURNS_CLASS(partial_ap);
 
+    struct partial_ap_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            template<class... Xs>
+            struct of;
+
+            template<class X>
+            struct of<X>
+            : Failure::template of<typename std::add_const<T>::type, X>
+            {};
+        };
+    };
+
+    struct failure
+    : failure_map<partial_ap_failure, Invoker>
+    {};
+
     template<class X>
     constexpr auto operator()(X&& x) const FIT_RETURNS
     (Invoker()(FIT_CONST_THIS->val, FIT_FORWARD(X)(x)));
 };
 
+template<class Invoker, class T>
+static constexpr partial_ap<T, Invoker> make_partial_ap(T&& x)
+{
+    return {FIT_FORWARD(T)(x)};
+}
+
 template<class Op>
 struct left
 {
+    struct failure
+    : failure_for<Op>
+    {};
     template<class T, class X>
-    constexpr auto operator()(const T& val, X&& x) const FIT_RETURNS
-    (Op()(val, FIT_FORWARD(X)(x)));
+    constexpr auto operator()(T&& val, X&& x) const FIT_RETURNS
+    (Op()(FIT_FORWARD(T)(val), FIT_FORWARD(X)(x)));
 };
 
 template<class Op>
 struct right
 {
+    struct right_failure
+    {
+        template<class Failure>
+        struct apply
+        {
+            template<class T, class U, class... Ts>
+            struct of
+            : Failure::template of<U, T, Ts...>
+            {};
+        };
+    };
+
+    struct failure
+    : failure_map<right_failure, Op>
+    {};
+
     template<class T, class X>
-    constexpr auto operator()(const T& val, X&& x) const FIT_RETURNS
-    (Op()(FIT_FORWARD(X)(x), val));
+    constexpr auto operator()(T&& val, X&& x) const FIT_RETURNS
+    (Op()(FIT_FORWARD(X)(x), FIT_FORWARD(T)(val)));
 };
 
 #define FIT_UNAMED_PLACEHOLDER_UNARY_OP(op, name) \
@@ -315,10 +363,10 @@ FIT_FOREACH_ASSIGN_OP(FIT_UNAMED_PLACEHOLDER_ASSIGN_OP)
 #define FIT_UNAMED_PLACEHOLDER_BINARY_OP(op, name) \
     template<class T> \
     constexpr inline auto operator op (const unamed_placeholder&, const T& x) FIT_RETURNS \
-    ( unamed_placeholder::partial_ap<T, unamed_placeholder::right<operators::name>>(x) ); \
+    ( unamed_placeholder::make_partial_ap<unamed_placeholder::right<operators::name>>(fit::decay(x)) ); \
     template<class T> \
     constexpr inline auto operator op (const T& x, const unamed_placeholder&) FIT_RETURNS \
-    ( unamed_placeholder::partial_ap<T, unamed_placeholder::left<operators::name>>(x) ); \
+    ( unamed_placeholder::make_partial_ap<unamed_placeholder::left<operators::name>>(fit::decay(x)) ); \
     constexpr inline auto operator op (const unamed_placeholder&, const unamed_placeholder&) FIT_RETURNS \
     ( operators::name() );
 

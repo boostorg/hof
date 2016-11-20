@@ -36,7 +36,7 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -71,16 +71,8 @@ namespace detail {
 
 struct placeholder_transformer
 {
-    template<class T>
-    struct transformer
-    {
-        template<class... Ts>
-        constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-        (fit::arg_c<std::is_placeholder<T>::value>(FIT_FORWARD(Ts)(xs)...));
-    };
-
     template<class T, typename std::enable_if<(std::is_placeholder<T>::value > 0), int>::type = 0>
-    constexpr transformer<T> operator()(const T&) const
+    constexpr detail::make_args_f<std::size_t, std::is_placeholder<T>::value> operator()(const T&) const
     {
         return {};
     }
@@ -115,8 +107,8 @@ struct ref_transformer
 struct id_transformer
 {
     template<class T>
-    constexpr auto operator()(const T& x) const 
-    FIT_SFINAE_RETURNS(always_ref(x));
+    constexpr auto operator()(T&& x) const 
+    FIT_SFINAE_RETURNS(always_detail::always_base<T>(FIT_FORWARD(T)(x)));
 };
 
 FIT_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer>);
@@ -247,7 +239,7 @@ struct lazy_adaptor : detail::callable_base<F>
     constexpr auto operator()(T x, Ts... xs) const FIT_RETURNS
     (
         fit::detail::make_lazy_invoker(FIT_RETURNS_C_CAST(detail::callable_base<F>&&)(FIT_CONST_THIS->base_function(x, xs...)), 
-            pack(FIT_RETURNS_STATIC_CAST(T&&)(x), FIT_RETURNS_STATIC_CAST(Ts&&)(xs)...))
+            fit::pack_basic(FIT_RETURNS_STATIC_CAST(T&&)(x), FIT_RETURNS_STATIC_CAST(Ts&&)(xs)...))
     );
 
     // Workaround for gcc 4.7

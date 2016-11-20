@@ -17,7 +17,7 @@
 /// The `tap` function invokes a function on the first argument passed in and
 /// then returns the first argument. This is useful in a chain of pipable
 /// function to perform operations on intermediate results. As a result, this
-/// function is [`pipable`](pipable.md).
+/// function is [`pipable`](/include/fit/pipable).
 /// 
 /// Synopsis
 /// --------
@@ -30,7 +30,7 @@
 /// 
 /// F must be:
 /// 
-/// * [UnaryCallable](concepts.md#unarycallable)
+/// * [UnaryCallable](UnaryCallable)
 /// 
 /// Example
 /// -------

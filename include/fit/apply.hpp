@@ -33,7 +33,7 @@
 /// 
 /// F must be:
 /// 
-/// * [Callable](concepts.md#callable)
+/// * [Callable](Callable)
 /// 
 /// Example
 /// -------
@@ -64,6 +64,12 @@
 #pragma warning(disable: 4003)
 #endif
 
+#define FIT_DETAIL_FOREACH_QUAL(m, data) \
+    m(, data) \
+    m(const, data) \
+    m(volatile, data) \
+    m(const volatile, data)
+
 namespace fit {
 
 namespace detail {
@@ -73,35 +79,62 @@ struct apply_mem_fn
     template<class...>
     struct convertible_args;
 
-    template<class T, class U>
-    struct is_convertible_args;
+    template<class T, class U, class=void>
+    struct is_convertible_args
+    : std::false_type
+    {};
 
     template<class... Ts, class... Us>
-    struct is_convertible_args<convertible_args<Ts...>, convertible_args<Us...>>
+    struct is_convertible_args<
+        convertible_args<Ts...>, 
+        convertible_args<Us...>, 
+        typename std::enable_if<(
+            sizeof...(Ts) == sizeof...(Us)
+        )>::type
+    >
     : and_<std::is_convertible<Ts, Us>...>
     {};
 
-#define FIT_APPLY_MEM_FN_CALL(cv) \
+    template<class From, class To>
+    struct is_compatible
+    : std::is_convertible<
+        typename std::add_pointer<typename std::remove_reference<From>::type>::type,
+        typename std::add_pointer<typename std::remove_reference<To>::type>::type
+    >
+    {};
+
+#define FIT_APPLY_MEM_FN_CALL(cv, data) \
     template <class R, class Base, class Derived, class... Ts, class... Us, class=typename std::enable_if<and_< \
-        std::is_base_of<Base, typename std::decay<Derived>::type>, \
+        is_compatible<Derived, cv Base>, \
         is_convertible_args<convertible_args<Us...>, convertible_args<Ts...>> \
     >::value>::type> \
     constexpr R operator()(R (Base::*mf)(Ts...) cv, Derived&& ref, Us &&... xs) const \
     { \
         return (FIT_FORWARD(Derived)(ref).*mf)(FIT_FORWARD(Us)(xs)...); \
     }
-    FIT_APPLY_MEM_FN_CALL()
-    FIT_APPLY_MEM_FN_CALL(const)
-    FIT_APPLY_MEM_FN_CALL(volatile)
-    FIT_APPLY_MEM_FN_CALL(const volatile)
+    FIT_DETAIL_FOREACH_QUAL(FIT_APPLY_MEM_FN_CALL, ~)
 };
 
 struct apply_mem_data
 {
+    template<class T, class R>
+    struct match_qualifier
+    { typedef R type; };
+
+#define FIT_APPLY_MEM_DATA_MATCH(cv, ref) \
+    template<class T, class R> \
+    struct match_qualifier<cv T ref, R> \
+    : match_qualifier<T, cv R ref> \
+    {};
+
+    FIT_DETAIL_FOREACH_QUAL(FIT_APPLY_MEM_DATA_MATCH,&)
+    FIT_DETAIL_FOREACH_QUAL(FIT_APPLY_MEM_DATA_MATCH,&&)
+
     template <class Base, class R, class Derived, class=typename std::enable_if<(
         std::is_base_of<Base, typename std::decay<Derived>::type>::value
     )>::type>
-    constexpr R operator()(R Base::*pmd, Derived&& ref) const
+    constexpr typename match_qualifier<Derived, R>::type 
+    operator()(R Base::*pmd, Derived&& ref) const
     {
         return FIT_FORWARD(Derived)(ref).*pmd;
     }
@@ -134,6 +167,15 @@ struct apply_f
         apply_mem_fn()(f, *FIT_FORWARD(T)(obj), FIT_FORWARD(Ts)(xs)...)
     );
 
+    template<class F, class T, class... Ts, class=typename std::enable_if<(
+        std::is_member_function_pointer<typename std::decay<F>::type>::value
+    )>::type>
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_fn, id_<F>, id_<T&>, id_<Ts>...) 
+    operator()(F&& f, const std::reference_wrapper<T>& ref, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
+    (
+        apply_mem_fn()(f, ref.get(), FIT_FORWARD(Ts)(xs)...)
+    );
+
     template<class F, class T, class=typename std::enable_if<(
         std::is_member_object_pointer<typename std::decay<F>::type>::value
     )>::type>
@@ -151,6 +193,15 @@ struct apply_f
     (
         apply_mem_data()(f, *FIT_FORWARD(T)(obj))
     );
+    
+    template<class F, class T, class=typename std::enable_if<(
+        std::is_member_object_pointer<typename std::decay<F>::type>::value
+    )>::type>
+    constexpr FIT_SFINAE_MANUAL_RESULT(apply_mem_data, id_<F>, id_<T&>) 
+    operator()(F&& f, const std::reference_wrapper<T>& ref) const FIT_SFINAE_MANUAL_RETURNS
+    (
+        apply_mem_data()(f, ref.get())
+    );
 
 #else
 
@@ -161,6 +212,10 @@ struct apply_f
     template <class PMD, class Pointer>
     constexpr auto operator()(PMD&& pmd, Pointer&& ptr) const
     FIT_RETURNS((*FIT_FORWARD(Pointer)(ptr)).*FIT_FORWARD(PMD)(pmd));
+
+    template <class Base, class T, class Derived>
+    constexpr auto operator()(T Base::*pmd, const std::reference_wrapper<Derived>& ref) const
+    FIT_RETURNS(ref.get().*pmd);
      
     template <class Base, class T, class Derived, class... Args>
     constexpr auto operator()(T Base::*pmf, Derived&& ref, Args&&... args) const
@@ -170,10 +225,14 @@ struct apply_f
     constexpr auto operator()(PMF&& pmf, Pointer&& ptr, Args&&... args) const
     FIT_RETURNS(((*FIT_FORWARD(Pointer)(ptr)).*FIT_FORWARD(PMF)(pmf))(FIT_FORWARD(Args)(args)...));
 
+    template <class Base, class T, class Derived, class... Args>
+    constexpr auto operator()(T Base::*pmf, const std::reference_wrapper<Derived>& ref, Args&&... args) const
+    FIT_RETURNS((ref.get().*pmf)(FIT_FORWARD(Args)(args)...));
+
 #endif
     template<class F, class... Ts>
-    constexpr FIT_SFINAE_RESULT(F, id_<Ts>...) 
-    operator()(F&& f, Ts&&... xs) const FIT_SFINAE_RETURNS
+    constexpr FIT_SFINAE_MANUAL_RESULT(F, id_<Ts>...) 
+    operator()(F&& f, Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
     (
         f(FIT_FORWARD(Ts)(xs)...)
     );

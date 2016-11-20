@@ -28,6 +28,11 @@
 ///         }
 ///     } decay;
 /// 
+/// References
+/// ----------
+/// 
+/// * [n3255](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3255.html) - Proposal for `decay_copy`
+/// 
 
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
@@ -35,11 +40,19 @@
 
 namespace fit { namespace detail {
 
+template<class T>
+struct decay_mf
+: unwrap_reference<typename std::decay<T>::type>
+{};
+
 struct decay_f
 {
-    template<class T>
-    constexpr typename unwrap_reference<typename std::decay<T>::type>::type 
-    operator()(T&& x) const
+    template<
+        class T, 
+        class Result=typename unwrap_reference<typename std::decay<T>::type>::type, 
+        class=typename std::enable_if<(std::is_constructible<Result, T>::value)>::type
+    >
+    constexpr Result operator()(T&& x) const
     {
         return FIT_FORWARD(T)(x);
     }

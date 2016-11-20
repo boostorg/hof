@@ -37,7 +37,7 @@
 /// 
 /// F must be a template class, that is a:
 /// 
-/// * [ConstFunctionObject](concepts.md#constfunctionobject)
+/// * [ConstFunctionObject](ConstFunctionObject)
 /// * DefaultConstructible
 /// 
 /// Example
@@ -136,7 +136,7 @@ struct implicit
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        detail::make_implicit_invoke<F>(fit::pack(FIT_FORWARD(Ts)(xs)...))
+        detail::make_implicit_invoke<F>(fit::pack_basic(FIT_FORWARD(Ts)(xs)...))
     );
 
 };

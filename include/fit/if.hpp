@@ -16,7 +16,7 @@
 /// 
 /// The `if_` function decorator makes the function callable if the boolean
 /// condition is true. The `if_c` version can be used to give a boolean
-/// condition directly(instead of relying on dependent typing).
+/// condition directly(instead of relying on an integral constant).
 /// 
 /// Synopsis
 /// --------
@@ -36,7 +36,7 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -61,6 +61,11 @@
 ///         assert(sum_f()(1, 2) == 3);
 ///         assert(sum_f()("", "") == 0);
 ///     }
+/// 
+/// References
+/// ----------
+/// 
+/// * [static_if](static_if)
 /// 
 
 #include <fit/always.hpp>
@@ -117,12 +122,16 @@ struct if_f
 };
 
 }
-
+#if FIT_HAS_VARIABLE_TEMPLATES
+template<bool B>
+FIT_STATIC_CONSTEXPR detail::make_if_f<B> if_c = {};
+#else
 template<bool B, class F>
 constexpr detail::if_adaptor<B, F> if_c(F f)
 {
     return detail::if_adaptor<B, F>(static_cast<F&&>(f));
 }
+#endif
 
 FIT_DECLARE_STATIC_VAR(if_, detail::if_f);
 

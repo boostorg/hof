@@ -30,7 +30,7 @@
 /// 
 /// Predicate must be:
 /// 
-/// * [ConstFunctionObject](concepts.md#constfunctionobject)
+/// * [ConstFunctionObject](ConstFunctionObject)
 /// * MoveConstructible
 /// 
 /// Example
@@ -145,23 +145,31 @@ template<>
 struct repeat_while_integral_decorator<0>
 {
     template<class P, class F, class T, class Self=repeat_while_integral_decorator<0>>
-    auto operator()(const P& p, const F& f, T&& x) const -> decltype(f(x))
+#if FIT_HAS_RELAXED_CONSTEXPR
+    constexpr
+#endif
+    auto operator()(const P& p, const F& f, T x) const -> decltype(f(x))
     {
-        return (p(x)) ? 
-            Self()( 
-                p, 
-                f, 
-                f(x)
-            ) : 
-            FIT_FORWARD(T)(x);
+        while(p(x))
+        {
+            // TODO: Should move?
+            x = f(x);
+        }
+        return x;
     }
 };
 }
 
+#if FIT_HAS_RELAXED_CONSTEXPR
+#define FIT_REPEAT_WHILE_CONSTEXPR_DEPTH 1
+#else
+#define FIT_REPEAT_WHILE_CONSTEXPR_DEPTH FIT_RECURSIVE_CONSTEXPR_DEPTH
+#endif
+
 FIT_DECLARE_STATIC_VAR(repeat_while, decorate_adaptor<
     fit::conditional_adaptor<
         detail::repeat_while_constant_decorator,
-        detail::repeat_while_integral_decorator<FIT_RECURSIVE_CONSTEXPR_DEPTH>
+        detail::repeat_while_integral_decorator<FIT_REPEAT_WHILE_CONSTEXPR_DEPTH>
     >
 >);
 

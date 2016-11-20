@@ -22,7 +22,7 @@
 /// 
 /// F must be:
 /// 
-/// * [Callable](concepts.md#callable)
+/// * [Callable](Callable)
 /// 
 /// Synopsis
 /// --------
@@ -54,7 +54,18 @@
 namespace fit {
 
 template<class F, class... Ts>
-FIT_USING(is_callable, detail::can_be_called<detail::apply_f, F, Ts...>);
+struct is_callable 
+: detail::can_be_called<detail::apply_f, F, Ts...>
+{};
+
+template<class F, class... Ts, class... Us>
+struct is_callable<F(Ts...), Us...>
+{
+    static_assert(!std::is_same<F, F>::value, 
+        "The is_callable<F(Args...)> form is not supported because it is problematic."
+        "Please use is_callable<F, Args...> instead."
+    );
+};
 
 } // namespace fit
 

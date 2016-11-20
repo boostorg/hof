@@ -34,7 +34,7 @@
 /// 
 /// F and Gs must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example

@@ -36,7 +36,7 @@
 /// 
 /// Fs must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -69,6 +69,12 @@
 ///         assert(r == 4);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Function composition](https://en.wikipedia.org/wiki/Function_composition)
+/// 
+/// 
 
 #include <fit/detail/callable_base.hpp>
 #include <fit/always.hpp>
@@ -78,12 +84,13 @@
 #include <tuple>
 #include <fit/detail/move.hpp>
 #include <fit/detail/make.hpp>
+#include <fit/detail/result_type.hpp>
 #include <fit/detail/static_const_var.hpp>
 
 namespace fit { namespace detail {
 
 template<class F1, class F2>
-struct compose_kernel : detail::compressed_pair<F1, F2>
+struct compose_kernel : detail::compressed_pair<F1, F2>, compose_function_result_type<F1, F2>
 {
     typedef detail::compressed_pair<F1, F2> base_type;
 
@@ -103,7 +110,8 @@ struct compose_kernel : detail::compressed_pair<F1, F2>
 }
 
 template<class F, class... Fs>
-struct compose_adaptor : detail::compose_kernel<detail::callable_base<F>, FIT_JOIN(compose_adaptor, detail::callable_base<Fs>...)>
+struct compose_adaptor 
+: detail::compose_kernel<detail::callable_base<F>, FIT_JOIN(compose_adaptor, detail::callable_base<Fs>...)>
 {
     typedef compose_adaptor fit_rewritable_tag;
     typedef FIT_JOIN(compose_adaptor, detail::callable_base<Fs>...) tail;

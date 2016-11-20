@@ -54,7 +54,7 @@ struct result_of
 #if FIT_NO_EXPRESSION_SFINAE
 
 #define FIT_SFINAE_RESULT(...) typename fit::result_of<__VA_ARGS__>::type
-#define FIT_SFINAE_RETURNS(...) { return __VA_ARGS__; }
+#define FIT_SFINAE_RETURNS(...) FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__) { return __VA_ARGS__; }
 
 #else
 

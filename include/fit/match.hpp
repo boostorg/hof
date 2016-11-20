@@ -16,7 +16,7 @@
 /// 
 /// The `match` function adaptor combines several functions together and
 /// resolves which one should be called by using C++ overload resolution. This
-/// is different than the [`conditional`](conditional.md) adaptor which resolves
+/// is different than the [`conditional`](/include/fit/conditional) adaptor which resolves
 /// them based on order.
 /// 
 /// Synopsis
@@ -30,7 +30,7 @@
 /// 
 /// Fs must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -64,6 +64,12 @@
 ///     static_assert(std::is_same<foo, decltype(fun()(foo()))>::value, "Failed match");
 /// 
 ///     int main() {}
+/// 
+/// References
+/// ----------
+/// 
+/// * [POO51](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0051r2.pdf) - Proposal for C++
+///   Proposal for C++ generic overload function
 /// 
 
 #include <fit/reveal.hpp>

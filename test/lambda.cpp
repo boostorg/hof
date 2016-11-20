@@ -48,6 +48,11 @@ FIT_STATIC_LAMBDA_FUNCTION(add_one) = [](int x)
     return x + 1;
 };
 
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(add_one(2) == 3);
+}
+
 FIT_STATIC_LAMBDA_FUNCTION(sum_partial) = fit::partial([](int x, int y)
 {
     return x + y;

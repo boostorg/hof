@@ -41,6 +41,15 @@ struct not_6
     }
 };
 
+struct not_limit
+{
+    template<class T>
+    constexpr bool operator()(T x) const
+    {
+        return x != (FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
+    }
+};
+
 FIT_TEST_CASE()
 {
     static_assert
@@ -61,4 +70,12 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(fit::repeat_while(not_6())(increment())(1) == 6);
     FIT_TEST_CHECK(fit::repeat_while(not_6())(increment())(1) == 6);
     FIT_TEST_CHECK(fit::reveal(fit::repeat_while(not_6())(increment()))(1) == 6);
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::repeat_while(not_limit())(increment())(1) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
+#if FIT_HAS_RELAXED_CONSTEXPR
+    FIT_STATIC_TEST_CHECK(fit::repeat_while(not_limit())(increment())(1) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
+#endif
 }

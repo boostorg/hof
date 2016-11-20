@@ -23,7 +23,7 @@
 /// eagerness of `constexpr` to instantiation templates, in some cases, an
 /// explicit return type must be specified in order to avoid reaching the
 /// recursion limits of the compiler. This can be accomplished using
-/// [`fit::result`](result.md):
+/// [`fit::result`](/include/fit/result):
 /// 
 ///     int r = fit::result<int>(factorial)(5);
 /// 
@@ -43,7 +43,7 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstFunctionObject](concepts.md#constfunctionobject)
+/// * [ConstFunctionObject](ConstFunctionObject)
 /// * MoveConstructible
 /// 
 /// Example
@@ -61,6 +61,12 @@
 ///         int r = fit::result<int>(factorial)(5);
 ///         assert(r == 5*4*3*2*1);
 ///     }
+/// 
+/// References
+/// ----------
+/// 
+/// * [Fixed-point combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator)
+/// * [Recursive](Recursive)
 /// 
 
 #include <fit/always.hpp>

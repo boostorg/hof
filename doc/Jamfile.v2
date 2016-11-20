@@ -1,0 +1,14 @@
+project fit/doc ;
+
+make fit-doc :  : @make-fit-doc ;
+
+actions make-fit-doc {
+    sphinx-build -b html . html/
+}
+
+
+alias boostdoc ;
+explicit boostdoc ;
+alias boostrelease ;
+explicit boostrelease ;
+

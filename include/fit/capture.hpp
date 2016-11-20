@@ -9,10 +9,12 @@
 #define FIT_GUARD_CAPTURE_H
 
 #include <fit/detail/callable_base.hpp>
+#include <fit/detail/compressed_pair.hpp>
 #include <fit/reveal.hpp>
 #include <fit/pack.hpp>
 #include <fit/always.hpp>
 #include <fit/detail/move.hpp>
+#include <fit/detail/result_type.hpp>
 
 /// capture
 /// =======
@@ -29,7 +31,7 @@
 /// Synopsis
 /// --------
 /// 
-///     // Capture lvalues by reference and rvalues by value.
+///     // Capture by decaying each value
 ///     template<class... Ts>
 ///     constexpr auto capture(Ts&&... xs);
 /// 
@@ -37,9 +39,9 @@
 ///     template<class... Ts>
 ///     constexpr auto capture_forward(Ts&&... xs);
 /// 
-///     // Capture by decaying each value
+///     // Capture lvalues by reference and rvalues by value.
 ///     template<class... Ts>
-///     constexpr auto capture_decay(Ts&&... xs);
+///     constexpr auto capture_basic(Ts&&... xs);
 /// 
 /// Semantics
 /// ---------
@@ -73,22 +75,21 @@ namespace fit {
 namespace detail {
 
 template<class F, class Pack>
-struct capture_invoke : detail::callable_base<F>, Pack
+struct capture_invoke : detail::compressed_pair<detail::callable_base<F>, Pack>, detail::function_result_type<F>
 {
     typedef capture_invoke fit_rewritable1_tag;
-    template<class X, class Y>
-    constexpr capture_invoke(X&& x, Y&& y) : detail::callable_base<F>(FIT_FORWARD(X)(x)), Pack(FIT_FORWARD(Y)(y))
-    {}
+    typedef detail::compressed_pair<detail::callable_base<F>, Pack> base;
+    FIT_INHERIT_CONSTRUCTOR(capture_invoke, base)
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->first(xs...);
     }
 
     template<class... Ts>
     constexpr const Pack& get_pack(Ts&&...xs) const
     {
-        return always_ref(*this)(xs...);
+        return this->second(xs...);
     }
 
     template<class Failure, class... Ts>
@@ -178,9 +179,9 @@ struct capture_f
 };
 }
 
-FIT_DECLARE_STATIC_VAR(capture, detail::capture_f<detail::pack_f>);
+FIT_DECLARE_STATIC_VAR(capture_basic, detail::capture_f<detail::pack_basic_f>);
 FIT_DECLARE_STATIC_VAR(capture_forward, detail::capture_f<detail::pack_forward_f>);
-FIT_DECLARE_STATIC_VAR(capture_decay, detail::capture_f<detail::pack_decay_f>);
+FIT_DECLARE_STATIC_VAR(capture, detail::capture_f<detail::pack_f>);
 
 } // namespace fit
 

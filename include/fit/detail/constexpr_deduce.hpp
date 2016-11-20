@@ -12,6 +12,17 @@
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
+#ifndef FIT_HAS_CONST_FOLD
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
+#define FIT_HAS_CONST_FOLD 0
+#elif defined(__clang__) || defined (__GNUC__)
+#define FIT_HAS_CONST_FOLD 1
+#else
+#define FIT_HAS_CONST_FOLD 0
+#endif
+#endif
+
+
 namespace fit {
 
 namespace detail {
@@ -32,19 +43,19 @@ struct constexpr_deduce_unique
 {
     constexpr constexpr_deduce_unique()
     {}
-#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
-    template<class F>
-    constexpr operator F() const
-    {
-        // static_assert(std::is_default_constructible<F>::value, "Function not default constructible");
-        return F();
-    }
-#else
+#if FIT_HAS_CONST_FOLD
     template<class F>
     constexpr operator const F&() const
     {
         static_assert(FIT_IS_EMPTY(F), "Function or lambda expression must be empty");
         return FIT_CONST_FOLD(reinterpret_cast<const F&>(static_const_var<T>()));
+    }
+#else
+    template<class F>
+    constexpr operator F() const
+    {
+        // static_assert(std::is_default_constructible<F>::value, "Function not default constructible");
+        return F();
     }
 #endif
 };

@@ -36,15 +36,6 @@
 #else
 #define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
 #endif
-#elif defined(_MSC_VER)
-#define FIT_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
-#define FIT_IS_CONVERTIBLE(...) __is_convertible_to(__VA_ARGS__)
-#define FIT_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
-#define FIT_IS_CLASS(...) __is_class(__VA_ARGS__)
-#define FIT_IS_EMPTY(...) __is_empty(__VA_ARGS__)
-#define FIT_IS_LITERAL(...) std::is_literal_type<__VA_ARGS__>::value
-#define FIT_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
-#define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
 #else
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
 #define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value
@@ -53,7 +44,11 @@
 #define FIT_IS_EMPTY(...) std::is_empty<__VA_ARGS__>::value
 #define FIT_IS_LITERAL(...) std::is_literal_type<__VA_ARGS__>::value
 #define FIT_IS_POLYMORPHIC(...) std::is_polymorphic<__VA_ARGS__>::value
+#if defined(_MSC_VER)
+#define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
+#else
 #define FIT_IS_FINAL(...) (false)
+#endif
 #endif
 
 #if FIT_NO_STD_DEFAULT_CONSTRUCTIBLE

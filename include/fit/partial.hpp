@@ -37,7 +37,7 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -59,6 +59,12 @@
 ///     int main() {
 ///         assert(3 == partial(sum())(1)(2));
 ///     }
+/// 
+/// References
+/// ----------
+/// 
+/// * [Partial application](https://en.wikipedia.org/wiki/Partial_application)
+/// * [Currying](https://en.wikipedia.org/wiki/Currying)
 /// 
 
 #include <fit/conditional.hpp>
@@ -135,17 +141,18 @@ struct partial_adaptor_join
     FIT_RETURNS_CLASS(partial_adaptor_join);
 
     template<class... Ts, class=typename std::enable_if<
-        (sizeof...(Ts) + Pack::fit_function_param_limit::value) < function_param_limit<F>::value
+        ((sizeof...(Ts) + Pack::fit_function_param_limit::value) < function_param_limit<F>::value)
     >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         fit::partial
         (
             FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
-            fit::pack_join(FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), fit::pack_decay(FIT_FORWARD(Ts)(xs)...))
+            fit::pack_join(FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...)), fit::pack(FIT_FORWARD(Ts)(xs)...))
         )
     );
 };
+
 template<class Derived, class F>
 struct partial_adaptor_pack
 {
@@ -162,14 +169,14 @@ struct partial_adaptor_pack
     FIT_RETURNS_CLASS(partial_adaptor_pack);
 
     template<class... Ts, class=typename std::enable_if<
-        sizeof...(Ts) < function_param_limit<F>::value
+        (sizeof...(Ts) < function_param_limit<F>::value)
     >::type>
     constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         fit::partial
         (
             FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), 
-            fit::pack_decay(FIT_FORWARD(Ts)(xs)...)
+            fit::pack(FIT_FORWARD(Ts)(xs)...)
         )
     );
 };
@@ -215,8 +222,7 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
 
     using base::operator();
 
-    constexpr partial_adaptor()
-    {}
+    FIT_INHERIT_DEFAULT(partial_adaptor, base, F, Pack);
 
     template<class X, class S>
     constexpr partial_adaptor(X&& x, S&& seq) : F(FIT_FORWARD(X)(x)), Pack(FIT_FORWARD(S)(seq))

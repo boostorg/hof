@@ -44,12 +44,12 @@
 /// 
 /// Projection must be:
 /// 
-/// * [UnaryCallable](concepts.md#unarycallable)
+/// * [UnaryCallable](UnaryCallable)
 /// * MoveConstructible
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](concepts.md#constcallable)
+/// * [ConstCallable](ConstCallable)
 /// * MoveConstructible
 /// 
 /// Example
@@ -70,6 +70,12 @@
 ///         assert(fit::by(&foo::x, _ + _)(foo(1), foo(2)) == 3);
 ///     }
 /// 
+/// References
+/// ----------
+/// 
+/// * [Projections](Projections)
+/// * [Variadic print](<Variadic print>)
+/// 
 
 
 
@@ -81,6 +87,7 @@
 #include <fit/detail/make.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/compressed_pair.hpp>
+#include <fit/detail/result_type.hpp>
 #include <fit/apply_eval.hpp>
 
 namespace fit {
@@ -169,7 +176,7 @@ template<class Projection, class F=void>
 struct by_adaptor;
 
 template<class Projection, class F>
-struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>>
+struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>>, detail::function_result_type<F>
 {
     typedef by_adaptor fit_rewritable_tag;
     typedef detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>> base;
@@ -236,8 +243,8 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
 
     FIT_RETURNS_CLASS(by_adaptor);
 
-    template<class... Ts>
-    constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const
+    template<class... Ts, class=detail::holder<decltype(std::declval<Projection>()(std::declval<Ts>()))...>>
+    constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const 
     {
 #if FIT_NO_ORDERED_BRACE_INIT
         return detail::by_void_eval(this->base_projection(xs...), FIT_FORWARD(Ts)(xs)...);

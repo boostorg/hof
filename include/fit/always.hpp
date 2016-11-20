@@ -8,6 +8,7 @@
 #ifndef FIT_GUARD_FUNCTION_ALWAYS_H
 #define FIT_GUARD_FUNCTION_ALWAYS_H
 
+#include <fit/detail/delegate.hpp>
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
 
@@ -78,14 +79,26 @@
 
 namespace fit { namespace always_detail {
 
-template<class T>
+template<class T, class=void>
 struct always_base
 {
     T x;
-    
-    constexpr always_base()
-    {}
-    
+
+    FIT_DELGATE_CONSTRUCTOR(always_base, T, x)
+
+    template<class... As>
+    constexpr typename detail::unwrap_reference<T>::type 
+    operator()(As&&...) const
+    {
+        return this->x;
+    }
+};
+
+template<class T>
+struct always_base<T, typename std::enable_if<!FIT_IS_EMPTY(T)>::type>
+{
+    T x;
+
     constexpr always_base(T xp) : x(xp)
     {}
 

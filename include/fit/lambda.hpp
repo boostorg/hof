@@ -66,7 +66,7 @@
 #include <fit/detail/result_of.hpp>
 #include <fit/reveal.hpp>
 #include <fit/detail/constexpr_deduce.hpp>
-#include <fit/detail/static_const_var.hpp>
+#include <fit/function.hpp>
 
 
 #ifndef FIT_REWRITE_STATIC_LAMBDA
@@ -201,35 +201,29 @@ struct reveal_static_lambda_function_wrapper_factor
     {
         return reveal_adaptor<typename rewrite_lambda<F>::type>();
     }
-#elif FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
-    template<class F>
-    constexpr reveal_adaptor<static_function_wrapper<F>> operator=(const F&) const
-    {
-        return {};
-    }
-#else
+#elif FIT_HAS_CONST_FOLD
     template<class F>
     constexpr const reveal_adaptor<F>& operator=(const F&) const
     {
         return reinterpret_cast<const reveal_adaptor<F>&>(static_const_var<T>());
+    }
+#else
+    template<class F>
+    constexpr reveal_adaptor<static_function_wrapper<F>> operator=(const F&) const
+    {
+        return {};
     }
 #endif
 };
 
 }} // namespace fit
 
-#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR || FIT_REWRITE_STATIC_LAMBDA
-#define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR auto
-#else
-#define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_AUTO_REF
-#endif
-
-#define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
 #define FIT_DETAIL_MAKE_REVEAL_STATIC(T) FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>()
 #define FIT_STATIC_LAMBDA_FUNCTION(name) \
 struct fit_private_static_function_ ## name {}; \
-FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
+FIT_STATIC_AUTO_REF name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
 
+#define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
 #define FIT_STATIC_LAMBDA FIT_DETAIL_MAKE_STATIC = []
 
 

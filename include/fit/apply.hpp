@@ -109,6 +109,7 @@ struct apply_mem_fn
         is_convertible_args<convertible_args<Us...>, convertible_args<Ts...>> \
     >::value>::type> \
     constexpr R operator()(R (Base::*mf)(Ts...) cv, Derived&& ref, Us &&... xs) const \
+    FIT_RETURNS_DEDUCE_NOEXCEPT((FIT_FORWARD(Derived)(ref).*mf)(FIT_FORWARD(Us)(xs)...)) \
     { \
         return (FIT_FORWARD(Derived)(ref).*mf)(FIT_FORWARD(Us)(xs)...); \
     }
@@ -134,7 +135,7 @@ struct apply_mem_data
         std::is_base_of<Base, typename std::decay<Derived>::type>::value
     )>::type>
     constexpr typename match_qualifier<Derived, R>::type 
-    operator()(R Base::*pmd, Derived&& ref) const
+    operator()(R Base::*pmd, Derived&& ref) const noexcept
     {
         return FIT_FORWARD(Derived)(ref).*pmd;
     }

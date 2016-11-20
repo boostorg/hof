@@ -67,9 +67,9 @@ struct result_of
 
 #define FIT_SFINAE_MANUAL_RESULT(...) typename fit::result_of<__VA_ARGS__>::type
 #if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
-#define FIT_SFINAE_MANUAL_RETURNS(...) { return (__VA_ARGS__); }
+#define FIT_SFINAE_MANUAL_RETURNS(...) FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__) { return (__VA_ARGS__); }
 #else
-#define FIT_SFINAE_MANUAL_RETURNS(...) { FIT_RETURNS_RETURN(__VA_ARGS__); }
+#define FIT_SFINAE_MANUAL_RETURNS(...) FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__) { FIT_RETURNS_RETURN(__VA_ARGS__); }
 #endif
 
 #else

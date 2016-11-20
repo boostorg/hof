@@ -14,14 +14,15 @@
 /// Description
 /// -----------
 /// 
-/// The `FIT_RETURNS` macro helps deduce the return type of an expression
-/// using the trailing return type. Instead of repeating the expression for
-/// the return type and using the expression in the function body, this macro
-/// helps reduce the code duplication from that.
+/// The `FIT_RETURNS` macro defines the function as the expression
+/// equivalence. It does this by deducing `noexcept` and the return type by
+/// using a trailing `decltype`. Instead of repeating the expression for the
+/// return type, `noexcept` clause and the function body, this macro will
+/// reduce the code duplication from that.
 /// 
 /// Note: The expression used to deduce the return the type will also
-/// constrain the template function as well, which is different behaviour than
-/// using C++14's return type deduction.
+/// constrain the template function and deduce `noexcept` as well, which is
+/// different behaviour than using C++14's return type deduction.
 /// 
 /// Synopsis
 /// --------
@@ -49,9 +50,10 @@
 /// Description
 /// -----------
 /// 
-/// On older compilers the `this` variable cannot be used inside the
-/// `FIT_RETURNS` macro because it is considered an incomplete type. So the
-/// following macros are provided to help workaround the issue.
+/// On some non-conformant compilers, such as gcc, the `this` variable cannot
+/// be used inside the `FIT_RETURNS` macro because it is considered an
+/// incomplete type. So the following macros are provided to help workaround
+/// the issue.
 /// 
 /// 
 /// Synopsis

@@ -424,21 +424,13 @@ struct member_obj
 {
     int x;
 };
-
+// Only newer versions of gcc support deducing noexcept for member function pointers
+#if defined(__GNUC__) && !defined (__clang__) && ((__GNUC__ == 4 && __GNUC_MINOR__ > 8) || (__GNUC__ > 4))
 struct no_throw_member_fun 
 {
     void foo_nullary() noexcept {}
     void foo_unary(copy_throws) noexcept {}
 };
-
-FIT_TEST_CASE()
-{
-    no_throw_fo obj;
-    copy_throws arg;
-    static_assert(noexcept(fit::apply(obj)), "");
-    static_assert(!noexcept(fit::apply(obj, arg)), "");
-    static_assert(noexcept(fit::apply(obj, std::move(arg))), "");
-}
 FIT_TEST_CASE()
 {
     no_throw_member_fun obj;
@@ -446,6 +438,15 @@ FIT_TEST_CASE()
     static_assert(noexcept(fit::apply(&no_throw_member_fun::foo_nullary, obj)), "");
     static_assert(!noexcept(fit::apply(&no_throw_member_fun::foo_unary, obj, arg)), "");
     static_assert(noexcept(fit::apply(&no_throw_member_fun::foo_unary, obj, std::move(arg))), "");
+}
+#endif
+FIT_TEST_CASE()
+{
+    no_throw_fo obj;
+    copy_throws arg;
+    static_assert(noexcept(fit::apply(obj)), "");
+    static_assert(!noexcept(fit::apply(obj, arg)), "");
+    static_assert(noexcept(fit::apply(obj, std::move(arg))), "");
 }
 FIT_TEST_CASE()
 {

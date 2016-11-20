@@ -41,4 +41,4 @@ Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the imp
 Noexcept support
 ----------------
 
-On older compilers such as gcc 4.6 and gcc 4.7, `noexcept` is not used due to many bugs in the implementation.
+On older compilers such as gcc 4.6 and gcc 4.7, `noexcept` is not used due to many bugs in the implementation. Also, most compilers don't support deducing `noexcept` with member function pointers. Only newer versions of gcc(4.9 and later) support this.

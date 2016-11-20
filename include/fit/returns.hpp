@@ -190,7 +190,7 @@ void fit_returns_class_check() \
 #define FIT_RETURNS_CLASS(...) typedef __VA_ARGS__* fit_this_type; typedef const __VA_ARGS__* fit_const_this_type
 
 #define FIT_RETURNS(...) \
-FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__)
+FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__) \
 FIT_RETURNS_DECLTYPE(__VA_ARGS__) \
 { FIT_RETURNS_RETURN(__VA_ARGS__); }
 

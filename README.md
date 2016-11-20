@@ -1,6 +1,6 @@
 
-Introduction
-============
+About
+=====
 
 Fit is a header-only C++11/C++14 library that provides utilities for functions and function objects, which can solve many problems with much simpler constructs than whats traditionally been done with metaprogramming.
 
@@ -36,8 +36,12 @@ This requires a C++11 compiler. There are no third-party dependencies. This has 
 Contexpr support
 ----------------
 
-Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the implementation of constexpr. However, constexpr initialization of functions is supported when using the `FIT_STATIC_FUNCTION` and `FIT_STATIC_LAMBDA_FUNCTION` constructs.
+Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the implementation of constexpr. However, constexpr initialization of functions is supported when using the [`FIT_STATIC_FUNCTION`](FIT_STATIC_FUNCTION) and [`FIT_STATIC_LAMBDA_FUNCTION`](FIT_STATIC_LAMBDA_FUNCTION) constructs.
 
+Noexcept support
+----------------
+
+On older compilers such as gcc 4.6 and gcc 4.7, `noexcept` is not used due to many bugs in the implementation.
 Building
 ========
 

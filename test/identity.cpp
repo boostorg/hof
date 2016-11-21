@@ -28,3 +28,26 @@ FIT_TEST_CASE()
     static_assert(!fit::is_callable<decltype(fit::identity), int, int>::value, "Identiy not callable");
     static_assert(!fit::is_callable<decltype(fit::identity)>::value, "Identiy not callable");
 }
+
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::identity(1)), "Noexcept identity");
+    int i = 5;
+    static_assert(noexcept(fit::identity(i)), "Noexcept identity");
+}
+
+struct copy_throws 
+{
+    copy_throws() {}
+    copy_throws(copy_throws const&) {}
+    copy_throws(copy_throws&&) noexcept {}
+};
+
+FIT_TEST_CASE()
+{
+    copy_throws ct{};
+    static_assert(noexcept(fit::identity(ct)), "Noexcept identity");
+    static_assert(noexcept(fit::identity(std::move(ct))), "Noexcept identity");
+    static_assert(!noexcept(fit::identity(copy_throws{})), "Noexcept identity");
+}
+

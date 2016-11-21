@@ -44,25 +44,25 @@ namespace fit { namespace identity_detail {
 struct identity_base
 {
     template<class T>
-    constexpr T operator()(T&& x) const
+    constexpr T operator()(T&& x) const noexcept(std::is_reference<T>::value || std::is_nothrow_move_constructible<T>::value)
     {
         return FIT_FORWARD(T)(x);
     }
 
     template<class T>
-    constexpr std::initializer_list<T>& operator()(std::initializer_list<T>& x) const
+    constexpr std::initializer_list<T>& operator()(std::initializer_list<T>& x) const noexcept
     {
         return x;
     }
 
     template<class T>
-    constexpr const std::initializer_list<T>& operator()(const std::initializer_list<T>& x) const
+    constexpr const std::initializer_list<T>& operator()(const std::initializer_list<T>& x) const noexcept
     {
         return x;
     }
 
     template<class T>
-    constexpr std::initializer_list<T> operator()(std::initializer_list<T>&& x) const
+    constexpr std::initializer_list<T> operator()(std::initializer_list<T>&& x) const noexcept(noexcept(std::initializer_list<T>(std::move(x))))
     {
         return FIT_FORWARD(std::initializer_list<T>)(x);
     }

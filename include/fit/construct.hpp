@@ -108,24 +108,24 @@ struct construct_f
     struct storage_holder
     {
         storage * s;
-        storage_holder(storage* x) : s(x)
+        storage_holder(storage* x) noexcept : s(x)
         {}
 
-        T& data()
+        T& data() noexcept
         {
             return *reinterpret_cast<T*>(s);
         }
 
-        ~storage_holder()
+        ~storage_holder() noexcept(noexcept(std::declval<T>().~T()))
         {
             this->data().~T();
         }
     };
 
-    constexpr construct_f()
+    constexpr construct_f() noexcept
     {}
     template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(T, Ts...)>
-    T operator()(Ts&&... xs) const
+    T operator()(Ts&&... xs) const FIT_NOEXCEPT_CONSTRUCTIBLE(T, Ts&&...)
     {
         storage buffer{};
         new(&buffer) T(FIT_FORWARD(Ts)(xs)...);
@@ -134,7 +134,7 @@ struct construct_f
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&&)>
-    T operator()(std::initializer_list<X>&& x) const
+    T operator()(std::initializer_list<X>&& x) const FIT_NOEXCEPT_CONSTRUCTIBLE(T, std::initializer_list<X>&&)
     {
         storage buffer{};
         new(&buffer) T(static_cast<std::initializer_list<X>&&>(x));
@@ -143,7 +143,7 @@ struct construct_f
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&)>
-    T operator()(std::initializer_list<X>& x) const
+    T operator()(std::initializer_list<X>& x) const FIT_NOEXCEPT_CONSTRUCTIBLE(T, std::initializer_list<X>&)
     {
         storage buffer{};
         new(&buffer) T(x);
@@ -152,7 +152,7 @@ struct construct_f
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, const std::initializer_list<X>&)>
-    T operator()(const std::initializer_list<X>& x) const
+    T operator()(const std::initializer_list<X>& x) const FIT_NOEXCEPT_CONSTRUCTIBLE(T, const std::initializer_list<X>&)
     {
         storage buffer{};
         new(&buffer) T(x);
@@ -164,28 +164,28 @@ struct construct_f
 template<class T>
 struct construct_f<T, typename std::enable_if<FIT_IS_LITERAL(T)>::type>
 {
-    constexpr construct_f()
+    constexpr construct_f() noexcept
     {}
     template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(T, Ts...)>
-    constexpr T operator()(Ts&&... xs) const
+    constexpr T operator()(Ts&&... xs) const noexcept
     {
         return T(FIT_FORWARD(Ts)(xs)...);
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&&)>
-    constexpr T operator()(std::initializer_list<X>&& x) const
+    constexpr T operator()(std::initializer_list<X>&& x) const noexcept
     {
         return T(static_cast<std::initializer_list<X>&&>(x));
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&)>
-    constexpr T operator()(std::initializer_list<X>& x) const
+    constexpr T operator()(std::initializer_list<X>& x) const noexcept
     {
         return T(x);
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, const std::initializer_list<X>&)>
-    constexpr T operator()(const std::initializer_list<X>& x) const
+    constexpr T operator()(const std::initializer_list<X>& x) const noexcept
     {
         return T(x);
     }
@@ -194,11 +194,11 @@ struct construct_f<T, typename std::enable_if<FIT_IS_LITERAL(T)>::type>
 template<template<class...> class Template, template<class...> class D>
 struct construct_template_f
 {
-    constexpr construct_template_f()
+    constexpr construct_template_f() noexcept
     {}
     template<class... Ts, class Result=FIT_JOIN(Template, typename D<Ts>::type...), 
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
-    constexpr Result operator()(Ts&&... xs) const
+    constexpr Result operator()(Ts&&... xs) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, Ts&&...)
     {
         return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
@@ -207,7 +207,7 @@ struct construct_template_f
 template<class MetafunctionClass>
 struct construct_meta_f
 {
-    constexpr construct_meta_f()
+    constexpr construct_meta_f() noexcept
     {}
 
     template<class... Ts>
@@ -219,7 +219,7 @@ struct construct_meta_f
         class Metafunction=FIT_JOIN(apply, Ts...), 
         class Result=typename Metafunction::type, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
-    constexpr Result operator()(Ts&&... xs) const
+    constexpr Result operator()(Ts&&... xs) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, Ts&&...)
     {
         return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
@@ -228,13 +228,13 @@ struct construct_meta_f
 template<template<class...> class MetafunctionTemplate>
 struct construct_meta_template_f
 {
-    constexpr construct_meta_template_f()
+    constexpr construct_meta_template_f() noexcept
     {}
     template<class... Ts, 
         class Metafunction=FIT_JOIN(MetafunctionTemplate, Ts...), 
         class Result=typename Metafunction::type, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
-    constexpr Result operator()(Ts&&... xs) const
+    constexpr Result operator()(Ts&&... xs) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, Ts&&...)
     {
         return construct_f<Result>()(FIT_FORWARD(Ts)(xs)...);
     }
@@ -250,49 +250,49 @@ struct construct_id
 }
 
 template<class T>
-constexpr detail::construct_f<T> construct()
+constexpr detail::construct_f<T> construct() noexcept
 {
     return {};
 }
 // These overloads are provide for consistency
 template<class T>
-constexpr detail::construct_f<T> construct_forward()
+constexpr detail::construct_f<T> construct_forward() noexcept
 {
     return {};
 }
 
 template<class T>
-constexpr detail::construct_f<T> construct_basic()
+constexpr detail::construct_f<T> construct_basic() noexcept
 {
     return {};
 }
 
 template<template<class...> class Template>
-constexpr detail::construct_template_f<Template, detail::decay_mf> construct()
+constexpr detail::construct_template_f<Template, detail::decay_mf> construct() noexcept
 {
     return {};
 }
 
 template<template<class...> class Template>
-constexpr detail::construct_template_f<Template, detail::construct_id> construct_forward()
+constexpr detail::construct_template_f<Template, detail::construct_id> construct_forward() noexcept
 {
     return {};
 }
 
 template<template<class...> class Template>
-constexpr detail::construct_template_f<Template, detail::remove_rvalue_reference> construct_basic()
+constexpr detail::construct_template_f<Template, detail::remove_rvalue_reference> construct_basic() noexcept
 {
     return {};
 }
 
 template<class T>
-constexpr detail::construct_meta_f<T> construct_meta()
+constexpr detail::construct_meta_f<T> construct_meta() noexcept
 {
     return {};
 }
 
 template<template<class...> class Template>
-constexpr detail::construct_meta_template_f<Template> construct_meta()
+constexpr detail::construct_meta_template_f<Template> construct_meta() noexcept
 {
     return {};
 }

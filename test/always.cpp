@@ -48,13 +48,12 @@ struct copy_throws
 
 FIT_TEST_CASE()
 {
-    static_assert(std::is_nothrow_copy_constructible<std::reference_wrapper<copy_throws>>::value, "Incorrect reference wrapper noexcept specifier");
     static_assert(noexcept(fit::always()()), "noexcept always");
     static_assert(noexcept(fit::always(1)()), "noexcept always");
     static_assert(!noexcept(fit::always(copy_throws{})()), "noexcept always");
     copy_throws ct{};
     static_assert(!noexcept(fit::always(ct)()), "noexcept always");
-    static_assert(noexcept(fit::always(std::ref(ct))()), "noexcept always");
+    static_assert(noexcept(fit::always(std::ref(ct))()) == FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(std::reference_wrapper<copy_throws>), "noexcept always");
     auto ctf = fit::always(copy_throws{});
     static_assert(!noexcept(ctf()), "noexcept always");
 }

@@ -91,7 +91,7 @@ struct always_base
     template<class... As>
     constexpr result_type
     operator()(As&&...) const
-    noexcept(std::is_reference<result_type>::value || std::is_nothrow_copy_constructible<result_type>::value)
+    noexcept(std::is_reference<result_type>::value || FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(result_type))
     {
         return this->x;
     }
@@ -102,7 +102,7 @@ struct always_base<T, typename std::enable_if<!FIT_IS_EMPTY(T)>::type>
 {
     T x;
 
-    constexpr always_base(T xp) noexcept(std::is_nothrow_copy_constructible<T>::value)
+    constexpr always_base(T xp) noexcept(FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(T))
     : x(xp)
     {}
 
@@ -111,7 +111,7 @@ struct always_base<T, typename std::enable_if<!FIT_IS_EMPTY(T)>::type>
     template<class... As>
     constexpr result_type 
     operator()(As&&...) const 
-    noexcept(std::is_reference<result_type>::value || std::is_nothrow_copy_constructible<result_type>::value)
+    noexcept(std::is_reference<result_type>::value || FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(result_type))
     {
         return this->x;
     }
@@ -145,7 +145,7 @@ struct always_base<void>
 struct always_f
 {
     template<class T>
-    constexpr always_detail::always_base<T> operator()(T x) const noexcept(std::is_nothrow_copy_constructible<T>::value)
+    constexpr always_detail::always_base<T> operator()(T x) const noexcept(FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(T))
     {
         return always_detail::always_base<T>(x);
     }

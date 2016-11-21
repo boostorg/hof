@@ -14,7 +14,9 @@
 
 #if defined(__clang__)
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
+#define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) std::is_nothrow_constructible<__VA_ARGS__>::value
 // #define FIT_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
+// #define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
 // #define FIT_IS_CONVERTIBLE(...) __is_convertible_to(__VA_ARGS__)
 #define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value
 #define FIT_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
@@ -23,27 +25,33 @@
 #define FIT_IS_LITERAL(...) __is_literal(__VA_ARGS__)
 #define FIT_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
 #define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
+#define FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(...) __has_nothrow_copy(__VA_ARGS__)
 #elif defined(__GNUC__)
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
+#define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) std::is_nothrow_constructible<__VA_ARGS__>::value
 #define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value
 #define FIT_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
 #define FIT_IS_CLASS(...) __is_class(__VA_ARGS__)
 #define FIT_IS_EMPTY(...) __is_empty(__VA_ARGS__)
 #define FIT_IS_LITERAL(...) __is_literal_type(__VA_ARGS__)
 #define FIT_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
+#define FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(...) __has_nothrow_copy(__VA_ARGS__)
 #if __GNUC__ == 4 && __GNUC_MINOR__ < 7
 #define FIT_IS_FINAL(...) (false)
 #else
 #define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
 #endif
+#define FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(...) __has_nothrow_copy(__VA_ARGS__)
 #else
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
+#define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) std::is_nothrow_constructible<__VA_ARGS__>::value
 #define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value
 #define FIT_IS_BASE_OF(...) std::is_base_of<__VA_ARGS__>::value
 #define FIT_IS_CLASS(...) std::is_class<__VA_ARGS__>::value
 #define FIT_IS_EMPTY(...) std::is_empty<__VA_ARGS__>::value
 #define FIT_IS_LITERAL(...) std::is_literal_type<__VA_ARGS__>::value
 #define FIT_IS_POLYMORPHIC(...) std::is_polymorphic<__VA_ARGS__>::value
+#define FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(...) std::is_nothrow_copy_constructible<__VA_ARGS__>::value
 #if defined(_MSC_VER)
 #define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
 #else
@@ -56,6 +64,8 @@
 #else
 #define FIT_IS_DEFAULT_CONSTRUCTIBLE FIT_IS_CONSTRUCTIBLE
 #endif
+
+#define FIT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(...) FIT_IS_NOTHROW_CONSTRUCTIBLE(__VA_ARGS__, __VA_ARGS__ &&)
 
 namespace fit { namespace detail {
 

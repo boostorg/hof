@@ -45,7 +45,7 @@ struct identity_base
 {
     template<class T>
     constexpr T operator()(T&& x) const 
-    noexcept(std::is_reference<T>::value || std::is_nothrow_move_constructible<T>::value)
+    noexcept(std::is_reference<T>::value || FIT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T))
     {
         return FIT_FORWARD(T)(x);
     }

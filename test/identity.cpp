@@ -1,5 +1,6 @@
 #include <fit/identity.hpp>
 #include <fit/is_callable.hpp>
+#include <fit/detail/move.hpp>
 #include "test.hpp"
 
 FIT_TEST_CASE()
@@ -47,7 +48,7 @@ FIT_TEST_CASE()
 {
     copy_throws ct{};
     static_assert(noexcept(fit::identity(ct)), "Noexcept identity");
-    static_assert(noexcept(fit::identity(std::move(ct))), "Noexcept identity");
+    static_assert(noexcept(fit::identity(fit::move(ct))), "Noexcept identity");
     static_assert(!noexcept(fit::identity(copy_throws{})), "Noexcept identity");
 }
 

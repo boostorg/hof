@@ -38,3 +38,23 @@ FIT_TEST_CASE()
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(f));
     FIT_TEST_CHECK(f(1,2,3,4,5) == 10);
 }
+
+struct copy_throws 
+{
+    copy_throws() {}
+    copy_throws(copy_throws const&) {}
+    copy_throws(copy_throws&&) noexcept {}
+};
+
+FIT_TEST_CASE()
+{
+    static_assert(std::is_nothrow_copy_constructible<std::reference_wrapper<copy_throws>>::value, "Incorrect reference wrapper noexcept specifier");
+    static_assert(noexcept(fit::always()()), "noexcept always");
+    static_assert(noexcept(fit::always(1)()), "noexcept always");
+    static_assert(!noexcept(fit::always(copy_throws{})()), "noexcept always");
+    copy_throws ct{};
+    static_assert(!noexcept(fit::always(ct)()), "noexcept always");
+    static_assert(noexcept(fit::always(std::ref(ct))()), "noexcept always");
+    auto ctf = fit::always(copy_throws{});
+    static_assert(!noexcept(ctf()), "noexcept always");
+}

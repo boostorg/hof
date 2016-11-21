@@ -86,9 +86,12 @@ struct always_base
 
     FIT_DELGATE_CONSTRUCTOR(always_base, T, x)
 
+    typedef typename detail::unwrap_reference<T>::type result_type;
+
     template<class... As>
-    constexpr typename detail::unwrap_reference<T>::type 
+    constexpr result_type
     operator()(As&&...) const
+    noexcept(std::is_reference<result_type>::value || std::is_nothrow_copy_constructible<result_type>::value)
     {
         return this->x;
     }
@@ -99,12 +102,16 @@ struct always_base<T, typename std::enable_if<!FIT_IS_EMPTY(T)>::type>
 {
     T x;
 
-    constexpr always_base(T xp) : x(xp)
+    constexpr always_base(T xp) noexcept(std::is_nothrow_copy_constructible<T>::value)
+    : x(xp)
     {}
 
+    typedef typename detail::unwrap_reference<T>::type result_type;
+
     template<class... As>
-    constexpr typename detail::unwrap_reference<T>::type 
-    operator()(As&&...) const
+    constexpr result_type 
+    operator()(As&&...) const 
+    noexcept(std::is_reference<result_type>::value || std::is_nothrow_copy_constructible<result_type>::value)
     {
         return this->x;
     }
@@ -120,14 +127,14 @@ template<>
 struct always_base<void>
 {
     
-    constexpr always_base()
+    constexpr always_base() noexcept
     {}
 
     struct void_ {};
 
     template<class... As>
     constexpr FIT_ALWAYS_VOID_RETURN 
-    operator()(As&&...) const
+    operator()(As&&...) const noexcept
     {
 #if FIT_NO_CONSTEXPR_VOID
         return void_();
@@ -138,12 +145,12 @@ struct always_base<void>
 struct always_f
 {
     template<class T>
-    constexpr always_detail::always_base<T> operator()(T x) const
+    constexpr always_detail::always_base<T> operator()(T x) const noexcept(std::is_nothrow_copy_constructible<T>::value)
     {
         return always_detail::always_base<T>(x);
     }
 
-    constexpr always_detail::always_base<void> operator()() const
+    constexpr always_detail::always_base<void> operator()() const noexcept
     {
         return always_detail::always_base<void>();
     }
@@ -152,7 +159,7 @@ struct always_f
 struct always_ref_f
 {
     template<class T>
-    constexpr always_detail::always_base<T&> operator()(T& x) const
+    constexpr always_detail::always_base<T&> operator()(T& x) const noexcept
     {
         return always_detail::always_base<T&>(x);
     }

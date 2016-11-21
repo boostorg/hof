@@ -44,7 +44,8 @@ namespace fit { namespace identity_detail {
 struct identity_base
 {
     template<class T>
-    constexpr T operator()(T&& x) const noexcept(std::is_reference<T>::value || std::is_nothrow_move_constructible<T>::value)
+    constexpr T operator()(T&& x) const 
+    noexcept(std::is_reference<T>::value || std::is_nothrow_move_constructible<T>::value)
     {
         return FIT_FORWARD(T)(x);
     }

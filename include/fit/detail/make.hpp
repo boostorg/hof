@@ -10,16 +10,17 @@
 
 #include <fit/detail/move.hpp>
 #include <fit/detail/join.hpp>
+#include <fit/detail/delegate.hpp>
 
 namespace fit { namespace detail {
 
 template<template<class...> class Adaptor>
 struct make
 {
-	constexpr make()
+	constexpr make() noexcept
 	{}
     template<class... Fs, class Result=FIT_JOIN(Adaptor, Fs...)>
-    constexpr Result operator()(Fs... fs) const
+    constexpr Result operator()(Fs... fs) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, Fs&&...)
     {
         return Result(static_cast<Fs&&>(fs)...);
     }

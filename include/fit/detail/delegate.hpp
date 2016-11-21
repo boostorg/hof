@@ -30,28 +30,35 @@
 #define FIT_ENABLE_IF_CONSTRUCTIBLE(...) \
     class=typename std::enable_if<FIT_IS_CONSTRUCTIBLE(__VA_ARGS__)>::type
 
+#define FIT_NOEXCEPT_CONSTRUCTIBLE(...) \
+    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(__VA_ARGS__))
+
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible_c<__VA_ARGS__>()>::type> \
-    constexpr C() {}
+    constexpr C() noexcept(fit::detail::is_nothrow_default_constructible_c<__VA_ARGS__>()) {}
 
 #define FIT_INHERIT_DEFAULT_EMPTY(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && \
         fit::detail::is_default_constructible_c<__VA_ARGS__>() && FIT_IS_EMPTY(__VA_ARGS__) \
     >::type> \
-    constexpr C() {}
+    constexpr C() noexcept(fit::detail::is_nothrow_default_constructible_c<__VA_ARGS__>()) {}
 
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 
 #define FIT_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr_, C, T, var) \
     template<class... FitXs, typename fit::detail::enable_if_constructible<C, T, FitXs...>::type = 0> \
-    constexpr_ C(FitXs&&... fit_xs) : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {}
+    constexpr_ C(FitXs&&... fit_xs) \
+    FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
+    : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {}
     
 #else
 #define FIT_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr_, C, T, var) \
     template<class... FitXs, FIT_ENABLE_IF_CONSTRUCTIBLE(T, FitXs&&...)> \
-    constexpr_ C(FitXs&&... fit_xs) : var(FIT_FORWARD(FitXs)(fit_xs)...) {}
+    constexpr_ C(FitXs&&... fit_xs) \
+    FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
+    : var(FIT_FORWARD(FitXs)(fit_xs)...) {}
 
 #endif
 
@@ -72,6 +79,12 @@
 
 namespace fit {
 namespace detail {
+
+template<class... Xs>
+constexpr bool is_nothrow_default_constructible_c()
+{
+    return FIT_AND_UNPACK(FIT_IS_NOTHROW_CONSTRUCTIBLE(Xs));
+}
 
 template<class... Xs>
 constexpr bool is_default_constructible_c()

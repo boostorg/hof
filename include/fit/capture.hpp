@@ -81,13 +81,13 @@ struct capture_invoke : detail::compressed_pair<detail::callable_base<F>, Pack>,
     typedef detail::compressed_pair<detail::callable_base<F>, Pack> base;
     FIT_INHERIT_CONSTRUCTOR(capture_invoke, base)
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
         return this->first(xs...);
     }
 
     template<class... Ts>
-    constexpr const Pack& get_pack(Ts&&...xs) const
+    constexpr const Pack& get_pack(Ts&&...xs) const noexcept
     {
         return this->second(xs...);
     }
@@ -163,6 +163,7 @@ struct make_capture_pack_f
 {
     template<class Pack>
     constexpr capture_pack<Pack> operator()(Pack p) const
+    FIT_NOEXCEPT_CONSTRUCTIBLE(capture_pack<Pack>, Pack&&)
     {
         return capture_pack<Pack>(static_cast<Pack&&>(p));
     }

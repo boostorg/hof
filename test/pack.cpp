@@ -22,6 +22,14 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    static_assert(noexcept(fit::pack(1, 2)(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_forward(1, 2)(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_basic(1, 2)(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_join(fit::pack(), fit::pack())(fit::always())), "noexcept pack");
+}
+
+FIT_TEST_CASE()
+{
     static constexpr int x = 1;
     static constexpr int y = 2;
 

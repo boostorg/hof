@@ -58,6 +58,13 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    static_assert(noexcept(fit::capture(fit::identity)(fit::identity)()), "noexcept capture");
+    static_assert(noexcept(fit::capture_basic(fit::identity)(fit::identity)()), "noexcept capture");
+    static_assert(noexcept(fit::capture_forward(fit::identity)(fit::identity)()), "noexcept capture");
+}
+
+FIT_TEST_CASE()
+{
     auto f = fit::capture_basic(fit::identity)(fit::identity);
     f();
 }

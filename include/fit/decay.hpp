@@ -34,6 +34,7 @@
 /// * [n3255](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3255.html) - Proposal for `decay_copy`
 /// 
 
+#include <fit/detail/delegate.hpp>
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/forward.hpp>
@@ -52,7 +53,7 @@ struct decay_f
         class Result=typename unwrap_reference<typename std::decay<T>::type>::type, 
         class=typename std::enable_if<(std::is_constructible<Result, T>::value)>::type
     >
-    constexpr Result operator()(T&& x) const
+    constexpr Result operator()(T&& x) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, T&&)
     {
         return FIT_FORWARD(T)(x);
     }

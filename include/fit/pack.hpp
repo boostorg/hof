@@ -108,7 +108,7 @@ struct is_copyable
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
     is_copyable<T>::value && !std::is_lvalue_reference<T>::value
 , int>::type = 0>
-constexpr T pack_get(X&& x, Ts&&... xs)
+constexpr T pack_get(X&& x, Ts&&... xs) noexcept(noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(T)))
 {
     return static_cast<T>(fit::alias_value<Tag, T>(FIT_FORWARD(X)(x), xs...));
 }
@@ -116,7 +116,7 @@ constexpr T pack_get(X&& x, Ts&&... xs)
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
     std::is_lvalue_reference<T>::value
 , int>::type = 0>
-constexpr T pack_get(X&& x, Ts&&... xs)
+constexpr T pack_get(X&& x, Ts&&... xs) noexcept
 {
     return fit::alias_value<Tag, T>(x, xs...);
 }
@@ -234,7 +234,9 @@ struct pack_base<seq<Ns...>, Ts...>
     FIT_INHERIT_DEFAULT(pack_base, Ts...);
     
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)>
-    constexpr pack_base(Xs&&... xs) : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(FIT_FORWARD(Xs)(xs))...
+    constexpr pack_base(Xs&&... xs) 
+    noexcept(noexcept(FIT_AND_UNPACK(FIT_IS_NOTHROW_CONSTRUCTIBLE(typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type, Xs&&))))
+    : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(FIT_FORWARD(Xs)(xs))...
     {}
 
     // typedef pack_base<seq<Ns...>, Ts...> self_t;
@@ -290,6 +292,11 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
 
     template<class P1, class P2>
     static constexpr result_type call(P1&& p1, P2&& p2)
+    FIT_RETURNS_DEDUCE_NOEXCEPT(
+        result_type(
+            detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
+            detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...)
+    )
     {
         return result_type(
             detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
@@ -329,12 +336,13 @@ struct pack_f
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        pack_basic_f()(decay(FIT_FORWARD(Ts)(xs))...)
+        pack_basic_f()(fit::decay(FIT_FORWARD(Ts)(xs))...)
     );
 };
 
 template<class P1, class P2>
 constexpr typename pack_join_result<P1, P2>::result_type make_pack_join_dual(P1&& p1, P2&& p2)
+FIT_RETURNS_DEDUCE_NOEXCEPT(pack_join_result<P1, P2>::call(FIT_FORWARD(P1)(p1), FIT_FORWARD(P2)(p2)))
 {
     return pack_join_result<P1, P2>::call(FIT_FORWARD(P1)(p1), FIT_FORWARD(P2)(p2));
 }
@@ -356,13 +364,14 @@ struct join_type<T, Ts...>
 };
 
 template<class P1>
-constexpr P1 make_pack_join(P1&& p1)
+constexpr P1 make_pack_join(P1&& p1) FIT_NOEXCEPT_CONSTRUCTIBLE(P1, P1&&)
 {
     return FIT_FORWARD(P1)(p1);
 }
 
 template<class P1, class... Ps>
 constexpr typename join_type<P1, Ps...>::type make_pack_join(P1&& p1, Ps&&... ps)
+FIT_RETURNS_DEDUCE_NOEXCEPT(make_pack_join_dual(FIT_FORWARD(P1)(p1), make_pack_join(FIT_FORWARD(Ps)(ps)...)))
 {
     return make_pack_join_dual(FIT_FORWARD(P1)(p1), make_pack_join(FIT_FORWARD(Ps)(ps)...));
 }

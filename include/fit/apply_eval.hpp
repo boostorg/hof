@@ -95,7 +95,7 @@ struct eval_helper
     R result;
 
     template<class F, class... Ts>
-    constexpr eval_helper(const F& f, Ts&&... xs) : result(apply(f, FIT_FORWARD(Ts)(xs)...))
+    constexpr eval_helper(const F& f, Ts&&... xs) : result(fit::apply(f, FIT_FORWARD(Ts)(xs)...))
     {}
 
     constexpr R get_result()
@@ -109,7 +109,7 @@ struct eval_helper<void>
 {
     int x;
     template<class F, class... Ts>
-    constexpr eval_helper(const F& f, Ts&&... xs) : x((apply(f, FIT_FORWARD(Ts)(xs)...), 0))
+    constexpr eval_helper(const F& f, Ts&&... xs) : x((fit::apply(f, FIT_FORWARD(Ts)(xs)...), 0))
     {}
 };
 #endif
@@ -117,11 +117,11 @@ struct eval_helper<void>
 struct apply_eval_f
 {
     template<class F, class... Ts, class R=decltype(
-        apply(std::declval<const F&>(), fit::eval(std::declval<Ts>())...)
+        fit::apply(std::declval<const F&>(), fit::eval(std::declval<Ts>())...)
     ),
     class=typename std::enable_if<(!std::is_void<R>::value)>::type 
     >
-    constexpr R operator()(const F& f, Ts&&... xs) const
+    constexpr R operator()(const F& f, Ts&&... xs) const FIT_RETURNS_DEDUCE_NOEXCEPT(fit::apply(f, fit::eval(FIT_FORWARD(Ts)(xs))...))
     {
         return
 #if FIT_NO_ORDERED_BRACE_INIT
@@ -134,12 +134,12 @@ struct apply_eval_f
     }
 
     template<class F, class... Ts, class R=decltype(
-        apply(std::declval<const F&>(), fit::eval(std::declval<Ts>())...)
+        fit::apply(std::declval<const F&>(), fit::eval(std::declval<Ts>())...)
     ),
     class=typename std::enable_if<(std::is_void<R>::value)>::type 
     >
     constexpr typename detail::holder<Ts...>::type 
-    operator()(const F& f, Ts&&... xs) const
+    operator()(const F& f, Ts&&... xs) const FIT_RETURNS_DEDUCE_NOEXCEPT(fit::apply(f, fit::eval(FIT_FORWARD(Ts)(xs))...))
     {
         return (typename detail::holder<Ts...>::type)
 #if FIT_NO_ORDERED_BRACE_INIT

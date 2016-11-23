@@ -78,25 +78,26 @@ struct compressed_pair<First, Second>
         FIT_ENABLE_IF_CONSTRUCTIBLE(Second, Y&&)
     >
     constexpr compressed_pair(X&& x, Y&& y) 
+    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(first_base, X&&) && FIT_IS_NOTHROW_CONSTRUCTIBLE(second_base, Y&&))
     : first_base(FIT_FORWARD(X)(x)), second_base(FIT_FORWARD(Y)(y))
     {}
 
     FIT_INHERIT_DEFAULT(compressed_pair, first_base, second_base)
 
     template<class Base, class... Xs>
-    constexpr const Base& get_alias_base(Xs&&... xs) const
+    constexpr const Base& get_alias_base(Xs&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }
 
     template<class... Xs>
-    constexpr const First& first(Xs&&... xs) const
+    constexpr const First& first(Xs&&... xs) const noexcept
     {
         return alias_value(this->get_alias_base<first_base>(xs...), xs...);
     }
 
     template<class... Xs>
-    constexpr const Second& second(Xs&&... xs) const
+    constexpr const Second& second(Xs&&... xs) const noexcept
     {
         return alias_value(this->get_alias_base<second_base>(xs...), xs...);
     }
@@ -105,6 +106,7 @@ struct compressed_pair<First, Second>
 
 template<class T, class U>
 constexpr compressed_pair<T, U> make_compressed_pair(T x, U y)
+noexcept(FIT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T) && FIT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(U))
 {
     return {static_cast<T&&>(x), static_cast<U&&>(y)};
 }

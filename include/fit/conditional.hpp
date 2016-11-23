@@ -102,7 +102,9 @@ struct basic_conditional_adaptor : F1, F2
     template<class A, class B,
         FIT_ENABLE_IF_CONVERTIBLE(A, F1),
         FIT_ENABLE_IF_CONVERTIBLE(B, F2)>
-    constexpr basic_conditional_adaptor(A&& f1, B&& f2) : F1(FIT_FORWARD(A)(f1)), F2(FIT_FORWARD(B)(f2))
+    constexpr basic_conditional_adaptor(A&& f1, B&& f2)
+    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(F1, A&&) && FIT_IS_NOTHROW_CONSTRUCTIBLE(F2, B&&))
+    : F1(FIT_FORWARD(A)(f1)), F2(FIT_FORWARD(B)(f2))
     {}
 
     template<class X,
@@ -110,7 +112,9 @@ struct basic_conditional_adaptor : F1, F2
         FIT_IS_CONVERTIBLE(X, F1) && 
         FIT_IS_DEFAULT_CONSTRUCTIBLE(F2)
     >::type>
-    constexpr basic_conditional_adaptor(X&& x) : F1(FIT_FORWARD(X)(x))
+    constexpr basic_conditional_adaptor(X&& x) 
+    FIT_NOEXCEPT_CONSTRUCTIBLE(F1, X&&)
+    : F1(FIT_FORWARD(X)(x))
     {} 
 
     template<class... Ts>
@@ -135,13 +139,13 @@ struct basic_conditional_adaptor : F1, F2
 };
 
 template <class F1, class F2>
-constexpr const F1& which(std::true_type, const F1& f1, const F2&) 
+constexpr const F1& which(std::true_type, const F1& f1, const F2&) noexcept
 { 
     return f1; 
 }
 
 template <class F1, class F2>
-constexpr const F2& which(std::false_type, const F1&, const F2& f2) 
+constexpr const F2& which(std::false_type, const F1&, const F2& f2) noexcept
 { 
     return f2; 
 }
@@ -193,12 +197,14 @@ struct conditional_adaptor
         FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, kernel_base), 
         FIT_ENABLE_IF_CONSTRUCTIBLE(kernel_base, Xs...)>
     constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
+    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X&&, kernel_base) && FIT_IS_NOTHROW_CONSTRUCTIBLE(kernel_base, Xs&&...))
     : base(FIT_FORWARD(X)(f1), kernel_base(FIT_FORWARD(Xs)(fs)...))
     {}
 
     template<class X, class... Xs, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(base, X)>
     constexpr conditional_adaptor(X&& f1) 
+    FIT_NOEXCEPT_CONSTRUCTIBLE(base, X&&)
     : base(FIT_FORWARD(X)(f1))
     {}
 

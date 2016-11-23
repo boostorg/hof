@@ -18,6 +18,11 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    static_assert(noexcept(fit::apply_eval(fit::always(), fit::always(1), fit::always(2))), "noexcept apply_eval");
+}
+
+FIT_TEST_CASE()
+{
     int i = 3;
     FIT_TEST_CHECK(fit::apply_eval(fit::_ - fit::_, [&]{ return i++; }, [&]{ return i++;}) == -1);
     FIT_TEST_CHECK(fit::apply_eval(fit::_ - fit::_, [&]{ return ++i; }, [&]{ return ++i;}) == -1);

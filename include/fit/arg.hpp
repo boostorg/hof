@@ -55,7 +55,8 @@ struct perfect_ref
     typedef T type;
     typedef typename std::remove_reference<T>::type value_type;
     T&& value;
-    constexpr perfect_ref(value_type& x) : value(FIT_FORWARD(T)(x))
+    constexpr perfect_ref(value_type& x) noexcept
+    : value(FIT_FORWARD(T)(x))
     {}
 };
 
@@ -63,7 +64,7 @@ template<std::size_t N>
 struct ignore
 {
     template<class T>
-    constexpr ignore(T&&...)
+    constexpr ignore(T&&...) noexcept
     {}
 };
 
@@ -76,7 +77,7 @@ struct args_at
 };
 
 template<std::size_t... N>
-constexpr args_at<N...> make_args_at(seq<N...>)
+constexpr args_at<N...> make_args_at(seq<N...>) noexcept
 {
     return {};
 }
@@ -100,7 +101,7 @@ struct make_args_f
 struct arg_f
 {
     template<class IntegralConstant>
-    constexpr make_args_f<std::size_t, IntegralConstant::value> operator()(IntegralConstant) const
+    constexpr make_args_f<std::size_t, IntegralConstant::value> operator()(IntegralConstant) const noexcept
     {
         return make_args_f<std::size_t, IntegralConstant::value>();
     }

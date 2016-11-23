@@ -30,3 +30,17 @@ FIT_TEST_CASE()
     static_assert(!fit::is_callable<decltype(fit::arg), int>::value, "Not sfinae friendly");
     static_assert(!fit::is_callable<decltype(fit::arg), foo>::value, "Not sfinae friendly");
 }
+
+struct copy_throws 
+{
+    copy_throws() {}
+    copy_throws(copy_throws const&) {}
+    copy_throws(copy_throws&&) noexcept {}
+};
+
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::arg_c<3>(1,2,3,4,5)), "noexcept arg");
+    static_assert(noexcept(fit::arg(std::integral_constant<int, 3>())(1,2,3,4,5)), "noexcept arg");
+    static_assert(!noexcept(fit::arg(std::integral_constant<int, 3>())(1,2,copy_throws{},4,5)), "noexcept arg");
+}

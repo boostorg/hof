@@ -134,9 +134,9 @@ struct no_throw_fo
 FIT_TEST_CASE()
 {
     typedef fit::conditional_adaptor<throw_fo<t1>, no_throw_fo<t2>> fun;
-    auto f = fun{};
-    static_assert(noexcept(f(t2{})), "noexcept conditional");
-    static_assert(!noexcept(f(t1{})), "noexcept conditional");
+    auto g = fun{};
+    static_assert(noexcept(g(t2{})), "noexcept conditional");
+    static_assert(!noexcept(g(t1{})), "noexcept conditional");
 
     static_assert(noexcept(fun{}(t2{})), "noexcept conditional");
     static_assert(!noexcept(fun{}(t1{})), "noexcept conditional");
@@ -145,9 +145,9 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
     typedef fit::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>> fun;
-    auto f = fun{};
-    static_assert(noexcept(f(t2{})), "noexcept conditional");
-    static_assert(!noexcept(f(t1{})), "noexcept conditional");
+    auto g = fun{};
+    static_assert(noexcept(g(t2{})), "noexcept conditional");
+    static_assert(!noexcept(g(t1{})), "noexcept conditional");
 
     static_assert(noexcept(fun{}(t2{})), "noexcept conditional");
     static_assert(!noexcept(fun{}(t1{})), "noexcept conditional");

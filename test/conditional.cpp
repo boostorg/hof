@@ -153,4 +153,13 @@ FIT_TEST_CASE()
     static_assert(!noexcept(fun{}(t1{})), "noexcept conditional");
 }
 
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>>{}(t2{})), "noexcept conditional");
+    static_assert(!noexcept(fit::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>>{}(t1{})), "noexcept conditional");
+
+    static_assert(noexcept(fit::conditional(no_throw_fo<t2>{}, throw_fo<t1>{})(t2{})), "noexcept conditional");
+    static_assert(!noexcept(fit::conditional(no_throw_fo<t2>{}, throw_fo<t1>{})(t1{})), "noexcept conditional");
+}
+
 }

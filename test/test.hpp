@@ -73,7 +73,7 @@ inline void unused(T&&) {}
 
 #define FIT_TEST_TEMPLATE(...) typedef std::integral_constant<int, sizeof(__VA_ARGS__)> FIT_PP_CAT(test_template_, __LINE__)
 
-#define FIT_TEST_CHECK(...) if (!(__VA_ARGS__)) std::cout << "*****FAILED: " << #__VA_ARGS__ << "@" << __FILE__ << ": " << __LINE__ << std::endl
+#define FIT_TEST_CHECK(...) if (!(__VA_ARGS__)) std::cout << "***** FAILED *****: " << #__VA_ARGS__ << "@" << __FILE__ << ": " << __LINE__ << std::endl
 #define FIT_STRINGIZE(...) #__VA_ARGS__
 
 #if FIT_HAS_STATIC_TEST_CHECK

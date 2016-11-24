@@ -127,7 +127,7 @@ struct alias_inherit
 
 #define FIT_DETAIL_ALIAS_INHERIT_GET_VALUE(ref, move) \
 template<class Tag, class T, class... Ts, class=typename std::enable_if<(FIT_IS_CLASS(T))>::type> \
-constexpr T ref alias_value(alias_inherit<T, Tag> ref a, Ts&&...) \
+constexpr T ref alias_value(alias_inherit<T, Tag> ref a, Ts&&...) FIT_RETURNS_DEDUCE_NOEXCEPT(move(a)) \
 { \
     return move(a); \
 }
@@ -163,12 +163,12 @@ template<class T, class Tag=void>
 struct alias_static
 {
     template<class... Ts, FIT_ENABLE_IF_CONSTRUCTIBLE(T, Ts...)>
-    constexpr alias_static(Ts&&...)
+    constexpr alias_static(Ts&&...) noexcept
     {}
 };
 
 template<class Tag, class T, class... Ts>
-constexpr const T& alias_value(const alias_static<T, Tag>&, Ts&&...)
+constexpr const T& alias_value(const alias_static<T, Tag>&, Ts&&...) noexcept
 {
     return detail::alias_static_storage<T, Tag>::value;
 }

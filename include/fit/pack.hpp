@@ -108,7 +108,7 @@ struct is_copyable
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
     is_copyable<T>::value && !std::is_lvalue_reference<T>::value
 , int>::type = 0>
-constexpr T pack_get(X&& x, Ts&&... xs) noexcept(noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(T)))
+constexpr T pack_get(X&& x, Ts&&... xs) noexcept(FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(T))
 {
     return static_cast<T>(fit::alias_value<Tag, T>(FIT_FORWARD(X)(x), xs...));
 }
@@ -167,12 +167,12 @@ struct pack_base<seq<Ns...>, Ts...>
 {
     typedef pack_holder_base<typename pack_holder_builder<Ts...>::template apply<Ts, Ns>...> base;
     template<class X1, class X2, class... Xs>
-    constexpr pack_base(X1&& x1, X2&& x2, Xs&&... xs) 
+    constexpr pack_base(X1&& x1, X2&& x2, Xs&&... xs)
     : base(FIT_FORWARD(X1)(x1), FIT_FORWARD(X2)(x2), FIT_FORWARD(Xs)(xs)...)
     {}
 
     template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
-    constexpr pack_base(X1&& x1) 
+    constexpr pack_base(X1&& x1)
     : base(FIT_FORWARD(X1)(x1))
     {}
 

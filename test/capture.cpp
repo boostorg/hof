@@ -55,14 +55,14 @@ FIT_TEST_CASE()
     static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(decltype(f)), "Not default constructible");
     f();
 }
-
+#if FIT_HAS_NOEXCEPT_DEDUCTION
 FIT_TEST_CASE()
 {
     static_assert(noexcept(fit::capture(fit::identity)(fit::identity)()), "noexcept capture");
     static_assert(noexcept(fit::capture_basic(fit::identity)(fit::identity)()), "noexcept capture");
     static_assert(noexcept(fit::capture_forward(fit::identity)(fit::identity)()), "noexcept capture");
 }
-
+#endif
 FIT_TEST_CASE()
 {
     auto f = fit::capture_basic(fit::identity)(fit::identity);

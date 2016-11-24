@@ -130,7 +130,7 @@ struct no_throw_fo
 {
     void operator()(T) const noexcept {}
 };
-
+#if FIT_HAS_NOEXCEPT_DEDUCTION
 FIT_TEST_CASE()
 {
     typedef fit::conditional_adaptor<throw_fo<t1>, no_throw_fo<t2>> fun;
@@ -161,5 +161,5 @@ FIT_TEST_CASE()
     static_assert(noexcept(fit::conditional(no_throw_fo<t2>{}, throw_fo<t1>{})(t2{})), "noexcept conditional");
     static_assert(!noexcept(fit::conditional(no_throw_fo<t2>{}, throw_fo<t1>{})(t1{})), "noexcept conditional");
 }
-
+#endif
 }

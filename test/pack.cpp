@@ -22,10 +22,26 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    int i = 1;
     static_assert(noexcept(fit::pack(1, 2)(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_forward(i, i)(fit::always())), "noexcept pack");
     static_assert(noexcept(fit::pack_forward(1, 2)(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_basic(i, i)(fit::always())), "noexcept pack");
     static_assert(noexcept(fit::pack_basic(1, 2)(fit::always())), "noexcept pack");
+
+    static_assert(noexcept(fit::pack()(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_forward()(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_basic()(fit::always())), "noexcept pack");
+}
+
+FIT_TEST_CASE()
+{
     static_assert(noexcept(fit::pack_join(fit::pack(), fit::pack())(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_join(fit::pack(1), fit::pack(1))(fit::always())), "noexcept pack");
+    auto p = fit::pack(1);
+    static_assert(noexcept(fit::pack_join(p, fit::pack())(fit::always())), "noexcept pack");
+    static_assert(noexcept(fit::pack_join(fit::pack(), p)(fit::always())), "noexcept pack");
+
 }
 
 FIT_TEST_CASE()
@@ -62,6 +78,14 @@ FIT_TEST_CASE()
 {
     FIT_STATIC_TEST_CHECK(fit::pack_basic(3)(fit::identity) == 3);
     FIT_TEST_CHECK(fit::pack_basic(3)(fit::identity) == 3 );
+}
+
+FIT_TEST_CASE()
+{
+    auto p = fit::pack(1);
+    FIT_TEST_CHECK(fit::pack_join(p, fit::pack(2))(binary_class()) == 3);
+    FIT_TEST_CHECK(fit::pack_join(p, p)(binary_class()) == 2);
+    
 }
 
 FIT_TEST_CASE()

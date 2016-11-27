@@ -651,3 +651,52 @@ FIT_TEST_CASE()
 {
     fit::lazy(by_value_fn{})(std::placeholders::_1, 42)("hello");
 }
+
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+struct copy_throws 
+{
+    copy_throws() {}
+    copy_throws(copy_throws const&) {}
+    copy_throws(copy_throws&&) noexcept {}
+};
+
+struct no_throw_fo 
+{
+    void operator()() const noexcept {}
+    void operator()(copy_throws) const noexcept {}
+};
+
+struct throws_fo 
+{
+    void operator()() const {}
+};
+
+struct member_obj 
+{
+    int x;
+};
+
+FIT_TEST_CASE()
+{
+    no_throw_fo obj;
+    copy_throws arg;
+    static_assert(noexcept(fit::lazy(obj)()()), "noexcept lazy");
+    static_assert(!noexcept(fit::lazy(obj)(arg)()), "noexcept lazy");
+    static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)), "noexcept lazy");
+    static_assert(!noexcept(fit::lazy(obj)(std::placeholders::_1)(arg)), "noexcept lazy");
+
+    static_assert(noexcept(fit::lazy(obj)(std::move(arg))), "noexcept lazy");
+    static_assert(!noexcept(fit::lazy(obj)(std::move(arg))()), "noexcept lazy");
+}
+FIT_TEST_CASE()
+{
+    throws_fo obj;
+    static_assert(!noexcept(fit::lazy(obj)()()), "noexcept lazy");
+}
+FIT_TEST_CASE()
+{
+    member_obj obj{42};
+    static_assert(noexcept(fit::lazy(&member_obj::x)(obj)()), "noexcept lazy");
+    static_assert(noexcept(fit::lazy(&member_obj::x)(std::placeholders::_1)(obj)), "noexcept lazy");
+}
+#endif

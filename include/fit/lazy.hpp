@@ -72,7 +72,7 @@ namespace detail {
 struct placeholder_transformer
 {
     template<class T, typename std::enable_if<(std::is_placeholder<T>::value > 0), int>::type = 0>
-    constexpr detail::make_args_f<std::size_t, std::is_placeholder<T>::value> operator()(const T&) const
+    constexpr detail::make_args_f<std::size_t, std::is_placeholder<T>::value> operator()(const T&) const noexcept
     {
         return {};
     }
@@ -81,7 +81,7 @@ struct placeholder_transformer
 struct bind_transformer
 {
     template<class T, typename std::enable_if<std::is_bind_expression<T>::value, int>::type = 0>
-    constexpr const T& operator()(const T& x) const
+    constexpr const T& operator()(const T& x) const noexcept
     {
         return x;
     }
@@ -125,7 +125,7 @@ struct lazy_unpack
     const F& f;
     const Pack& p;
 
-    constexpr lazy_unpack(const F& fp, const Pack& pp) 
+    constexpr lazy_unpack(const F& fp, const Pack& pp) noexcept
     : f(fp), p(pp)
     {}
 
@@ -137,7 +137,7 @@ struct lazy_unpack
 };
 
 template<class F, class Pack>
-constexpr lazy_unpack<F, Pack> make_lazy_unpack(const F& f, const Pack& p)
+constexpr lazy_unpack<F, Pack> make_lazy_unpack(const F& f, const Pack& p) noexcept
 {
     return lazy_unpack<F, Pack>(f, p);
 }
@@ -158,18 +158,19 @@ struct lazy_invoker
         FIT_ENABLE_IF_CONSTRUCTIBLE(base_type, X&&, Y&&)
     >
     constexpr lazy_invoker(X&& x, Y&& y) 
+    FIT_NOEXCEPT_CONSTRUCTIBLE(base_type, X&&, Y&&)
     : base_type(FIT_FORWARD(X)(x), FIT_FORWARD(Y)(y))
     {}
 #endif
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const noexcept
     {
         return this->first(xs...);
     }
 
     template<class... Ts>
-    constexpr const Pack& get_pack(Ts&&... xs) const
+    constexpr const Pack& get_pack(Ts&&... xs) const noexcept
     {
         return this->second(xs...);
     }
@@ -190,6 +191,7 @@ struct lazy_invoker
 
 template<class F, class Pack>
 constexpr lazy_invoker<F, Pack> make_lazy_invoker(F f, Pack pack)
+FIT_NOEXCEPT_CONSTRUCTIBLE(lazy_invoker<F, Pack>, F&&, Pack&&)
 {
     return lazy_invoker<F, Pack>(static_cast<F&&>(f), static_cast<Pack&&>(pack));
 }
@@ -200,7 +202,7 @@ struct lazy_nullary_invoker : F
     FIT_INHERIT_CONSTRUCTOR(lazy_nullary_invoker, F);
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }
@@ -216,6 +218,7 @@ struct lazy_nullary_invoker : F
 
 template<class F>
 constexpr lazy_nullary_invoker<F> make_lazy_nullary_invoker(F f)
+FIT_NOEXCEPT_CONSTRUCTIBLE(lazy_nullary_invoker<F>, F&&)
 {
     return lazy_nullary_invoker<F>(static_cast<F&&>(f));
 }
@@ -228,7 +231,7 @@ struct lazy_adaptor : detail::callable_base<F>
     FIT_INHERIT_CONSTRUCTOR(lazy_adaptor, detail::callable_base<F>);
 
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }
@@ -245,6 +248,11 @@ struct lazy_adaptor : detail::callable_base<F>
     // Workaround for gcc 4.7
     template<class Unused=int>
     constexpr detail::lazy_nullary_invoker<F> operator()() const
+    FIT_RETURNS_DEDUCE_NOEXCEPT(
+        fit::detail::make_lazy_nullary_invoker(FIT_RETURNS_C_CAST(detail::callable_base<F>&&)(
+            FIT_CONST_THIS->base_function(FIT_RETURNS_CONSTRUCT(Unused)())
+        ))
+    )
     {
         return fit::detail::make_lazy_nullary_invoker((detail::callable_base<F>&&)(
             this->base_function(Unused())

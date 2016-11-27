@@ -15,12 +15,12 @@ FIT_TEST_CASE()
 {
     fit::apply_eval(fit::always(), fit::always(1), fit::always(2));
 }
-
+#if FIT_HAS_NOEXCEPT_DEDUCTION
 FIT_TEST_CASE()
 {
     static_assert(noexcept(fit::apply_eval(fit::always(), fit::always(1), fit::always(2))), "noexcept apply_eval");
 }
-
+#endif
 FIT_TEST_CASE()
 {
     int i = 3;

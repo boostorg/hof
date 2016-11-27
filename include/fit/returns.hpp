@@ -120,22 +120,18 @@
 #include <fit/config.hpp>
 #include <utility>
 #include <fit/detail/forward.hpp>
+#include <fit/detail/noexcept.hpp>
 
 #define FIT_EAT(...)
 #define FIT_REM(...) __VA_ARGS__
 
-
 #if FIT_HAS_COMPLETE_DECLTYPE && FIT_HAS_MANGLE_OVERLOAD
-#if FIT_HAS_NOEXCEPT_DEDUCTION
 #ifdef _MSC_VER
 // Since decltype can't be used in noexcept on MSVC, we can't check for noexcept
 // move constructors.
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(__VA_ARGS__))
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(__VA_ARGS__))
 #else
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))
-#endif
-#else
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...)
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))
 #endif
 #define FIT_RETURNS(...) \
 FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__) \
@@ -161,16 +157,12 @@ void fit_returns_class_check() \
 #define FIT_RETURNS_RETURN(...) return FIT_RETURNS_RETURN_X(FIT_PP_WALL(__VA_ARGS__))
 #define FIT_RETURNS_RETURN_X(...) __VA_ARGS__
 
-#if FIT_HAS_NOEXCEPT_DEDUCTION
 #ifdef _MSC_VER
 // Since decltype can't be used in noexcept on MSVC, we can't check for noexcept
 // move constructors.
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__)))
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__)))
 #else
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) noexcept(noexcept(decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))))
-#endif
-#else
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...)
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))))
 #endif
 
 #define FIT_RETURNS_DECLTYPE(...) \

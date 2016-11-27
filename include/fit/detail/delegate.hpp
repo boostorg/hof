@@ -16,6 +16,7 @@
 #include <fit/detail/forward.hpp>
 #include <fit/detail/using.hpp>
 #include <fit/detail/intrinsics.hpp>
+#include <fit/detail/noexcept.hpp>
 
 
 #define FIT_ENABLE_IF_CONVERTIBLE(...) \
@@ -31,19 +32,19 @@
     class=typename std::enable_if<FIT_IS_CONSTRUCTIBLE(__VA_ARGS__)>::type
 
 #define FIT_NOEXCEPT_CONSTRUCTIBLE(...) \
-    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(__VA_ARGS__))
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(__VA_ARGS__))
 
 #define FIT_INHERIT_DEFAULT(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && fit::detail::is_default_constructible_c<__VA_ARGS__>()>::type> \
-    constexpr C() noexcept(fit::detail::is_nothrow_default_constructible_c<__VA_ARGS__>()) {}
+    constexpr C() FIT_NOEXCEPT(fit::detail::is_nothrow_default_constructible_c<__VA_ARGS__>()) {}
 
 #define FIT_INHERIT_DEFAULT_EMPTY(C, ...) \
     template<bool FitPrivateEnableBool_##__LINE__=true, \
     class=typename std::enable_if<FitPrivateEnableBool_##__LINE__ && \
         fit::detail::is_default_constructible_c<__VA_ARGS__>() && FIT_IS_EMPTY(__VA_ARGS__) \
     >::type> \
-    constexpr C() noexcept(fit::detail::is_nothrow_default_constructible_c<__VA_ARGS__>()) {}
+    constexpr C() FIT_NOEXCEPT(fit::detail::is_nothrow_default_constructible_c<__VA_ARGS__>()) {}
 
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 

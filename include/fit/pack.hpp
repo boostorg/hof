@@ -136,7 +136,7 @@ struct pack_holder_base
 {
     template<class... Xs, class=typename std::enable_if<(sizeof...(Xs) == sizeof...(Ts))>::type>
     constexpr pack_holder_base(Xs&&... xs) 
-    noexcept(FIT_AND_UNPACK(FIT_IS_NOTHROW_CONSTRUCTIBLE(typename Ts::type, Xs&&)))
+    FIT_NOEXCEPT(FIT_AND_UNPACK(FIT_IS_NOTHROW_CONSTRUCTIBLE(typename Ts::type, Xs&&)))
     : Ts::type(FIT_FORWARD(Xs)(xs))...
     {}
 #ifndef _MSC_VER
@@ -169,13 +169,13 @@ struct pack_base<seq<Ns...>, Ts...>
     typedef pack_holder_base<typename pack_holder_builder<Ts...>::template apply<Ts, Ns>...> base;
     template<class X1, class X2, class... Xs>
     constexpr pack_base(X1&& x1, X2&& x2, Xs&&... xs)
-    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&, X2&&, Xs&...))
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&, X2&&, Xs&...))
     : base(FIT_FORWARD(X1)(x1), FIT_FORWARD(X2)(x2), FIT_FORWARD(Xs)(xs)...)
     {}
 
     template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
     constexpr pack_base(X1&& x1)
-    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&))
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&))
     : base(FIT_FORWARD(X1)(x1))
     {}
 
@@ -206,7 +206,7 @@ struct pack_base<seq<0>, T>
 
     template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
     constexpr pack_base(X1&& x1) 
-    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&))
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&))
     : base(FIT_FORWARD(X1)(x1))
     {}
 
@@ -239,7 +239,7 @@ struct pack_base<seq<Ns...>, Ts...>
     
     template<class... Xs, FIT_ENABLE_IF_CONVERTIBLE_UNPACK(Xs&&, typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)>
     constexpr pack_base(Xs&&... xs) 
-    noexcept(FIT_AND_UNPACK(FIT_IS_NOTHROW_CONSTRUCTIBLE(typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type, Xs&&)))
+    FIT_NOEXCEPT(FIT_AND_UNPACK(FIT_IS_NOTHROW_CONSTRUCTIBLE(typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type, Xs&&)))
     : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type(FIT_FORWARD(Xs)(xs))...
     {}
 

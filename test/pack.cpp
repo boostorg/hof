@@ -19,7 +19,7 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(fit::pack_forward(1, 2)(binary_class()) == 3);
     FIT_TEST_CHECK(fit::pack_forward(1, 2)(binary_class()) == 3 );
 }
-
+#if FIT_HAS_NOEXCEPT_DEDUCTION
 struct copy_throws 
 {
     copy_throws() {}
@@ -61,7 +61,7 @@ FIT_TEST_CASE()
     static_assert(!noexcept(fit::pack_join(pt, pt)(fit::always())), "noexcept pack");
 
 }
-
+#endif
 FIT_TEST_CASE()
 {
     static constexpr int x = 1;

@@ -94,17 +94,17 @@ template<class F>
 struct if_adaptor<false, F>
 {
     template<class... Ts>
-    constexpr if_adaptor(Ts&&...)
+    constexpr if_adaptor(Ts&&...) noexcept
     {}
 };
 
 template<bool Cond>
 struct make_if_f
 {
-    constexpr make_if_f()
+    constexpr make_if_f() noexcept
     {}
     template<class F>
-    constexpr if_adaptor<Cond, F> operator()(F f) const
+    constexpr if_adaptor<Cond, F> operator()(F f) const FIT_NOEXCEPT_CONSTRUCTIBLE(F, F&&)
     {
         return if_adaptor<Cond, F>(static_cast<F&&>(f));
     }
@@ -115,7 +115,7 @@ struct if_f
     constexpr if_f()
     {}
     template<class Cond, bool B=Cond::type::value>
-    constexpr make_if_f<B> operator()(Cond) const
+    constexpr make_if_f<B> operator()(Cond) const noexcept
     {
         return {};
     }
@@ -127,7 +127,7 @@ template<bool B>
 FIT_STATIC_CONSTEXPR detail::make_if_f<B> if_c = {};
 #else
 template<bool B, class F>
-constexpr detail::if_adaptor<B, F> if_c(F f)
+constexpr detail::if_adaptor<B, F> if_c(F f) FIT_NOEXCEPT_CONSTRUCTIBLE(F, F&&)
 {
     return detail::if_adaptor<B, F>(static_cast<F&&>(f));
 }

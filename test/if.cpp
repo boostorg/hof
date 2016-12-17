@@ -140,4 +140,7 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(sum_f_c()("", "") == 0);
 }
 
-
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::if_(std::is_integral<int>())(fit::identity)(1)), "noexcept if");
+}

@@ -8,7 +8,7 @@ namespace flow_test {
 struct increment
 {
     template<class T>
-    constexpr T operator()(T x) const
+    constexpr T operator()(T x) const noexcept
     {
         return x + 1;
     }
@@ -17,7 +17,7 @@ struct increment
 struct decrement
 {
     template<class T>
-    constexpr T operator()(T x) const
+    constexpr T operator()(T x) const noexcept
     {
         return x - 1;
     }
@@ -26,7 +26,7 @@ struct decrement
 struct negate
 {
     template<class T>
-    constexpr T operator()(T x) const
+    constexpr T operator()(T x) const noexcept
     {
         return -x;
     }
@@ -57,6 +57,12 @@ struct decrement_movable
         return x - *n;
     }
 };
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::flow(increment(), decrement(), increment())(3)), "noexcept flow");
+}
+#endif
 
 FIT_TEST_CASE()
 {

@@ -122,6 +122,7 @@ struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor, Fs...)>
         FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)
     >
     constexpr flow_adaptor(X&& f1, Xs&& ... fs) 
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base_type, X&&, tail) && FIT_IS_NOTHROW_CONSTRUCTIBLE(tail, Xs&&...))
     : base_type(FIT_FORWARD(X)(f1), tail(FIT_FORWARD(Xs)(fs)...))
     {}
 
@@ -129,6 +130,7 @@ struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor, Fs...)>
         FIT_ENABLE_IF_CONSTRUCTIBLE(detail::callable_base<F>, X)
     >
     constexpr flow_adaptor(X&& f1) 
+    FIT_NOEXCEPT_CONSTRUCTIBLE(base_type, X&&)
     : base_type(FIT_FORWARD(X)(f1))
     {}
 };
@@ -141,6 +143,7 @@ struct flow_adaptor<F> : detail::callable_base<F>
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>)>
     constexpr flow_adaptor(X&& f1) 
+    FIT_NOEXCEPT_CONSTRUCTIBLE(detail::callable_base<F>, X&&)
     : detail::callable_base<F>(FIT_FORWARD(X)(f1))
     {}
 

@@ -81,17 +81,16 @@ inline void unused(T&&) {}
 #else
 #define FIT_STATIC_TEST_CHECK(...)
 #endif
+
 struct binary_class
 {
     template<class T, class U>
-    constexpr T operator()(T x, U y) const
+    constexpr T operator()(T x, U y) const noexcept
     {
         return x+y;
     }
 
 };
-
-// typedef zen::defer_adaptor<binary_class_d> binary_class;
 
 struct mutable_class
 {
@@ -115,7 +114,7 @@ struct mutable_class
 struct unary_class
 {
     template<class T>
-    constexpr T&& operator()(T&& x) const
+    constexpr T&& operator()(T&& x) const noexcept
     {
         return fit::forward<T>(x);
     }

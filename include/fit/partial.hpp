@@ -89,13 +89,13 @@ template<class Derived, class F, class Pack>
 struct partial_adaptor_invoke
 {
     template<class... Ts>
-    constexpr const F& get_function(Ts&&...) const
+    constexpr const F& get_function(Ts&&...) const noexcept
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
     template<class... Ts>
-    constexpr const Pack& get_pack(Ts&&...) const
+    constexpr const Pack& get_pack(Ts&&...) const noexcept
     {
         return static_cast<const Pack&>(static_cast<const Derived&>(*this));
     }
@@ -127,13 +127,13 @@ template<class Derived, class F, class Pack>
 struct partial_adaptor_join
 {
     template<class... Ts>
-    constexpr const F& get_function(Ts&&...) const
+    constexpr const F& get_function(Ts&&...) const noexcept
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
 
     template<class... Ts>
-    constexpr const Pack& get_pack(Ts&&...) const
+    constexpr const Pack& get_pack(Ts&&...) const noexcept
     {
         return static_cast<const Pack&>(static_cast<const Derived&>(*this));
     }
@@ -157,11 +157,11 @@ template<class Derived, class F>
 struct partial_adaptor_pack
 {
 
-    constexpr partial_adaptor_pack()
+    constexpr partial_adaptor_pack() noexcept
     {}
     
     template<class... Ts>
-    constexpr const F& get_function(Ts&&...) const
+    constexpr const F& get_function(Ts&&...) const noexcept
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
@@ -210,12 +210,12 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
     typedef partial_adaptor fit_rewritable1_tag;
     
     template<class... Ts>
-    constexpr const F& base_function(Ts&&...) const
+    constexpr const F& base_function(Ts&&...) const noexcept
     {
         return *this;
     }
 
-    constexpr const Pack& get_pack() const
+    constexpr const Pack& get_pack() const noexcept
     {
         return *this;
     }
@@ -225,7 +225,9 @@ struct partial_adaptor : detail::partial_adaptor_base<F, Pack>::type, F, Pack
     FIT_INHERIT_DEFAULT(partial_adaptor, base, F, Pack);
 
     template<class X, class S>
-    constexpr partial_adaptor(X&& x, S&& seq) : F(FIT_FORWARD(X)(x)), Pack(FIT_FORWARD(S)(seq))
+    constexpr partial_adaptor(X&& x, S&& seq) 
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(F, X&&) && FIT_IS_NOTHROW_CONSTRUCTIBLE(Pack, S&&))
+    : F(FIT_FORWARD(X)(x)), Pack(FIT_FORWARD(S)(seq))
     {}
 };
 
@@ -237,7 +239,7 @@ struct partial_adaptor<F, void> : detail::partial_adaptor_pack_base<partial_adap
     typedef partial_adaptor fit_rewritable1_tag;
     
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&...) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&...) const noexcept
     {
         return *this;
     }

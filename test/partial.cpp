@@ -68,6 +68,11 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    static_assert(noexcept(fit::partial(binary_class{})(1)(2)), "noexcept partial");
+}
+
+FIT_TEST_CASE()
+{
     auto f = fit::partial(fit::limit_c<2>(binary_class()));
     static_assert(fit::is_callable<decltype(f), int>::value, "Passing the limit is not callable");
     static_assert(fit::is_callable<decltype(f), int, int>::value, "Passing the limit is not callable");

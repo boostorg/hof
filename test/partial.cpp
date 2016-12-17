@@ -65,12 +65,12 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(3 == mono_partial_constexpr()(2));
 
 }
-
+#if FIT_HAS_NOEXCEPT_DEDUCTION
 FIT_TEST_CASE()
 {
     static_assert(noexcept(fit::partial(binary_class{})(1)(2)), "noexcept partial");
 }
-
+#endif
 FIT_TEST_CASE()
 {
     auto f = fit::partial(fit::limit_c<2>(binary_class()));

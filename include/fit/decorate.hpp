@@ -102,25 +102,25 @@ struct decorator_invoke
     FIT_INHERIT_CONSTRUCTOR(decorator_invoke, base)
 
     template<class... Ts>
-    constexpr const compressed_pair<D, T>& get_pair(Ts&&... xs) const
+    constexpr const compressed_pair<D, T>& get_pair(Ts&&... xs) const noexcept
     {
         return this->first(xs...);
     }
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const noexcept
     {
         return this->second(xs...);
     }
 
     template<class... Ts>
-    constexpr const D& get_decorator(Ts&&... xs) const
+    constexpr const D& get_decorator(Ts&&... xs) const noexcept
     {
         return this->get_pair(xs...).first(xs...);
     }
 
     template<class... Ts>
-    constexpr const T& get_data(Ts&&... xs) const
+    constexpr const T& get_data(Ts&&... xs) const noexcept
     {
         return this->get_pair(xs...).second(xs...);
     }
@@ -163,19 +163,20 @@ struct decoration
     FIT_INHERIT_CONSTRUCTOR(decoration, base)
 
     template<class... Ts>
-    constexpr const D& get_decorator(Ts&&... xs) const
+    constexpr const D& get_decorator(Ts&&... xs) const noexcept
     {
         return this->first(xs...);
     }
 
     template<class... Ts>
-    constexpr const T& get_data(Ts&&... xs) const
+    constexpr const T& get_data(Ts&&... xs) const noexcept
     {
         return this->second(xs...);
     }
 
     template<class F>
     constexpr decorator_invoke<D, T, detail::callable_base<F>> operator()(F f) const
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(decorator_invoke<D, T, detail::callable_base<F>>, compressed_pair<D, T>, detail::callable_base<F>&&))
     {
         return decorator_invoke<D, T, detail::callable_base<F>>(
             *this, static_cast<detail::callable_base<F>&&>(f)
@@ -189,10 +190,11 @@ template<class F>
 struct decorate_adaptor : detail::callable_base<F>
 {
     typedef decorate_adaptor fit_rewritable1_tag;
+    typedef detail::callable_base<F> base;
     FIT_INHERIT_CONSTRUCTOR(decorate_adaptor, detail::callable_base<F>)
 
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    constexpr const base& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }
@@ -200,9 +202,10 @@ struct decorate_adaptor : detail::callable_base<F>
     // TODO: Add predicate for constraints
 
     template<class T>
-    constexpr detail::decoration<detail::callable_base<F>, T> operator()(T x) const
+    constexpr detail::decoration<base, T> operator()(T x) const 
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, const base&) && FIT_IS_NOTHROW_CONSTRUCTIBLE(T, T&&))
     {
-        return detail::decoration<detail::callable_base<F>, T>(this->base_function(x), static_cast<T&&>(x));
+        return detail::decoration<base, T>(this->base_function(x), static_cast<T&&>(x));
     }
 
 };

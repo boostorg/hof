@@ -140,7 +140,9 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(sum_f_c()("", "") == 0);
 }
 
+#if FIT_HAS_NOEXCEPT_DEDUCTION
 FIT_TEST_CASE()
 {
     static_assert(noexcept(fit::if_(std::is_integral<int>())(fit::identity)(1)), "noexcept if");
 }
+#endif

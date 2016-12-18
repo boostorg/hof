@@ -103,7 +103,8 @@ template<>
 struct while_repeater<false>
 {
     template<class F, class P, class T>
-    constexpr T operator()(const F&, const P&, T&& x) const
+    constexpr T operator()(const F&, const P&, T&& x) const 
+    FIT_RETURNS_DEDUCE_NOEXCEPT(x)
     {
         return x;
     }
@@ -148,7 +149,9 @@ struct repeat_while_integral_decorator<0>
 #if FIT_HAS_RELAXED_CONSTEXPR
     constexpr
 #endif
-    auto operator()(const P& p, const F& f, T x) const -> decltype(f(x))
+    auto operator()(const P& p, const F& f, T x) const 
+    FIT_RETURNS_DEDUCE_NOEXCEPT((p(x), f(x)))
+    -> decltype(f(x))
     {
         while(p(x))
         {

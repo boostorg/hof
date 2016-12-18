@@ -7,11 +7,19 @@
 struct increment
 {
     template<class T>
-    constexpr T operator()(T x) const
+    constexpr T operator()(T x) const noexcept
     {
         return x + 1;
     }
 };
+
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::repeat(std::integral_constant<int, 5>())(increment())(1)), "noexcept repeat");
+    static_assert(noexcept(fit::repeat(5)(increment())(1)), "noexcept repeat");
+}
+#endif
 
 FIT_TEST_CASE()
 {

@@ -83,6 +83,7 @@ struct repeater<0>
 {
     template<class F, class T>
     constexpr T operator()(const F&, T&& x) const
+    FIT_RETURNS_DEDUCE_NOEXCEPT(T(x))
     {
         return x;
     }
@@ -120,7 +121,9 @@ struct repeat_integral_decorator<0>
 #if FIT_HAS_RELAXED_CONSTEXPR
     constexpr
 #endif
-    auto operator()(Integral n, const F& f, T x) const -> decltype(f(FIT_FORWARD(T)(x)))
+    auto operator()(Integral n, const F& f, T x) const 
+    FIT_RETURNS_DEDUCE_NOEXCEPT((n--, f(FIT_FORWARD(T)(x))))
+    -> decltype(f(FIT_FORWARD(T)(x)))
     {
         while(n > 0)
         {

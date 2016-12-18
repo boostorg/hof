@@ -7,7 +7,7 @@
 struct increment_constant
 {
     template<class T>
-    constexpr std::integral_constant<int, T::value + 1> operator()(T) const
+    constexpr std::integral_constant<int, T::value + 1> operator()(T) const noexcept
     {
         return std::integral_constant<int, T::value + 1>();
     }
@@ -16,7 +16,7 @@ struct increment_constant
 struct increment
 {
     template<class T>
-    constexpr T operator()(T x) const
+    constexpr T operator()(T x) const noexcept
     {
         return x + 1;
     }
@@ -26,7 +26,7 @@ struct not_6_constant
 {
     template<class T>
     constexpr std::integral_constant<bool, (T::value != 6)> 
-    operator()(T) const
+    operator()(T) const noexcept
     {
         return std::integral_constant<bool, (T::value != 6)>();
     }
@@ -35,7 +35,7 @@ struct not_6_constant
 struct not_6
 {
     template<class T>
-    constexpr bool operator()(T x) const
+    constexpr bool operator()(T x) const noexcept
     {
         return x != 6;
     }
@@ -49,6 +49,14 @@ struct not_limit
         return x != (FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
     }
 };
+
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::repeat_while(not_6())(increment())(1)), "noexcept repeat_while");
+    static_assert(noexcept(fit::repeat_while(not_6_constant())(increment_constant())(std::integral_constant<int, 1>())), "noexcept repeat_while");
+}
+#endif
 
 FIT_TEST_CASE()
 {

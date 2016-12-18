@@ -99,7 +99,7 @@ struct v_reverse_fold
     );
 
     template<class F, class State>
-    constexpr State operator()(const F&, State&& state) const 
+    constexpr State operator()(const F&, State&& state) const noexcept
     {
         return FIT_FORWARD(State)(state);
     }
@@ -115,13 +115,13 @@ struct reverse_compress_adaptor
     FIT_INHERIT_CONSTRUCTOR(reverse_compress_adaptor, base_type)
 
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
         return this->first(xs...);
     }
 
     template<class... Ts>
-    constexpr State get_state(Ts&&... xs) const
+    constexpr State get_state(Ts&&... xs) const noexcept
     {
         return this->second(xs...);
     }
@@ -148,7 +148,7 @@ struct reverse_compress_adaptor<F, void>
     FIT_INHERIT_CONSTRUCTOR(reverse_compress_adaptor, detail::callable_base<F>)
 
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }

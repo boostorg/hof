@@ -75,7 +75,7 @@ struct indirect_adaptor : F
     FIT_INHERIT_CONSTRUCTOR(indirect_adaptor, F);
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }
@@ -99,14 +99,15 @@ struct indirect_adaptor<F*>
 {
     typedef indirect_adaptor fit_rewritable1_tag;
     F* f;
-    constexpr indirect_adaptor()
+    constexpr indirect_adaptor() noexcept
     {}
 
-    constexpr indirect_adaptor(F* x) : f(x)
+    constexpr indirect_adaptor(F* x) noexcept
+    : f(x)
     {}
 
     template<class... Ts>
-    constexpr F& base_function(Ts&&...) const
+    constexpr F& base_function(Ts&&...) const noexcept
     {
         return *f;
     }

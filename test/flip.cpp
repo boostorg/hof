@@ -21,6 +21,13 @@ struct f FINAL {
     }
 };
 
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(fit::flip(fit::_ - fit::_)(2, 5), "noexcept flip");
+}
+#endif
+
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(fit::flip(f())(nullptr, 2) == 2);

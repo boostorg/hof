@@ -11,6 +11,13 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == fit::indirect(&f)(1, 2));
     FIT_TEST_CHECK(3 == fit::reveal(fit::indirect(&f))(1, 2));
 }
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    binary_class f;
+    static_assert(noexcept(fit::indirect(&f)(1, 2)), "noexcept indirect");
+}
+#endif
 
 struct mutable_function
 {

@@ -94,13 +94,13 @@ struct compute_indirect_ref<indirect_adaptor<F*>>
 { typedef indirect_adaptor<F*> type; };
 
 template<class F>
-constexpr indirect_adaptor<const F*> make_indirect_ref(const F& f)
+constexpr indirect_adaptor<const F*> make_indirect_ref(const F& f) noexcept
 {
     return indirect_adaptor<const F*>(&f);
 }
 
 template<class F>
-constexpr indirect_adaptor<const F*> make_indirect_ref(const indirect_adaptor<F*>& f)
+constexpr indirect_adaptor<const F*> make_indirect_ref(const indirect_adaptor<F*>& f) noexcept
 {
     return f;
 }
@@ -138,13 +138,13 @@ struct fix_adaptor_base : F
 
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }
 
     template<class... Ts>
-    constexpr derived derived_function(Ts&&... xs) const
+    constexpr derived derived_function(Ts&&... xs) const noexcept
     {
         return derived(detail::make_indirect_ref(this->base_function(xs...)));
     }
@@ -186,7 +186,7 @@ struct fix_adaptor_base<F, Result, 0> : F
     FIT_INHERIT_CONSTRUCTOR(fix_adaptor_base, F);
 
     template<class... Ts>
-    const F& base_function(Ts&&...) const
+    const F& base_function(Ts&&...) const noexcept
     {
         return *this;
     }
@@ -212,7 +212,7 @@ struct fix_adaptor_base<F, Result, 0> : F
 
     template<class... Ts>
     typename Result::template apply<fix_adaptor_base, Ts...>::type
-    operator()(Ts&&... xs) const 
+    operator()(Ts&&... xs) const
     {
         return this->base_function(xs...)(*this, FIT_FORWARD(Ts)(xs)...);
     }

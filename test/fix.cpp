@@ -9,7 +9,7 @@
 struct factorial_t
 {
     template<class Self, class T>
-    T operator()(Self s, T x) const
+    T operator()(Self s, T x) const noexcept
     {
         return x == 0 ? 1 : x * s(x-1);
     }
@@ -18,7 +18,7 @@ struct factorial_t
 struct factorial_constexpr_t
 {
     template<class Self, class T>
-    constexpr T operator()(Self s, T x) const
+    constexpr T operator()(Self s, T x) const noexcept
     {
         return x == 0 ? 1 : x * s(x-1);
     }
@@ -39,6 +39,13 @@ struct factorial_move_t
 static constexpr fit::fix_adaptor<factorial_t> factorial = {};
 static constexpr fit::fix_adaptor<factorial_constexpr_t> factorial_constexpr = {};
 static constexpr fit::static_<fit::fix_adaptor<factorial_move_t> > factorial_move = {};
+
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(factorial(5)), "noexcept fix");
+}
+#endif
 
 FIT_TEST_CASE()
 {

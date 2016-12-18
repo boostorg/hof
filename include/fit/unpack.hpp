@@ -100,7 +100,7 @@ struct unpack_adaptor : detail::callable_base<F>
     FIT_INHERIT_CONSTRUCTOR(unpack_adaptor, detail::callable_base<F>);
 
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }

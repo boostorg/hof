@@ -14,6 +14,15 @@ FIT_STATIC_AUTO binary_unpack_constexpr = fit::unpack_adaptor<binary_class>();
 FIT_STATIC_AUTO unary_unpack_reveal = fit::reveal_adaptor<fit::unpack_adaptor<unary_class>>();
 FIT_STATIC_AUTO binary_unpack_reveal = fit::reveal_adaptor<fit::unpack_adaptor<binary_class>>();
 
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::unpack(unary_class())(fit::pack(3))), "noexcept unpack");
+    static_assert(noexcept(unary_unpack(fit::pack(3))), "noexcept unpack");
+    static_assert(noexcept(binary_unpack(fit::pack(3), fit::pack(2))), "noexcept unpack");
+}
+#endif
+
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(3 == fit::unpack(unary_class())(std::make_tuple(3)));

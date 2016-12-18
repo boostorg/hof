@@ -67,6 +67,7 @@ struct tap_f
 {
     template<class T, class F>
     constexpr T operator()(T&& x, const F& f) const
+    FIT_RETURNS_DEDUCE_NOEXCEPT((fit::apply(f, x), FIT_FORWARD(T)(x)))
     {
         return fit::apply(f, x), FIT_FORWARD(T)(x);
     }

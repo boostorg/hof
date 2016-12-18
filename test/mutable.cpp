@@ -7,15 +7,23 @@
 struct mutable_fun
 {
     int x;
-    mutable_fun() : x(1)
+    mutable_fun() noexcept
+    : x(1)
     {}
 
-    int operator()(int i)
+    int operator()(int i) noexcept
     {
         x+=i;
         return x;
     }
 };
+
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(fit::mutable_(mutable_fun())(3)), "noexcept mutable_");
+}
+#endif
 
 FIT_TEST_CASE()
 {

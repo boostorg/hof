@@ -77,12 +77,13 @@ struct postfix_adaptor : F
     T x;
 
     template<class X, class XF>
-    constexpr postfix_adaptor(X&& xp, XF&& fp) 
+    constexpr postfix_adaptor(X&& xp, XF&& fp)
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(F, XF&&) && FIT_IS_NOTHROW_CONSTRUCTIBLE(T, X&&)) 
     : F(FIT_FORWARD(XF)(fp)), x(FIT_FORWARD(X)(xp))
     {}
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const
+    constexpr const F& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }
@@ -106,6 +107,7 @@ struct postfix_adaptor : F
 
 template<class T, class F>
 constexpr postfix_adaptor<T, F> make_postfix_adaptor(T&& x, F f)
+FIT_NOEXCEPT_CONSTRUCTIBLE(postfix_adaptor<T, F>, T&&, F&&)
 {
     return postfix_adaptor<T, F>(FIT_FORWARD(T)(x), static_cast<F&&>(f));
 }
@@ -118,13 +120,13 @@ struct infix_adaptor : detail::callable_base<F>
     FIT_INHERIT_CONSTRUCTOR(infix_adaptor, detail::callable_base<F>);
 
     template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }
 
     template<class... Ts>
-    constexpr const detail::callable_base<F>& infix_base_function(Ts&&... xs) const
+    constexpr const detail::callable_base<F>& infix_base_function(Ts&&... xs) const noexcept
     {
         return always_ref(*this)(xs...);
     }

@@ -7,13 +7,21 @@
 struct sum_f
 {
     template<class T, class U>
-    constexpr T operator()(T x, U y) const
+    constexpr T operator()(T x, U y) const FIT_RETURNS_DEDUCE_NOEXCEPT(x+y)
     {
         return x+y;
     }
 };
 
 static constexpr fit::infix_adaptor<sum_f> sum = {};
+
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(1 <sum> 2), "noexcept infix");
+    static_assert(!noexcept(std::string() <sum> std::string()), "noexcept infix");
+}
+#endif
 
 FIT_TEST_CASE()
 {

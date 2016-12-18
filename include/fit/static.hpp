@@ -77,6 +77,7 @@ struct static_
     {};
 
     const F& base_function() const
+    FIT_NOEXCEPT_CONSTRUCTIBLE(F)
     {
         static F f;
         return f;

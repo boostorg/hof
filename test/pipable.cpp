@@ -20,6 +20,13 @@ constexpr fit::pipable_adaptor<binary_class> binary_pipable_constexpr = {};
 
 constexpr fit::pipable_adaptor<unary_class> unary_pipable_constexpr = {};
 
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    static_assert(noexcept(1 | binary_pipable(2)), "noexcept pipable");
+    static_assert(noexcept(binary_pipable(1, 2)), "noexcept pipable");
+}
+#endif
 
 FIT_TEST_CASE()
 {

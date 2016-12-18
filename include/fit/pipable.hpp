@@ -86,17 +86,19 @@ struct pipe_closure : F, Pack
 {
     
     template<class X, class P>
-    constexpr pipe_closure(X&& fp, P&& packp) : F(FIT_FORWARD(X)(fp)), Pack(FIT_FORWARD(P)(packp))
+    constexpr pipe_closure(X&& fp, P&& packp) 
+    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(F, X&&) && FIT_IS_NOTHROW_CONSTRUCTIBLE(Pack, P&&))
+    : F(FIT_FORWARD(X)(fp)), Pack(FIT_FORWARD(P)(packp))
     {}
 
     template<class... Ts>
-    constexpr const F& base_function(Ts&&...) const
+    constexpr const F& base_function(Ts&&...) const noexcept
     {
         return *this;
     }
 
     template<class... Ts>
-    constexpr const Pack& get_pack(Ts&&...) const
+    constexpr const Pack& get_pack(Ts&&...) const noexcept
     {
         return *this;
     }
@@ -107,7 +109,9 @@ struct pipe_closure : F, Pack
         A a;
         const pipe_closure * self;
         template<class X>
-        constexpr invoke(X&& xp, const pipe_closure * selfp) : a(FIT_FORWARD(X)(xp)), self(selfp)
+        constexpr invoke(X&& xp, const pipe_closure * selfp) 
+        FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(A, X&&))
+        : a(FIT_FORWARD(X)(xp)), self(selfp)
         {}
 
         FIT_RETURNS_CLASS(invoke);
@@ -137,7 +141,7 @@ template<class Derived, class F>
 struct pipe_pack
 {
     template<class... Ts>
-    constexpr const F& get_function(Ts&&...) const
+    constexpr const F& get_function(Ts&&...) const noexcept
     {
         return static_cast<const F&>(static_cast<const Derived&>(*this));
     }
@@ -166,7 +170,7 @@ struct pipable_adaptor
 
     FIT_INHERIT_CONSTRUCTOR(pipable_adaptor, base);
 
-    constexpr const detail::callable_base<F>& base_function() const
+    constexpr const detail::callable_base<F>& base_function() const noexcept
     {
         return *this;
     }

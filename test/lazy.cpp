@@ -663,6 +663,7 @@ struct copy_throws
 struct no_throw_fo 
 {
     void operator()() const noexcept {}
+    void operator()(int) const noexcept {}
     void operator()(copy_throws) const noexcept {}
 };
 
@@ -680,9 +681,12 @@ FIT_TEST_CASE()
 {
     no_throw_fo obj;
     copy_throws arg;
+    static_assert(noexcept(fit::lazy(no_throw_fo{})()()), "noexcept lazy");
     static_assert(noexcept(fit::lazy(obj)()()), "noexcept lazy");
     static_assert(!noexcept(fit::lazy(obj)(arg)()), "noexcept lazy");
     static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)), "noexcept lazy");
+    // static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)()), "noexcept lazy");
+    static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)(1)), "noexcept lazy");
     static_assert(!noexcept(fit::lazy(obj)(std::placeholders::_1)(arg)), "noexcept lazy");
 
     static_assert(noexcept(fit::lazy(obj)(std::move(arg))), "noexcept lazy");

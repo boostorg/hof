@@ -79,13 +79,13 @@ struct has_tag<T, Tag, typename detail::holder<
 namespace detail {
 
 template<class T>
-constexpr T& lvalue(T& x)
+constexpr T& lvalue(T& x) noexcept
 {
     return x;
 }
 
 template<class T>
-constexpr const T& lvalue(const T& x)
+constexpr const T& lvalue(const T& x) noexcept
 {
     return x;
 }

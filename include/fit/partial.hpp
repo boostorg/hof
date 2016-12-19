@@ -122,6 +122,11 @@ struct partial_adaptor_invoke
     );
 };
 
+#ifdef _MSC_VER
+#define FIT_PARTIAL_RETURNS(...) -> decltype(__VA_ARGS__) { return (__VA_ARGS__); }
+#else
+#define FIT_PARTIAL_RETURNS FIT_SFINAE_RETURNS
+#endif
 
 template<class Derived, class F, class Pack>
 struct partial_adaptor_join
@@ -143,7 +148,12 @@ struct partial_adaptor_join
     template<class... Ts, class=typename std::enable_if<
         ((sizeof...(Ts) + Pack::fit_function_param_limit::value) < function_param_limit<F>::value)
     >::type>
-    constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    constexpr auto operator()(Ts&&... xs) const 
+#ifdef _MSC_VER
+    // Workaround ICE on MSVC
+    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(F, F&&) && fit::pack_join(std::decval<const Pack&>(), fit::pack(FIT_FORWARD(Ts)(xs)...)))
+#endif
+    FIT_PARTIAL_RETURNS
     (
         fit::partial
         (
@@ -171,7 +181,12 @@ struct partial_adaptor_pack
     template<class... Ts, class=typename std::enable_if<
         (sizeof...(Ts) < function_param_limit<F>::value)
     >::type>
-    constexpr auto operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+    constexpr auto operator()(Ts&&... xs) const 
+#ifdef _MSC_VER
+    // Workaround ICE on MSVC
+    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(F, F&&) && noexcept(fit::pack(FIT_FORWARD(Ts)(xs)...)))
+#endif
+    FIT_PARTIAL_RETURNS
     (
         fit::partial
         (

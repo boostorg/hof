@@ -684,6 +684,7 @@ FIT_TEST_CASE()
     static_assert(noexcept(fit::lazy(no_throw_fo{})()()), "noexcept lazy");
     static_assert(noexcept(fit::lazy(obj)()()), "noexcept lazy");
     static_assert(!noexcept(fit::lazy(obj)(arg)()), "noexcept lazy");
+    static_assert(noexcept(fit::lazy(obj)(1)()), "noexcept lazy");
     static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)), "noexcept lazy");
     // static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)()), "noexcept lazy");
     static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)(1)), "noexcept lazy");

@@ -51,7 +51,11 @@
 #define FIT_IS_EMPTY(...) std::is_empty<__VA_ARGS__>::value
 #define FIT_IS_LITERAL(...) std::is_literal_type<__VA_ARGS__>::value
 #define FIT_IS_POLYMORPHIC(...) std::is_polymorphic<__VA_ARGS__>::value
+#if defined(_MSC_VER)
+#define FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(...) (std::is_nothrow_copy_constructible<__VA_ARGS__>::value || std::is_reference<T>::value)
+#else
 #define FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(...) std::is_nothrow_copy_constructible<__VA_ARGS__>::value
+#endif
 #if defined(_MSC_VER)
 #define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
 #else

@@ -114,7 +114,7 @@ struct id_transformer
 FIT_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer>);
 
 template<class T, class Pack>
-constexpr auto lazy_transform(T&& x, Pack&& p) FIT_RETURNS
+constexpr auto lazy_transform(T&& x, const Pack& p) FIT_RETURNS
 (
     p(fit::detail::pick_transformer(FIT_FORWARD(T)(x)))
 );

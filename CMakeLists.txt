@@ -9,6 +9,8 @@ foreach(level MAJOR MINOR PATCH)
     string(REGEX MATCH "([0-9]+)" Fit_VERSION_${level} "${_define_${level}}")
 endforeach() 
 
+set(Fit_VERSION Fit_VERSION_MAJOR.Fit_VERSION_MINOR.Fit_VERSION_PATCH)
+
 include(CheckCXXCompilerFlag)
 enable_language(CXX)
 
@@ -37,40 +39,48 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
     endif()
 endforeach()
 
-install (DIRECTORY include/fit DESTINATION include)
-install (FILES include/fit.hpp DESTINATION include)
+include(BCMInstallTargets)
+add_library(fit INTERFACE)
+bcm_install_targets(TARGETS fit INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# install (DIRECTORY include/fit DESTINATION include)
+# install (FILES include/fit.hpp DESTINATION include)
 configure_file(fit.pc.in fit.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
 
 include(SphinxDoc)
-
 add_sphinx_doc(${CMAKE_CURRENT_SOURCE_DIR}/doc HTML_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc/html)
 
+
+# include_directories(include)
+
 include(BCMTest)
-
-include_directories(include)
-
 file(GLOB TESTS test/*.cpp)
 foreach(TEST ${TESTS})
     get_filename_component(BASE_NAME ${TEST} NAME_WE)
     bcm_add_test(NAME ${BASE_NAME} SOURCES ${TEST})
     set_tests_properties(${BASE_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
+    target_link_libraries(${BASE_NAME} fit)
 endforeach()
 bcm_add_test(NAME static_def SOURCES test/static_def/static_def.cpp test/static_def/static_def2.cpp)
+target_link_libraries(static_def fit)
 set_tests_properties(static_def PROPERTIES FAIL_REGULAR_EXPRESSION "FAILED")
 
 file(GLOB FAIL_TESTS test/fail/*.cpp)
 foreach(TEST ${FAIL_TESTS})
     get_filename_component(BASE_NAME ${TEST} NAME_WE)
     bcm_add_test(NAME fail-${BASE_NAME} COMPILE_ONLY WILL_FAIL SOURCES ${TEST})
+    target_link_libraries(fail-${BASE_NAME} fit)
 endforeach()
 
 file(GLOB HEADERS include/fit/*.hpp)
 foreach(HEADER ${HEADERS})
     get_filename_component(BASE_NAME ${HEADER} NAME_WE)
-    bcm_test_header(NAME ${BASE_NAME} HEADER fit/${BASE_NAME}.hpp)
+    bcm_test_header(NAME header-include-${BASE_NAME} HEADER fit/${BASE_NAME}.hpp)
+    target_link_libraries(header-include-${BASE_NAME} fit)
 endforeach()
-bcm_test_header(NAME fit HEADER fit.hpp)
+bcm_test_header(NAME header-include-fit HEADER fit.hpp)
+target_link_libraries(header-include-fit fit)
 
 function(extract_doc SOURCE OUTPUTVAR)
     file(READ ${SOURCE} CONTENT)
@@ -96,6 +106,7 @@ function(build_example SECTIONCONTENT NAME)
     endif()
     message(STATUS "Adding example: ${TARGET_NAME}")
     bcm_add_test(NAME ${TARGET_NAME} CONTENT "${CONTENT}\n")
+    target_link_libraries(${TARGET_NAME} fit)
 endfunction()
 
 function(extract_example SOURCE)
@@ -137,6 +148,7 @@ if (BUILD_EXAMPLES)
     foreach(EXAMPLE ${EXAMPLES})
         get_filename_component(BASE_NAME ${EXAMPLE} NAME_WE)
         bcm_add_test(NAME example-${BASE_NAME} SOURCES ${EXAMPLE})
+        target_link_libraries(example-${BASE_NAME} fit)
     endforeach()
     foreach(HEADER ${HEADERS})
         extract_example(${HEADER})

@@ -40,12 +40,9 @@ function(bcm_add_test)
 
     if(PARSE_COMPILE_ONLY)
         if(PARSE_WILL_FAIL)
-            add_library(_${PARSE_NAME}_TEST_FAIL STATIC EXCLUDE_FROM_ALL ${SOURCES})
-            add_custom_target(${PARSE_NAME} 
-                COMMAND ${CMAKE_COMMAND} --build . --target _${PARSE_NAME}_TEST_FAIL --config $<CONFIGURATION>
-                WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+            add_library(${PARSE_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES})
             add_test(NAME ${PARSE_NAME}
-                COMMAND ${CMAKE_COMMAND} --build . --target _${PARSE_NAME}_TEST_FAIL --config $<CONFIGURATION>
+                COMMAND ${CMAKE_COMMAND} --build . --target ${PARSE_NAME} --config $<CONFIGURATION>
                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
             set_tests_properties(${PARSE_NAME} PROPERTIES WILL_FAIL TRUE)
         else()
@@ -53,7 +50,7 @@ function(bcm_add_test)
             bcm_mark_as_test(${PARSE_NAME})
         endif()
     else()
-        add_executable (${PARSE_NAME} ${SOURCES})
+        add_executable(${PARSE_NAME} ${SOURCES})
         bcm_mark_as_test(${PARSE_NAME})
         if(WIN32)
             add_test(NAME ${PARSE_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${PARSE_NAME}${CMAKE_EXECUTABLE_SUFFIX})
@@ -80,12 +77,12 @@ function(bcm_test_header)
         file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${PARSE_NAME}.cpp 
             "#include <${PARSE_HEADER}>\n"
         )
-        bcm_add_test(NAME header-static-include-${PARSE_NAME} SOURCES
+        bcm_add_test(NAME ${PARSE_NAME} SOURCES
             ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${PARSE_NAME}.cpp 
             ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${PARSE_NAME}.cpp
         )
     else()
-        bcm_add_test(NAME header-include-${PARSE_NAME} CONTENT
+        bcm_add_test(NAME ${PARSE_NAME} CONTENT
             "#include <${PARSE_HEADER}>\nint main() {}\n"
         )
     endif()

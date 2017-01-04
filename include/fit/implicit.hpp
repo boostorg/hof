@@ -112,11 +112,12 @@ struct implicit
     {
         Pack p;
 
-        constexpr invoker(Pack pp) : p(pp)
+        constexpr invoker(Pack pp) FIT_NOEXCEPT_CONSTRUCTIBLE(Pack, Pack&&)
+        : p(fit::move(pp))
         {}
 
         template<class X, class=typename std::enable_if<detail::is_implicit_callable<F<X>, Pack, X>::value>::type>
-        constexpr operator X() const
+        constexpr operator X() const FIT_NOEXCEPT(noexcept(p(F<X>())))
         {
             return p(F<X>());
         }
@@ -131,7 +132,7 @@ struct implicit
     };
 
     template<class Pack>
-    static constexpr invoker<Pack> make_invoker(Pack&& p)
+    static constexpr invoker<Pack> make_invoker(Pack&& p) FIT_NOEXCEPT(noexcept(invoker<Pack>(FIT_FORWARD(Pack)(p))))
     {
         return invoker<Pack>(FIT_FORWARD(Pack)(p));
     }

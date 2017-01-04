@@ -137,10 +137,18 @@ struct implicit
     }
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr auto operator()(Ts&&... xs) const 
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+    FIT_RETURNS
+    (
+        make_invoker(fit::pack_basic(FIT_FORWARD(Ts)(xs)...))
+    );
+#else
+    FIT_RETURNS
     (
         implicit::make_invoker(fit::pack_basic(FIT_FORWARD(Ts)(xs)...))
     );
+#endif
 };
 
 } // namespace fit

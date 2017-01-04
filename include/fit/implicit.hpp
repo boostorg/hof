@@ -120,13 +120,14 @@ struct implicit
         {
             return p(F<X>());
         }
-
+#if !(defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
         invoker (const invoker&) = delete; 
         invoker& operator= (const invoker&) = delete;
 
     private:
         friend struct implicit;
         invoker (invoker&&) = default; 
+#endif
     };
 
     template<class Pack>

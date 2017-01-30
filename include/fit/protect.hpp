@@ -27,6 +27,11 @@
 ///     template<class F>
 ///     constexpr protect_adaptor<F> protect(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(lazy(f)(protect(lazy(g)(_1)))() == f(lazy(g)(_1)))
+/// 
 /// Requirements
 /// ------------
 /// 

@@ -31,6 +31,14 @@
 ///     template<class F>
 ///     constexpr lazy_adaptor<F> lazy(F f);
 /// 
+/// Semantics
+/// ---------
+/// 
+///     assert(lazy(f)(xs...) == std::bind(f, xs...))
+///     assert(lazy(f)(xs...)() == f(xs...))
+///     assert(lazy(f)(_1)(x) == f(x))
+///     assert(lazy(f)(lazy(g)(_1))(x) == f(g(x)))
+/// 
 /// Requirements
 /// ------------
 /// 
@@ -51,6 +59,11 @@
 ///         auto increment = lazy(add)(_1, 1);
 ///         assert(increment(5) == 6);
 ///     }
+/// 
+/// References
+/// ----------
+/// 
+/// * [std::bind](http://en.cppreference.com/w/cpp/utility/functional/bind)
 /// 
 
 #include <fit/arg.hpp>

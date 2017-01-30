@@ -43,8 +43,8 @@ FIT_TEST_CASE()
 #if FIT_HAS_NOEXCEPT_DEDUCTION
 FIT_TEST_CASE()
 {
-    fit::implicit<auto_caster_noexcept> auto_cast{};
+    fit::implicit<auto_caster_noexcept> lauto_cast{};
     float f = 1.5;
-    static_assert(noexcept(int(auto_cast(f))), "noexcept implicit");
+    static_assert(noexcept(int(lauto_cast(f))), "noexcept implicit");
 }
 #endif

@@ -100,32 +100,6 @@ struct is_implicit_callable<F, Pack, X, typename std::enable_if<
 : std::true_type
 {};
 #endif
-template<template <class...> class F, class Pack>
-struct implicit_invoke
-{
-    Pack p;
-
-    constexpr implicit_invoke(Pack pp) : p(pp)
-    {}
-
-    template<class X, class=typename std::enable_if<is_implicit_callable<F<X>, Pack, X>::value>::type>
-    constexpr operator X() const
-    {
-        return p(F<X>());
-    }
-
-    template<template <class...> class F2, class Pack2>
-    constexpr operator implicit_invoke<F2, Pack2>() const
-    {
-        return implicit_invoke<F2, Pack2>(p);
-    }
-};
-
-template<template <class...> class F, class Pack>
-constexpr implicit_invoke<F, Pack> make_implicit_invoke(Pack&& p)
-{
-    return implicit_invoke<F, Pack>(FIT_FORWARD(Pack)(p));
-}
 
 }
 
@@ -133,12 +107,46 @@ constexpr implicit_invoke<F, Pack> make_implicit_invoke(Pack&& p)
 template<template <class...> class F>
 struct implicit
 {
-    template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-    (
-        detail::make_implicit_invoke<F>(fit::pack_basic(FIT_FORWARD(Ts)(xs)...))
-    );
+    template<class Pack>
+    struct invoker
+    {
+        Pack p;
 
+        constexpr invoker(Pack pp) FIT_NOEXCEPT_CONSTRUCTIBLE(Pack, Pack&&)
+        : p(fit::move(pp))
+        {}
+
+        template<class X, class=typename std::enable_if<detail::is_implicit_callable<F<X>, Pack, X>::value>::type>
+        constexpr operator X() const FIT_NOEXCEPT(noexcept(p(F<X>())))
+        {
+            return p(F<X>());
+        }
+#if !(defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+        invoker (const invoker&) = delete; 
+        invoker& operator= (const invoker&) = delete;
+
+    private:
+        friend struct implicit;
+        invoker (invoker&&) = default; 
+#endif
+    };
+
+    struct make_invoker
+    {
+        template<class Pack>
+        constexpr invoker<Pack> operator()(Pack p) const FIT_NOEXCEPT(noexcept(invoker<Pack>(fit::move(p))))
+        {
+            return invoker<Pack>(fit::move(p));
+        }
+
+    };
+
+    template<class... Ts>
+    constexpr auto operator()(Ts&&... xs) const 
+    FIT_RETURNS
+    (
+        FIT_RETURNS_CONSTRUCT(make_invoker)()(fit::pack_basic(FIT_FORWARD(Ts)(xs)...))
+    );
 };
 
 } // namespace fit

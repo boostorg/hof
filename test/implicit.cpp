@@ -11,6 +11,16 @@ struct auto_caster
     }
 };
 
+template<class T>
+struct auto_caster_noexcept
+{
+    template<class U>
+    T operator()(U x) noexcept
+    {
+        return T(x);
+    }
+};
+
 struct auto_caster_foo
 {
     int i;
@@ -30,3 +40,11 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(1 == x.i);
 
 }
+#if FIT_HAS_NOEXCEPT_DEDUCTION
+FIT_TEST_CASE()
+{
+    fit::implicit<auto_caster_noexcept> lauto_cast{};
+    float f = 1.5;
+    static_assert(noexcept(int(lauto_cast(f))), "noexcept implicit");
+}
+#endif

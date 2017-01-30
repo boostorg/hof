@@ -131,25 +131,22 @@ struct implicit
 #endif
     };
 
-    template<class Pack>
-    static constexpr invoker<Pack> make_invoker(Pack&& p) FIT_NOEXCEPT(noexcept(invoker<Pack>(FIT_FORWARD(Pack)(p))))
+    struct make_invoker
     {
-        return invoker<Pack>(FIT_FORWARD(Pack)(p));
-    }
+        template<class Pack>
+        constexpr invoker<Pack> operator()(Pack p) const FIT_NOEXCEPT(noexcept(invoker<Pack>(fit::move(p))))
+        {
+            return invoker<Pack>(fit::move(p));
+        }
+
+    };
 
     template<class... Ts>
     constexpr auto operator()(Ts&&... xs) const 
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
     FIT_RETURNS
     (
-        make_invoker(fit::pack_basic(FIT_FORWARD(Ts)(xs)...))
+        FIT_RETURNS_CONSTRUCT(make_invoker)()(fit::pack_basic(FIT_FORWARD(Ts)(xs)...))
     );
-#else
-    FIT_RETURNS
-    (
-        implicit::make_invoker(fit::pack_basic(FIT_FORWARD(Ts)(xs)...))
-    );
-#endif
 };
 
 } // namespace fit

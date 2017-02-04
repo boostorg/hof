@@ -1,6 +1,7 @@
 #include <fit/infix.hpp>
 #include <fit/function.hpp>
 #include <fit/lambda.hpp>
+#include <fit/pipable.hpp>
 #include <fit/placeholders.hpp>
 #include "test.hpp"
 
@@ -82,4 +83,20 @@ FIT_TEST_CASE()
 
     FIT_TEST_CHECK(3 == (sum5(1, 2)));
     FIT_STATIC_TEST_CHECK(3 == (sum5(1, 2)));
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(6 == (1 + 2 <sum> 3));
+    FIT_TEST_CHECK(3 == 1 <sum> 2);
+}
+
+struct foo {};
+
+FIT_TEST_CASE()
+{
+    auto f = fit::infix([](int, int) { return foo{}; });
+    auto g = fit::infix([](foo, foo) { return std::string("hello"); });
+    FIT_TEST_CHECK((1 <f> 2 <g> foo{}) == "hello");
+
 }

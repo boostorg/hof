@@ -89,7 +89,7 @@ FIT_TEST_CASE()
 {
 #if (defined(__GNUC__) && !defined (__clang__))
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wparenthesis"
+#pragma GCC diagnostic ignored "-Wparentheses"
 #endif
     FIT_TEST_CHECK(6 == (1 + 2 <sum> 3));
     FIT_TEST_CHECK(3 == 1 <sum> 2);

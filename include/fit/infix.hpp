@@ -27,7 +27,7 @@
 /// Semantics
 /// ---------
 /// 
-///     assert((x <infix(f)> y) == f(x, y));
+///     assert(x <infix(f)> y == f(x, y));
 /// 
 /// Requirements
 /// ------------
@@ -36,6 +36,24 @@
 /// 
 /// * [BinaryCallable](BinaryCallable)
 /// * MoveConstructible
+/// 
+/// Operator precedence
+/// -------------------
+/// 
+/// Infix operators have the precedence of relational operators. This means
+/// operators such as `+` or `*` have higher precedence:
+/// 
+///     assert((x + y <infix(f)> z) == ((x + y) <infix(f)> z));
+///     assert((x * y <infix(f)> z) == ((x * y) <infix(f)> z));
+/// 
+/// However, operators such as `|` or `==` have lower precedence::
+/// 
+///     assert((x | y <infix(f)> z) == (x | (y <infix(f)> z)));
+///     assert((x == y <infix(f)> z) == (x == (y <infix(f)> z)));
+/// 
+/// Also, infix operators have left-to-right associativity:
+/// 
+///     assert(x <infix(f)> y <infix(g)> z == ((x <infix(f)> y) <infix(g)> z));
 /// 
 /// Example
 /// -------

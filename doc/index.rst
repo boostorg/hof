@@ -13,7 +13,7 @@ Fit
     src/reference
 
     src/configurations
-    src/faq
+    src/discussion
     src/acknowledgements
     src/license
 

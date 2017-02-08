@@ -53,6 +53,11 @@
 ///         assert(lazy_apply(3) == 3);
 ///     }
 /// 
+/// See Also
+/// --------
+/// 
+/// * [lazy](lazy)
+/// 
 
 #include <utility>
 #include <fit/reveal.hpp>

@@ -14,14 +14,21 @@
 /// Description
 /// -----------
 /// 
-/// The `function_param_limit` metafunction retrieves the maxium number of
-/// parameters for a function.
+/// The `function_param_limit` metafunction retrieves the maximum number of
+/// parameters for a function. This can be annotated using [`limit`](limit)
+/// decorator.
 /// 
 /// Synopsis
 /// --------
 /// 
 ///     template<class F>
 ///     struct function_param_limit;
+/// 
+/// See Also
+/// --------
+/// 
+/// * [Partial function evaluation](<Partial function evaluation>)
+/// * [limit](limit)
 /// 
 
 #include <fit/detail/holder.hpp>

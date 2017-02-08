@@ -59,7 +59,7 @@
 /// ----------
 /// 
 /// * [std::apply](http://en.cppreference.com/w/cpp/utility/apply) - C++17 function to unpack a tuple
-/// 
+/// * [`unpack_sequence`](unpack_sequence)
 /// 
 
 #include <fit/unpack_sequence.hpp>

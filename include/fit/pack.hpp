@@ -68,6 +68,11 @@
 ///         assert(r == 5);
 ///     }
 /// 
+/// See Also
+/// --------
+/// 
+/// * [unpack](unpack)
+/// 
 
 #include <fit/detail/seq.hpp>
 #include <fit/detail/delegate.hpp>

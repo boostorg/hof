@@ -14,9 +14,12 @@
 /// Description
 /// -----------
 /// 
-/// The `limit` function decorator annotates the function with the max number of
-/// parameters. The `limit_c` version can be used to give the max number
-/// directly(instead of relying on an integral constant).
+/// The `limit` function decorator annotates the function with the max number
+/// of parameters. The `limit_c` version can be used to give the max number
+/// directly(instead of relying on an integral constant). The parameter limit
+/// can be read by using the [`function_param_limit`](function_param_limit)
+/// trait. Using `limit` is useful to improve error reporting with partially
+/// evaluated functions.
 /// 
 /// Synopsis
 /// --------
@@ -59,6 +62,12 @@
 ///     int main() {
 ///         assert(3 == sum(1, 2));
 ///     }
+/// 
+/// See Also
+/// --------
+/// 
+/// * [Partial function evaluation](<Partial function evaluation>)
+/// * [function_param_limit](function_param_limit)
 /// 
 
 #include <fit/detail/callable_base.hpp>

@@ -31,7 +31,7 @@
 /// 
 /// F must be:
 /// 
-/// * [EvaluatableFunctionObject](concepts.md#evaluatablefunctionobject)
+/// * [EvaluatableFunctionObject](EvaluatableFunctionObject)
 /// 
 /// Example
 /// -------

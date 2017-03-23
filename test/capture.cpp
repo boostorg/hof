@@ -2,8 +2,6 @@
 #include <fit/identity.hpp>
 #include "test.hpp"
 
-// TODO: Test empty capture
-
 FIT_TEST_CASE()
 {    
     FIT_STATIC_TEST_CHECK(fit::capture_basic(1, 2)(binary_class())() == 3);
@@ -11,6 +9,9 @@ FIT_TEST_CASE()
 
     FIT_STATIC_TEST_CHECK(fit::capture_basic(1)(binary_class())(2) == 3);
     FIT_TEST_CHECK(fit::capture_basic(1)(binary_class())(2) == 3);
+
+    FIT_STATIC_TEST_CHECK(fit::capture_basic()(binary_class())(1, 2) == 3);
+    FIT_TEST_CHECK(fit::capture_basic()(binary_class())(1, 2) == 3);
 
     static const int one = 1;
     static const int two = 2;
@@ -21,11 +22,17 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(fit::capture_forward(one)(binary_class())(two) == 3);
     FIT_TEST_CHECK(fit::capture_forward(1)(binary_class())(2) == 3);
 
+    FIT_STATIC_TEST_CHECK(fit::capture_forward()(binary_class())(one, two) == 3);
+    FIT_TEST_CHECK(fit::capture_forward()(binary_class())(one, two) == 3);
+
     FIT_STATIC_TEST_CHECK(fit::capture(1, 2)(binary_class())() == 3);
     FIT_TEST_CHECK(fit::capture(1, 2)(binary_class())() == 3);
 
     FIT_STATIC_TEST_CHECK(fit::capture(1)(binary_class())(2) == 3);
     FIT_TEST_CHECK(fit::capture(1)(binary_class())(2) == 3);
+
+    FIT_STATIC_TEST_CHECK(fit::capture()(binary_class())(1, 2) == 3);
+    FIT_TEST_CHECK(fit::capture()(binary_class())(1, 2) == 3);
 }
 
 struct add_member

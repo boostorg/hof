@@ -37,11 +37,6 @@
 #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/unpack_tuple.hpp>
 
-// TODO: Move to config
-#ifndef FIT_CHECK_UNPACK_SEQUENCE
-#define FIT_CHECK_UNPACK_SEQUENCE 1
-#endif
-
 namespace fit {
 
 namespace detail {

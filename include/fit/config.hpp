@@ -8,6 +8,12 @@
 #ifndef FIT_GUARD_CONFIG_HPP
 #define FIT_GUARD_CONFIG_HPP
 
+// Unpack has extra checks to ensure that the function will be invoked with
+// the sequence. This extra check can help improve error reporting but it can
+// slow down compilation. This is enabled by default.
+#ifndef FIT_CHECK_UNPACK_SEQUENCE
+#define FIT_CHECK_UNPACK_SEQUENCE 1
+#endif
 
 // Check for std version
 #if __cplusplus >= 201402

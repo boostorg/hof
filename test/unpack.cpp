@@ -219,3 +219,25 @@ FIT_TEST_CASE()
 
     static_assert(!fit::is_callable<decltype(f), not_unpackable>::value, "SFINAE for unpack failed");
 }
+
+struct simple_unpackable
+{};
+
+namespace fit {
+
+template<>
+struct unpack_sequence<simple_unpackable>
+{
+    template<class F, class S>
+    constexpr static auto apply(F&& f, S&&) FIT_RETURNS
+    (
+        f(1)
+    );
+};
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::unpack(fit::identity)(simple_unpackable{}) == 1);
+    FIT_STATIC_TEST_CHECK(fit::unpack(fit::identity)(simple_unpackable{}) == 1);
+}

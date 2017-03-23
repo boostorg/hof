@@ -42,6 +42,7 @@ Noexcept support
 ----------------
 
 On older compilers such as gcc 4.6 and gcc 4.7, `noexcept` is not used due to many bugs in the implementation.
+
 Building
 ========
 

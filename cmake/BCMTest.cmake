@@ -1,7 +1,7 @@
 option(BUILD_TESTING off)
 
 include(CMakeParseArguments)
-include(CTest)
+enable_testing()
 
 if(NOT TARGET check)
     add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C ${CMAKE_CFG_INTDIR})

@@ -23,13 +23,14 @@ FIT_TEST_CASE()
 struct id
 {
     template<class T>
-    auto operator()(T x) const FIT_RETURNS
+    constexpr auto operator()(T x) const FIT_RETURNS
     (x);
 };
 
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(id{}(3) == 3);
+    FIT_STATIC_TEST_CHECK(id{}(3) == 3);
 }
 
 constexpr void no_op() {}

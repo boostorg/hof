@@ -162,7 +162,7 @@ void fit_returns_class_check() \
 // move constructors.
 #define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__)))
 #else
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))))
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(static_cast<decltype(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))>(FIT_RETURNS_DECLTYPE_CONTEXT(__VA_ARGS__))))
 #endif
 
 #define FIT_RETURNS_DECLTYPE(...) \

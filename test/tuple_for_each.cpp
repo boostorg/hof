@@ -210,3 +210,24 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK( tuple_for_each( tp, 11 ) == 11 );
     FIT_TEST_CHECK( tuple_for_each( std::move( tp ), 12 ) == 12 );
 }
+
+struct assert_is_integral
+{
+    template<class T> constexpr bool operator()( T ) const
+    {
+        FIT_STATIC_TEST_CHECK( std::is_integral<T>::value );
+        return true;
+    }
+};
+
+FIT_TEST_CASE()
+{
+    constexpr auto r = tuple_for_each( std::tuple<int, short, char>{1, 2, 3}, assert_is_integral() );
+    (void)r;
+}
+
+FIT_TEST_CASE()
+{
+    constexpr auto r = tuple_for_each( fit::pack(1, 2, 3), assert_is_integral() );
+    (void)r;
+}

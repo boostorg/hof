@@ -32,16 +32,17 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(id{}(3) == 3);
 }
 
-void no_op() {}
+constexpr void no_op() {}
 
 struct id_comma
 {
     template<class T>
-    auto operator()(T x) const FIT_RETURNS
-    (no_op(), x);
+    constexpr auto operator()(T&& x) const FIT_RETURNS
+    (no_op(), fit::forward<T>(x));
 };
 
 FIT_TEST_CASE()
 {
     FIT_TEST_CHECK(id_comma{}(3) == 3);
+    FIT_STATIC_TEST_CHECK(id_comma{}(3) == 3);
 }

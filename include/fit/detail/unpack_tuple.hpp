@@ -13,6 +13,7 @@
 #include <fit/detail/forward.hpp>
 #include <fit/detail/seq.hpp>
 #include <tuple>
+#include <array>
 
 namespace fit {
 
@@ -66,17 +67,31 @@ constexpr auto unpack_tuple(F&& f, T&& t, seq<N...>) FIT_RETURNS
     )
 );
 
-}
-
-template<class... Ts>
-struct unpack_sequence<std::tuple<Ts...>>
+struct unpack_tuple_apply
 {
     template<class F, class S>
     constexpr static auto apply(F&& f, S&& t) FIT_RETURNS
     (
-        detail::unpack_tuple(FIT_FORWARD(F)(f), FIT_FORWARD(S)(t), detail::make_tuple_gens(t))
+        fit::detail::unpack_tuple(FIT_FORWARD(F)(f), FIT_FORWARD(S)(t), fit::detail::make_tuple_gens(t))
     );
 };
+
+}
+
+template<class... Ts>
+struct unpack_sequence<std::tuple<Ts...>>
+: detail::unpack_tuple_apply
+{};
+
+template<class... Ts>
+struct unpack_sequence<std::pair<Ts...>>
+: detail::unpack_tuple_apply
+{};
+
+template<class T, std::size_t N>
+struct unpack_sequence<std::array<T, N>>
+: detail::unpack_tuple_apply
+{};
 
 } // namespace fit
 

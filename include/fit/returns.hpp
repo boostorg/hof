@@ -131,7 +131,7 @@
 // move constructors.
 #define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(__VA_ARGS__))
 #else
-#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__)))
+#define FIT_RETURNS_DEDUCE_NOEXCEPT(...) FIT_NOEXCEPT(noexcept(static_cast<decltype(__VA_ARGS__)>(__VA_ARGS__)))
 #endif
 #define FIT_RETURNS(...) \
 FIT_RETURNS_DEDUCE_NOEXCEPT(__VA_ARGS__) \

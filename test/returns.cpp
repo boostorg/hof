@@ -19,3 +19,29 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(3 == add_1()(2));   
 }
 #endif
+// TODO: check noexcept
+struct id
+{
+    template<class T>
+    auto operator()(T x) const FIT_RETURNS
+    (x);
+};
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(id{}(3) == 3);
+}
+
+void no_op() {}
+
+struct id_comma
+{
+    template<class T>
+    auto operator()(T x) const FIT_RETURNS
+    (no_op(), x);
+};
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(id_comma{}(3) == 3);
+}

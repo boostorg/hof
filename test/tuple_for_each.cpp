@@ -222,12 +222,20 @@ struct assert_is_integral
 
 FIT_TEST_CASE()
 {
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+    auto r = tuple_for_each( std::tuple<int, short, char>{1, 2, 3}, assert_is_integral() );
+#else
     constexpr auto r = tuple_for_each( std::tuple<int, short, char>{1, 2, 3}, assert_is_integral() );
+#endif
     (void)r;
 }
 
 FIT_TEST_CASE()
 {
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+    auto r = tuple_for_each( fit::pack(1, 2, 3), assert_is_integral() );
+#else
     constexpr auto r = tuple_for_each( fit::pack(1, 2, 3), assert_is_integral() );
+#endif
     (void)r;
 }

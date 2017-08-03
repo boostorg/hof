@@ -33,7 +33,8 @@ FIT_TEST_CASE()
     FIT_STATIC_TEST_CHECK(id{}(3) == 3);
 }
 
-constexpr void no_op() {}
+struct void_ {};
+constexpr void_ no_op() { return void_{}; }
 
 struct id_comma
 {

@@ -130,7 +130,7 @@ struct construct_f
         storage buffer{};
         new(&buffer) T(FIT_FORWARD(Ts)(xs)...);
         storage_holder h(&buffer);
-        return h.data();
+        return fit::move(h.data());
     }
 
     template<class X, FIT_ENABLE_IF_CONSTRUCTIBLE(T, std::initializer_list<X>&&)>

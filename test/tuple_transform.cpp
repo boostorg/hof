@@ -25,7 +25,7 @@ struct pack_transform_f
 };
 
 FIT_STATIC_FUNCTION(tuple_transform) = tuple_transform_f{};
-FIT_STATIC_FUNCTION(pack_transform) = pack_transform_f{};
+// FIT_STATIC_FUNCTION(pack_transform) = pack_transform_f{};
 
 
 FIT_TEST_CASE()

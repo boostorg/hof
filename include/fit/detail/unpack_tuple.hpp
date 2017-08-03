@@ -83,8 +83,8 @@ struct unpack_sequence<std::tuple<Ts...>>
 : detail::unpack_tuple_apply
 {};
 
-template<class... Ts>
-struct unpack_sequence<std::pair<Ts...>>
+template<class T, class U>
+struct unpack_sequence<std::pair<T, U>>
 : detail::unpack_tuple_apply
 {};
 

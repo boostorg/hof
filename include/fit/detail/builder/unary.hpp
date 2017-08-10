@@ -1,0 +1,47 @@
+/*=============================================================================
+    Copyright (c) 2016 Paul Fultz II
+    unary.hpp
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef FIT_GUARD_DETAIL_BUILDER_UNARY_HPP
+#define FIT_GUARD_DETAIL_BUILDER_UNARY_HPP
+
+#include <fit/detail/builder.hpp>
+
+namespace fit { namespace detail {
+
+template<class Adaptor>
+struct unary_adaptor_builder
+{
+    template<class F>
+    struct apply
+    : callable_base<F>, Adaptor::template base<F>
+    {
+        typedef callable_base<F> base;
+        typedef apply fit_rewritable1_tag;
+
+        template<class... Ts>
+        constexpr const callable_base<F>& base_function(Ts&&... xs) const
+        {
+            return always_ref(*this)(xs...);
+        }
+
+        template<class... Ts>
+        constexpr FIT_SFINAE_RESULT(const callable_base<F>&, id_<Ts>...) 
+        operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+        (
+            Adaptor::apply(
+                FIT_MANGLE_CAST(const callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)),
+                FIT_FORWARD(Ts)(xs)...
+            )
+        );
+
+        FIT_INHERIT_CONSTRUCTOR(apply, base)
+    };
+};
+
+}} // namespace fit
+
+#endif

@@ -75,16 +75,20 @@ struct flip_adaptor_builder
         };
 
         struct failure
-        : failure_map<flip_failure, detail::callable_base<F>>
+        : failure_map<flip_failure, F>
         {};
     };
 
-    template<class F, class T, class U, class... Ts>
-    static constexpr FIT_SFINAE_RESULT(F&&, id_<U>, id_<T>, id_<Ts>...) 
-    apply(F&& f, T&& x, U&& y, Ts&&... xs) FIT_SFINAE_RETURNS
-    (
-        FIT_FORWARD(F)(f)(FIT_FORWARD(U)(y), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
-    );
+    struct apply
+    {
+        template<class F, class T, class U, class... Ts>
+        constexpr FIT_SFINAE_RESULT(F&&, id_<U>, id_<T>, id_<Ts>...) 
+        operator()(F&& f, T&& x, U&& y, Ts&&... xs) const FIT_SFINAE_RETURNS
+        (
+            FIT_FORWARD(F)(f)(FIT_FORWARD(U)(y), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
+        );
+    };
+
 };
 
 }

@@ -77,18 +77,10 @@
 /// * [Variadic print](<Variadic print>)
 /// 
 
-
-
-#include <utility>
-#include <fit/always.hpp>
-#include <fit/detail/callable_base.hpp>
-#include <fit/detail/result_of.hpp>
-#include <fit/detail/move.hpp>
-#include <fit/detail/make.hpp>
-#include <fit/detail/static_const_var.hpp>
-#include <fit/detail/compressed_pair.hpp>
-#include <fit/detail/result_type.hpp>
+#include <fit/detail/builder.hpp>
+#include <fit/detail/builder/binary.hpp>
 #include <fit/apply_eval.hpp>
+#include <fit/reveal.hpp>
 
 namespace fit {
 
@@ -170,96 +162,72 @@ struct swallow
     {}
 };
 
-}
-
-template<class Projection, class F=void>
-struct by_adaptor;
-
-template<class Projection, class F>
-struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>>, detail::function_result_type<F>
+struct by_binary_adaptor_base
 {
-    typedef by_adaptor fit_rewritable_tag;
-    typedef detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>> base;
-    template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
+    template<class Projection, class F>
+    struct base
     {
-        return this->second(xs...);;
-    }
-
-    template<class... Ts>
-    constexpr const detail::callable_base<Projection>& base_projection(Ts&&... xs) const
-    {
-        return this->first(xs...);
-    }
-
-    struct by_failure
-    {
-        template<class Failure>
-        struct apply
+        struct by_failure
         {
-            template<class... Ts>
-            struct of
-            : Failure::template of<decltype(std::declval<detail::callable_base<Projection>>()(std::declval<Ts>()))...>
-            {};
+            template<class Failure>
+            struct apply
+            {
+                template<class... Ts>
+                struct of
+                : Failure::template of<decltype(std::declval<Projection>()(std::declval<Ts>()))...>
+                {};
+            };
         };
+
+        struct failure
+        : failure_map<by_failure, F>
+        {};
     };
 
-    struct failure
-    : failure_map<by_failure, detail::callable_base<F>>
+    struct apply
+    {
+        template<class Projection, class F, class... Ts>
+        constexpr FIT_SFINAE_RESULT(F&&, result_of<Projection&&, id_<Ts>>...) 
+        operator()(Projection&& p, F&& f, Ts&&... xs) const FIT_SFINAE_RETURNS
+        (
+            detail::by_eval(
+                FIT_FORWARD(Projection)(p),
+                FIT_FORWARD(F)(f),
+                FIT_FORWARD(Ts)(xs)...
+            )
+        );
+    };
+};
+
+struct by_unary_adaptor_base
+{
+    template<class F>
+    struct base
     {};
 
-    FIT_INHERIT_CONSTRUCTOR(by_adaptor, base)
-
-    FIT_RETURNS_CLASS(by_adaptor);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, result_of<const detail::callable_base<Projection>&, id_<Ts>>...) 
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        detail::by_eval(
-            FIT_MANGLE_CAST(const detail::callable_base<Projection>&)(FIT_CONST_THIS->base_projection(xs...)),
-            FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)),
-            FIT_FORWARD(Ts)(xs)...
-        )
-    );
-};
-
-template<class Projection>
-struct by_adaptor<Projection, void> : detail::callable_base<Projection>
-{
-    typedef by_adaptor fit_rewritable1_tag;
-    template<class... Ts>
-    constexpr const detail::callable_base<Projection>& base_projection(Ts&&... xs) const
+    struct apply
     {
-        return always_ref(*this)(xs...);
-    }
-
-    FIT_INHERIT_DEFAULT(by_adaptor, detail::callable_base<Projection>)
-
-    template<class P, FIT_ENABLE_IF_CONVERTIBLE(P, detail::callable_base<Projection>)>
-    constexpr by_adaptor(P&& p) 
-    : detail::callable_base<Projection>(FIT_FORWARD(P)(p))
-    {}
-
-    FIT_RETURNS_CLASS(by_adaptor);
-
-    template<class... Ts, class=detail::holder<decltype(std::declval<Projection>()(std::declval<Ts>()))...>>
-    constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const 
-    {
+        template<class Projection, class... Ts, class=detail::holder<decltype(std::declval<Projection>()(std::declval<Ts>()))...>>
+        constexpr FIT_BY_VOID_RETURN operator()(Projection&& p, Ts&&... xs) const 
+        {
 #if FIT_NO_ORDERED_BRACE_INIT
-        return detail::by_void_eval(this->base_projection(xs...), FIT_FORWARD(Ts)(xs)...);
+            return detail::by_void_eval(FIT_FORWARD(Projection)(p), FIT_FORWARD(Ts)(xs)...);
 #else
 #if FIT_NO_CONSTEXPR_VOID
-        return
+            return
 #endif
-        detail::swallow{
-            (this->base_projection(xs...)(FIT_FORWARD(Ts)(xs)), 0)...
-        };
+            detail::swallow{
+                (FIT_FORWARD(Projection)(p)(FIT_FORWARD(Ts)(xs)), 0)...
+            };
 #endif
-    }
+        }
+    };
+
 };
 
-FIT_DECLARE_STATIC_VAR(by, detail::make<by_adaptor>);
+}
+
+FIT_DECLARE_ADAPTOR(by, detail::binary_adaptor_builder<detail::by_binary_adaptor_base, detail::by_unary_adaptor_base>)
 
 } // namespace fit
 #endif

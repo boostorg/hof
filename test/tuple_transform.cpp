@@ -59,7 +59,6 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(tuple_transform(x, *fit::_1) == tuple_transform(y, *fit::_1));
 }
 
-
 #define TUPLE_TRANSFORM_CHECK_COMPOSE(x, f, g) \
 FIT_TEST_CHECK(tuple_transform(x, fit::compose(f, g)) == tuple_transform(tuple_transform(x, g), f)); \
 FIT_STATIC_TEST_CHECK(tuple_transform(x, fit::compose(f, g)) == tuple_transform(tuple_transform(x, g), f));

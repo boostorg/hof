@@ -1,6 +1,7 @@
 #include <fit/compose.hpp>
 #include <fit/function.hpp>
 #include <fit/lambda.hpp>
+#include <fit/placeholders.hpp>
 #include <memory>
 #include "test.hpp"
 
@@ -110,6 +111,9 @@ FIT_TEST_CASE()
     FIT_TEST_CHECK(r == 4);
 }
 
+template<class T>
+struct print;
+
 FIT_TEST_CASE()
 {
     const auto f = fit::compose([](int i) { return i+1; }, [](int i) { return i-1; }, [](int i) { return i+1; });
@@ -155,5 +159,11 @@ FIT_TEST_CASE()
 {
     int r = f_compose_lambda(3);
     FIT_TEST_CHECK(r == 4);
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::compose(fit::_1 * fit::_1, fit::_1 + fit::_1)(3) == 36);
+    FIT_STATIC_TEST_CHECK(fit::compose(fit::_1 * fit::_1, fit::_1 + fit::_1)(3) == 36);
 }
 }

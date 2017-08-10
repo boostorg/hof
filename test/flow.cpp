@@ -1,6 +1,7 @@
 #include <fit/flow.hpp>
 #include <fit/function.hpp>
 #include <fit/lambda.hpp>
+#include <fit/placeholders.hpp>
 #include <memory>
 #include "test.hpp"
 
@@ -141,5 +142,11 @@ FIT_TEST_CASE()
 {
     int r = f_flow_lambda(3);
     FIT_TEST_CHECK(r == 4);
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::flow(fit::_1 + fit::_1, fit::_1 * fit::_1)(3) == 36);
+    FIT_STATIC_TEST_CHECK(fit::flow(fit::_1 + fit::_1, fit::_1 * fit::_1)(3) == 36);
 }
 }

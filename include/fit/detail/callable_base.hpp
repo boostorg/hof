@@ -40,6 +40,7 @@ template<class F>
 struct callable_base_type
 : std::conditional<(FIT_IS_CLASS(F) && !FIT_IS_FINAL(F) && !FIT_IS_POLYMORPHIC(F)), F, non_class_function<F>>
 {};
+
 #if FIT_HAS_TEMPLATE_ALIAS
 template<class F>
 using callable_base = typename callable_base_type<F>::type;
@@ -53,12 +54,9 @@ struct callable_base
 };
 
 template<class F>
-struct callable_base<callable_base<F>>
-: callable_base<F>
-{
-    typedef callable_base<F> base;
-    FIT_INHERIT_CONSTRUCTOR(callable_base, base)
-};
+struct callable_base_type<callable_base<F>>
+: callable_base_type<F>
+{};
 
 #endif
 

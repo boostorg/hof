@@ -29,29 +29,31 @@ struct pair_tag
 {};
 
 #if FIT_COMPRESSED_PAIR_USE_EBO_WORKAROUND
-template<class T, class U>
-struct is_related
-: std::integral_constant<bool, std::is_base_of<T, U>::value || std::is_base_of<U, T>::value>
-{};
 
-template<class T>
-struct is_compressed_pair
+template<class T, class U>
+struct is_same_template
 : std::false_type
 {};
 
-template<class First, class Second, class Enable>
-struct is_compressed_pair<compressed_pair<First, Second, Enable>>
+template<template<class...> class X, class... Ts, class... Us>
+struct is_same_template<X<Ts...>, X<Us...>>
 : std::true_type
+{};
+
+template<class T, class U>
+struct is_related_template
+: is_same_template<T, U>
+{};
+
+template<class T, class U>
+struct is_related
+: std::integral_constant<bool, std::is_base_of<T, U>::value || std::is_base_of<U, T>::value || is_same_template<T, U>::value>
 {};
 
 template<int I, class T, class U>
 struct pair_holder
 : std::conditional<(
-    is_related<T, U>::value
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
-    || is_compressed_pair<T>::value || is_compressed_pair<U>::value
-#endif
-    ), 
+    is_related<T, U>::value), 
     detail::alias_empty<T, pair_tag<I, T, U>>,
     detail::alias_try_inherit<T, pair_tag<I, T, U>>
 >::type

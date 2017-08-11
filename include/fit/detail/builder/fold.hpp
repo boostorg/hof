@@ -1,12 +1,12 @@
 /*=============================================================================
-    Copyright (c) 2016 Paul Fultz II
-    binary.hpp
+    Copyright (c) 2017 Paul Fultz II
+    fold.hpp
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef FIT_GUARD_DETAIL_BUILDER_BINARY_HPP
-#define FIT_GUARD_DETAIL_BUILDER_BINARY_HPP
+#ifndef FIT_GUARD_DETAIL_BUILDER_FOLD_HPP
+#define FIT_GUARD_DETAIL_BUILDER_FOLD_HPP
 
 #include <fit/detail/builder.hpp>
 #include <fit/detail/builder/unary.hpp>
@@ -14,18 +14,18 @@
 
 namespace fit { namespace detail {
 
-
-template<class BinaryAdaptor, class UnaryAdaptor=void>
-struct binary_adaptor_builder
+template<class BinaryAdaptor>
+struct fold_adaptor_builder
 {
     template<class... Fs>
     struct apply;
 
     template<class F>
     struct apply<F>
-    : unary_adaptor_builder<UnaryAdaptor>::template apply<F>
+    : callable_base<F>
     {
-        typedef typename unary_adaptor_builder<UnaryAdaptor>::template apply<F> base;
+        typedef callable_base<F> base;
+        typedef apply fit_rewritable1_tag;
 
         FIT_INHERIT_CONSTRUCTOR(apply, base)
     };
@@ -53,6 +53,31 @@ struct binary_adaptor_builder
         );
 
         FIT_INHERIT_CONSTRUCTOR(apply, base)
+    };
+
+    template<class F, class G, class... Fs>
+    struct apply<F, G, Fs...>
+    : apply<F, apply<G, Fs...>>
+    {
+        typedef apply<F, apply<G, Fs...>> base;
+        typedef apply<G, Fs...> tail_base;
+
+        FIT_INHERIT_DEFAULT(apply, base)
+        
+        template<class X, class... Xs, 
+            FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, tail_base), 
+            FIT_ENABLE_IF_CONSTRUCTIBLE(tail_base, Xs...)>
+        constexpr apply(X&& f1, Xs&& ... fs) 
+        noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X&&, tail_base) && FIT_IS_NOTHROW_CONSTRUCTIBLE(tail_base, Xs&&...))
+        : base(FIT_FORWARD(X)(f1), tail_base(FIT_FORWARD(Xs)(fs)...))
+        {}
+
+        template<class X, class... Xs, 
+            FIT_ENABLE_IF_CONSTRUCTIBLE(base, X)>
+        constexpr apply(X&& f1) 
+        FIT_NOEXCEPT_CONSTRUCTIBLE(base, X&&)
+        : base(FIT_FORWARD(X)(f1))
+        {}
     };
 };
 

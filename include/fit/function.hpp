@@ -46,8 +46,10 @@
 /// 
 
 #include <fit/reveal.hpp>
+#if !FIT_HAS_INLINE_VARIABLES
 #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/constexpr_deduce.hpp>
+#endif
 
 namespace fit {
 
@@ -60,12 +62,19 @@ struct reveal_static_const_factory
     template<class F>
     constexpr reveal_adaptor<F> operator=(const F& f) const
     {
+#if FIT_HAS_INLINE_VARIABLES
+#else
         static_assert(FIT_IS_DEFAULT_CONSTRUCTIBLE(F), "Static functions must be default constructible");
+#endif
         return reveal_adaptor<F>(f);
     }
 };
 }} // namespace fit
 
+#if FIT_HAS_INLINE_VARIABLES
+#define FIT_STATIC_FUNCTION(name) inline const constexpr auto name = fit::detail::reveal_static_const_factory()
+#else
 #define FIT_STATIC_FUNCTION(name) FIT_STATIC_CONST_VAR(name) = FIT_DETAIL_MSVC_CONSTEXPR_DEDUCE fit::detail::reveal_static_const_factory()
+#endif
 
 #endif

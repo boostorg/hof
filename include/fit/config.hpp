@@ -16,6 +16,12 @@
 #endif
 
 // Check for std version
+#if __cplusplus >= 201606
+#define FIT_HAS_STD_17 1
+#else
+#define FIT_HAS_STD_17 0
+#endif
+
 #if __cplusplus >= 201402
 #define FIT_HAS_STD_14 1
 #else
@@ -83,6 +89,30 @@
 #endif
 #endif
 
+// Whether the compiler supports constexpr lambdas
+#ifndef FIT_HAS_CONSTEXPR_LAMBDA
+#if defined(__cpp_constexpr) && __cpp_constexpr >= 201603
+#define FIT_HAS_CONSTEXPR_LAMBDA 1
+#else
+#define FIT_HAS_CONSTEXPR_LAMBDA FIT_HAS_STD_17
+#endif
+#endif
+
+// Whether the compiler supports inline variables
+#ifndef FIT_HAS_INLINE_VARIABLES
+#if defined(__cpp_inline_variables)
+#define FIT_HAS_INLINE_VARIABLES 1
+#else
+#define FIT_HAS_INLINE_VARIABLES FIT_HAS_STD_17
+#endif
+#endif
+
+// Whether inline variables defined with lambdas have external linkage.
+// Currently, no compiler supports this yet.
+#ifndef FIT_HAS_INLINE_LAMBDAS
+#define FIT_HAS_INLINE_LAMBDAS 0
+#endif
+
 // Whether the compiler supports variable templates
 #ifndef FIT_HAS_VARIABLE_TEMPLATES
 #if defined(__clang__) && __clang_major__ == 3 && __clang_minor__ < 5
@@ -143,7 +173,7 @@
 
 // Whether function will deduce noexcept from an expression
 #ifndef FIT_HAS_NOEXCEPT_DEDUCTION
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+#if defined(__GNUC__) && !defined (__clang__) && ((__GNUC__ == 4 && __GNUC_MINOR__ < 8) || (__GNUC__ == 7 && __GNUC_MINOR__ == 1))
 #define FIT_HAS_NOEXCEPT_DEDUCTION 0
 #else
 #define FIT_HAS_NOEXCEPT_DEDUCTION 1

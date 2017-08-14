@@ -92,6 +92,9 @@ struct can_be_called<Res(Us...), Ts...>
 
 #else
 
+template<class T>
+T&& called_val() noexcept;
+
 template<class... Ts>
 struct callable_args
 {};
@@ -103,7 +106,7 @@ struct can_be_called_impl
 
 template<class F, class... Args>
 struct can_be_called_impl<F, callable_args<Args...>, typename detail::holder<
-    decltype( std::declval<F>()(std::declval<Args>()...) )
+    decltype( fit::detail::called_val<F>()(fit::detail::called_val<Args>()...) )
 >::type>
 : std::true_type
 {};

@@ -111,10 +111,10 @@ struct compose_kernel : detail::compressed_pair<F1, F2>, compose_function_result
 
 template<class F, class... Fs>
 struct compose_adaptor 
-: detail::compose_kernel<detail::callable_base<F>, FIT_JOIN(compose_adaptor, detail::callable_base<Fs>...)>
+: detail::compose_kernel<detail::callable_base<F>, FIT_JOIN(compose_adaptor)( detail::callable_base<Fs>...)>
 {
     typedef compose_adaptor fit_rewritable_tag;
-    typedef FIT_JOIN(compose_adaptor, detail::callable_base<Fs>...) tail;
+    typedef FIT_JOIN(compose_adaptor)( detail::callable_base<Fs>...) tail;
     typedef detail::compose_kernel<detail::callable_base<F>, tail> base_type;
 
     FIT_INHERIT_DEFAULT(compose_adaptor, base_type)

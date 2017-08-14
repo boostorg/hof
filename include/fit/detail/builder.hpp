@@ -14,12 +14,13 @@
 #include <fit/detail/result_of.hpp>
 #include <fit/returns.hpp>
 #include <fit/always.hpp>
+#include <fit/detail/join.hpp>
 
 #define FIT_DECLARE_ADAPTOR(adaptor, ...) \
 template<class... Fs> \
 struct adaptor ## _adaptor : __VA_ARGS__::template apply<Fs...> \
 { \
-    typedef typename __VA_ARGS__::apply<Fs...> builder_base; \
+    typedef typename FIT_JOIN(__VA_ARGS__::apply)( Fs...) builder_base; \
     FIT_INHERIT_CONSTRUCTOR(adaptor ## _adaptor, builder_base) \
 }; \
 FIT_DECLARE_STATIC_VAR(adaptor, detail::make<adaptor ## _adaptor>);

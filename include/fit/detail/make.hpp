@@ -19,7 +19,7 @@ struct make
 {
 	constexpr make() noexcept
 	{}
-    template<class... Fs, class Result=FIT_JOIN(Adaptor, Fs...)>
+    template<class... Fs, class Result=FIT_JOIN(Adaptor)( Fs...)>
     constexpr Result operator()(Fs... fs) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, Fs&&...)
     {
         return Result(static_cast<Fs&&>(fs)...);

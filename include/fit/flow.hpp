@@ -109,10 +109,10 @@ struct flow_kernel : detail::compressed_pair<detail::callable_base<F1>, detail::
 }
 
 template<class F, class... Fs>
-struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor, Fs...)>
+struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor)( Fs...)>
 {
     typedef flow_adaptor fit_rewritable_tag;
-    typedef FIT_JOIN(flow_adaptor, Fs...) tail;
+    typedef FIT_JOIN(flow_adaptor)( Fs...) tail;
     typedef detail::flow_kernel<F, tail> base_type;
 
     FIT_INHERIT_DEFAULT(flow_adaptor, base_type)

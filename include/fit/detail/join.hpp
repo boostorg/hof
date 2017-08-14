@@ -35,12 +35,10 @@ struct join
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
 #define FIT_JOIN_1(...) __VA_ARGS__>::type
-#define FIT_JOIN(...) typename fit::detail::join<__VA_ARGS__ FIT_JOIN_1
+#define FIT_JOIN(...) typename fit::detail::join<__VA_ARGS__, FIT_JOIN_1
 #else
 #define FIT_JOIN_1(...) <__VA_ARGS__>
 #define FIT_JOIN(...) __VA_ARGS__ FIT_JOIN_1
-// #define FIT_JOIN(c, ...) c<__VA_ARGS__>
-
 #endif
 
 #endif

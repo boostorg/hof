@@ -12,13 +12,14 @@
 #include <fit/detail/holder.hpp>
 #include <fit/config.hpp>
 
+// *** clang ***
 #if defined(__clang__)
-#define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
-#define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) std::is_nothrow_constructible<__VA_ARGS__>::value
-// #define FIT_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
-// #define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
-// #define FIT_IS_CONVERTIBLE(...) __is_convertible_to(__VA_ARGS__)
-#define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value
+// #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
+// #define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) std::is_nothrow_constructible<__VA_ARGS__>::value
+// #define FIT_IS_CONVERTIBLE(...) std::is_convertible<__VA_ARGS__>::value
+#define FIT_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
+#define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
+#define FIT_IS_CONVERTIBLE(...) __is_convertible_to(__VA_ARGS__)
 #define FIT_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
 #define FIT_IS_CLASS(...) __is_class(__VA_ARGS__)
 #define FIT_IS_EMPTY(...) __is_empty(__VA_ARGS__)
@@ -26,6 +27,7 @@
 #define FIT_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
 #define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
 #define FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(...) __has_nothrow_copy(__VA_ARGS__)
+// *** gcc ***
 #elif defined(__GNUC__)
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
 #define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) std::is_nothrow_constructible<__VA_ARGS__>::value
@@ -42,6 +44,7 @@
 #define FIT_IS_FINAL(...) __is_final(__VA_ARGS__)
 #endif
 #define FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(...) __has_nothrow_copy(__VA_ARGS__)
+// *** other ***
 #else
 #define FIT_IS_CONSTRUCTIBLE(...) std::is_constructible<__VA_ARGS__>::value
 #define FIT_IS_NOTHROW_CONSTRUCTIBLE(...) std::is_nothrow_constructible<__VA_ARGS__>::value

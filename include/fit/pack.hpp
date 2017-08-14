@@ -101,13 +101,18 @@ struct pack_base;
 template<class T>
 struct is_copyable
 : std::integral_constant<bool, (
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
-    std::is_constructible<T, typename std::add_const<T>::type>::value ||
-#else
-    std::is_copy_constructible<T>::value || 
-#endif
-    std::is_reference<T>::value
+    FIT_IS_CONSTRUCTIBLE(T, const T&)
 )>
+{};
+
+template<class T>
+struct is_copyable<T&>
+: std::true_type
+{};
+
+template<class T>
+struct is_copyable<T&&>
+: std::true_type
 {};
 
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
@@ -178,7 +183,7 @@ struct pack_base<seq<Ns...>, Ts...>
     : base(FIT_FORWARD(X1)(x1), FIT_FORWARD(X2)(x2), FIT_FORWARD(Xs)(xs)...)
     {}
 
-    template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
+    template<class X1, typename std::enable_if<(FIT_IS_CONSTRUCTIBLE(base, X1)), int>::type = 0>
     constexpr pack_base(X1&& x1)
     FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&))
     : base(FIT_FORWARD(X1)(x1))
@@ -209,7 +214,7 @@ struct pack_base<seq<0>, T>
 {
     typedef pack_holder_base<pack_holder<T, pack_tag<seq<0>, T>>> base;
 
-    template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
+    template<class X1, typename std::enable_if<(FIT_IS_CONSTRUCTIBLE(base, X1)), int>::type = 0>
     constexpr pack_base(X1&& x1) 
     FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&))
     : base(FIT_FORWARD(X1)(x1))

@@ -99,6 +99,7 @@ struct v_fold
         return FIT_FORWARD(State)(state);
     }
 };
+
 struct compress_binary_adaptor_base
 {
     template<class... F>

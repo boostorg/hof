@@ -87,8 +87,20 @@ struct compose_adaptor_base
     template<class F, class G>
     struct base
     {
+        struct compose_failure
+        {
+            template<class Failure>
+            struct apply
+            {
+                template<class... Ts>
+                struct of
+                : Failure::template of<decltype(std::declval<G>()(std::declval<Ts>()...))>
+                {};
+            };
+        };
+
         struct failure
-        : failure_for<F, G>
+        : with_failures<failure_map<compose_failure, F>, failure_for<G>>
         {};
     };
 

@@ -80,7 +80,7 @@
 /// 
 
 #include <fit/detail/builder.hpp>
-#include <fit/detail/builder/unary_data.hpp>
+#include <fit/detail/builder/binary.hpp>
 #include <fit/reveal.hpp>
 
 namespace fit { namespace detail {
@@ -149,7 +149,12 @@ struct reverse_compress_unary_adaptor_base
 
 }
 
-FIT_DECLARE_ADAPTOR(reverse_compress, detail::unary_data_adaptor_builder<detail::reverse_compress_binary_adaptor_base, detail::reverse_compress_unary_adaptor_base>)
+template<class F, class... T>
+FIT_DECLARE_ADAPTOR_USING(reverse_compress, FIT_BUILDER_JOIN_BASE(
+    detail::binary_adaptor_builder<detail::reverse_compress_binary_adaptor_base, detail::reverse_compress_unary_adaptor_base>
+)(detail::callable_base<F>, T...))
+
+// FIT_DECLARE_ADAPTOR(reverse_compress, detail::unary_data_adaptor_builder<detail::reverse_compress_binary_adaptor_base, detail::reverse_compress_unary_adaptor_base>)
 
 } // namespace fit
 

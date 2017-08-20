@@ -17,13 +17,13 @@ struct unary_adaptor_builder
 {
     template<class F>
     struct apply
-    : callable_base<F>, Adaptor::template base<callable_base<F>>
+    : F, Adaptor::template base<F>
     {
-        typedef callable_base<F> base;
+        typedef F base;
         typedef apply fit_rewritable1_tag;
 
         template<class... Ts>
-        constexpr const callable_base<F>& base_function(Ts&&... xs) const noexcept
+        constexpr const F& base_function(Ts&&... xs) const noexcept
         {
             return always_ref(*this)(xs...);
         }
@@ -31,11 +31,11 @@ struct unary_adaptor_builder
         FIT_RETURNS_CLASS(apply);
 
         template<class... Ts>
-        constexpr FIT_SFINAE_RESULT(typename Adaptor::apply, id_<const callable_base<F>&>, id_<Ts>...) 
+        constexpr FIT_SFINAE_RESULT(typename Adaptor::apply, id_<const F&>, id_<Ts>...) 
         operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
         (
             FIT_RETURNS_CONSTRUCT(typename Adaptor::apply)()(
-                FIT_MANGLE_CAST(const callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)),
+                FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)),
                 FIT_FORWARD(Ts)(xs)...
             )
         );

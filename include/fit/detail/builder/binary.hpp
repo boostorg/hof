@@ -32,21 +32,21 @@ struct binary_adaptor_builder
     template<class F, class G>
     struct apply<F, G>
     : 
-        detail::compressed_pair<detail::callable_base<F>, detail::callable_base<G>>, 
-        BinaryAdaptor::template base<detail::callable_base<F>, detail::callable_base<G>>
+        detail::compressed_pair<F, G>, 
+        BinaryAdaptor::template base<F, G>
     {
-        typedef detail::compressed_pair<detail::callable_base<F>, detail::callable_base<G>> base;
+        typedef detail::compressed_pair<F, G> base;
         typedef apply fit_rewritable_tag;
 
         FIT_RETURNS_CLASS(apply);
 
         template<class... Ts>
-        constexpr FIT_SFINAE_RESULT(typename BinaryAdaptor::apply, id_<const callable_base<F>&>, id_<const callable_base<G>&>, id_<Ts>...) 
+        constexpr FIT_SFINAE_RESULT(typename BinaryAdaptor::apply, id_<const F&>, id_<const G&>, id_<Ts>...) 
         operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
         (
             FIT_RETURNS_CONSTRUCT(typename BinaryAdaptor::apply)()(
-                FIT_MANGLE_CAST(const callable_base<F>&)(FIT_CONST_THIS->first(xs...)),
-                FIT_MANGLE_CAST(const callable_base<G>&)(FIT_CONST_THIS->second(xs...)),
+                FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->first(xs...)),
+                FIT_MANGLE_CAST(const G&)(FIT_CONST_THIS->second(xs...)),
                 FIT_FORWARD(Ts)(xs)...
             )
         );

@@ -78,7 +78,7 @@
 /// 
 
 #include <fit/detail/builder.hpp>
-#include <fit/detail/builder/unary_data.hpp>
+#include <fit/detail/builder/binary.hpp>
 #include <fit/reveal.hpp>
 
 namespace fit { namespace detail {
@@ -147,7 +147,12 @@ struct compress_unary_adaptor_base
 
 }
 
-FIT_DECLARE_ADAPTOR(compress, detail::unary_data_adaptor_builder<detail::compress_binary_adaptor_base, detail::compress_unary_adaptor_base>)
+template<class F, class... T>
+FIT_DECLARE_ADAPTOR_USING(compress, FIT_BUILDER_JOIN_BASE(
+    detail::binary_adaptor_builder<detail::compress_binary_adaptor_base, detail::compress_unary_adaptor_base>
+)(detail::callable_base<F>, T...))
+
+// FIT_DECLARE_ADAPTOR(compress, detail::binary_adaptor_builder<detail::compress_binary_adaptor_base, detail::compress_unary_adaptor_base>)
 
 } // namespace fit
 

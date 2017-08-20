@@ -33,13 +33,16 @@ struct compute_builder_base
 #define FIT_BUILDER_JOIN_BASE(...) __VA_ARGS__::template apply FIT_BUILDER_JOIN_BASE_1
 #endif
 
-#define FIT_DECLARE_ADAPTOR(adaptor, ...) \
-template<class... Fs> \
-struct adaptor ## _adaptor : FIT_BUILDER_JOIN_BASE(__VA_ARGS__)(Fs...) \
+#define FIT_DECLARE_ADAPTOR_USING(adaptor, ...) \
+struct adaptor ## _adaptor : __VA_ARGS__ \
 { \
-    typedef typename FIT_BUILDER_JOIN_BASE(__VA_ARGS__)(Fs...) builder_base; \
+    typedef typename __VA_ARGS__ builder_base; \
     FIT_INHERIT_CONSTRUCTOR(adaptor ## _adaptor, builder_base) \
 }; \
 FIT_DECLARE_STATIC_VAR(adaptor, detail::make<adaptor ## _adaptor>);
+
+#define FIT_DECLARE_ADAPTOR(adaptor, ...) \
+template<class... Fs> \
+FIT_DECLARE_ADAPTOR_USING(adaptor, FIT_BUILDER_JOIN_BASE(__VA_ARGS__)(fit::detail::callable_base<Fs>...))
 
 #endif

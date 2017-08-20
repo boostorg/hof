@@ -75,91 +75,48 @@
 /// * [Function composition](https://en.wikipedia.org/wiki/Function_composition)
 /// 
 
-#include <fit/detail/callable_base.hpp>
-#include <fit/always.hpp>
-#include <fit/detail/delegate.hpp>
-#include <fit/detail/compressed_pair.hpp>
-#include <fit/detail/join.hpp>
-#include <tuple>
-#include <fit/detail/move.hpp>
-#include <fit/detail/make.hpp>
-#include <fit/detail/result_type.hpp>
-#include <fit/detail/static_const_var.hpp>
+#include <fit/detail/builder.hpp>
+#include <fit/detail/builder/fold.hpp>
+#include <fit/reveal.hpp>
 
 namespace fit { namespace detail {
 
-template<class F1, class F2>
-struct flow_kernel : detail::compressed_pair<detail::callable_base<F1>, detail::callable_base<F2>>, compose_function_result_type<F2, F1>
+struct flow_adaptor_base
 {
-    typedef detail::compressed_pair<detail::callable_base<F1>, detail::callable_base<F2>> base_type;
+    template<class F, class G>
+    struct base
+    {
+        struct flow_failure
+        {
+            template<class Failure>
+            struct apply
+            {
+                template<class... Ts>
+                struct of
+                : Failure::template of<decltype(std::declval<F>()(std::declval<Ts>()...))>
+                {};
+            };
+        };
 
-    FIT_INHERIT_CONSTRUCTOR(flow_kernel, base_type)
+        struct failure
+        : with_failures<failure_map<flow_failure, G>, failure_for<F>>
+        {};
+    };
 
-    FIT_RETURNS_CLASS(flow_kernel);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F2>&, result_of<const detail::callable_base<F1>&, id_<Ts>...>) 
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        FIT_MANGLE_CAST(const detail::callable_base<F2>&)(FIT_CONST_THIS->second(xs...))(
-            FIT_MANGLE_CAST(const detail::callable_base<F1>&)(FIT_CONST_THIS->first(xs...))(FIT_FORWARD(Ts)(xs)...)
-        )
-    );
+    struct apply
+    {
+        template<class F1, class F2, class... Ts>
+        constexpr FIT_SFINAE_RESULT(const F1&, result_of<const F2&, id_<Ts>...>)
+        operator()(F1&& f1, F2&& f2, Ts && ... xs) const
+        FIT_SFINAE_RETURNS
+        (
+            FIT_FORWARD(F2)(f2)(FIT_FORWARD(F1)(f1)(FIT_FORWARD(Ts)(xs)...))
+        );
+    };
 };
 }
 
-template<class F, class... Fs>
-struct flow_adaptor : detail::flow_kernel<F, FIT_JOIN(flow_adaptor)( Fs...)>
-{
-    typedef flow_adaptor fit_rewritable_tag;
-    typedef FIT_JOIN(flow_adaptor)( Fs...) tail;
-    typedef detail::flow_kernel<F, tail> base_type;
-
-    FIT_INHERIT_DEFAULT(flow_adaptor, base_type)
-
-    template<class X, class... Xs, 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(detail::callable_base<F>, X), 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(tail, Xs...)
-    >
-    constexpr flow_adaptor(X&& f1, Xs&& ... fs) 
-    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base_type, X&&, tail) && FIT_IS_NOTHROW_CONSTRUCTIBLE(tail, Xs&&...))
-    : base_type(FIT_FORWARD(X)(f1), tail(FIT_FORWARD(Xs)(fs)...))
-    {}
-
-    template<class X,
-        FIT_ENABLE_IF_CONSTRUCTIBLE(detail::callable_base<F>, X)
-    >
-    constexpr flow_adaptor(X&& f1) 
-    FIT_NOEXCEPT_CONSTRUCTIBLE(base_type, X&&)
-    : base_type(FIT_FORWARD(X)(f1))
-    {}
-};
-
-template<class F>
-struct flow_adaptor<F> : detail::callable_base<F>
-{
-    typedef flow_adaptor fit_rewritable_tag;
-    FIT_INHERIT_DEFAULT(flow_adaptor, detail::callable_base<F>)
-
-    template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, detail::callable_base<F>)>
-    constexpr flow_adaptor(X&& f1) 
-    FIT_NOEXCEPT_CONSTRUCTIBLE(detail::callable_base<F>, X&&)
-    : detail::callable_base<F>(FIT_FORWARD(X)(f1))
-    {}
-
-};
-
-template<class F1, class F2>
-struct flow_adaptor<F1, F2>
-: detail::flow_kernel<detail::callable_base<F1>, detail::callable_base<F2>>
-{
-    typedef flow_adaptor fit_rewritable_tag;
-    typedef detail::flow_kernel<detail::callable_base<F1>, detail::callable_base<F2>> base_type;
-
-    FIT_INHERIT_CONSTRUCTOR(flow_adaptor, base_type)
-};
-
-FIT_DECLARE_STATIC_VAR(flow, detail::make<flow_adaptor>);
+FIT_DECLARE_ADAPTOR(flow, detail::fold_adaptor_builder<detail::flow_adaptor_base>)
 
 } // namespace fit
 

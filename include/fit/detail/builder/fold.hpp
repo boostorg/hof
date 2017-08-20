@@ -42,8 +42,8 @@ struct fold_adaptor_builder
         FIT_RETURNS_CLASS(apply);
 
         template<class... Ts>
-        constexpr FIT_SFINAE_RESULT(typename BinaryAdaptor::apply, id_<const callable_base<F>&>, id_<const callable_base<G>&>, id_<Ts>...) 
-        operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
+        constexpr FIT_SFINAE_MANUAL_RESULT(typename BinaryAdaptor::apply, id_<const callable_base<F>&>, id_<const callable_base<G>&>, id_<Ts>...) 
+        operator()(Ts&&... xs) const FIT_SFINAE_MANUAL_RETURNS
         (
             FIT_RETURNS_CONSTRUCT(typename BinaryAdaptor::apply)()(
                 FIT_MANGLE_CAST(const callable_base<F>&)(FIT_CONST_THIS->first(xs...)),

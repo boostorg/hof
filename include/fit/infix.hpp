@@ -130,11 +130,11 @@ FIT_NOEXCEPT_CONSTRUCTIBLE(postfix_adaptor<T, F>, T&&, F&&)
 }
 
 template<class T, class F>
-constexpr postfix_adaptor<T, F> make_postfix_adaptor(T&& x, const infix_adaptor<F>& f)
-FIT_NOEXCEPT_CONSTRUCTIBLE(postfix_adaptor<T, F>, T&&, const F&)
-{
-    return postfix_adaptor<T, F>(FIT_FORWARD(T)(x), f.base_function());
-}
+constexpr auto make_postfix_adaptor(T&& x, const infix_adaptor<F>& f) FIT_RETURNS
+(
+    fit::detail::make_postfix_adaptor(FIT_FORWARD(T)(x), f.base_function())
+);
+
 
 struct infix_adaptor_builder
 {

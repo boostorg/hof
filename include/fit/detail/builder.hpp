@@ -25,8 +25,7 @@ struct compute_builder_base
 };
 
 }} // namespace fit
-// #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#if 1
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
 #define FIT_BUILDER_JOIN_BASE_1(...) __VA_ARGS__>::type
 #define FIT_BUILDER_JOIN_BASE(...) fit::detail::compute_builder_base<__VA_ARGS__, FIT_BUILDER_JOIN_BASE_1
 #else

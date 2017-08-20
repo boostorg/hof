@@ -52,6 +52,8 @@ struct fold_adaptor_builder
             )
         );
 
+        FIT_INHERIT_DEFAULT(apply, detail::callable_base<F>, detail::callable_base<G>)
+
         FIT_INHERIT_CONSTRUCTOR(apply, base)
     };
 

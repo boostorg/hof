@@ -58,75 +58,54 @@
 ///     }
 /// 
 
-#include <fit/detail/delegate.hpp>
-#include <fit/detail/result_of.hpp>
+#include <fit/detail/builder.hpp>
+#include <fit/detail/builder/fold.hpp>
 #include <fit/reveal.hpp>
-#include <fit/always.hpp>
-#include <fit/detail/move.hpp>
-#include <fit/detail/make.hpp>
-#include <fit/detail/static_const_var.hpp>
 
-namespace fit {
-// TODO: Support non-classes as well
-template<class F>
-struct indirect_adaptor : F
-{
-    typedef indirect_adaptor fit_rewritable1_tag;
-    FIT_INHERIT_CONSTRUCTOR(indirect_adaptor, F);
-
-    template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const noexcept
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    struct failure
-    : failure_for<decltype(*std::declval<F>())>
-    {};
-
-    FIT_RETURNS_CLASS(indirect_adaptor);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(decltype(*std::declval<F>()), id_<Ts>...) 
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        (*FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
-    );
-};
+namespace fit { namespace detail {
 
 template<class F>
-struct indirect_adaptor<F*>
+struct pointer_base
 {
-    typedef indirect_adaptor fit_rewritable1_tag;
-    F* f;
-    constexpr indirect_adaptor() noexcept
+    F f;
+    constexpr pointer_base() noexcept
     {}
 
-    constexpr indirect_adaptor(F* x) noexcept
+    constexpr pointer_base(F x) noexcept
     : f(x)
     {}
 
-    template<class... Ts>
-    constexpr F& base_function(Ts&&...) const noexcept
-    {
-        return *f;
-    }
-
-    struct failure
-    : failure_for<F>
-    {};
-
-    FIT_RETURNS_CLASS(indirect_adaptor);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(F, id_<Ts>...) 
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        (FIT_MANGLE_CAST(F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_FORWARD(Ts)(xs)...)
-    );
+    constexpr auto operator*() const FIT_RETURNS(*f);
 };
 
-FIT_DECLARE_STATIC_VAR(indirect, detail::make<indirect_adaptor>);
+
+
+struct indirect_adaptor_base
+{
+    template<class F>
+    struct base
+    {
+        struct failure
+        : failure_for<decltype(*std::declval<F>())>
+        {};
+    };
+
+    struct apply
+    {
+        template<class F, class... Ts>
+        constexpr FIT_SFINAE_RESULT(decltype(*std::declval<F>()), id_<Ts>...) 
+        operator()(const F& f, Ts&&... xs) const FIT_SFINAE_RETURNS
+        (
+            (*f)(FIT_FORWARD(Ts)(xs)...)
+        );
+    };
+};
+}
+
+template<class F>
+FIT_DECLARE_ADAPTOR_USING(indirect, FIT_BUILDER_JOIN_BASE(
+    detail::unary_adaptor_builder<detail::indirect_adaptor_base>
+)(typename std::conditional<std::is_pointer<F>::value, detail::pointer_base<F>, F>::type))
 
 } // namespace fit
 

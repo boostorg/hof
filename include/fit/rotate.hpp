@@ -48,53 +48,49 @@
 ///     }
 /// 
 
-#include <fit/detail/result_of.hpp>
+#include <fit/detail/builder.hpp>
+#include <fit/detail/builder/unary.hpp>
 #include <fit/reveal.hpp>
-#include <fit/detail/make.hpp>
-#include <fit/detail/static_const_var.hpp>
 
-namespace fit {
+namespace fit { namespace detail {
 
-template<class F>
-struct rotate_adaptor : detail::callable_base<F>
+struct rotate_adaptor_builder
 {
-    typedef rotate_adaptor fit_rewritable1_tag;
-    FIT_INHERIT_CONSTRUCTOR(rotate_adaptor, detail::callable_base<F>);
-
-    template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
+    template<class F>
+    struct base
     {
-        return always_ref(*this)(xs...);
-    }
-
-    struct rotate_failure
-    {
-        template<class Failure>
-        struct apply
+        struct rotate_failure
         {
-            template<class T, class... Ts>
-            struct of
-            : Failure::template of<Ts..., T>
-            {};
+            template<class Failure>
+            struct apply
+            {
+                template<class T, class... Ts>
+                struct of
+                : Failure::template of<T, Ts...>
+                {};
+            };
         };
+
+        struct failure
+        : failure_map<rotate_failure, F>
+        {};
     };
 
-    struct failure
-    : failure_map<rotate_failure, detail::callable_base<F>>
-    {};
+    struct apply
+    {
+        template<class F, class T, class... Ts>
+        constexpr FIT_SFINAE_RESULT(F&&, id_<Ts>..., id_<T>) 
+        operator()(F&& f, T&& x, Ts&&... xs) const FIT_SFINAE_RETURNS
+        (
+            FIT_FORWARD(F)(f)(FIT_FORWARD(Ts)(xs)..., FIT_FORWARD(T)(x))
+        );
+    };
 
-    FIT_RETURNS_CLASS(rotate_adaptor);
-
-    template<class T, class... Ts>
-    constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<Ts>..., id_<T>) 
-    operator()(T&& x, Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))
-            (FIT_FORWARD(Ts)(xs)..., FIT_FORWARD(T)(x))
-    );
 };
 
-FIT_DECLARE_STATIC_VAR(rotate, detail::make<rotate_adaptor>);
+}
+
+FIT_DECLARE_ADAPTOR(rotate, detail::unary_adaptor_builder<detail::rotate_adaptor_builder>)
 
 } // namespace fit
 

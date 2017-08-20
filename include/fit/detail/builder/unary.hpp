@@ -23,7 +23,7 @@ struct unary_adaptor_builder
         typedef apply fit_rewritable1_tag;
 
         template<class... Ts>
-        constexpr const callable_base<F>& base_function(Ts&&... xs) const
+        constexpr const callable_base<F>& base_function(Ts&&... xs) const noexcept
         {
             return always_ref(*this)(xs...);
         }

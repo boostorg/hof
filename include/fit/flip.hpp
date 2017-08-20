@@ -47,10 +47,6 @@
 ///     }
 /// 
 
-// #include <fit/detail/callable_base.hpp>
-// #include <fit/reveal.hpp>
-// #include <fit/detail/make.hpp>
-// #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/builder.hpp>
 #include <fit/detail/builder/unary.hpp>
 #include <fit/reveal.hpp>
@@ -94,47 +90,6 @@ struct flip_adaptor_builder
 }
 
 FIT_DECLARE_ADAPTOR(flip, detail::unary_adaptor_builder<detail::flip_adaptor_builder>)
-
-// template<class F>
-// struct flip_adaptor : detail::callable_base<F>
-// {
-//     typedef flip_adaptor fit_rewritable1_tag;
-//     FIT_INHERIT_CONSTRUCTOR(flip_adaptor, detail::callable_base<F>);
-
-//     template<class... Ts>
-//     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
-//     {
-//         return always_ref(*this)(xs...);
-//     }
-
-//     struct flip_failure
-//     {
-//         template<class Failure>
-//         struct apply
-//         {
-//             template<class T, class U, class... Ts>
-//             struct of
-//             : Failure::template of<U, T, Ts...>
-//             {};
-//         };
-//     };
-
-//     struct failure
-//     : failure_map<flip_failure, detail::callable_base<F>>
-//     {};
-
-//     FIT_RETURNS_CLASS(flip_adaptor);
-
-//     template<class T, class U, class... Ts>
-//     constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, id_<U>, id_<T>, id_<Ts>...) 
-//     operator()(T&& x, U&& y, Ts&&... xs) const FIT_SFINAE_RETURNS
-//     (
-//         (FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)))
-//             (FIT_FORWARD(U)(y), FIT_FORWARD(T)(x), FIT_FORWARD(Ts)(xs)...)
-//     );
-// };
-
-// FIT_DECLARE_STATIC_VAR(flip, detail::make<flip_adaptor>);
 
 } // namespace fit
 

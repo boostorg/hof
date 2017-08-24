@@ -32,6 +32,7 @@
 /// 
 
 #include <fit/detail/holder.hpp>
+#include <fit/detail/bare.hpp>
 #include <type_traits>
 #include <cstdint>
 
@@ -44,9 +45,9 @@ struct function_param_limit
 
 template<class F>
 struct function_param_limit<F, typename detail::holder<
-    typename std::remove_cv<typename std::remove_reference<F>::type>::type::fit_function_param_limit
+    typename detail::bare<F>::type::fit_function_param_limit
 >::type>
-: std::remove_cv<typename std::remove_reference<F>::type>::type::fit_function_param_limit
+: detail::bare<F>::type::fit_function_param_limit
 {};
 
 } // namespace fit

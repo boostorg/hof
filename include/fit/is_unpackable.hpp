@@ -36,6 +36,7 @@
 #include <fit/always.hpp>
 #include <fit/detail/static_const_var.hpp>
 #include <fit/detail/unpack_tuple.hpp>
+#include <fit/detail/bare.hpp>
 
 namespace fit {
 
@@ -46,7 +47,7 @@ struct unpack_impl_f
     template<class F, class Sequence>
     constexpr auto operator()(F&& f, Sequence&& s) const FIT_RETURNS
     (
-        fit::unpack_sequence<typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type>::
+        fit::unpack_sequence<typename detail::bare<Sequence>::type>::
                 apply(FIT_FORWARD(F)(f), FIT_FORWARD(Sequence)(s))
     );
 };
@@ -95,12 +96,12 @@ struct is_unpackable_impl<Sequence, typename detail::holder<
 template<class Sequence>
 struct is_unpackable
 : detail::is_unpackable_impl<
-    typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type
+    typename detail::bare<Sequence>::type
 >
 {
 #if FIT_CHECK_UNPACK_SEQUENCE
 typedef detail::is_unpackable_impl<
-    typename std::remove_cv<typename std::remove_reference<Sequence>::type>::type
+    typename detail::bare<Sequence>::type
 > base;
 
 typedef std::conditional<base::value, detail::is_proper_sequence<Sequence>, std::true_type> check;

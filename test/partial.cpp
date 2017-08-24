@@ -1,4 +1,5 @@
 #include <fit/partial.hpp>
+#include <fit/limit.hpp>
 #include "test.hpp"
 
 static constexpr fit::static_<fit::partial_adaptor<binary_class> > binary_partial = {};

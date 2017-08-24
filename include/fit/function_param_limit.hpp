@@ -43,8 +43,10 @@ struct function_param_limit
 {};
 
 template<class F>
-struct function_param_limit<F, typename detail::holder<typename F::fit_function_param_limit>::type>
-: F::fit_function_param_limit
+struct function_param_limit<F, typename detail::holder<
+    typename std::remove_cv<typename std::remove_reference<F>::type>::type::fit_function_param_limit
+>::type>
+: std::remove_cv<typename std::remove_reference<F>::type>::type::fit_function_param_limit
 {};
 
 } // namespace fit

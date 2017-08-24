@@ -13,6 +13,7 @@
 #include <fit/reveal.hpp>
 #include <fit/pack.hpp>
 #include <fit/always.hpp>
+#include <fit/function_param_limit.hpp>
 #include <fit/detail/move.hpp>
 #include <fit/detail/result_type.hpp>
 
@@ -113,6 +114,10 @@ struct capture_invoke : detail::compressed_pair<detail::callable_base<F>, Pack>,
             {};
         };
     };
+
+    typedef std::integral_constant<std::size_t, 
+        (function_param_limit<detail::callable_base<F>>::value - Pack::fit_function_param_limit::value)
+    > fit_function_param_limit;
 
     struct failure
     : failure_map<capture_failure, detail::callable_base<F>>

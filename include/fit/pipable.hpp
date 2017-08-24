@@ -66,19 +66,14 @@
 /// * [Extension methods](<Extension methods>)
 /// 
 
-#include <fit/conditional.hpp>
 #include <fit/pack.hpp>
-#include <fit/detail/delegate.hpp>
-#include <fit/detail/move.hpp>
-#include <fit/detail/make.hpp>
-#include <fit/detail/static_const_var.hpp>
-#include <fit/limit.hpp>
+#include <fit/detail/builder.hpp>
+#include <fit/detail/builder/partial.hpp>
+#include <fit/indirect.hpp>
+#include <fit/reveal.hpp>
 
 namespace fit { 
  
-template<class F>
-struct pipable_adaptor;
-
 namespace detail {
 
 template<class F, class Pack>
@@ -136,23 +131,29 @@ constexpr auto make_pipe_closure(F f, Pack&& p) FIT_RETURNS
     pipe_closure<F, typename std::remove_reference<Pack>::type>(FIT_RETURNS_STATIC_CAST(F&&)(f), FIT_FORWARD(Pack)(p))
 );
 
-
-template<class Derived, class F>
-struct pipe_pack
+struct pipable_adaptor_builder
 {
-    template<class... Ts>
-    constexpr const F& get_function(Ts&&...) const noexcept
+    template<class F>
+    struct base
     {
-        return static_cast<const F&>(static_cast<const Derived&>(*this));
-    }
+        struct failure
+        : failure_for<F>
+        {};
+    };
 
-    FIT_RETURNS_CLASS(pipe_pack);
-
-    template<class... Ts, class=typename std::enable_if<
-        (sizeof...(Ts) < function_param_limit<F>::value)
-    >::type>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
-    (make_pipe_closure(FIT_RETURNS_C_CAST(F&&)(FIT_CONST_THIS->get_function(xs...)), fit::pack_forward(FIT_FORWARD(Ts)(xs)...)));
+    struct apply
+    {
+        template<class F, class... Ts>
+        constexpr auto operator()(F&& f, Ts&&... xs) const 
+        FIT_RETURNS
+        (
+            fit::detail::make_pipe_closure(
+                // FIT_FORWARD(F)(f), 
+                fit::indirect(&f), 
+                fit::pack_forward(FIT_FORWARD(Ts)(xs)...)
+            )
+        );
+    };
 };
     
 template<class A, class F, class Pack>
@@ -161,26 +162,11 @@ constexpr auto operator|(A&& a, const pipe_closure<F, Pack>& p) FIT_RETURNS
 
 }
 
-template<class F>
-struct pipable_adaptor 
-: detail::basic_conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> >
-{
-    typedef detail::basic_conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> > base;
-    typedef pipable_adaptor fit_rewritable_tag;
-
-    FIT_INHERIT_CONSTRUCTOR(pipable_adaptor, base);
-
-    constexpr const detail::callable_base<F>& base_function() const noexcept
-    {
-        return *this;
-    }
-};
+FIT_DECLARE_ADAPTOR(pipable, detail::partial_adaptor_builder<detail::pipable_adaptor_builder>)
 
 template<class A, class F>
 constexpr auto operator|(A&& a, const pipable_adaptor<F>& p) FIT_RETURNS
 (p(FIT_FORWARD(A)(a)));
-
-FIT_DECLARE_STATIC_VAR(pipable, detail::make<pipable_adaptor>);
 
 namespace detail {
 

@@ -99,26 +99,10 @@ struct postfix_adaptor : F
     : F(FIT_FORWARD(XF)(fp)), x(FIT_FORWARD(X)(xp))
     {}
 
-    template<class... Ts>
-    constexpr const F& base_function(Ts&&... xs) const noexcept
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    FIT_RETURNS_CLASS(postfix_adaptor);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<Ts>...)
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_RETURNS_C_CAST(T&&)(FIT_CONST_THIS->x), FIT_FORWARD(Ts)(xs)...)
-    );
-
     template<class A>
-    constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<A>)
-    operator>(A&& a) const FIT_SFINAE_RETURNS
+    friend constexpr auto operator>(postfix_adaptor f, A&& a) FIT_RETURNS
     (
-        (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_RETURNS_C_CAST(T&&)(FIT_CONST_THIS->x), FIT_FORWARD(A)(a))
+        f(fit::move(always_ref(f)(a).x), FIT_FORWARD(A)(a))
     );
 };
 
@@ -126,7 +110,7 @@ template<class T, class F>
 constexpr postfix_adaptor<T, F> make_postfix_adaptor(T&& x, F f)
 FIT_NOEXCEPT_CONSTRUCTIBLE(postfix_adaptor<T, F>, T&&, F&&)
 {
-    return postfix_adaptor<T, F>(FIT_FORWARD(T)(x), static_cast<F&&>(f));
+    return postfix_adaptor<T, F>(FIT_FORWARD(T)(x), fit::move(f));
 }
 
 template<class T, class F>
@@ -174,7 +158,7 @@ struct infix_adaptor_builder
 FIT_DECLARE_ADAPTOR(infix, detail::unary_adaptor_builder<detail::infix_adaptor_builder>)
 
 template<class T, class F>
-constexpr auto operator<(T&& x, const infix_adaptor<F>& i) FIT_RETURNS
+constexpr auto operator<(T&& x, infix_adaptor<F> i) FIT_RETURNS
 (detail::make_postfix_adaptor(FIT_FORWARD(T)(x), fit::move(i.base_function(x))));
 
 // TODO: Operators for static_
@@ -188,14 +172,14 @@ struct static_function_wrapper;
 template<class T, class F>
 auto operator<(T&& x, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
 (
-    detail::make_postfix_adaptor(FIT_FORWARD(T)(x), fit::move(f.base_function()))
+    fit::detail::make_postfix_adaptor(FIT_FORWARD(T)(x), fit::move(f.base_function()))
 );
 }
 // This overload is needed for gcc
 template<class T, class F>
 constexpr auto operator<(T&& x, const fit::reveal_adaptor<F>& f) FIT_RETURNS
 (
-    detail::make_postfix_adaptor(FIT_FORWARD(T)(x), f)
+    fit::detail::make_postfix_adaptor(FIT_FORWARD(T)(x), f.base_function())
 );
 
 } // namespace fit

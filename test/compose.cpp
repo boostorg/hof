@@ -67,6 +67,17 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_TEST_CHECK(fit::compose(fit::identity)(3) == 3);
+    FIT_TEST_CHECK(fit::compose(fit::identity, fit::identity)(3) == 3);
+    FIT_TEST_CHECK(fit::compose(fit::identity, fit::identity, fit::identity)(3) == 3);
+
+    FIT_STATIC_TEST_CHECK(fit::compose(fit::identity)(3) == 3);
+    FIT_STATIC_TEST_CHECK(fit::compose(fit::identity, fit::identity)(3) == 3);
+    FIT_STATIC_TEST_CHECK(fit::compose(fit::identity, fit::identity, fit::identity)(3) == 3);
+}
+
+FIT_TEST_CASE()
+{
     int r = fit::compose(increment(), decrement(), increment())(3);
     FIT_TEST_CHECK(r == 4);
     FIT_STATIC_TEST_CHECK(fit::compose(increment(), decrement(), increment())(3) == 4);

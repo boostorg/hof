@@ -74,7 +74,7 @@ struct fold_adaptor_builder
         : base(FIT_FORWARD(X)(f1), tail_base(FIT_FORWARD(Xs)(fs)...))
         {}
 
-        template<class X, class... Xs, 
+        template<class X, 
             FIT_ENABLE_IF_CONSTRUCTIBLE(base, X)>
         constexpr apply(X&& f1) 
         FIT_NOEXCEPT_CONSTRUCTIBLE(base, X&&)

@@ -41,11 +41,18 @@ FIT_NOEXCEPT_CONSTRUCTIBLE(typename FIT_BUILDER_JOIN_BASE(Adaptor)(Fs...), Fs&&.
 
 }} // namespace fit
 
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
+#define FIT_ADAPTOR_BUILDER_DEFAULT_CONSTRUCTOR(C) constexpr C() {}
+#else
+#define FIT_ADAPTOR_BUILDER_DEFAULT_CONSTRUCTOR(C)
+#endif
+
 #define FIT_DECLARE_ADAPTOR_USING(adaptor, ...) \
 struct adaptor ## _adaptor : __VA_ARGS__ \
 { \
     typedef typename __VA_ARGS__ builder_base; \
     FIT_INHERIT_CONSTRUCTOR(adaptor ## _adaptor, builder_base) \
+    FIT_ADAPTOR_BUILDER_DEFAULT_CONSTRUCTOR(adaptor ## _adaptor) \
 }; \
 FIT_DECLARE_STATIC_VAR(adaptor, detail::make<adaptor ## _adaptor>);
 

@@ -62,6 +62,46 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
+    FIT_TEST_CHECK(fit::conditional(f1{}, f2{})(t1()) == 1);
+    FIT_TEST_CHECK(fit::conditional(f1{}, f2{})(t2()) == 2);
+
+    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, f2{})(t1()) == 1);
+    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, f2{})(t2()) == 2);
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f1{}, f2{}))(t1()) == 1);
+    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f1{}, f2{}))(t2()) == 2);
+
+    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f1{}, f2{}))(t1()) == 1);
+    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f1{}, f2{}))(t2()) == 2);
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t1()) == 1);
+    FIT_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t2()) == 2);
+    FIT_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t3()) == 3);
+
+    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t1()) == 1);
+    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t2()) == 2);
+    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t3()) == 3);
+}
+
+FIT_TEST_CASE()
+{
+    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t1()) == 1);
+    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t2()) == 2);
+    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t3()) == 3);
+
+    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t1()) == 1);
+    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t2()) == 2);
+    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t3()) == 3);
+}
+
+FIT_TEST_CASE()
+{
     auto f_move_local = fit::conditional(f_move1(1), f_move2(2), f_move3(3));
     STATIC_ASSERT_MOVE_ONLY(decltype(f_move_local));
     FIT_TEST_CHECK(f_move_local(t_move1()) == 1);

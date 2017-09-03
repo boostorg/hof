@@ -109,10 +109,18 @@ constexpr indirect_adaptor<const F*> make_indirect_ref(const indirect_adaptor<F*
 template<class F, class=void>
 struct fix_result
 {
+#if FIT_HAS_TEMPLATE_ALIAS
+    template<class>
+    FIT_USING(result, fix_result<F>);
+#else
     template<class>
     struct result
-    : fix_result<F>
-    {};
+    {
+        typedef fix_result<F> type;
+    };
+    typedef fix_result type;
+#endif
+
     template<class... Ts>
     struct apply
     { 
@@ -125,8 +133,17 @@ struct fix_result<F, typename holder<
     typename F::result_type
 >::type>
 {
+#if FIT_HAS_TEMPLATE_ALIAS
     template<class>
     FIT_USING(result, fix_result<F>);
+#else
+    template<class>
+    struct result
+    {
+        typedef fix_result<F> type;
+    };
+    typedef fix_result type;
+#endif
 
     template<class...>
     struct apply
@@ -137,8 +154,17 @@ struct fix_result<F, typename holder<
 
 struct make_fix_result
 {
+#if FIT_HAS_TEMPLATE_ALIAS
     template<class F>
     FIT_USING(result, fix_result<F>);
+#else
+    template<class F>
+    struct result
+    {
+        typedef fix_result<F> type;
+    };
+    typedef make_fix_result type;
+#endif
 };
 
 template<int N, class Result=make_fix_result>
@@ -168,7 +194,16 @@ struct fix_adaptor_builder
     {
         template<class F, class... Ts, 
             class Adaptor=detail::unary_adaptor_builder<
-                detail::fix_adaptor_builder<N-1, typename Result::template result<typename bare<F>::type>>
+                detail::fix_adaptor_builder<N-1, 
+                    typename Result
+#if !FIT_HAS_TEMPLATE_ALIAS
+                    ::type
+#endif
+                    ::template result<typename bare<F>::type>
+#if !FIT_HAS_TEMPLATE_ALIAS
+                    ::type
+#endif
+                >
             >
         >
         constexpr FIT_SFINAE_RESULT(F&&, id_<Ts>...) 
@@ -210,7 +245,11 @@ struct fix_adaptor_builder<0, Result>
         typedef detail::unary_adaptor_builder<detail::fix_adaptor_builder<0, Result>> adaptor;
 
         template<class F, class... Ts>
-        typename Result::template apply<decltype(fit::detail::make_adaptor<adaptor>(fit::detail::make_indirect_ref(std::declval<F>()))), Ts...>::type
+        typename Result
+#if !FIT_HAS_TEMPLATE_ALIAS
+        ::type
+#endif
+        ::template apply<decltype(fit::detail::make_adaptor<adaptor>(fit::detail::make_indirect_ref(std::declval<F>()))), Ts...>::type
         operator()(F&& f, Ts&&... xs) const
         {
             return FIT_FORWARD(F)(f)(

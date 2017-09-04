@@ -76,6 +76,7 @@
 
 #include <fit/detail/seq.hpp>
 #include <fit/detail/delegate.hpp>
+#include <fit/detail/bare.hpp>
 #include <fit/detail/remove_rvalue_reference.hpp>
 #include <fit/detail/unwrap.hpp>
 #include <fit/detail/static_const_var.hpp>
@@ -239,6 +240,10 @@ template<std::size_t... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
 : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type...
 {
+    // static_assert(
+    //     !FIT_AND_UNPACK(FIT_IS_EMPTY(typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)) || 
+    //     FIT_AND_UNPACK(FIT_IS_EMPTY(Ts)), 
+    // "Pack not empty");
     // FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
     FIT_INHERIT_DEFAULT(pack_base, Ts...);
     
@@ -316,8 +321,8 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
 template<class P1, class P2>
 struct pack_join_result 
 : pack_join_base<
-    typename std::remove_cv<typename std::remove_reference<P1>::type>::type, 
-    typename std::remove_cv<typename std::remove_reference<P2>::type>::type
+    typename bare<P1>::type, 
+    typename bare<P2>::type
 >
 {};
 

@@ -319,7 +319,7 @@ struct failures;
 template<class... Fs>
 struct with_failures
 {
-    typedef FIT_JOIN(failures, Fs...) children;
+    typedef FIT_JOIN(failures)( Fs...) children;
 };
 
 template<class Failure, class... Failures>
@@ -328,7 +328,7 @@ struct failures
     template<class Transform>
     FIT_USING(transform, with_failures<detail::transform_failures<Failure, Transform>, detail::transform_failures<Failures, Transform>...>);
 
-    template<class F, class FailureBase=FIT_JOIN(failures, Failures...)>
+    template<class F, class FailureBase=FIT_JOIN(failures)( Failures...)>
     struct overloads
     : detail::traverse_failure<F, Failure>, FailureBase::template overloads<F>
     {

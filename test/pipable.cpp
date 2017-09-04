@@ -1,5 +1,6 @@
 #include <fit/pipable.hpp>
 #include <fit/static.hpp>
+#include <fit/limit.hpp>
 #include "test.hpp"
 
 static constexpr fit::static_<fit::pipable_adaptor<binary_class> > binary_pipable = {};

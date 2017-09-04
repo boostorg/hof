@@ -77,12 +77,9 @@
 /// * [Variadic sum](<Variadic sum>)
 /// 
 
-#include <fit/detail/callable_base.hpp>
-#include <fit/detail/delegate.hpp>
-#include <fit/detail/compressed_pair.hpp>
-#include <fit/detail/move.hpp>
-#include <fit/detail/make.hpp>
-#include <fit/detail/static_const_var.hpp>
+#include <fit/detail/builder.hpp>
+#include <fit/detail/builder/binary.hpp>
+#include <fit/reveal.hpp>
 
 namespace fit { namespace detail {
 
@@ -103,68 +100,57 @@ struct v_fold
     }
 };
 
+struct compress_binary_adaptor_base
+{
+    template<class... F>
+    struct base
+    {
+        // TODO: Implement failure
+    };
+
+    struct apply 
+    {
+        template<class F, class State, class... Ts>
+        constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const F&>, id_<State>, id_<Ts>...)
+        operator()(const F& f, State state, Ts&&... xs) const FIT_SFINAE_RETURNS
+        (
+            detail::v_fold()(
+                f,
+                fit::move(state),
+                FIT_FORWARD(Ts)(xs)...
+            )
+        )
+    };
+};
+
+struct compress_unary_adaptor_base
+{
+    template<class... F>
+    struct base
+    {
+        // TODO: Implement failure
+    };
+
+    struct apply 
+    {
+        template<class F, class... Ts>
+        constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const F&>, id_<Ts>...)
+        operator()(const F& f, Ts&&... xs) const FIT_SFINAE_RETURNS
+        (
+            detail::v_fold()(
+                f,
+                FIT_FORWARD(Ts)(xs)...
+            )
+        )
+    };
+};
+
 }
 
-template<class F, class State=void>
-struct compress_adaptor
-: detail::compressed_pair<detail::callable_base<F>, State>
-{
-    typedef detail::compressed_pair<detail::callable_base<F>, State> base_type;
-    FIT_INHERIT_CONSTRUCTOR(compress_adaptor, base_type)
-
-    template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
-    {
-        return this->first(xs...);
-    }
-
-    template<class... Ts>
-    constexpr State get_state(Ts&&... xs) const noexcept
-    {
-        return this->second(xs...);
-    }
-
-    FIT_RETURNS_CLASS(compress_adaptor);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const detail::callable_base<F>&>, id_<State>, id_<Ts>...)
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        detail::v_fold()(
-            FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)), 
-            FIT_MANGLE_CAST(State)(FIT_CONST_THIS->get_state(xs...)), 
-            FIT_FORWARD(Ts)(xs)...
-        )
-    )
-};
-
-
-template<class F>
-struct compress_adaptor<F, void>
-: detail::callable_base<F>
-{
-    FIT_INHERIT_CONSTRUCTOR(compress_adaptor, detail::callable_base<F>)
-
-    template<class... Ts>
-    constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
-    {
-        return always_ref(*this)(xs...);
-    }
-
-    FIT_RETURNS_CLASS(compress_adaptor);
-
-    template<class... Ts>
-    constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const detail::callable_base<F>&>, id_<Ts>...)
-    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
-    (
-        detail::v_fold()(
-            FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)), 
-            FIT_FORWARD(Ts)(xs)...
-        )
-    )
-};
-
-FIT_DECLARE_STATIC_VAR(compress, detail::make<compress_adaptor>);
+template<class F, class... T>
+FIT_DECLARE_ADAPTOR_USING(compress, FIT_BUILDER_JOIN_BASE(
+    detail::binary_adaptor_builder<detail::compress_binary_adaptor_base, detail::compress_unary_adaptor_base>
+)(detail::callable_base<F>, T...))
 
 } // namespace fit
 

@@ -196,7 +196,7 @@ struct construct_template_f
 {
     constexpr construct_template_f() noexcept
     {}
-    template<class... Ts, class Result=FIT_JOIN(Template, typename D<Ts>::type...), 
+    template<class... Ts, class Result=FIT_JOIN(Template)( typename D<Ts>::type...), 
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, Ts&&...)
     {
@@ -216,7 +216,7 @@ struct construct_meta_f
     {};
 
     template<class... Ts, 
-        class Metafunction=FIT_JOIN(apply, Ts...), 
+        class Metafunction=FIT_JOIN(apply)( Ts...), 
         class Result=typename Metafunction::type, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, Ts&&...)
@@ -231,7 +231,7 @@ struct construct_meta_template_f
     constexpr construct_meta_template_f() noexcept
     {}
     template<class... Ts, 
-        class Metafunction=FIT_JOIN(MetafunctionTemplate, Ts...), 
+        class Metafunction=FIT_JOIN(MetafunctionTemplate)( Ts...), 
         class Result=typename Metafunction::type, 
         FIT_ENABLE_IF_CONSTRUCTIBLE(Result, Ts...)>
     constexpr Result operator()(Ts&&... xs) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, Ts&&...)

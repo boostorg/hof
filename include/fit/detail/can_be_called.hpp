@@ -11,6 +11,7 @@
 #include <fit/config.hpp>
 #include <fit/detail/and.hpp>
 #include <fit/detail/holder.hpp>
+#include <fit/detail/bare.hpp>
 #include <fit/detail/using.hpp>
 
 namespace fit { namespace detail {
@@ -41,7 +42,7 @@ struct is_callable_wrapper_fallback
     -> decltype(std::declval<F>()(std::declval<Ts>()...));
 };
 
-template<class T, class U=typename std::remove_cv<typename std::remove_reference<T>::type>::type>
+template<class T, class U=typename bare<T>::type>
 struct is_callable_wrapper_base
 : std::conditional<FIT_IS_CLASS(U) && !FIT_IS_FINAL(U), U, is_callable_wrapper_fallback<U>>
 {};

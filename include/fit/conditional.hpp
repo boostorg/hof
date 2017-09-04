@@ -81,14 +81,9 @@
 /// * [Conditional overloading](<Conditional overloading>)
 /// 
 
+#include <fit/detail/builder.hpp>
+#include <fit/detail/builder/fold.hpp>
 #include <fit/reveal.hpp>
-#include <fit/detail/compressed_pair.hpp>
-#include <fit/detail/callable_base.hpp>
-#include <fit/detail/delegate.hpp>
-#include <fit/detail/join.hpp>
-#include <fit/detail/seq.hpp>
-#include <fit/detail/make.hpp>
-#include <fit/detail/static_const_var.hpp>
 
 namespace fit {
 
@@ -150,94 +145,46 @@ constexpr const F2& which(std::false_type, const F1&, const F2& f2) noexcept
     return f2; 
 }
 
-template<class F1, class F2>
-struct conditional_kernel : compressed_pair<F1, F2>
+struct conditional_adaptor_base
 {
-    typedef compressed_pair<F1, F2> base;
-    FIT_INHERIT_CONSTRUCTOR(conditional_kernel, base)
+    template<class F, class G>
+    struct base
+    {
+        struct failure
+        : failure_for<F, G>
+        {};
+    };
 
-    template<class... Ts>
-    struct select
-    : std::conditional
-    <
-        is_callable<F1, Ts...>::value, 
-        F1,
-        F2
-    >
-    {};
+    struct apply
+    {
+        
+        template<class F1, class F2, class... Ts>
+        struct select
+        : std::conditional
+        <
+            is_callable<F1, Ts...>::value, 
+            F1,
+            F2
+        >
+        {};
 
-    FIT_RETURNS_CLASS(conditional_kernel);
-
-    template<class... Ts, class PickFirst=is_callable<F1, Ts...>>
-    constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
-    operator()(Ts && ... xs) const
-    FIT_SFINAE_RETURNS
-    (
-        detail::which(
-            FIT_RETURNS_CONSTRUCT(PickFirst)(),
-            FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...)),
-            FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))
-        )
-        (FIT_FORWARD(Ts)(xs)...)
-    );
+        template<class F1, class F2, class... Ts, class PickFirst=is_callable<F1, Ts...>>
+        constexpr FIT_SFINAE_RESULT(typename select<F1, F2, Ts...>::type, id_<Ts>...) 
+        operator()(F1&& f1, F2&& f2, Ts && ... xs) const
+        FIT_SFINAE_RETURNS
+        (
+            detail::which(
+                FIT_RETURNS_CONSTRUCT(PickFirst)(),
+                FIT_FORWARD(F1)(f1),
+                FIT_FORWARD(F2)(f2)
+            )
+            (FIT_FORWARD(Ts)(xs)...)
+        );
+    };
 };
 }
 
-template<class F, class... Fs>
-struct conditional_adaptor 
-: detail::conditional_kernel<F, FIT_JOIN(conditional_adaptor, Fs...) >
-{
-    typedef conditional_adaptor fit_rewritable_tag;
-    typedef FIT_JOIN(conditional_adaptor, Fs...) kernel_base;
-    typedef detail::conditional_kernel<F, kernel_base > base;
-
-    FIT_INHERIT_DEFAULT(conditional_adaptor, base)
-
-    template<class X, class... Xs, 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, kernel_base), 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(kernel_base, Xs...)>
-    constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
-    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X&&, kernel_base) && FIT_IS_NOTHROW_CONSTRUCTIBLE(kernel_base, Xs&&...))
-    : base(FIT_FORWARD(X)(f1), kernel_base(FIT_FORWARD(Xs)(fs)...))
-    {}
-
-    template<class X, class... Xs, 
-        FIT_ENABLE_IF_CONSTRUCTIBLE(base, X)>
-    constexpr conditional_adaptor(X&& f1) 
-    FIT_NOEXCEPT_CONSTRUCTIBLE(base, X&&)
-    : base(FIT_FORWARD(X)(f1))
-    {}
-
-    struct failure
-    : failure_for<F, Fs...>
-    {};
-};
-
-template<class F>
-struct conditional_adaptor<F> : F
-{
-    typedef conditional_adaptor fit_rewritable_tag;
-    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, F);
-
-    struct failure
-    : failure_for<F>
-    {};
-};
-
-template<class F1, class F2>
-struct conditional_adaptor<F1, F2> 
-: detail::conditional_kernel<F1, F2>
-{
-    typedef detail::conditional_kernel<F1, F2> base;
-    typedef conditional_adaptor fit_rewritable_tag;
-    FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, base);
-
-    struct failure
-    : failure_for<F1, F2>
-    {};
-};
-
-FIT_DECLARE_STATIC_VAR(conditional, detail::make<conditional_adaptor>);
+FIT_DECLARE_ADAPTOR(conditional, detail::fold_adaptor_builder<detail::conditional_adaptor_base>)
 
 } // namespace fit
 

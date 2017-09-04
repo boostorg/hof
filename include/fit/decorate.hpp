@@ -81,13 +81,10 @@
 ///     }
 /// 
 
-#include <fit/reveal.hpp>
-#include <fit/detail/delegate.hpp>
-#include <fit/detail/move.hpp>
-#include <fit/detail/make.hpp>
-#include <fit/detail/callable_base.hpp>
-#include <fit/detail/static_const_var.hpp>
+#include <fit/detail/builder.hpp>
 #include <fit/detail/compressed_pair.hpp>
+#include <fit/detail/builder/unary.hpp>
+#include <fit/reveal.hpp>
 
 namespace fit { namespace detail {
 
@@ -184,33 +181,27 @@ struct decoration
     }
 };
 
-}
-
-template<class F>
-struct decorate_adaptor : detail::callable_base<F>
+struct decorate_adaptor_builder
 {
-    typedef decorate_adaptor fit_rewritable1_tag;
-    typedef detail::callable_base<F> base;
-    FIT_INHERIT_CONSTRUCTOR(decorate_adaptor, detail::callable_base<F>)
+    template<class F>
+    struct base
+    {};
 
-    template<class... Ts>
-    constexpr const base& base_function(Ts&&... xs) const noexcept
+    struct apply
     {
-        return always_ref(*this)(xs...);
-    }
-
-    // TODO: Add predicate for constraints
-
-    template<class T>
-    constexpr detail::decoration<base, T> operator()(T x) const 
-    FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, const base&) && FIT_IS_NOTHROW_CONSTRUCTIBLE(T, T&&))
-    {
-        return detail::decoration<base, T>(this->base_function(x), static_cast<T&&>(x));
-    }
+        template<class F, class T>
+        constexpr detail::decoration<F, T> operator()(const F& f, T x) const 
+        FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(F, const F&) && FIT_IS_NOTHROW_CONSTRUCTIBLE(T, T&&))
+        {
+            return detail::decoration<F, T>(f, static_cast<T&&>(x));
+        }
+    };
 
 };
 
-FIT_DECLARE_STATIC_VAR(decorate, detail::make<decorate_adaptor>);
+}
+
+FIT_DECLARE_ADAPTOR(decorate, detail::unary_adaptor_builder<detail::decorate_adaptor_builder>)
 
 } // namespace fit
 

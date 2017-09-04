@@ -176,7 +176,7 @@ struct decoration
     FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(decorator_invoke<D, T, detail::callable_base<F>>, compressed_pair<D, T>, detail::callable_base<F>&&))
     {
         return decorator_invoke<D, T, detail::callable_base<F>>(
-            *this, static_cast<detail::callable_base<F>&&>(f)
+            *this, static_cast<F&&>(f)
         );
     }
 };

@@ -93,9 +93,39 @@ struct is_default_constructible_helper
 >::type
 {};
 
+template<class T, class Arg, class=void>
+struct is_unary_constructible_check
+: std::false_type
+{};
+
+template<class T, class Arg>
+struct is_unary_constructible_check<T, Arg, typename holder<
+    decltype(T(std::declval<Arg>()))
+>::type>
+: std::true_type
+{};
+
+template<class T, class Arg>
+struct is_unary_constructible_helper
+: std::conditional<(std::is_reference<T>::value), 
+    std::is_convertible<Arg, T>,
+    is_unary_constructible_check<T, Arg>
+>::type
+{};
+
 template<class T, class... Xs>
 struct is_constructible
 : std::is_constructible<T, Xs...>
+{};
+
+template<class T, class X>
+struct is_constructible<T, X>
+: is_unary_constructible_helper<T, X>
+// : std::integral_constant<bool, (
+//     std::is_constructible<T, X>::value ||
+//     is_unary_constructible_helper<T, X>::value ||
+//     std::is_convertible<X, T>::value
+// )>
 {};
 
 template<class T>

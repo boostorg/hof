@@ -51,7 +51,7 @@ FIT_NOEXCEPT_CONSTRUCTIBLE(typename FIT_BUILDER_JOIN_BASE(Adaptor)(Fs...), Fs&&.
 struct adaptor ## _adaptor : __VA_ARGS__ \
 { \
     typedef typename __VA_ARGS__ builder_base; \
-    FIT_INHERIT_CONSTRUCTOR(adaptor ## _adaptor, builder_base) \
+    FIT_INHERIT_CONSTRUCTOR2(adaptor ## _adaptor, builder_base) \
     FIT_ADAPTOR_BUILDER_DEFAULT_CONSTRUCTOR(adaptor ## _adaptor) \
 }; \
 FIT_DECLARE_STATIC_VAR(adaptor, detail::make<adaptor ## _adaptor>);

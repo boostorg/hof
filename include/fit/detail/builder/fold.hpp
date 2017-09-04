@@ -22,17 +22,17 @@ template<class BinaryAdaptor>
 struct fold_adaptor_builder
 {
     template<class... Fs>
-    struct apply;
+    struct adaptor;
 
 
     template<class F>
-    struct apply<F>
+    struct adaptor<F>
     : F
     {
         typedef F base;
-        typedef apply fit_rewritable1_tag;
+        typedef adaptor fit_rewritable1_tag;
 
-        FIT_INHERIT_CONSTRUCTOR(apply, base)
+        FIT_INHERIT_CONSTRUCTOR(adaptor, base)
     };
 
 #if 0
@@ -102,15 +102,15 @@ struct fold_adaptor_builder
     };
 #else
     template<class F, class G>
-    struct apply<F, G>
+    struct adaptor<F, G>
     : 
         detail::compressed_pair<F, G>, 
         BinaryAdaptor::template base<F, G>
     {
         typedef detail::compressed_pair<F, G> base;
-        typedef apply fit_rewritable_tag;
+        typedef adaptor fit_rewritable_tag;
 
-        FIT_RETURNS_CLASS(apply);
+        FIT_RETURNS_CLASS(adaptor);
 
         template<class... Ts>
         constexpr FIT_SFINAE_MANUAL_RESULT(typename BinaryAdaptor::apply, id_<const F&>, id_<const G&>, id_<Ts>...) 
@@ -123,31 +123,31 @@ struct fold_adaptor_builder
             )
         );
 
-        FIT_INHERIT_DEFAULT(apply, F, G)
+        FIT_INHERIT_DEFAULT(adaptor, F, G)
 
-        FIT_INHERIT_CONSTRUCTOR(apply, base)
+        FIT_INHERIT_CONSTRUCTOR(adaptor, base)
     };
 
     template<class F, class G, class... Fs>
-    struct apply<F, G, Fs...>
-    : apply<F, apply<G, Fs...>>
+    struct adaptor<F, G, Fs...>
+    : adaptor<F, adaptor<G, Fs...>>
     {
-        typedef apply<F, apply<G, Fs...>> base;
-        typedef apply<G, Fs...> tail_base;
+        typedef adaptor<F, adaptor<G, Fs...>> base;
+        typedef adaptor<G, Fs...> tail_base;
 
-        FIT_INHERIT_DEFAULT(apply, base)
+        FIT_INHERIT_DEFAULT(adaptor, base)
         
         template<class X, class... Xs, 
             FIT_ENABLE_IF_CONSTRUCTIBLE(base, X, tail_base), 
             FIT_ENABLE_IF_CONSTRUCTIBLE(tail_base, Xs...)>
-        constexpr apply(X&& f1, Xs&& ... fs) 
+        constexpr adaptor(X&& f1, Xs&& ... fs) 
         noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X&&, tail_base) && FIT_IS_NOTHROW_CONSTRUCTIBLE(tail_base, Xs&&...))
         : base(FIT_FORWARD(X)(f1), tail_base(FIT_FORWARD(Xs)(fs)...))
         {}
 
         template<class X, 
             FIT_ENABLE_IF_CONSTRUCTIBLE(base, X)>
-        constexpr apply(X&& f1) 
+        constexpr adaptor(X&& f1) 
         FIT_NOEXCEPT_CONSTRUCTIBLE(base, X&&)
         : base(FIT_FORWARD(X)(f1))
         {}

@@ -18,27 +18,27 @@ template<class BinaryAdaptor, class UnaryAdaptor=void>
 struct binary_adaptor_builder
 {
     template<class... Fs>
-    struct apply;
+    struct adaptor;
 
     template<class F>
-    struct apply<F>
-    : unary_adaptor_builder<UnaryAdaptor>::template apply<F>
+    struct adaptor<F>
+    : unary_adaptor_builder<UnaryAdaptor>::template adaptor<F>
     {
-        typedef typename unary_adaptor_builder<UnaryAdaptor>::template apply<F> base;
+        typedef typename unary_adaptor_builder<UnaryAdaptor>::template adaptor<F> base;
 
-        FIT_INHERIT_CONSTRUCTOR(apply, base)
+        FIT_INHERIT_CONSTRUCTOR(adaptor, base)
     };
 
     template<class F, class G>
-    struct apply<F, G>
+    struct adaptor<F, G>
     : 
         detail::compressed_pair<F, G>, 
         BinaryAdaptor::template base<F, G>
     {
         typedef detail::compressed_pair<F, G> base;
-        typedef apply fit_rewritable_tag;
+        typedef adaptor fit_rewritable_tag;
 
-        FIT_RETURNS_CLASS(apply);
+        FIT_RETURNS_CLASS(adaptor);
 
         template<class... Ts>
         constexpr FIT_SFINAE_RESULT(typename BinaryAdaptor::apply, id_<const F&>, id_<const G&>, id_<Ts>...) 
@@ -51,7 +51,7 @@ struct binary_adaptor_builder
             )
         );
 
-        FIT_INHERIT_CONSTRUCTOR(apply, base)
+        FIT_INHERIT_CONSTRUCTOR(adaptor, base)
     };
 };
 

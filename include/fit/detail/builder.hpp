@@ -21,7 +21,7 @@
 #define FIT_BUILDER_JOIN_BASE(...) fit::detail::compute_builder_base<__VA_ARGS__, FIT_BUILDER_JOIN_BASE_1
 #else
 #define FIT_BUILDER_JOIN_BASE_1(...) <__VA_ARGS__>
-#define FIT_BUILDER_JOIN_BASE(...) __VA_ARGS__::template apply FIT_BUILDER_JOIN_BASE_1
+#define FIT_BUILDER_JOIN_BASE(...) __VA_ARGS__::template adaptor FIT_BUILDER_JOIN_BASE_1
 #endif
 
 namespace fit { namespace detail {
@@ -29,7 +29,7 @@ namespace fit { namespace detail {
 template<class T, class... Ts>
 struct compute_builder_base
 {
-    typedef typename T::template apply<Ts...> type;
+    typedef typename T::template adaptor<Ts...> type;
 };
 
 template<class Adaptor, class... Fs>

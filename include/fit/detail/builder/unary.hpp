@@ -16,11 +16,11 @@ template<class Adaptor>
 struct unary_adaptor_builder
 {
     template<class F>
-    struct apply
+    struct adaptor
     : F, Adaptor::template base<F>
     {
         typedef F base;
-        typedef apply fit_rewritable1_tag;
+        typedef adaptor fit_rewritable1_tag;
 
         template<class... Ts>
         constexpr const F& base_function(Ts&&... xs) const noexcept
@@ -28,7 +28,7 @@ struct unary_adaptor_builder
             return always_ref(*this)(xs...);
         }
 
-        FIT_RETURNS_CLASS(apply);
+        FIT_RETURNS_CLASS(adaptor);
 
         template<class... Ts>
         constexpr FIT_SFINAE_RESULT(typename Adaptor::apply, id_<const F&>, id_<Ts>...) 
@@ -40,7 +40,7 @@ struct unary_adaptor_builder
             )
         );
 
-        FIT_INHERIT_CONSTRUCTOR(apply, base)
+        FIT_INHERIT_CONSTRUCTOR(adaptor, base)
     };
 };
 

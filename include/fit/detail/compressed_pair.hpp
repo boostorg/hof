@@ -89,7 +89,11 @@ struct compressed_pair<First, Second>
     template<class Base, class... Xs>
     constexpr const Base& get_alias_base(Xs&&... xs) const noexcept
     {
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+        return static_cast<const Base&>(*this);
+#else
         return always_ref(*this)(xs...);
+#endif
     }
 
     template<class... Xs>

@@ -27,6 +27,12 @@ struct pack_transform_f
 FIT_STATIC_FUNCTION(tuple_transform) = tuple_transform_f{};
 // FIT_STATIC_FUNCTION(pack_transform) = pack_transform_f{};
 
+#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+#define TUPLE_TRANSFORM_STATIC_CHECK(...)
+#else
+#define TUPLE_TRANSFORM_STATIC_CHECK FIT_STATIC_TEST_CHECK
+
+#endif
 
 FIT_TEST_CASE()
 {
@@ -37,12 +43,12 @@ FIT_TEST_CASE()
 
 FIT_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(tuple_transform(std::make_tuple(1, 2), fit::_1 * fit::_1) == std::make_tuple(1, 4));
+    TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(std::make_tuple(1, 2), fit::_1 * fit::_1) == std::make_tuple(1, 4));
 }
 
 #define TUPLE_TRANSFORM_CHECK_ID(x) \
 FIT_TEST_CHECK(tuple_transform(x, fit::identity) == x); \
-FIT_STATIC_TEST_CHECK(tuple_transform(x, fit::identity) == x);
+TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(x, fit::identity) == x);
 
 FIT_TEST_CASE()
 {
@@ -61,7 +67,7 @@ FIT_TEST_CASE()
 
 #define TUPLE_TRANSFORM_CHECK_COMPOSE(x, f, g) \
 FIT_TEST_CHECK(tuple_transform(x, fit::compose(f, g)) == tuple_transform(tuple_transform(x, g), f)); \
-FIT_STATIC_TEST_CHECK(tuple_transform(x, fit::compose(f, g)) == tuple_transform(tuple_transform(x, g), f));
+TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(x, fit::compose(f, g)) == tuple_transform(tuple_transform(x, g), f));
 
 FIT_TEST_CASE()
 {

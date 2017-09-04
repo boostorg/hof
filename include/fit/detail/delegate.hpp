@@ -65,7 +65,7 @@
     constexpr_ C(FitXs&&... fit_xs) \
     FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
     : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {} \
-    template<class FitX> \
+    template<class FitX, class=typename std::enable_if<(!FIT_IS_BASE_OF(C, typename fit::detail::bare<FitX>::type))>::type> \
     constexpr_ C(FitX&& fit_x) \
     FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitX&&) \
     : var((FitX&&)fit::forward<FitX>(fit_x)) {} \

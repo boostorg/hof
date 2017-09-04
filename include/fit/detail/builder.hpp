@@ -58,6 +58,6 @@ FIT_DECLARE_STATIC_VAR(adaptor, detail::make<adaptor ## _adaptor>);
 
 #define FIT_DECLARE_ADAPTOR(adaptor, ...) \
 template<class... Fs> \
-FIT_DECLARE_ADAPTOR_USING(adaptor, FIT_BUILDER_JOIN_BASE(__VA_ARGS__)(fit::detail::callable_base<Fs>...))
+FIT_DECLARE_ADAPTOR_USING(adaptor, FIT_BUILDER_JOIN_BASE(__VA_ARGS__)(FIT_CALLABLE_BASE(Fs)...))
 
 #endif

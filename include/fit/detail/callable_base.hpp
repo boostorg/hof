@@ -44,7 +44,9 @@ struct callable_base_type
 #if FIT_HAS_TEMPLATE_ALIAS
 template<class F>
 using callable_base = typename callable_base_type<F>::type;
+#define FIT_CALLABLE_BASE(F) fit::detail::callable_base<F>
 #else
+#define FIT_CALLABLE_BASE(F) typename fit::detail::callable_base_type<F>::type
 template<class F>
 struct callable_base
 : callable_base_type<F>::type

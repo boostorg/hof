@@ -40,13 +40,13 @@ struct and_<>
 : std::true_type
 {};
 
-#define FIT_AND_UNPACK(Bs) (fit::detail::and_c(Bs...))
+#define FIT_AND_UNPACK(...) (fit::detail::and_c(__VA_ARGS__...))
 #else
 template<bool...> struct bool_seq {};
 template<class... Ts>
 FIT_USING(and_, std::is_same<bool_seq<Ts::value...>, bool_seq<(Ts::value, true)...>>);
 
-#define FIT_AND_UNPACK(Bs) FIT_IS_BASE_OF(fit::detail::bool_seq<Bs...>, fit::detail::bool_seq<(Bs || true)...>)
+#define FIT_AND_UNPACK(...) FIT_IS_BASE_OF(fit::detail::bool_seq<__VA_ARGS__...>, fit::detail::bool_seq<(__VA_ARGS__ || true)...>)
 
 #endif
 

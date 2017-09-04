@@ -240,6 +240,10 @@ template<std::size_t... Ns, class... Ts>
 struct pack_base<seq<Ns...>, Ts...>
 : pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type...
 {
+    // static_assert(
+    //     !FIT_AND_UNPACK(FIT_IS_EMPTY(typename pack_holder<Ts, pack_tag<seq<Ns>, Ts...>>::type)) || 
+    //     FIT_AND_UNPACK(FIT_IS_EMPTY(Ts)), 
+    // "Pack not empty");
     // FIT_INHERIT_DEFAULT(pack_base, typename std::remove_cv<typename std::remove_reference<Ts>::type>::type...);
     FIT_INHERIT_DEFAULT(pack_base, Ts...);
     

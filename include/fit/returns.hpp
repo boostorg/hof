@@ -246,4 +246,6 @@ struct check_this
 
 #define FIT_AUTO_FORWARD(...) FIT_RETURNS_STATIC_CAST(decltype(__VA_ARGS__))(__VA_ARGS__)
 
+#define FIT_SIMPLE_RETURNS(...) { return (__VA_ARGS__); }
+
 #endif

@@ -12,6 +12,10 @@
 #include <fit/detail/builder/unary.hpp>
 #include <fit/detail/compressed_pair.hpp>
 
+// #include <fit/pack.hpp>
+// #include <fit/compress.hpp>
+// #include <fit/capture.hpp>
+
 namespace fit { namespace detail {
 
 template<class BinaryAdaptor>
@@ -19,6 +23,7 @@ struct fold_adaptor_builder
 {
     template<class... Fs>
     struct apply;
+
 
     template<class F>
     struct apply<F>
@@ -30,6 +35,72 @@ struct fold_adaptor_builder
         FIT_INHERIT_CONSTRUCTOR(apply, base)
     };
 
+#if 0
+    struct op
+    {
+        template<class F, class G>
+        constexpr auto
+        // FIT_SFINAE_MANUAL_RESULT(typename BinaryAdaptor::apply, id_<const F&>, id_<const G&>, id_<Ts>...) 
+        operator()(F&& f, G&& g) const FIT_SFINAE_MANUAL_RETURNS
+        (
+            fit::capture_basic(FIT_FORWARD(F)(f), FIT_FORWARD(G)(g))
+            (FIT_RETURNS_CONSTRUCT(typename BinaryAdaptor::apply)())
+            
+        );
+    };
+
+    // struct fold_op
+    // {
+    //     template<class F, class G>
+    //     constexpr auto operator()(const F& f, const G& g) const FIT_RETURNS
+    //     (
+
+    //     );
+    // };
+    template<class F, class... Fs>
+    struct apply<F, Fs...>
+    : fit::detail::pack_base<typename detail::gens<sizeof...(Fs)+1>::type, F, Fs...>
+    {
+        typedef fit::detail::pack_base<typename detail::gens<sizeof...(Fs)+1>::type, F, Fs...> base;
+        typedef apply fit_rewritable_tag;
+
+        template<class... Ts>
+        constexpr const base& base_pack(Ts&&... xs) const noexcept
+        {
+            return always_ref(*this)(xs...);
+        }
+
+        // struct unpacked
+        // {
+        //     template<class... Ts>
+        //     constexpr 
+        //     auto
+        //     // FIT_SFINAE_MANUAL_RESULT(typename BinaryAdaptor::apply, id_<const F&>, id_<const G&>, id_<Ts>...) 
+        //     operator()(const F& f, const Fs&... fs, Ts&&... xs) const FIT_RETURNS
+        //     (
+        //         fit::compress(fit::capture_forward(FIT_RETURNS_CONSTRUCT(op)()))
+        //         (f, fs...)
+        //         (FIT_FORWARD(Ts)(xs)...)
+        //     );
+        // };
+
+        FIT_RETURNS_CLASS(apply);
+
+        template<class... Ts>
+        constexpr 
+        auto
+        // FIT_SFINAE_MANUAL_RESULT(typename BinaryAdaptor::apply, id_<const F&>, id_<const G&>, id_<Ts>...) 
+        operator()(Ts&&... xs) const FIT_RETURNS
+        (
+            FIT_MANGLE_CAST(const base&)(FIT_CONST_THIS->base_pack(xs...))
+            (fit::compress(FIT_RETURNS_CONSTRUCT(op)()))
+            (FIT_FORWARD(Ts)(xs)...)
+        );
+
+        FIT_INHERIT_CONSTRUCTOR(apply, base)
+
+    };
+#else
     template<class F, class G>
     struct apply<F, G>
     : 
@@ -81,6 +152,7 @@ struct fold_adaptor_builder
         : base(FIT_FORWARD(X)(f1))
         {}
     };
+#endif
 };
 
 }} // namespace fit

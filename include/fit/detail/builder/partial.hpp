@@ -55,15 +55,15 @@ template<class UnaryAdaptor, class BinaryAdaptor=void>
 struct partial_adaptor_builder
 {
     template<class... Fs>
-    struct apply;
+    struct adaptor;
 
     template<class F>
-    struct apply<F>
-    : unary_adaptor_builder<partial_adaptor_builder_base<UnaryAdaptor>>::template apply<F>
+    struct adaptor<F>
+    : unary_adaptor_builder<partial_adaptor_builder_base<UnaryAdaptor>>::template adaptor<F>
     {
-        typedef typename unary_adaptor_builder<partial_adaptor_builder_base<UnaryAdaptor>>::template apply<F> base;
+        typedef typename unary_adaptor_builder<partial_adaptor_builder_base<UnaryAdaptor>>::template adaptor<F> base;
 
-        FIT_INHERIT_CONSTRUCTOR(apply, base)
+        FIT_INHERIT_CONSTRUCTOR(adaptor, base)
     };
 
     // template<class F, class G>

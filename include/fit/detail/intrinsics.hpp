@@ -121,11 +121,6 @@ struct is_constructible
 template<class T, class X>
 struct is_constructible<T, X>
 : is_unary_constructible_helper<T, X>
-// : std::integral_constant<bool, (
-//     std::is_constructible<T, X>::value ||
-//     is_unary_constructible_helper<T, X>::value ||
-//     std::is_convertible<X, T>::value
-// )>
 {};
 
 template<class T>

@@ -91,7 +91,11 @@ struct limit_adaptor : detail::callable_base<F>
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+        return static_cast<const detail::callable_base<F>&>(*this);
+#else
         return always_ref(*this)(xs...);
+#endif
     }
 
     FIT_RETURNS_CLASS(limit_adaptor);

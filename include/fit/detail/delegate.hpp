@@ -51,7 +51,7 @@
 //     constexpr_ C(FitXs&&... fit_xs) \
 //     FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
 //     : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {} \
-//     template<class FitX, class=decltype(T{(FitX&&)std::declval<FitX>()})> \
+//     template<class FitX> \
 //     constexpr_ C(FitX&& fit_x) \
 //     FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitX&&) \
 //     : var((FitX&&)fit::forward<FitX>(fit_x)) {} \
@@ -60,13 +60,27 @@
 //     FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
 //     : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {}
 
+#define FIT_DELGATE_PRIMITIVE_CONSTRUCTOR2(constexpr_, C, T, var) \
+    template<class... FitXs, class=typename std::enable_if<(sizeof...(FitXs) > 1)>::type> \
+    constexpr_ C(FitXs&&... fit_xs) \
+    FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
+    : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {} \
+    template<class FitX> \
+    constexpr_ C(FitX&& fit_x) \
+    FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitX&&) \
+    : var((FitX&&)fit::forward<FitX>(fit_x)) {} \
+    template<class... FitXs, class=typename std::enable_if<(sizeof...(FitXs) < 2)>::type, typename fit::detail::enable_if_constructible<C, T, FitXs...>::type = 0> \
+    constexpr_ C(FitXs&&... fit_xs) \
+    FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
+    : var((FitXs&&)fit::forward<FitXs>(fit_xs)...) {}
+
     // template<class FitX, class=typename std::enable_if<(!FIT_IS_BASE_OF(C, typename fit::detail::bare<FitX>::type))>::type> \
 
-#define FIT_DELGATE_PRIMITIVE_CONSTRUCTOR2(constexpr_, C, T, var) \
-    template<class... FitXs> \
-    constexpr_ C(FitXs... fit_xs) \
-    FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
-    : var((FitXs&&)fit::move(fit_xs)...) {}
+// #define FIT_DELGATE_PRIMITIVE_CONSTRUCTOR2(constexpr_, C, T, var) \
+//     template<class... FitXs> \
+//     constexpr_ C(FitXs... fit_xs) \
+//     FIT_NOEXCEPT_CONSTRUCTIBLE(T, FitXs&&...) \
+//     : var((FitXs&&)fit::move(fit_xs)...) {}
 
 #if FIT_NO_TYPE_PACK_EXPANSION_IN_TEMPLATE
 

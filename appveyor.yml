@@ -15,13 +15,19 @@ environment:
   - GENERATOR: "Visual Studio 14 2015"
     CONFIG: Release
 
+  - GENERATOR: "Visual Studio 14 2017"
+    CONFIG: Debug
+
+  - GENERATOR: "Visual Studio 14 2017"
+    CONFIG: Release
+
 matrix:
   fast_finish: true
 
 build_script:
  - cmd: set PATH=C:\Program Files (x86)\CMake\bin;%PATH%
- - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
- - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\vsvars32.bat"
+ # - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+ # - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\vsvars32.bat"
  - cmd: set CTEST_OUTPUT_ON_FAILURE=1
  - cmd: cmake --version
  - cmd: mkdir build

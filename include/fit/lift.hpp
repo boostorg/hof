@@ -82,7 +82,7 @@ constexpr lift_noexcept<F, NoExcept> make_lift_noexcept(F f, NoExcept)
 #if defined (_MSC_VER)
 #define FIT_LIFT(...) (FIT_STATIC_LAMBDA { FIT_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }())
 #elif defined (__clang__)
-#define FIT_LIFT(...) (make_lift_noexcept( \
+#define FIT_LIFT(...) (fit::detail::make_lift_noexcept( \
     FIT_STATIC_LAMBDA(auto&&... xs) \
     -> decltype((__VA_ARGS__)(FIT_FORWARD(decltype(xs))(xs)...)) \
     { return (__VA_ARGS__)(FIT_FORWARD(decltype(xs))(xs)...); }, \

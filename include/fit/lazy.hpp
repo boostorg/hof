@@ -100,20 +100,10 @@ struct bind_transformer
     }
 };
 
-template<class T>
-struct is_reference_wrapper
-: std::false_type
-{};
-
-template<class T>
-struct is_reference_wrapper<std::reference_wrapper<T>>
-: std::true_type
-{};
-
 struct ref_transformer
 {
-    template<class T, typename std::enable_if<is_reference_wrapper<T>::value, int>::type = 0>
-    constexpr auto operator()(T x) const 
+    template<class T>
+    constexpr auto operator()(std::reference_wrapper<T> x) const 
     FIT_SFINAE_RETURNS(always_ref(x.get()));
 };
 

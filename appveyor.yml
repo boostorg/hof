@@ -15,10 +15,10 @@ environment:
   - GENERATOR: "Visual Studio 14 2015"
     CONFIG: Release
 
-  - GENERATOR: "Visual Studio 14 2017"
+  - GENERATOR: "Visual Studio 15 2017"
     CONFIG: Debug
 
-  - GENERATOR: "Visual Studio 14 2017"
+  - GENERATOR: "Visual Studio 15 2017"
     CONFIG: Release
 
 matrix:

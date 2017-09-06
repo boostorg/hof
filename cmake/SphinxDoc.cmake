@@ -1,4 +1,5 @@
 include(CMakeParseArguments)
+include(ProcessorCount)
 
 find_program(SPHINX_EXECUTABLE NAMES sphinx-build
     HINTS
@@ -26,6 +27,7 @@ function(add_sphinx_doc SRC_DIR)
     set(multiValueArgs VARS TEMPLATE_VARS)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    ProcessorCount(N)
 
     set(ADDITIONAL_ARGS)
     foreach(VAR ${PARSE_VARS})
@@ -47,6 +49,8 @@ function(add_sphinx_doc SRC_DIR)
 
     add_custom_target(doc
         ${SPHINX_EXECUTABLE}
+        -j ${N}
+        -n
         -b html
         -d "${SPHINX_CACHE_DIR}"
         ${ADDITIONAL_ARGS}

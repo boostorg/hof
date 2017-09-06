@@ -85,6 +85,10 @@
 #include <fit/lazy.hpp>
 #include <fit/protect.hpp>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1910
+#include <fit/detail/pp.hpp>
+#endif
+
 namespace fit { namespace detail {
     template<int N>
     struct simple_placeholder
@@ -160,7 +164,30 @@ struct call
     (f(FIT_FORWARD(Ts)(xs)...));
 };
 
-#define FIT_BINARY_OP(op, name) \
+// MSVC 2017 ICEs on && and || in conxtexpr, so we fallback on bitwise operators
+#if defined(_MSC_VER) && _MSC_VER >= 1910
+#define FIT_BINARY_OP_SKIP_and_ ()
+#define FIT_BINARY_OP_SKIP_or_ ()
+
+struct and_
+{
+    template<class T, class U>
+    constexpr auto operator()(T&& x, U&& y) const 
+    noexcept(noexcept(FIT_FORWARD(T)(x) && FIT_FORWARD(U)(y)))
+    -> decltype(FIT_FORWARD(T)(x) && FIT_FORWARD(U)(y)) 
+    { return FIT_FORWARD(T)(x) & FIT_FORWARD(U)(y); }
+};
+
+struct or_
+{
+    template<class T, class U>
+    constexpr auto operator()(T&& x, U&& y) const 
+    noexcept(noexcept(FIT_FORWARD(T)(x) || FIT_FORWARD(U)(y)))
+    -> decltype(FIT_FORWARD(T)(x) || FIT_FORWARD(U)(y)) 
+    { return FIT_FORWARD(T)(x) | FIT_FORWARD(U)(y); }
+};
+
+#define FIT_BINARY_OP_IMPL(op, name) \
     struct name \
     { \
         template<class T, class U> \
@@ -170,6 +197,23 @@ struct call
         constexpr auto operator()(T&& x, U&& y) const FIT_RETURNS \
         (FIT_FORWARD(T)(x) op FIT_FORWARD(U)(y)); \
     };
+
+#define FIT_BINARY_OP(op, name) \
+    FIT_PP_IIF(FIT_PP_IS_PAREN(FIT_PP_CAT(FIT_BINARY_OP_SKIP_, name))) \
+    (FIT_PP_EMPTY, FIT_BINARY_OP_IMPL)(op, name)
+
+#else
+
+#define FIT_BINARY_OP(op, name) \
+    struct name \
+    { \
+        template<class T, class U> \
+        constexpr decltype(auto) operator()(T&& x, U&& y) const  \
+        noexcept(noexcept(FIT_FORWARD(T)(x) op FIT_FORWARD(U)(y))) \
+        { return FIT_FORWARD(T)(x) op FIT_FORWARD(U)(y); } \
+    };
+
+#endif
 
 FIT_FOREACH_BINARY_OP(FIT_BINARY_OP)
 FIT_FOREACH_ASSIGN_OP(FIT_BINARY_OP)
@@ -184,6 +228,7 @@ FIT_FOREACH_ASSIGN_OP(FIT_BINARY_OP)
 
 
 FIT_FOREACH_UNARY_OP(FIT_UNARY_OP)
+
 
 }
 
@@ -302,8 +347,11 @@ struct partial_ap
     {};
 
     template<class X>
-    constexpr auto operator()(X&& x) const FIT_RETURNS
-    (Invoker()(FIT_CONST_THIS->val, FIT_FORWARD(X)(x)));
+    constexpr FIT_SFINAE_RESULT(const Invoker&, id_<T>, id_<X>) 
+    operator()(X&& x) const FIT_SFINAE_RETURNS
+    (
+        Invoker()(FIT_CONST_THIS->val, FIT_FORWARD(X)(x))
+    );
 };
 
 template<class Invoker, class T>
@@ -319,7 +367,8 @@ struct left
     : failure_for<Op>
     {};
     template<class T, class X>
-    constexpr auto operator()(T&& val, X&& x) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const Op&, id_<T>, id_<X>) 
+    operator()(T&& val, X&& x) const FIT_SFINAE_RETURNS
     (Op()(FIT_FORWARD(T)(val), FIT_FORWARD(X)(x)));
 };
 
@@ -343,7 +392,8 @@ struct right
     {};
 
     template<class T, class X>
-    constexpr auto operator()(T&& val, X&& x) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const Op&, id_<X>, id_<T>) 
+    operator()(T&& val, X&& x) const FIT_SFINAE_RETURNS
     (Op()(FIT_FORWARD(X)(x), FIT_FORWARD(T)(val)));
 };
 

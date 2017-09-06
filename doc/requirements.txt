@@ -1,4 +1,4 @@
 sphinx>=1.5,<1.6
 # recommonmark==0.4.0
-git+https://github.com/pfultz2/recommonmark@develop --upgrade
+git+https://github.com/pfultz2/recommonmark@develop
 sphinx-boost>0.0.2

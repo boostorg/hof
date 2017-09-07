@@ -48,7 +48,15 @@
 #define FIT_PP_IS_PAREN(x) FIT_PP_IS_PAREN_CHECK(FIT_PP_IS_PAREN_PROBE x)
 #define FIT_PP_IS_PAREN_CHECK(...) FIT_PP_IS_PAREN_CHECK_N(__VA_ARGS__,0)
 #define FIT_PP_IS_PAREN_PROBE(...) ~, 1,
+#ifndef _MSC_VER
 #define FIT_PP_IS_PAREN_CHECK_N(x, n, ...) n
+#else
+// MSVC workarounds
+#define FIT_PP_IS_PAREN_CHECK_RES(x) x
+#define FIT_PP_IS_PAREN_CHECK_II(x, n, ...) n
+#define FIT_PP_IS_PAREN_CHECK_I(x) FIT_PP_IS_PAREN_CHECK_RES(FIT_PP_IS_PAREN_CHECK_II x)
+#define FIT_PP_IS_PAREN_CHECK_N(...) FIT_PP_IS_PAREN_CHECK_I((__VA_ARGS__))
+#endif
 
 //
 // FIT_PP_IS_1 is used to detect if the first token is a 1.

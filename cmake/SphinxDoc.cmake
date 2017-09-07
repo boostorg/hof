@@ -9,6 +9,10 @@ find_program(SPHINX_EXECUTABLE NAMES sphinx-build
 
 mark_as_advanced(SPHINX_EXECUTABLE)
 
+function(clean_doc_output DIR)
+    set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${DIR})
+endfunction()
+
 set(BINARY_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/sphinx/_build")
  
 # Sphinx cache with pickled ReST documents
@@ -36,6 +40,10 @@ function(add_sphinx_doc SRC_DIR)
     else()
         set(SPHINX_HTML_DIR ${SPHINX_DEFAULT_HTML_DIR} CACHE PATH "Path to html output")
     endif()
+
+    clean_doc_output(${SPHINX_HTML_DIR})
+    clean_doc_output(${SPHINX_CACHE_DIR})
+    clean_doc_output(${BINARY_BUILD_DIR})
 
     add_custom_target(doc
         ${SPHINX_EXECUTABLE}

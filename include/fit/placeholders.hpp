@@ -208,9 +208,8 @@ struct or_
     struct name \
     { \
         template<class T, class U> \
-        constexpr decltype(auto) operator()(T&& x, U&& y) const  \
-        noexcept(noexcept(FIT_FORWARD(T)(x) op FIT_FORWARD(U)(y))) \
-        { return FIT_FORWARD(T)(x) op FIT_FORWARD(U)(y); } \
+        constexpr auto operator()(T&& x, U&& y) const FIT_RETURNS \
+        (FIT_FORWARD(T)(x) op FIT_FORWARD(U)(y)); \
     };
 
 #endif

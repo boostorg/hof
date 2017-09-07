@@ -31,7 +31,7 @@ Motivation
 Requirements
 ============
 
-This requires a C++11 compiler. There are no third-party dependencies. This has been tested on clang 3.5-3.8, gcc 4.6-6.2, and Visual Studio 2015. Gcc 5.1 is not supported at all, however, gcc 5.4 is supported.
+This requires a C++11 compiler. There are no third-party dependencies. This has been tested on clang 3.5-3.8, gcc 4.6-7, and Visual Studio 2015 and 2017.
 
 Contexpr support
 ----------------

@@ -153,7 +153,7 @@ struct capture_pack : Pack
     (
         capture_invoke<F, Pack>(FIT_RETURNS_STATIC_CAST(F&&)(f), 
             FIT_RETURNS_C_CAST(Pack&&)(
-                FIT_RETURNS_STATIC_CAST(const Pack&)(*always(FIT_CONST_THIS)(f))
+                FIT_RETURNS_STATIC_CAST(const Pack&)(*fit::always(FIT_CONST_THIS)(f))
             )
         )
     );

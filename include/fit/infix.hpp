@@ -103,7 +103,7 @@ struct postfix_adaptor : F
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     FIT_RETURNS_CLASS(postfix_adaptor);
@@ -140,13 +140,13 @@ struct infix_adaptor : detail::callable_base<F>
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     template<class... Ts>
     constexpr const detail::callable_base<F>& infix_base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     FIT_RETURNS_CLASS(infix_adaptor);

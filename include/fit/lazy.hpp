@@ -104,7 +104,7 @@ struct ref_transformer
 {
     template<class T>
     constexpr auto operator()(std::reference_wrapper<T> x) const 
-    FIT_SFINAE_RETURNS(always_ref(x.get()));
+    FIT_SFINAE_RETURNS(fit::always_ref(x.get()));
 };
 
 struct id_transformer
@@ -186,7 +186,7 @@ struct lazy_invoker
         FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(xs...))(
             fit::detail::make_lazy_unpack(
                 FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)), 
-                pack_forward(FIT_FORWARD(Ts)(xs)...)
+                fit::pack_forward(FIT_FORWARD(Ts)(xs)...)
             )
         )
     );
@@ -207,7 +207,7 @@ struct lazy_nullary_invoker : F
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     FIT_RETURNS_CLASS(lazy_nullary_invoker);
@@ -236,7 +236,7 @@ struct lazy_adaptor : detail::callable_base<F>
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     FIT_RETURNS_CLASS(lazy_adaptor);

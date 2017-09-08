@@ -77,7 +77,7 @@ struct indirect_adaptor : F
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     struct failure

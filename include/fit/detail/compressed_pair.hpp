@@ -87,19 +87,19 @@ struct compressed_pair<First, Second>
     template<class Base, class... Xs>
     constexpr const Base& get_alias_base(Xs&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     template<class... Xs>
     constexpr const First& first(Xs&&... xs) const noexcept
     {
-        return alias_value(this->get_alias_base<first_base>(xs...), xs...);
+        return fit::alias_value(this->get_alias_base<first_base>(xs...), xs...);
     }
 
     template<class... Xs>
     constexpr const Second& second(Xs&&... xs) const noexcept
     {
-        return alias_value(this->get_alias_base<second_base>(xs...), xs...);
+        return fit::alias_value(this->get_alias_base<second_base>(xs...), xs...);
     }
 
 };

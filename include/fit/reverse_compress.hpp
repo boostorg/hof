@@ -150,7 +150,7 @@ struct reverse_compress_adaptor<F, void>
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     FIT_RETURNS_CLASS(reverse_compress_adaptor);

@@ -231,7 +231,7 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
     template<class... Ts>
     constexpr const detail::callable_base<Projection>& base_projection(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     FIT_INHERIT_DEFAULT(by_adaptor, detail::callable_base<Projection>)

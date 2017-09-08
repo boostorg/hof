@@ -76,7 +76,7 @@ struct result_adaptor : detail::callable_base<F>
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     template<class... Ts, class=typename std::enable_if<(fit::is_callable<F, Ts...>::value)>::type>
@@ -96,7 +96,7 @@ struct result_adaptor<void, F> : detail::callable_base<F>
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     template<class... Ts, class=typename std::enable_if<(fit::is_callable<F, Ts...>::value)>::type>

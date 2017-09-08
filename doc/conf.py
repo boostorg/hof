@@ -376,6 +376,8 @@ texinfo_documents = [
 #
 # texinfo_no_detailmenu = False
 
+nitpicky = True
+
 def insert_header(lines, f):
     for line in lines:
         yield line

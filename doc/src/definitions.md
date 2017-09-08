@@ -46,7 +46,7 @@ Some parts of the documentation provides the meaning(or equivalence) of an expre
 Signatures
 ----------
 
-All the functions are global function objects except where an explicit template parameter is required. However, the documentation still shows the traditional signature since it is much clearer. So instead of writing this:
+All the functions are global function objects except where an explicit template parameter is required on older compilers. However, the documentation still shows the traditional signature since it is much clearer. So instead of writing this:
 
 ```cpp
 struct if_f

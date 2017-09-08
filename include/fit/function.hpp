@@ -14,10 +14,20 @@
 /// Description
 /// -----------
 /// 
-/// The `FIT_STATIC_FUNCTION` macro allows initializing a function object from
-/// a `constexpr` expression. It also ensures that the function object will
-/// have a unique address across translation units. This helps to avoid ODR
-/// violations. As such, the object that is deduced is default constructed.
+
+/// The `FIT_STATIC_FUNCTION` macro allows initializing a function object from a
+/// `constexpr` expression. It uses the best practices as outlined in
+/// [N4381](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html).
+/// This includes using `const` to avoid global state, compile-time
+/// initialization of the function object to avoid the [static initialization
+/// order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order), and an
+/// external address of the function object that is the same across translation
+/// units to avoid possible One-Definition-Rule(ODR) violations.
+/// 
+/// In C++17, this achieved using the `inline` keyword. However, on older
+/// compilers it is initialized using a reference to a static member variable.
+/// The static member variable is default constructed, as such the user variable
+/// is always default constructed regardless of the expression.
 /// 
 /// By default, all functions defined with `FIT_STATIC_FUNCTION` use the
 /// [`fit::reveal`](/include/fit/reveal) adaptor to improve error messages.

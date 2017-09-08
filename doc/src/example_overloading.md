@@ -41,7 +41,7 @@ this:
         [](auto x) FIT_RETURNS(static_cast<std::ostringstream&>(std::ostringstream() << x).str())
     );
 
-So, using [`FIT_RETURNS`](/include/fit/returns) not only deduces the return type for the function, but it also constrains the function on whether the expression is valid or not either. So by writing `FIT_RETURNS(std::to_string(x))` then the first function will try to call `std::to_string` function if possible. If not, then the second function will be called. 
+So, using [`FIT_RETURNS`](/include/fit/returns) not only deduces the return type for the function, but it also constrains the function on whether the expression is valid or not. So by writing `FIT_RETURNS(std::to_string(x))` then the first function will try to call `std::to_string` function if possible. If not, then the second function will be called. 
 
 The second function still uses [`FIT_RETURNS`](/include/fit/returns), so the function will still be constrained by whether the `<<` stream operator can be used. Although it may seem unnecessary because there is not another function, however, this makes the function composable. So we could use this to define a `serialize` function that tries to call `stringify` first, otherwise it looks for the member `.serialize()`:
 
@@ -54,20 +54,20 @@ static_if
 ---------
 
 In addition, this can be used with the [`fit::if_`](/include/fit/if) decorator to create `static_if`-like
-constructs. For example, Baptiste Wicht discusses how one could write `static_if` in C++ [here](http://baptiste-wicht.com/posts/2015/07/simulate-static_if-with-c11c14.html).
+constructs on pre-C++17 compilers. For example, Baptiste Wicht discusses how one could write `static_if` in C++ [here](http://baptiste-wicht.com/posts/2015/07/simulate-static_if-with-c11c14.html).
 
 He wants to be able to write this:
 
     template<typename T>
     void decrement_kindof(T& value){
-        static_if(std::is_same<std::string, T>::value){
+        if constexpr(std::is_same<std::string, T>()){
             value.pop_back();
         } else {
             --value;
         }
     }
 
-However, that isn't possible in C++. With the Fit library one can simply write
+However, that isn't possible before C++17. With the Fit library one can simply write
 this:
 
     template<typename T>

@@ -234,7 +234,7 @@ struct unpack_sequence<simple_unpackable>
         f(1)
     );
 };
-}
+} // namespace fit
 
 FIT_TEST_CASE()
 {

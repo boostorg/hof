@@ -4,8 +4,8 @@ Decorators
 .. toctree::
     :maxdepth: 1
 
-    ../../include/fit/capture
-    ../../include/fit/if
-    ../../include/fit/limit
-    ../../include/fit/repeat
-    ../../include/fit/repeat_while
+    ../../include/boost/fit/capture
+    ../../include/boost/fit/if
+    ../../include/boost/fit/limit
+    ../../include/boost/fit/repeat
+    ../../include/boost/fit/repeat_while

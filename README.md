@@ -16,9 +16,9 @@ Fit is divided into three components:
 * Functions: These return functions that achieve a specific purpose.
 * Utilities: These are general utilities that are useful when defining or using functions
 
-Github: [http://github.com/pfultz2/Fit](http://github.com/pfultz2/Fit)
+Github: [https://github.com/pfultz2/Fit/tree/boost](https://github.com/pfultz2/Fit/tree/boost)
 
-Documentation: [http://fit.readthedocs.org](http://fit.readthedocs.org)
+Documentation: [http://pfultz2.github.io/Fit/doc/html/](http://pfultz2.github.io/Fit/doc/html/)
 
 Motivation
 ==========
@@ -36,7 +36,7 @@ This requires a C++11 compiler. There are no third-party dependencies. This has 
 Contexpr support
 ----------------
 
-Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the implementation of constexpr. However, constexpr initialization of functions is supported when using the [`FIT_STATIC_FUNCTION`](FIT_STATIC_FUNCTION) and [`FIT_STATIC_LAMBDA_FUNCTION`](FIT_STATIC_LAMBDA_FUNCTION) constructs.
+Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the implementation of constexpr. However, constexpr initialization of functions is supported when using the [`BOOST_FIT_STATIC_FUNCTION`](BOOST_FIT_STATIC_FUNCTION) and [`BOOST_FIT_STATIC_LAMBDA_FUNCTION`](BOOST_FIT_STATIC_LAMBDA_FUNCTION) constructs.
 
 Noexcept support
 ----------------

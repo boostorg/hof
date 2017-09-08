@@ -5,59 +5,59 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef FIT_GUARD_FIT_HPP
-#define FIT_GUARD_FIT_HPP
+#ifndef BOOST_FIT_GUARD_BOOST_FIT_HPP
+#define BOOST_FIT_GUARD_BOOST_FIT_HPP
 
-#include <fit/alias.hpp>
-#include <fit/always.hpp>
-#include <fit/apply_eval.hpp>
-#include <fit/apply.hpp>
-#include <fit/arg.hpp>
-#include <fit/by.hpp>
-#include <fit/capture.hpp>
-#include <fit/combine.hpp>
-#include <fit/compose.hpp>
-#include <fit/fold.hpp>
-#include <fit/conditional.hpp>
-#include <fit/construct.hpp>
-#include <fit/decay.hpp>
-#include <fit/decorate.hpp>
-#include <fit/eval.hpp>
-#include <fit/fix.hpp>
-#include <fit/flip.hpp>
-#include <fit/flow.hpp>
-#include <fit/function.hpp>
-#include <fit/identity.hpp>
-#include <fit/if.hpp>
-#include <fit/implicit.hpp>
-#include <fit/indirect.hpp>
-#include <fit/infix.hpp>
-#include <fit/is_callable.hpp>
-#include <fit/lambda.hpp>
-#include <fit/lazy.hpp>
-#include <fit/lift.hpp>
-#include <fit/limit.hpp>
-#include <fit/match.hpp>
-#include <fit/mutable.hpp>
-#include <fit/pack.hpp>
-#include <fit/partial.hpp>
-#include <fit/pipable.hpp>
-#include <fit/placeholders.hpp>
-#include <fit/protect.hpp>
-#include <fit/repeat.hpp>
-#include <fit/repeat_while.hpp>
-#include <fit/result.hpp>
-#include <fit/returns.hpp>
-#include <fit/reveal.hpp>
-#include <fit/reverse_fold.hpp>
-#include <fit/rotate.hpp>
-#include <fit/static.hpp>
-#include <fit/tap.hpp>
-#include <fit/unpack.hpp>
+#include <boost/fit/alias.hpp>
+#include <boost/fit/always.hpp>
+#include <boost/fit/apply_eval.hpp>
+#include <boost/fit/apply.hpp>
+#include <boost/fit/arg.hpp>
+#include <boost/fit/by.hpp>
+#include <boost/fit/capture.hpp>
+#include <boost/fit/combine.hpp>
+#include <boost/fit/compose.hpp>
+#include <boost/fit/fold.hpp>
+#include <boost/fit/conditional.hpp>
+#include <boost/fit/construct.hpp>
+#include <boost/fit/decay.hpp>
+#include <boost/fit/decorate.hpp>
+#include <boost/fit/eval.hpp>
+#include <boost/fit/fix.hpp>
+#include <boost/fit/flip.hpp>
+#include <boost/fit/flow.hpp>
+#include <boost/fit/function.hpp>
+#include <boost/fit/identity.hpp>
+#include <boost/fit/if.hpp>
+#include <boost/fit/implicit.hpp>
+#include <boost/fit/indirect.hpp>
+#include <boost/fit/infix.hpp>
+#include <boost/fit/is_callable.hpp>
+#include <boost/fit/lambda.hpp>
+#include <boost/fit/lazy.hpp>
+#include <boost/fit/lift.hpp>
+#include <boost/fit/limit.hpp>
+#include <boost/fit/match.hpp>
+#include <boost/fit/mutable.hpp>
+#include <boost/fit/pack.hpp>
+#include <boost/fit/partial.hpp>
+#include <boost/fit/pipable.hpp>
+#include <boost/fit/placeholders.hpp>
+#include <boost/fit/protect.hpp>
+#include <boost/fit/repeat.hpp>
+#include <boost/fit/repeat_while.hpp>
+#include <boost/fit/result.hpp>
+#include <boost/fit/returns.hpp>
+#include <boost/fit/reveal.hpp>
+#include <boost/fit/reverse_fold.hpp>
+#include <boost/fit/rotate.hpp>
+#include <boost/fit/static.hpp>
+#include <boost/fit/tap.hpp>
+#include <boost/fit/unpack.hpp>
 
 
-namespace fit {
+namespace boost { namespace fit {
 
-} // namespace fit
+}} // namespace boost::fit
 
 #endif

@@ -7,12 +7,12 @@
 
 #include "example.h"
 
-using namespace fit;
+using namespace boost::fit;
 
-FIT_STATIC_FUNCTION(simple_print) = FIT_LIFT(std::ref(std::cout) << _);
-FIT_STATIC_FUNCTION(print) = by(simple_print);
-FIT_STATIC_FUNCTION(print_lines) = by(flow(simple_print, _ << std::integral_constant<char, '\n'>{}));
-FIT_STATIC_FUNCTION(max) = fold(FIT_LIFT(std::max));
+BOOST_FIT_STATIC_FUNCTION(simple_print) = BOOST_FIT_LIFT(std::ref(std::cout) << _);
+BOOST_FIT_STATIC_FUNCTION(print) = by(simple_print);
+BOOST_FIT_STATIC_FUNCTION(print_lines) = by(flow(simple_print, _ << std::integral_constant<char, '\n'>{}));
+BOOST_FIT_STATIC_FUNCTION(max) = fold(BOOST_FIT_LIFT(std::max));
 
 int main() 
 {

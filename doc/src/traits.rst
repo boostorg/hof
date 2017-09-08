@@ -4,7 +4,7 @@ Traits
 .. toctree::
     :maxdepth: 1
     
-    ../../include/fit/function_param_limit
-    ../../include/fit/is_callable
-    ../../include/fit/is_unpackable
-    ../../include/fit/unpack_sequence
+    ../../include/boost/fit/function_param_limit
+    ../../include/boost/fit/is_callable
+    ../../include/boost/fit/is_unpackable
+    ../../include/boost/fit/unpack_sequence

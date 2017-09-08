@@ -4,7 +4,7 @@ FAQ
 #### Q: Why is `const` required for the call operator on function objects?
 
 Mutable function objects are not prohibited, they just need to be explicit by
-using the adaptor [`mutable_`](/include/fit/mutable). The main reason for this, is that it can lead to
+using the adaptor [`mutable_`](/include/boost/fit/mutable). The main reason for this, is that it can lead to
 many suprising behaviours. Many times function objects are copied by value
 everywhere. For example,
 
@@ -48,7 +48,7 @@ Instead, `constexpr` would have to be made explicit. Considering the pitfalls
 of mutable function objects, it would be better to make mutability explicit
 rather than `constexpr`.
 
-#### Q: Is the reinterpret cast in FIT_STATIC_LAMBDA undefined behaviour?
+#### Q: Is the reinterpret cast in BOOST_FIT_STATIC_LAMBDA undefined behaviour?
 
 Not really, since the objects are empty, there is no data access. There is a
 static assert to guard against this restriction.
@@ -60,7 +60,7 @@ unlikely considering that C++ will probably get constexpr lambdas and inline
 variables in the future.
 
 Alternatively, the factory pattern can be used instead of
-[`FIT_STATIC_LAMBDA_FUNCTION`](FIT_STATIC_LAMBDA_FUNCTION), which doesn't require an reinterpret cast:
+[`BOOST_FIT_STATIC_LAMBDA_FUNCTION`](BOOST_FIT_STATIC_LAMBDA_FUNCTION), which doesn't require an reinterpret cast:
 
 ```cpp
 struct sum_factory
@@ -74,5 +74,5 @@ struct sum_factory
     }
 }
 
-FIT_STATIC_FUNCTION(sum) = fit::indirect(sum_factory{});
+BOOST_FIT_STATIC_FUNCTION(sum) = boost::fit::indirect(sum_factory{});
 ```

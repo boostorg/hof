@@ -1,42 +1,42 @@
-#include <fit/always.hpp>
-#include <fit/function.hpp>
+#include <boost/fit/always.hpp>
+#include <boost/fit/function.hpp>
 #include <memory>
 #include "test.hpp"
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     static const int ten = 10;
-    FIT_STATIC_TEST_CHECK(fit::always(ten)(1,2,3,4,5) == 10);
-    FIT_TEST_CHECK( fit::always(ten)(1,2,3,4,5) == 10 );
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::always(ten)(1,2,3,4,5) == 10);
+    BOOST_FIT_TEST_CHECK( boost::fit::always(ten)(1,2,3,4,5) == 10 );
     
     int i = 10; 
-    FIT_TEST_CHECK( fit::always(std::ref(i))(1,2,3,4,5) == 10 );
-    FIT_TEST_CHECK( &fit::always(std::ref(i))(1,2,3,4,5) == &i );
+    BOOST_FIT_TEST_CHECK( boost::fit::always(std::ref(i))(1,2,3,4,5) == 10 );
+    BOOST_FIT_TEST_CHECK( &boost::fit::always(std::ref(i))(1,2,3,4,5) == &i );
 
-    fit::always()(1, 2);
-    static_assert(std::is_same<decltype(fit::always()(1, 2)), FIT_ALWAYS_VOID_RETURN>::value, "Failed");
+    boost::fit::always()(1, 2);
+    static_assert(std::is_same<decltype(boost::fit::always()(1, 2)), BOOST_FIT_ALWAYS_VOID_RETURN>::value, "Failed");
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     int i = 10; 
-    FIT_TEST_CHECK( fit::always_ref(i)(1,2,3,4,5) == 10 );
-    FIT_TEST_CHECK( &fit::always_ref(i)(1,2,3,4,5) == &i );
+    BOOST_FIT_TEST_CHECK( boost::fit::always_ref(i)(1,2,3,4,5) == 10 );
+    BOOST_FIT_TEST_CHECK( &boost::fit::always_ref(i)(1,2,3,4,5) == &i );
 }
 
-FIT_STATIC_FUNCTION(gten) = fit::always(std::integral_constant<int, 10>{});
+BOOST_FIT_STATIC_FUNCTION(gten) = boost::fit::always(std::integral_constant<int, 10>{});
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(gten(1,2,3,4,5) == 10);
-    FIT_TEST_CHECK(gten(1,2,3,4,5) == 10);
+    BOOST_FIT_STATIC_TEST_CHECK(gten(1,2,3,4,5) == 10);
+    BOOST_FIT_TEST_CHECK(gten(1,2,3,4,5) == 10);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    auto f = fit::always(10);
+    auto f = boost::fit::always(10);
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(f));
-    FIT_TEST_CHECK(f(1,2,3,4,5) == 10);
+    BOOST_FIT_TEST_CHECK(f(1,2,3,4,5) == 10);
 }
 
 struct copy_throws 
@@ -46,14 +46,14 @@ struct copy_throws
     copy_throws(copy_throws&&) noexcept {}
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    static_assert(noexcept(fit::always()()), "noexcept always");
-    static_assert(noexcept(fit::always(1)()), "noexcept always");
-    static_assert(!noexcept(fit::always(copy_throws{})()), "noexcept always");
+    static_assert(noexcept(boost::fit::always()()), "noexcept always");
+    static_assert(noexcept(boost::fit::always(1)()), "noexcept always");
+    static_assert(!noexcept(boost::fit::always(copy_throws{})()), "noexcept always");
     copy_throws ct{};
-    static_assert(!noexcept(fit::always(ct)()), "noexcept always");
-    static_assert(noexcept(fit::always(std::ref(ct))()) == FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(std::reference_wrapper<copy_throws>), "noexcept always");
-    auto ctf = fit::always(copy_throws{});
+    static_assert(!noexcept(boost::fit::always(ct)()), "noexcept always");
+    static_assert(noexcept(boost::fit::always(std::ref(ct))()) == BOOST_FIT_IS_NOTHROW_COPY_CONSTRUCTIBLE(std::reference_wrapper<copy_throws>), "noexcept always");
+    auto ctf = boost::fit::always(copy_throws{});
     static_assert(!noexcept(ctf()), "noexcept always");
 }

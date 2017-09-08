@@ -1,4 +1,4 @@
-#include <fit/lazy.hpp>
+#include <boost/fit/lazy.hpp>
 #include <memory>
 #include "test.hpp"
 
@@ -13,36 +13,36 @@ namespace std {
     {};
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     int i = 5;
 
-    static_assert(std::is_reference<decltype(fit::detail::ref_transformer()(std::ref(i))(0,0,0))>::value, "Reference wrapper failed");
-    static_assert(std::is_reference<decltype(fit::detail::pick_transformer(std::ref(i))(0,0,0))>::value, "Reference wrapper failed");
-    static_assert(std::is_reference<decltype(fit::detail::lazy_transform(std::ref(i), fit::pack_basic(0,0,0)))>::value, "Reference wrapper failed");
+    static_assert(std::is_reference<decltype(boost::fit::detail::ref_transformer()(std::ref(i))(0,0,0))>::value, "Reference wrapper failed");
+    static_assert(std::is_reference<decltype(boost::fit::detail::pick_transformer(std::ref(i))(0,0,0))>::value, "Reference wrapper failed");
+    static_assert(std::is_reference<decltype(boost::fit::detail::lazy_transform(std::ref(i), boost::fit::pack_basic(0,0,0)))>::value, "Reference wrapper failed");
 
-    FIT_TEST_CHECK(&fit::detail::ref_transformer()(std::ref(i))(0,0,0) == &i);
-    FIT_TEST_CHECK(&fit::detail::pick_transformer(std::ref(i))(0,0,0) == &i);
-    FIT_TEST_CHECK(&fit::detail::lazy_transform(std::ref(i), fit::pack_basic(0,0,0)) == &i);
+    BOOST_FIT_TEST_CHECK(&boost::fit::detail::ref_transformer()(std::ref(i))(0,0,0) == &i);
+    BOOST_FIT_TEST_CHECK(&boost::fit::detail::pick_transformer(std::ref(i))(0,0,0) == &i);
+    BOOST_FIT_TEST_CHECK(&boost::fit::detail::lazy_transform(std::ref(i), boost::fit::pack_basic(0,0,0)) == &i);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     int i = 5;
 
-    FIT_TEST_CHECK(fit::detail::id_transformer()(i)(0,0,0) == i);
-    FIT_TEST_CHECK(fit::detail::pick_transformer(i)(0,0,0) == i);
-    FIT_TEST_CHECK(fit::detail::lazy_transform(i, fit::pack_basic(0,0,0)) == i);
+    BOOST_FIT_TEST_CHECK(boost::fit::detail::id_transformer()(i)(0,0,0) == i);
+    BOOST_FIT_TEST_CHECK(boost::fit::detail::pick_transformer(i)(0,0,0) == i);
+    BOOST_FIT_TEST_CHECK(boost::fit::detail::lazy_transform(i, boost::fit::pack_basic(0,0,0)) == i);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     auto id =[](int i){ return i;};
     auto fi = std::bind(id, 5);
 
-    FIT_TEST_CHECK(fit::detail::bind_transformer()(fi)(0,0,0) == id(5));
-    FIT_TEST_CHECK(fit::detail::pick_transformer(fi)(0,0,0) == id(5));
-    FIT_TEST_CHECK(fit::detail::lazy_transform(fi, fit::pack_basic(0,0,0)) == id(5));
+    BOOST_FIT_TEST_CHECK(boost::fit::detail::bind_transformer()(fi)(0,0,0) == id(5));
+    BOOST_FIT_TEST_CHECK(boost::fit::detail::pick_transformer(fi)(0,0,0) == id(5));
+    BOOST_FIT_TEST_CHECK(boost::fit::detail::lazy_transform(fi, boost::fit::pack_basic(0,0,0)) == id(5));
 }
 
 struct f_0 {
@@ -97,45 +97,45 @@ struct Y
     void operator() (long a, long b, long c, long d) const { global_result = a + 10 * b + 100 * c + 1000 * d; }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     short i(6);
 
     int const k = 3;
 
-    FIT_TEST_CHECK( fit::lazy(Y())( std::ref(i))() == 7 );
-    FIT_TEST_CHECK( fit::lazy(Y())( std::ref(i))() == 8 );
-    FIT_TEST_CHECK( fit::lazy(Y())( i,std::placeholders::_1)(k) == 38 );
-    FIT_TEST_CHECK( fit::lazy(Y())( i,std::placeholders::_1, 9)(k) == 938 );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(Y())( std::ref(i))() == 7 );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(Y())( std::ref(i))() == 8 );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(Y())( i,std::placeholders::_1)(k) == 38 );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(Y())( i,std::placeholders::_1, 9)(k) == 938 );
 
     global_result = 0;
-    fit::lazy(Y())( i,std::placeholders::_1, 9, 4)(k);
-    FIT_TEST_CHECK( global_result == 4938 );
+    boost::fit::lazy(Y())( i,std::placeholders::_1, 9, 4)(k);
+    BOOST_FIT_TEST_CHECK( global_result == 4938 );
 
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     int const x = 1;
     int const y = 2;
 
-    FIT_TEST_CHECK( fit::lazy(f_1())( fit::lazy(f_1())(std::placeholders::_1))(x) == 1L );
-    FIT_TEST_CHECK( fit::lazy(f_1())( fit::lazy(f_2())(std::placeholders::_1, std::placeholders::_2))(x, y) == 21L );
-    FIT_TEST_CHECK( fit::lazy(f_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())(std::placeholders::_1))(x) == 11L );
-    FIT_TEST_CHECK( fit::lazy(f_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())( std::placeholders::_2))(x, y) == 21L );
-    FIT_TEST_CHECK( fit::lazy(f_1())( fit::lazy(f_0())())() == 17041L );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(f_1())( boost::fit::lazy(f_1())(std::placeholders::_1))(x) == 1L );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(f_1())( boost::fit::lazy(f_2())(std::placeholders::_1, std::placeholders::_2))(x, y) == 21L );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(f_2())( boost::fit::lazy(f_1())(std::placeholders::_1), boost::fit::lazy(f_1())(std::placeholders::_1))(x) == 11L );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(f_2())( boost::fit::lazy(f_1())(std::placeholders::_1), boost::fit::lazy(f_1())( std::placeholders::_2))(x, y) == 21L );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy(f_1())( boost::fit::lazy(f_0())())() == 17041L );
 
-    FIT_STATIC_TEST_CHECK( fit::lazy(f_1())( fit::lazy(f_1())(test_placeholder<1>()))(x) == 1L );
-    FIT_STATIC_TEST_CHECK( fit::lazy(f_1())( fit::lazy(f_2())(test_placeholder<1>(), test_placeholder<2>()))(x, y) == 21L );
-    FIT_STATIC_TEST_CHECK( fit::lazy(f_2())( fit::lazy(f_1())(test_placeholder<1>()), fit::lazy(f_1())(test_placeholder<1>()))(x) == 11L );
-    FIT_STATIC_TEST_CHECK( fit::lazy(f_2())( fit::lazy(f_1())(test_placeholder<1>()), fit::lazy(f_1())( test_placeholder<2>()))(x, y) == 21L );
-    FIT_STATIC_TEST_CHECK( fit::lazy(f_1())( fit::lazy(f_0())())() == 17041L );
+    BOOST_FIT_STATIC_TEST_CHECK( boost::fit::lazy(f_1())( boost::fit::lazy(f_1())(test_placeholder<1>()))(x) == 1L );
+    BOOST_FIT_STATIC_TEST_CHECK( boost::fit::lazy(f_1())( boost::fit::lazy(f_2())(test_placeholder<1>(), test_placeholder<2>()))(x, y) == 21L );
+    BOOST_FIT_STATIC_TEST_CHECK( boost::fit::lazy(f_2())( boost::fit::lazy(f_1())(test_placeholder<1>()), boost::fit::lazy(f_1())(test_placeholder<1>()))(x) == 11L );
+    BOOST_FIT_STATIC_TEST_CHECK( boost::fit::lazy(f_2())( boost::fit::lazy(f_1())(test_placeholder<1>()), boost::fit::lazy(f_1())( test_placeholder<2>()))(x, y) == 21L );
+    BOOST_FIT_STATIC_TEST_CHECK( boost::fit::lazy(f_1())( boost::fit::lazy(f_0())())() == 17041L );
 
-    FIT_TEST_CHECK( (fit::lazy(fv_1())( fit::lazy(f_1())(std::placeholders::_1))(x), (global_result == 1L)) );
-    FIT_TEST_CHECK( (fit::lazy(fv_1())( fit::lazy(f_2())(std::placeholders::_1, std::placeholders::_2))(x, y), (global_result == 21L)) );
-    FIT_TEST_CHECK( (fit::lazy(fv_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())(std::placeholders::_1))(x), (global_result == 11L)) );
-    FIT_TEST_CHECK( (fit::lazy(fv_2())( fit::lazy(f_1())(std::placeholders::_1), fit::lazy(f_1())( std::placeholders::_2))(x, y), (global_result == 21L)) );
-    FIT_TEST_CHECK( (fit::lazy(fv_1())( fit::lazy(f_0())())(), (global_result == 17041L)) );
+    BOOST_FIT_TEST_CHECK( (boost::fit::lazy(fv_1())( boost::fit::lazy(f_1())(std::placeholders::_1))(x), (global_result == 1L)) );
+    BOOST_FIT_TEST_CHECK( (boost::fit::lazy(fv_1())( boost::fit::lazy(f_2())(std::placeholders::_1, std::placeholders::_2))(x, y), (global_result == 21L)) );
+    BOOST_FIT_TEST_CHECK( (boost::fit::lazy(fv_2())( boost::fit::lazy(f_1())(std::placeholders::_1), boost::fit::lazy(f_1())(std::placeholders::_1))(x), (global_result == 11L)) );
+    BOOST_FIT_TEST_CHECK( (boost::fit::lazy(fv_2())( boost::fit::lazy(f_1())(std::placeholders::_1), boost::fit::lazy(f_1())( std::placeholders::_2))(x, y), (global_result == 21L)) );
+    BOOST_FIT_TEST_CHECK( (boost::fit::lazy(fv_1())( boost::fit::lazy(f_0())())(), (global_result == 17041L)) );
 }
 
 
@@ -207,181 +207,181 @@ struct V
     void g8(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8) const { g7(a1, a2, a3, a4, a5, a6, a7); g1(a8); }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
 
     X x;
 
     // 0
 
-    fit::lazy(&X::f0)(&x)();
-    fit::lazy(&X::f0)(std::ref(x))();
+    boost::fit::lazy(&X::f0)(&x)();
+    boost::fit::lazy(&X::f0)(std::ref(x))();
 
-    fit::lazy(&X::g0)(&x)();
-    fit::lazy(&X::g0)(x)();
-    fit::lazy(&X::g0)(std::ref(x))();
+    boost::fit::lazy(&X::g0)(&x)();
+    boost::fit::lazy(&X::g0)(x)();
+    boost::fit::lazy(&X::g0)(std::ref(x))();
 
     // 1
 
-    fit::lazy(&X::f1)(&x, 1)();
-    fit::lazy(&X::f1)(std::ref(x), 1)();
+    boost::fit::lazy(&X::f1)(&x, 1)();
+    boost::fit::lazy(&X::f1)(std::ref(x), 1)();
 
-    fit::lazy(&X::g1)(&x, 1)();
-    fit::lazy(&X::g1)(x, 1)();
-    fit::lazy(&X::g1)(std::ref(x), 1)();
+    boost::fit::lazy(&X::g1)(&x, 1)();
+    boost::fit::lazy(&X::g1)(x, 1)();
+    boost::fit::lazy(&X::g1)(std::ref(x), 1)();
 
     // 2
 
-    fit::lazy(&X::f2)(&x, 1, 2)();
-    fit::lazy(&X::f2)(std::ref(x), 1, 2)();
+    boost::fit::lazy(&X::f2)(&x, 1, 2)();
+    boost::fit::lazy(&X::f2)(std::ref(x), 1, 2)();
 
-    fit::lazy(&X::g2)(&x, 1, 2)();
-    fit::lazy(&X::g2)(x, 1, 2)();
-    fit::lazy(&X::g2)(std::ref(x), 1, 2)();
+    boost::fit::lazy(&X::g2)(&x, 1, 2)();
+    boost::fit::lazy(&X::g2)(x, 1, 2)();
+    boost::fit::lazy(&X::g2)(std::ref(x), 1, 2)();
 
     // 3
 
-    fit::lazy(&X::f3)(&x, 1, 2, 3)();
-    fit::lazy(&X::f3)(std::ref(x), 1, 2, 3)();
+    boost::fit::lazy(&X::f3)(&x, 1, 2, 3)();
+    boost::fit::lazy(&X::f3)(std::ref(x), 1, 2, 3)();
 
-    fit::lazy(&X::g3)(&x, 1, 2, 3)();
-    fit::lazy(&X::g3)(x, 1, 2, 3)();
-    fit::lazy(&X::g3)(std::ref(x), 1, 2, 3)();
+    boost::fit::lazy(&X::g3)(&x, 1, 2, 3)();
+    boost::fit::lazy(&X::g3)(x, 1, 2, 3)();
+    boost::fit::lazy(&X::g3)(std::ref(x), 1, 2, 3)();
 
     // 4
 
-    fit::lazy(&X::f4)(&x, 1, 2, 3, 4)();
-    fit::lazy(&X::f4)(std::ref(x), 1, 2, 3, 4)();
+    boost::fit::lazy(&X::f4)(&x, 1, 2, 3, 4)();
+    boost::fit::lazy(&X::f4)(std::ref(x), 1, 2, 3, 4)();
 
-    fit::lazy(&X::g4)(&x, 1, 2, 3, 4)();
-    fit::lazy(&X::g4)(x, 1, 2, 3, 4)();
-    fit::lazy(&X::g4)(std::ref(x), 1, 2, 3, 4)();
+    boost::fit::lazy(&X::g4)(&x, 1, 2, 3, 4)();
+    boost::fit::lazy(&X::g4)(x, 1, 2, 3, 4)();
+    boost::fit::lazy(&X::g4)(std::ref(x), 1, 2, 3, 4)();
 
     // 5
 
-    fit::lazy(&X::f5)(&x, 1, 2, 3, 4, 5)();
-    fit::lazy(&X::f5)(std::ref(x), 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&X::f5)(&x, 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&X::f5)(std::ref(x), 1, 2, 3, 4, 5)();
 
-    fit::lazy(&X::g5)(&x, 1, 2, 3, 4, 5)();
-    fit::lazy(&X::g5)(x, 1, 2, 3, 4, 5)();
-    fit::lazy(&X::g5)(std::ref(x), 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&X::g5)(&x, 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&X::g5)(x, 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&X::g5)(std::ref(x), 1, 2, 3, 4, 5)();
 
     // 6
 
-    fit::lazy(&X::f6)(&x, 1, 2, 3, 4, 5, 6)();
-    fit::lazy(&X::f6)(std::ref(x), 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&X::f6)(&x, 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&X::f6)(std::ref(x), 1, 2, 3, 4, 5, 6)();
 
-    fit::lazy(&X::g6)(&x, 1, 2, 3, 4, 5, 6)();
-    fit::lazy(&X::g6)(x, 1, 2, 3, 4, 5, 6)();
-    fit::lazy(&X::g6)(std::ref(x), 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&X::g6)(&x, 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&X::g6)(x, 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&X::g6)(std::ref(x), 1, 2, 3, 4, 5, 6)();
 
     // 7
 
-    fit::lazy(&X::f7)(&x, 1, 2, 3, 4, 5, 6, 7)();
-    fit::lazy(&X::f7)(std::ref(x), 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&X::f7)(&x, 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&X::f7)(std::ref(x), 1, 2, 3, 4, 5, 6, 7)();
 
-    fit::lazy(&X::g7)(&x, 1, 2, 3, 4, 5, 6, 7)();
-    fit::lazy(&X::g7)(x, 1, 2, 3, 4, 5, 6, 7)();
-    fit::lazy(&X::g7)(std::ref(x), 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&X::g7)(&x, 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&X::g7)(x, 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&X::g7)(std::ref(x), 1, 2, 3, 4, 5, 6, 7)();
 
     // 8
 
-    fit::lazy(&X::f8)(&x, 1, 2, 3, 4, 5, 6, 7, 8)();
-    fit::lazy(&X::f8)(std::ref(x), 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&X::f8)(&x, 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&X::f8)(std::ref(x), 1, 2, 3, 4, 5, 6, 7, 8)();
 
-    fit::lazy(&X::g8)(&x, 1, 2, 3, 4, 5, 6, 7, 8)();
-    fit::lazy(&X::g8)(x, 1, 2, 3, 4, 5, 6, 7, 8)();
-    fit::lazy(&X::g8)(std::ref(x), 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&X::g8)(&x, 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&X::g8)(x, 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&X::g8)(std::ref(x), 1, 2, 3, 4, 5, 6, 7, 8)();
 
-    FIT_TEST_CHECK( x.hash == 23558 );
+    BOOST_FIT_TEST_CHECK( x.hash == 23558 );
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     V v;
 
     // 0
 
-    fit::lazy(&V::f0)(&v)();
-    fit::lazy(&V::f0)(std::ref(v))();
+    boost::fit::lazy(&V::f0)(&v)();
+    boost::fit::lazy(&V::f0)(std::ref(v))();
 
-    fit::lazy(&V::g0)(&v)();
-    fit::lazy(&V::g0)(v)();
-    fit::lazy(&V::g0)(std::ref(v))();
+    boost::fit::lazy(&V::g0)(&v)();
+    boost::fit::lazy(&V::g0)(v)();
+    boost::fit::lazy(&V::g0)(std::ref(v))();
 
     // 1
 
-    fit::lazy(&V::f1)(&v, 1)();
-    fit::lazy(&V::f1)(std::ref(v), 1)();
+    boost::fit::lazy(&V::f1)(&v, 1)();
+    boost::fit::lazy(&V::f1)(std::ref(v), 1)();
 
-    fit::lazy(&V::g1)(&v, 1)();
-    fit::lazy(&V::g1)(v, 1)();
-    fit::lazy(&V::g1)(std::ref(v), 1)();
+    boost::fit::lazy(&V::g1)(&v, 1)();
+    boost::fit::lazy(&V::g1)(v, 1)();
+    boost::fit::lazy(&V::g1)(std::ref(v), 1)();
 
     // 2
 
-    fit::lazy(&V::f2)(&v, 1, 2)();
-    fit::lazy(&V::f2)(std::ref(v), 1, 2)();
+    boost::fit::lazy(&V::f2)(&v, 1, 2)();
+    boost::fit::lazy(&V::f2)(std::ref(v), 1, 2)();
 
-    fit::lazy(&V::g2)(&v, 1, 2)();
-    fit::lazy(&V::g2)(v, 1, 2)();
-    fit::lazy(&V::g2)(std::ref(v), 1, 2)();
+    boost::fit::lazy(&V::g2)(&v, 1, 2)();
+    boost::fit::lazy(&V::g2)(v, 1, 2)();
+    boost::fit::lazy(&V::g2)(std::ref(v), 1, 2)();
 
     // 3
 
-    fit::lazy(&V::f3)(&v, 1, 2, 3)();
-    fit::lazy(&V::f3)(std::ref(v), 1, 2, 3)();
+    boost::fit::lazy(&V::f3)(&v, 1, 2, 3)();
+    boost::fit::lazy(&V::f3)(std::ref(v), 1, 2, 3)();
 
-    fit::lazy(&V::g3)(&v, 1, 2, 3)();
-    fit::lazy(&V::g3)(v, 1, 2, 3)();
-    fit::lazy(&V::g3)(std::ref(v), 1, 2, 3)();
+    boost::fit::lazy(&V::g3)(&v, 1, 2, 3)();
+    boost::fit::lazy(&V::g3)(v, 1, 2, 3)();
+    boost::fit::lazy(&V::g3)(std::ref(v), 1, 2, 3)();
 
     // 4
 
-    fit::lazy(&V::f4)(&v, 1, 2, 3, 4)();
-    fit::lazy(&V::f4)(std::ref(v), 1, 2, 3, 4)();
+    boost::fit::lazy(&V::f4)(&v, 1, 2, 3, 4)();
+    boost::fit::lazy(&V::f4)(std::ref(v), 1, 2, 3, 4)();
 
-    fit::lazy(&V::g4)(&v, 1, 2, 3, 4)();
-    fit::lazy(&V::g4)(v, 1, 2, 3, 4)();
-    fit::lazy(&V::g4)(std::ref(v), 1, 2, 3, 4)();
+    boost::fit::lazy(&V::g4)(&v, 1, 2, 3, 4)();
+    boost::fit::lazy(&V::g4)(v, 1, 2, 3, 4)();
+    boost::fit::lazy(&V::g4)(std::ref(v), 1, 2, 3, 4)();
 
     // 5
 
-    fit::lazy(&V::f5)(&v, 1, 2, 3, 4, 5)();
-    fit::lazy(&V::f5)(std::ref(v), 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&V::f5)(&v, 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&V::f5)(std::ref(v), 1, 2, 3, 4, 5)();
 
-    fit::lazy(&V::g5)(&v, 1, 2, 3, 4, 5)();
-    fit::lazy(&V::g5)(v, 1, 2, 3, 4, 5)();
-    fit::lazy(&V::g5)(std::ref(v), 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&V::g5)(&v, 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&V::g5)(v, 1, 2, 3, 4, 5)();
+    boost::fit::lazy(&V::g5)(std::ref(v), 1, 2, 3, 4, 5)();
 
     // 6
 
-    fit::lazy(&V::f6)(&v, 1, 2, 3, 4, 5, 6)();
-    fit::lazy(&V::f6)(std::ref(v), 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&V::f6)(&v, 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&V::f6)(std::ref(v), 1, 2, 3, 4, 5, 6)();
 
-    fit::lazy(&V::g6)(&v, 1, 2, 3, 4, 5, 6)();
-    fit::lazy(&V::g6)(v, 1, 2, 3, 4, 5, 6)();
-    fit::lazy(&V::g6)(std::ref(v), 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&V::g6)(&v, 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&V::g6)(v, 1, 2, 3, 4, 5, 6)();
+    boost::fit::lazy(&V::g6)(std::ref(v), 1, 2, 3, 4, 5, 6)();
 
     // 7
 
-    fit::lazy(&V::f7)(&v, 1, 2, 3, 4, 5, 6, 7)();
-    fit::lazy(&V::f7)(std::ref(v), 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&V::f7)(&v, 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&V::f7)(std::ref(v), 1, 2, 3, 4, 5, 6, 7)();
 
-    fit::lazy(&V::g7)(&v, 1, 2, 3, 4, 5, 6, 7)();
-    fit::lazy(&V::g7)(v, 1, 2, 3, 4, 5, 6, 7)();
-    fit::lazy(&V::g7)(std::ref(v), 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&V::g7)(&v, 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&V::g7)(v, 1, 2, 3, 4, 5, 6, 7)();
+    boost::fit::lazy(&V::g7)(std::ref(v), 1, 2, 3, 4, 5, 6, 7)();
 
     // 8
 
-    fit::lazy(&V::f8)(&v, 1, 2, 3, 4, 5, 6, 7, 8)();
-    fit::lazy(&V::f8)(std::ref(v), 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&V::f8)(&v, 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&V::f8)(std::ref(v), 1, 2, 3, 4, 5, 6, 7, 8)();
 
-    fit::lazy(&V::g8)(&v, 1, 2, 3, 4, 5, 6, 7, 8)();
-    fit::lazy(&V::g8)(v, 1, 2, 3, 4, 5, 6, 7, 8)();
-    fit::lazy(&V::g8)(std::ref(v), 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&V::g8)(&v, 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&V::g8)(v, 1, 2, 3, 4, 5, 6, 7, 8)();
+    boost::fit::lazy(&V::g8)(std::ref(v), 1, 2, 3, 4, 5, 6, 7, 8)();
 
-    FIT_TEST_CHECK( v.hash == 23558 );
+    BOOST_FIT_TEST_CHECK( v.hash == 23558 );
 }
 
 struct id
@@ -392,9 +392,9 @@ struct id
     }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::lazy(id())(3)() == 3);
+    BOOST_FIT_TEST_CHECK(boost::fit::lazy(id())(3)() == 3);
 }
 
 struct deref
@@ -405,123 +405,123 @@ struct deref
     }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::lazy(deref())(std::unique_ptr<int>(new int(3)))() == 3);
+    BOOST_FIT_TEST_CHECK(boost::fit::lazy(deref())(std::unique_ptr<int>(new int(3)))() == 3);
 }
 
 void fv1( std::unique_ptr<int> p1 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
 }
 
 void fv2( std::unique_ptr<int> p1, std::unique_ptr<int> p2 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
-    FIT_TEST_CHECK( *p2 == 2 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p2 == 2 );
 }
 
 void fv3( std::unique_ptr<int> p1, std::unique_ptr<int> p2, std::unique_ptr<int> p3 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
-    FIT_TEST_CHECK( *p2 == 2 );
-    FIT_TEST_CHECK( *p3 == 3 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p2 == 2 );
+    BOOST_FIT_TEST_CHECK( *p3 == 3 );
 }
 
 void fv4( std::unique_ptr<int> p1, std::unique_ptr<int> p2, std::unique_ptr<int> p3, std::unique_ptr<int> p4 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
-    FIT_TEST_CHECK( *p2 == 2 );
-    FIT_TEST_CHECK( *p3 == 3 );
-    FIT_TEST_CHECK( *p4 == 4 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p2 == 2 );
+    BOOST_FIT_TEST_CHECK( *p3 == 3 );
+    BOOST_FIT_TEST_CHECK( *p4 == 4 );
 }
 
 void fv5( std::unique_ptr<int> p1, std::unique_ptr<int> p2, std::unique_ptr<int> p3, std::unique_ptr<int> p4, std::unique_ptr<int> p5 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
-    FIT_TEST_CHECK( *p2 == 2 );
-    FIT_TEST_CHECK( *p3 == 3 );
-    FIT_TEST_CHECK( *p4 == 4 );
-    FIT_TEST_CHECK( *p5 == 5 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p2 == 2 );
+    BOOST_FIT_TEST_CHECK( *p3 == 3 );
+    BOOST_FIT_TEST_CHECK( *p4 == 4 );
+    BOOST_FIT_TEST_CHECK( *p5 == 5 );
 }
 
 void fv6( std::unique_ptr<int> p1, std::unique_ptr<int> p2, std::unique_ptr<int> p3, std::unique_ptr<int> p4, std::unique_ptr<int> p5, std::unique_ptr<int> p6 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
-    FIT_TEST_CHECK( *p2 == 2 );
-    FIT_TEST_CHECK( *p3 == 3 );
-    FIT_TEST_CHECK( *p4 == 4 );
-    FIT_TEST_CHECK( *p5 == 5 );
-    FIT_TEST_CHECK( *p6 == 6 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p2 == 2 );
+    BOOST_FIT_TEST_CHECK( *p3 == 3 );
+    BOOST_FIT_TEST_CHECK( *p4 == 4 );
+    BOOST_FIT_TEST_CHECK( *p5 == 5 );
+    BOOST_FIT_TEST_CHECK( *p6 == 6 );
 }
 
 void fv7( std::unique_ptr<int> p1, std::unique_ptr<int> p2, std::unique_ptr<int> p3, std::unique_ptr<int> p4, std::unique_ptr<int> p5, std::unique_ptr<int> p6, std::unique_ptr<int> p7 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
-    FIT_TEST_CHECK( *p2 == 2 );
-    FIT_TEST_CHECK( *p3 == 3 );
-    FIT_TEST_CHECK( *p4 == 4 );
-    FIT_TEST_CHECK( *p5 == 5 );
-    FIT_TEST_CHECK( *p6 == 6 );
-    FIT_TEST_CHECK( *p7 == 7 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p2 == 2 );
+    BOOST_FIT_TEST_CHECK( *p3 == 3 );
+    BOOST_FIT_TEST_CHECK( *p4 == 4 );
+    BOOST_FIT_TEST_CHECK( *p5 == 5 );
+    BOOST_FIT_TEST_CHECK( *p6 == 6 );
+    BOOST_FIT_TEST_CHECK( *p7 == 7 );
 }
 
 void fv8( std::unique_ptr<int> p1, std::unique_ptr<int> p2, std::unique_ptr<int> p3, std::unique_ptr<int> p4, std::unique_ptr<int> p5, std::unique_ptr<int> p6, std::unique_ptr<int> p7, std::unique_ptr<int> p8 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
-    FIT_TEST_CHECK( *p2 == 2 );
-    FIT_TEST_CHECK( *p3 == 3 );
-    FIT_TEST_CHECK( *p4 == 4 );
-    FIT_TEST_CHECK( *p5 == 5 );
-    FIT_TEST_CHECK( *p6 == 6 );
-    FIT_TEST_CHECK( *p7 == 7 );
-    FIT_TEST_CHECK( *p8 == 8 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p2 == 2 );
+    BOOST_FIT_TEST_CHECK( *p3 == 3 );
+    BOOST_FIT_TEST_CHECK( *p4 == 4 );
+    BOOST_FIT_TEST_CHECK( *p5 == 5 );
+    BOOST_FIT_TEST_CHECK( *p6 == 6 );
+    BOOST_FIT_TEST_CHECK( *p7 == 7 );
+    BOOST_FIT_TEST_CHECK( *p8 == 8 );
 }
 
 void fv9( std::unique_ptr<int> p1, std::unique_ptr<int> p2, std::unique_ptr<int> p3, std::unique_ptr<int> p4, std::unique_ptr<int> p5, std::unique_ptr<int> p6, std::unique_ptr<int> p7, std::unique_ptr<int> p8, std::unique_ptr<int> p9 )
 {
-    FIT_TEST_CHECK( *p1 == 1 );
-    FIT_TEST_CHECK( *p2 == 2 );
-    FIT_TEST_CHECK( *p3 == 3 );
-    FIT_TEST_CHECK( *p4 == 4 );
-    FIT_TEST_CHECK( *p5 == 5 );
-    FIT_TEST_CHECK( *p6 == 6 );
-    FIT_TEST_CHECK( *p7 == 7 );
-    FIT_TEST_CHECK( *p8 == 8 );
-    FIT_TEST_CHECK( *p9 == 9 );
+    BOOST_FIT_TEST_CHECK( *p1 == 1 );
+    BOOST_FIT_TEST_CHECK( *p2 == 2 );
+    BOOST_FIT_TEST_CHECK( *p3 == 3 );
+    BOOST_FIT_TEST_CHECK( *p4 == 4 );
+    BOOST_FIT_TEST_CHECK( *p5 == 5 );
+    BOOST_FIT_TEST_CHECK( *p6 == 6 );
+    BOOST_FIT_TEST_CHECK( *p7 == 7 );
+    BOOST_FIT_TEST_CHECK( *p8 == 8 );
+    BOOST_FIT_TEST_CHECK( *p9 == 9 );
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
 
-    fit::lazy( fv1 )( std::placeholders::_1 )( std::move( p1 ) );
+    boost::fit::lazy( fv1 )( std::placeholders::_1 )( std::move( p1 ) );
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
     std::unique_ptr<int> p2( new int(2) );
 
-    fit::lazy( fv2 )( std::placeholders::_1, std::placeholders::_2 )( std::move( p1 ), std::move( p2 ) );
+    boost::fit::lazy( fv2 )( std::placeholders::_1, std::placeholders::_2 )( std::move( p1 ), std::move( p2 ) );
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
     std::unique_ptr<int> p2( new int(2) );
     std::unique_ptr<int> p3( new int(3) );
 
-    fit::lazy( fv3 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 )( std::move( p1 ), std::move( p2 ), std::move( p3 ) );
+    boost::fit::lazy( fv3 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 )( std::move( p1 ), std::move( p2 ), std::move( p3 ) );
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
     std::unique_ptr<int> p2( new int(2) );
     std::unique_ptr<int> p3( new int(3) );
     std::unique_ptr<int> p4( new int(4) );
 
-    fit::lazy( fv4 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ) );
+    boost::fit::lazy( fv4 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ) );
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
     std::unique_ptr<int> p2( new int(2) );
@@ -529,9 +529,9 @@ FIT_TEST_CASE()
     std::unique_ptr<int> p4( new int(4) );
     std::unique_ptr<int> p5( new int(5) );
 
-    fit::lazy( fv5 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ) );
+    boost::fit::lazy( fv5 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ) );
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
     std::unique_ptr<int> p2( new int(2) );
@@ -540,9 +540,9 @@ FIT_TEST_CASE()
     std::unique_ptr<int> p5( new int(5) );
     std::unique_ptr<int> p6( new int(6) );
 
-    fit::lazy( fv6 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ), std::move( p6 ) );
+    boost::fit::lazy( fv6 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ), std::move( p6 ) );
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
     std::unique_ptr<int> p2( new int(2) );
@@ -552,9 +552,9 @@ FIT_TEST_CASE()
     std::unique_ptr<int> p6( new int(6) );
     std::unique_ptr<int> p7( new int(7) );
 
-    fit::lazy( fv7 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ), std::move( p6 ), std::move( p7 ) );
+    boost::fit::lazy( fv7 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ), std::move( p6 ), std::move( p7 ) );
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
     std::unique_ptr<int> p2( new int(2) );
@@ -565,9 +565,9 @@ FIT_TEST_CASE()
     std::unique_ptr<int> p7( new int(7) );
     std::unique_ptr<int> p8( new int(8) );
 
-    fit::lazy( fv8 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ), std::move( p6 ), std::move( p7 ), std::move( p8 ) );
+    boost::fit::lazy( fv8 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ), std::move( p6 ), std::move( p7 ), std::move( p8 ) );
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     std::unique_ptr<int> p1( new int(1) );
     std::unique_ptr<int> p2( new int(2) );
@@ -579,7 +579,7 @@ FIT_TEST_CASE()
     std::unique_ptr<int> p8( new int(8) );
     std::unique_ptr<int> p9( new int(9) );
 
-    fit::lazy( fv9 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8, std::placeholders::_9 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ), std::move( p6 ), std::move( p7 ), std::move( p8 ), std::move( p9 ) );
+    boost::fit::lazy( fv9 )( std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7, std::placeholders::_8, std::placeholders::_9 )( std::move( p1 ), std::move( p2 ), std::move( p3 ), std::move( p4 ), std::move( p5 ), std::move( p6 ), std::move( p7 ), std::move( p8 ), std::move( p9 ) );
 }
 
 
@@ -596,23 +596,23 @@ struct X_ref
     }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     X_ref x;
 
-    FIT_TEST_CHECK( fit::lazy( &X_ref::f )( std::ref( x ), std::placeholders::_1 )( 1 ) == 1 );
-    FIT_TEST_CHECK( fit::lazy( &X_ref::g )( std::cref( x ), std::placeholders::_1 )( 2 ) == -2 );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy( &X_ref::f )( std::ref( x ), std::placeholders::_1 )( 1 ) == 1 );
+    BOOST_FIT_TEST_CHECK( boost::fit::lazy( &X_ref::g )( std::cref( x ), std::placeholders::_1 )( 2 ) == -2 );
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    auto lazy_f_1 = fit::lazy(f_1())(std::placeholders::_1);
-    static_assert(fit::is_callable<decltype(lazy_f_1), long>::value, "Callable");
-    static_assert(fit::is_callable<decltype(lazy_f_1), long, long>::value, "Callable");
+    auto lazy_f_1 = boost::fit::lazy(f_1())(std::placeholders::_1);
+    static_assert(boost::fit::is_callable<decltype(lazy_f_1), long>::value, "Callable");
+    static_assert(boost::fit::is_callable<decltype(lazy_f_1), long, long>::value, "Callable");
     
-    auto lazy_f_2 = fit::lazy(f_2())(std::placeholders::_1, std::placeholders::_2);
-    static_assert(fit::is_callable<decltype(lazy_f_2), long, long>::value, "Callable");
-    static_assert(!fit::is_callable<decltype(lazy_f_2), long>::value, "Not SFINAE-friendly");
+    auto lazy_f_2 = boost::fit::lazy(f_2())(std::placeholders::_1, std::placeholders::_2);
+    static_assert(boost::fit::is_callable<decltype(lazy_f_2), long, long>::value, "Callable");
+    static_assert(!boost::fit::is_callable<decltype(lazy_f_2), long>::value, "Not SFINAE-friendly");
 }
 
 struct dummy_unary_fn
@@ -631,9 +631,9 @@ struct bad_unary_fn
     }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    auto b = fit::lazy(dummy_unary_fn())(bad_unary_fn());
+    auto b = boost::fit::lazy(dummy_unary_fn())(bad_unary_fn());
     b(0);
 }
 
@@ -647,12 +647,12 @@ struct by_value_fn
     }
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    fit::lazy(by_value_fn{})(std::placeholders::_1, 42)("hello");
+    boost::fit::lazy(by_value_fn{})(std::placeholders::_1, 42)("hello");
 }
 
-#if FIT_HAS_NOEXCEPT_DEDUCTION
+#if BOOST_FIT_HAS_NOEXCEPT_DEDUCTION
 struct copy_throws 
 {
     copy_throws() {}
@@ -677,31 +677,31 @@ struct member_obj
     int x;
 };
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     no_throw_fo obj;
     copy_throws arg;
-    static_assert(noexcept(fit::lazy(no_throw_fo{})()()), "noexcept lazy");
-    static_assert(noexcept(fit::lazy(obj)()()), "noexcept lazy");
-    static_assert(!noexcept(fit::lazy(obj)(arg)()), "noexcept lazy");
-    static_assert(noexcept(fit::lazy(obj)(1)()), "noexcept lazy");
-    static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)), "noexcept lazy");
-    // static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)()), "noexcept lazy");
-    static_assert(noexcept(fit::lazy(obj)(std::placeholders::_1)(1)), "noexcept lazy");
-    static_assert(!noexcept(fit::lazy(obj)(std::placeholders::_1)(arg)), "noexcept lazy");
+    static_assert(noexcept(boost::fit::lazy(no_throw_fo{})()()), "noexcept lazy");
+    static_assert(noexcept(boost::fit::lazy(obj)()()), "noexcept lazy");
+    static_assert(!noexcept(boost::fit::lazy(obj)(arg)()), "noexcept lazy");
+    static_assert(noexcept(boost::fit::lazy(obj)(1)()), "noexcept lazy");
+    static_assert(noexcept(boost::fit::lazy(obj)(std::placeholders::_1)), "noexcept lazy");
+    // static_assert(noexcept(boost::fit::lazy(obj)(std::placeholders::_1)()), "noexcept lazy");
+    static_assert(noexcept(boost::fit::lazy(obj)(std::placeholders::_1)(1)), "noexcept lazy");
+    static_assert(!noexcept(boost::fit::lazy(obj)(std::placeholders::_1)(arg)), "noexcept lazy");
 
-    static_assert(noexcept(fit::lazy(obj)(std::move(arg))), "noexcept lazy");
-    static_assert(!noexcept(fit::lazy(obj)(std::move(arg))()), "noexcept lazy");
+    static_assert(noexcept(boost::fit::lazy(obj)(std::move(arg))), "noexcept lazy");
+    static_assert(!noexcept(boost::fit::lazy(obj)(std::move(arg))()), "noexcept lazy");
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     throws_fo obj;
-    static_assert(!noexcept(fit::lazy(obj)()()), "noexcept lazy");
+    static_assert(!noexcept(boost::fit::lazy(obj)()()), "noexcept lazy");
 }
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     member_obj obj{42};
-    static_assert(noexcept(fit::lazy(&member_obj::x)(obj)()), "noexcept lazy");
-    static_assert(noexcept(fit::lazy(&member_obj::x)(std::placeholders::_1)(obj)), "noexcept lazy");
+    static_assert(noexcept(boost::fit::lazy(&member_obj::x)(obj)()), "noexcept lazy");
+    static_assert(noexcept(boost::fit::lazy(&member_obj::x)(std::placeholders::_1)(obj)), "noexcept lazy");
 }
 #endif

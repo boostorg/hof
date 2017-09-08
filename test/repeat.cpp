@@ -1,4 +1,4 @@
-#include <fit/repeat.hpp>
+#include <boost/fit/repeat.hpp>
 #include <limits>
 #include "test.hpp"
 
@@ -13,48 +13,48 @@ struct increment
     }
 };
 
-#if FIT_HAS_NOEXCEPT_DEDUCTION
-FIT_TEST_CASE()
+#if BOOST_FIT_HAS_NOEXCEPT_DEDUCTION
+BOOST_FIT_TEST_CASE()
 {
-    static_assert(noexcept(fit::repeat(std::integral_constant<int, 5>())(increment())(1)), "noexcept repeat");
-    static_assert(noexcept(fit::repeat(5)(increment())(1)), "noexcept repeat");
+    static_assert(noexcept(boost::fit::repeat(std::integral_constant<int, 5>())(increment())(1)), "noexcept repeat");
+    static_assert(noexcept(boost::fit::repeat(5)(increment())(1)), "noexcept repeat");
 }
 #endif
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::repeat(std::integral_constant<int, 5>())(increment())(1) == 6);
-    FIT_STATIC_TEST_CHECK(fit::repeat(std::integral_constant<int, 5>())(increment())(1) == 6);
+    BOOST_FIT_TEST_CHECK(boost::fit::repeat(std::integral_constant<int, 5>())(increment())(1) == 6);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::repeat(std::integral_constant<int, 5>())(increment())(1) == 6);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::repeat(5)(increment())(1) == 6);
-    FIT_STATIC_TEST_CHECK(fit::repeat(5)(increment())(1) == 6);
+    BOOST_FIT_TEST_CHECK(boost::fit::repeat(5)(increment())(1) == 6);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::repeat(5)(increment())(1) == 6);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     int i = 5;
-    FIT_TEST_CHECK(fit::repeat(i)(increment())(1) == 6);
+    BOOST_FIT_TEST_CHECK(boost::fit::repeat(i)(increment())(1) == 6);
 }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
     static const int i = 5;
-    FIT_TEST_CHECK(fit::repeat(i)(increment())(1) == 6);
-    FIT_STATIC_TEST_CHECK(fit::repeat(i)(increment())(1) == 6);
+    BOOST_FIT_TEST_CHECK(boost::fit::repeat(i)(increment())(1) == 6);
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::repeat(i)(increment())(1) == 6);
 }
 
-// FIT_TEST_CASE()
+// BOOST_FIT_TEST_CASE()
 // {
-//     FIT_TEST_CHECK(fit::repeat(std::numeric_limits<int>::max()/4)(increment())(0) == std::numeric_limits<int>::max()/4);
+//     BOOST_FIT_TEST_CHECK(boost::fit::repeat(std::numeric_limits<int>::max()/4)(increment())(0) == std::numeric_limits<int>::max()/4);
 // }
 
-FIT_TEST_CASE()
+BOOST_FIT_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::repeat(FIT_RECURSIVE_CONSTEXPR_DEPTH+4)(increment())(0) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
-#if FIT_HAS_RELAXED_CONSTEXPR
-    FIT_STATIC_TEST_CHECK(fit::repeat(FIT_RECURSIVE_CONSTEXPR_DEPTH+4)(increment())(0) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
+    BOOST_FIT_TEST_CHECK(boost::fit::repeat(BOOST_FIT_RECURSIVE_CONSTEXPR_DEPTH+4)(increment())(0) == BOOST_FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
+#if BOOST_FIT_HAS_RELAXED_CONSTEXPR
+    BOOST_FIT_STATIC_TEST_CHECK(boost::fit::repeat(BOOST_FIT_RECURSIVE_CONSTEXPR_DEPTH+4)(increment())(0) == BOOST_FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
 #endif
 }

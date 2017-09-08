@@ -7,7 +7,7 @@
 
 #include "example.h"
 
-using namespace fit;
+using namespace boost::fit;
 
 // ADL Lookup for ranges
 namespace adl {
@@ -16,13 +16,13 @@ using std::begin;
 using std::end;
 
 template<class R>
-auto adl_begin(R&& r) FIT_RETURNS(begin(r));
+auto adl_begin(R&& r) BOOST_FIT_RETURNS(begin(r));
 template<class R>
-auto adl_end(R&& r) FIT_RETURNS(end(r));
+auto adl_end(R&& r) BOOST_FIT_RETURNS(end(r));
 }
 
 // Iterate over a tuple
-FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
 {
     return unpack(by(f))(sequence);
 };
@@ -49,14 +49,14 @@ auto print_with_tuple(Self self, const T& tuple) -> decltype(for_each_tuple(tupl
 }
 
 // Recursively print everything
-FIT_STATIC_FUNCTION(simple_print) = fix(conditional(
-    FIT_LIFT(print_with_cout),
-    FIT_LIFT(print_with_range),
-    FIT_LIFT(print_with_tuple)
+BOOST_FIT_STATIC_FUNCTION(simple_print) = fix(conditional(
+    BOOST_FIT_LIFT(print_with_cout),
+    BOOST_FIT_LIFT(print_with_range),
+    BOOST_FIT_LIFT(print_with_tuple)
 ));
 #else
 // Recursively print everything
-FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
     [](auto, const auto& x) -> decltype(std::cout << x, void())
     {
         std::cout << x << std::endl;
@@ -73,7 +73,7 @@ FIT_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
 #endif
 
 // Make print function varidiac
-FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
+BOOST_FIT_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
 
 int main()
 {

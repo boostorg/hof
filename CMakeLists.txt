@@ -3,9 +3,9 @@ project (Fit)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 foreach(level MAJOR MINOR PATCH)
-    file(STRINGS include/fit/version.hpp
+    file(STRINGS include/boost/fit/version.hpp
                  _define_${level}
-                 REGEX "#define FIT_${level}_VERSION")
+                 REGEX "#define BOOST_FIT_${level}_VERSION")
     string(REGEX MATCH "([0-9]+)" Fit_VERSION_${level} "${_define_${level}}")
 endforeach() 
 
@@ -43,8 +43,8 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
     endif()
 endforeach()
 
-install (DIRECTORY include/fit DESTINATION include)
-install (FILES include/fit.hpp DESTINATION include)
+install (DIRECTORY include/boost DESTINATION include)
+install (FILES include/boost.hpp DESTINATION include)
 configure_file(fit.pc.in fit.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
 
@@ -71,10 +71,10 @@ foreach(TEST ${FAIL_TESTS})
     bcm_add_test(NAME fail-${BASE_NAME} COMPILE_ONLY WILL_FAIL SOURCES ${TEST})
 endforeach()
 
-file(GLOB HEADERS include/fit/*.hpp)
+file(GLOB HEADERS include/boost/fit/*.hpp)
 foreach(HEADER ${HEADERS})
     get_filename_component(BASE_NAME ${HEADER} NAME_WE)
-    bcm_test_header(NAME ${BASE_NAME} HEADER fit/${BASE_NAME}.hpp STATIC)
+    bcm_test_header(NAME ${BASE_NAME} HEADER boost/fit/${BASE_NAME}.hpp STATIC)
 endforeach()
 bcm_test_header(NAME fit HEADER fit.hpp STATIC)
 

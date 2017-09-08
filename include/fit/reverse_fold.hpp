@@ -1,20 +1,20 @@
 /*=============================================================================
     Copyright (c) 2015 Paul Fultz II
-    reverse_compress.h
+    reverse_fold.h
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef FIT_GUARD_REVERSE_COMPRESS_H
-#define FIT_GUARD_REVERSE_COMPRESS_H
+#ifndef FIT_GUARD_REVERSE_FOLD_H
+#define FIT_GUARD_REVERSE_FOLD_H
 
-/// reverse_compress
+/// reverse_fold
 /// ========
 /// 
 /// Description
 /// -----------
 /// 
-/// The `reverse_compress` function adaptor uses a binary function to apply a
+/// The `reverse_fold` function adaptor uses a binary function to apply a
 /// reverse [fold]
 /// (https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29)(ie right
 /// fold in functional programming terms) operation to the arguments passed to
@@ -28,18 +28,18 @@
 /// --------
 /// 
 ///     template<class F, class State>
-///     constexpr reverse_compress_adaptor<F, State> reverse_compress(F f, State s);
+///     constexpr reverse_fold_adaptor<F, State> reverse_fold(F f, State s);
 /// 
 ///     template<class F>
-///     constexpr reverse_compress_adaptor<F> reverse_compress(F f);
+///     constexpr reverse_fold_adaptor<F> reverse_fold(F f);
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(reverse_compress(f, z)() == z);
-///     assert(reverse_compress(f, z)(x, xs...) == f(reverse_compress(f, z)(xs...), x));
-///     assert(reverse_compress(f)(x) == x);
-///     assert(reverse_compress(f)(x, xs...) == f(reverse_compress(f)(xs...), x));
+///     assert(reverse_fold(f, z)() == z);
+///     assert(reverse_fold(f, z)(x, xs...) == f(reverse_fold(f, z)(xs...), x));
+///     assert(reverse_fold(f)(x) == x);
+///     assert(reverse_fold(f)(x, xs...) == f(reverse_fold(f)(xs...), x));
 /// 
 /// Requirements
 /// ------------
@@ -69,7 +69,7 @@
 ///     };
 /// 
 ///     int main() {
-///         assert(fit::reverse_compress(max_f())(2, 3, 4, 5) == 5);
+///         assert(fit::reverse_fold(max_f())(2, 3, 4, 5) == 5);
 ///     }
 /// 
 /// References
@@ -108,11 +108,11 @@ struct v_reverse_fold
 }
 
 template<class F, class State=void>
-struct reverse_compress_adaptor
+struct reverse_fold_adaptor
 : detail::compressed_pair<detail::callable_base<F>, State>
 {
     typedef detail::compressed_pair<detail::callable_base<F>, State> base_type;
-    FIT_INHERIT_CONSTRUCTOR(reverse_compress_adaptor, base_type)
+    FIT_INHERIT_CONSTRUCTOR(reverse_fold_adaptor, base_type)
 
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
@@ -126,7 +126,7 @@ struct reverse_compress_adaptor
         return this->second(xs...);
     }
 
-    FIT_RETURNS_CLASS(reverse_compress_adaptor);
+    FIT_RETURNS_CLASS(reverse_fold_adaptor);
 
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(detail::v_reverse_fold, id_<const detail::callable_base<F>&>, id_<State>, id_<Ts>...)
@@ -142,10 +142,10 @@ struct reverse_compress_adaptor
 
 
 template<class F>
-struct reverse_compress_adaptor<F, void>
+struct reverse_fold_adaptor<F, void>
 : detail::callable_base<F>
 {
-    FIT_INHERIT_CONSTRUCTOR(reverse_compress_adaptor, detail::callable_base<F>)
+    FIT_INHERIT_CONSTRUCTOR(reverse_fold_adaptor, detail::callable_base<F>)
 
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
@@ -153,7 +153,7 @@ struct reverse_compress_adaptor<F, void>
         return fit::always_ref(*this)(xs...);
     }
 
-    FIT_RETURNS_CLASS(reverse_compress_adaptor);
+    FIT_RETURNS_CLASS(reverse_fold_adaptor);
 
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(detail::v_reverse_fold, id_<const detail::callable_base<F>&>, id_<Ts>...)
@@ -166,7 +166,7 @@ struct reverse_compress_adaptor<F, void>
     )
 };
 
-FIT_DECLARE_STATIC_VAR(reverse_compress, detail::make<reverse_compress_adaptor>);
+FIT_DECLARE_STATIC_VAR(reverse_fold, detail::make<reverse_fold_adaptor>);
 
 } // namespace fit
 

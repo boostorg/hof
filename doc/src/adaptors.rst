@@ -8,7 +8,7 @@ Function Adaptors
     ../../include/fit/compose
     ../../include/fit/conditional
     ../../include/fit/combine
-    ../../include/fit/compress
+    ../../include/fit/fold
     ../../include/fit/decorate
     ../../include/fit/fix
     ../../include/fit/flip
@@ -24,7 +24,7 @@ Function Adaptors
     ../../include/fit/protect
     ../../include/fit/result
     ../../include/fit/reveal
-    ../../include/fit/reverse_compress
+    ../../include/fit/reverse_fold
     ../../include/fit/rotate
     ../../include/fit/static
     ../../include/fit/unpack

@@ -197,7 +197,7 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
+        f(fit::detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 
     typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
@@ -227,7 +227,7 @@ struct pack_base<seq<0>, T>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(detail::pack_get<T, pack_tag<seq<0>, T>>(*FIT_CONST_THIS, f))
+        f(fit::detail::pack_get<T, pack_tag<seq<0>, T>>(*FIT_CONST_THIS, f))
     );
 
     typedef std::integral_constant<std::size_t, 1> fit_function_param_limit;
@@ -260,7 +260,7 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
+        f(fit::detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 
     typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
@@ -308,13 +308,13 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
     static constexpr result_type call(P1&& p1, P2&& p2)
     FIT_RETURNS_DEDUCE_NOEXCEPT(
         result_type(
-            detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
-            detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...)
+            fit::detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
+            fit::detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...)
     )
     {
         return result_type(
-            detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
-            detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...);
+            fit::detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
+            fit::detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...);
     }
 };
 

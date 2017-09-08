@@ -146,7 +146,7 @@ struct fix_adaptor_base : F
     template<class... Ts>
     constexpr derived derived_function(Ts&&... xs) const noexcept
     {
-        return derived(detail::make_indirect_ref(this->base_function(xs...)));
+        return derived(fit::detail::make_indirect_ref(this->base_function(xs...)));
     }
 
     struct fix_failure

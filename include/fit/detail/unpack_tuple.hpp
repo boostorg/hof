@@ -74,7 +74,7 @@ struct unpack_sequence<std::tuple<Ts...>>
     template<class F, class S>
     constexpr static auto apply(F&& f, S&& t) FIT_RETURNS
     (
-        detail::unpack_tuple(FIT_FORWARD(F)(f), FIT_FORWARD(S)(t), detail::make_tuple_gens(t))
+        fit::detail::unpack_tuple(FIT_FORWARD(F)(f), FIT_FORWARD(S)(t), fit::detail::make_tuple_gens(t))
     );
 };
 

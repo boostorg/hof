@@ -12,11 +12,11 @@
 #include <fit/detail/result_of.hpp>
 #include <fit/apply.hpp>
 
-#ifndef FIT_HAS_TEMPLATE_ALIAS
+#ifndef FIT_CALLABLE_BASE_USE_TEMPLATE_ALIAS
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
-#define FIT_HAS_TEMPLATE_ALIAS 0
+#define FIT_CALLABLE_BASE_USE_TEMPLATE_ALIAS 0
 #else
-#define FIT_HAS_TEMPLATE_ALIAS 1
+#define FIT_CALLABLE_BASE_USE_TEMPLATE_ALIAS 1
 #endif
 #endif
 
@@ -41,7 +41,7 @@ struct callable_base_type
 : std::conditional<(FIT_IS_CLASS(F) && !FIT_IS_FINAL(F) && !FIT_IS_POLYMORPHIC(F)), F, non_class_function<F>>
 {};
 
-#if FIT_HAS_TEMPLATE_ALIAS
+#if FIT_CALLABLE_BASE_USE_TEMPLATE_ALIAS
 template<class F>
 using callable_base = typename callable_base_type<F>::type;
 #else

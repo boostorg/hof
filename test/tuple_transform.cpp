@@ -4,6 +4,12 @@
 #include <fit/function.hpp>
 #include <fit/placeholders.hpp>
 #include <fit/compose.hpp>
+// Disable static checks for gcc 4.7
+#ifndef FIT_HAS_STATIC_TEST_CHECK
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#define FIT_HAS_STATIC_TEST_CHECK 0
+#endif
+#endif
 #include "test.hpp"
 
 struct tuple_transform_f

@@ -51,7 +51,7 @@ struct decay_f
     template<
         class T, 
         class Result=typename unwrap_reference<typename std::decay<T>::type>::type, 
-        class=typename std::enable_if<(std::is_constructible<Result, T>::value)>::type
+        class=typename std::enable_if<(FIT_IS_CONSTRUCTIBLE(Result, T))>::type
     >
     constexpr Result operator()(T&& x) const FIT_NOEXCEPT_CONSTRUCTIBLE(Result, T&&)
     {

@@ -140,13 +140,13 @@ struct fix_adaptor_base : F
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     template<class... Ts>
     constexpr derived derived_function(Ts&&... xs) const noexcept
     {
-        return derived(detail::make_indirect_ref(this->base_function(xs...)));
+        return derived(fit::detail::make_indirect_ref(this->base_function(xs...)));
     }
 
     struct fix_failure

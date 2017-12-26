@@ -74,14 +74,14 @@ Another example, say we would like to write a varidiac version of `max`. We coul
         return std::max(x, max(y, xs...));
     }
 
-With point-free style programming, we can recognize this is a [fold](https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29), and write it using the [`compress`](/include/fit/compress) adaptor, which will do a fold over the variadic parameters:
+With point-free style programming, we can recognize this is a [fold](https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29), and write it using the [`fold`](/include/fit/fold) adaptor, which will do a fold over the variadic parameters:
 
-    FIT_STATIC_FUNCTION(max) = compress(FIT_LIFT(std::max));
+    FIT_STATIC_FUNCTION(max) = fold(FIT_LIFT(std::max));
 
 [`FIT_LIFT`](/include/fit/lift) is used to grab the entire overload set of `std::max` function, which is needed since `std::max` is templated and we want the variadic `std::max` function to handle any types as well. So now it can be called like this:
 
     auto n = max(1, 2, 4, 3); // Returns 4
     auto m = max(0.1, 0.2, 0.5, 0.4); // Returns 0.5
 
-By using [`compress`](/include/fit/compress), `max(1, 2, 4, 3)` will call `std::max` like `std::max(std::max(std::max(1, 2), 4), 3)` and `max(0.1, 0.2, 0.5, 0.4)` will be called like `std::max(std::max(std::max(0.1, 0.2), 0.5), 0.4)`.
+By using [`fold`](/include/fit/fold), `max(1, 2, 4, 3)` will call `std::max` like `std::max(std::max(std::max(1, 2), 4), 3)` and `max(0.1, 0.2, 0.5, 0.4)` will be called like `std::max(std::max(std::max(0.1, 0.2), 0.5), 0.4)`.
 

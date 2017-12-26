@@ -23,7 +23,7 @@ FIT_STATIC_LAMBDA_FUNCTION(tuple_for_each) = [](auto&& sequence, auto f)
 // Fold over tuple using a f as the binary operator
 FIT_STATIC_LAMBDA_FUNCTION(tuple_fold) = [](auto&& sequence, auto f)
 {
-    return unpack(compress(f))(std::forward<decltype(sequence)>(sequence));
+    return unpack(fold(f))(std::forward<decltype(sequence)>(sequence));
 };
 // Concat multiple tuples
 FIT_STATIC_FUNCTION(tuple_cat) = unpack(construct<std::tuple>());

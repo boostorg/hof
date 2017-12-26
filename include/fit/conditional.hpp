@@ -173,7 +173,7 @@ struct conditional_kernel : compressed_pair<F1, F2>
     operator()(Ts && ... xs) const
     FIT_SFINAE_RETURNS
     (
-        detail::which(
+        fit::detail::which(
             FIT_RETURNS_CONSTRUCT(PickFirst)(),
             FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...)),
             FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))

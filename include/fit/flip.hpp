@@ -63,7 +63,7 @@ struct flip_adaptor : detail::callable_base<F>
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     struct flip_failure

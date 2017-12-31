@@ -1,20 +1,20 @@
 /*=============================================================================
     Copyright (c) 2015 Paul Fultz II
-    compress.h
+    fold.h
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef FIT_GUARD_COMPRESS_H
-#define FIT_GUARD_COMPRESS_H
+#ifndef FIT_GUARD_FOLD_H
+#define FIT_GUARD_FOLD_H
 
-/// compress
+/// fold
 /// ========
 /// 
 /// Description
 /// -----------
 /// 
-/// The `compress` function adaptor uses a binary function to apply a
+/// The `fold` function adaptor uses a binary function to apply a
 /// [fold](https://en.wikipedia.org/wiki/Fold_%28higher-order_function%29)
 /// operation to the arguments passed to the function. Additionally, an
 /// optional initial state can be provided, otherwise the first argument is
@@ -27,18 +27,18 @@
 /// --------
 /// 
 ///     template<class F, class State>
-///     constexpr compress_adaptor<F, State> compress(F f, State s);
+///     constexpr fold_adaptor<F, State> fold(F f, State s);
 /// 
 ///     template<class F>
-///     constexpr compress_adaptor<F> compress(F f);
+///     constexpr fold_adaptor<F> fold(F f);
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(compress(f, z)() == z);
-///     assert(compress(f, z)(x, xs...) == compress(f, f(z, x))(xs...));
-///     assert(compress(f)(x) == x);
-///     assert(compress(f)(x, y, xs...) == compress(f)(f(x, y), xs...));
+///     assert(fold(f, z)() == z);
+///     assert(fold(f, z)(x, xs...) == fold(f, f(z, x))(xs...));
+///     assert(fold(f)(x) == x);
+///     assert(fold(f)(x, y, xs...) == fold(f)(f(x, y), xs...));
 /// 
 /// Requirements
 /// ------------
@@ -67,7 +67,7 @@
 ///         }
 ///     };
 ///     int main() {
-///         assert(fit::compress(max_f())(2, 3, 4, 5) == 5);
+///         assert(fit::fold(max_f())(2, 3, 4, 5) == 5);
 ///     }
 /// 
 /// References
@@ -106,11 +106,11 @@ struct v_fold
 }
 
 template<class F, class State=void>
-struct compress_adaptor
+struct fold_adaptor
 : detail::compressed_pair<detail::callable_base<F>, State>
 {
     typedef detail::compressed_pair<detail::callable_base<F>, State> base_type;
-    FIT_INHERIT_CONSTRUCTOR(compress_adaptor, base_type)
+    FIT_INHERIT_CONSTRUCTOR(fold_adaptor, base_type)
 
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
@@ -124,7 +124,7 @@ struct compress_adaptor
         return this->second(xs...);
     }
 
-    FIT_RETURNS_CLASS(compress_adaptor);
+    FIT_RETURNS_CLASS(fold_adaptor);
 
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const detail::callable_base<F>&>, id_<State>, id_<Ts>...)
@@ -140,18 +140,18 @@ struct compress_adaptor
 
 
 template<class F>
-struct compress_adaptor<F, void>
+struct fold_adaptor<F, void>
 : detail::callable_base<F>
 {
-    FIT_INHERIT_CONSTRUCTOR(compress_adaptor, detail::callable_base<F>)
+    FIT_INHERIT_CONSTRUCTOR(fold_adaptor, detail::callable_base<F>)
 
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
-    FIT_RETURNS_CLASS(compress_adaptor);
+    FIT_RETURNS_CLASS(fold_adaptor);
 
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(detail::v_fold, id_<const detail::callable_base<F>&>, id_<Ts>...)
@@ -164,7 +164,7 @@ struct compress_adaptor<F, void>
     )
 };
 
-FIT_DECLARE_STATIC_VAR(compress, detail::make<compress_adaptor>);
+FIT_DECLARE_STATIC_VAR(fold, detail::make<fold_adaptor>);
 
 } // namespace fit
 

@@ -196,7 +196,7 @@ struct decorate_adaptor : detail::callable_base<F>
     template<class... Ts>
     constexpr const base& base_function(Ts&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     // TODO: Add predicate for constraints

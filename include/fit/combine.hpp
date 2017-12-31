@@ -82,7 +82,7 @@ struct combine_adaptor_base<seq<Ns...>, F, Gs...>
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     FIT_RETURNS_CLASS(combine_adaptor_base);

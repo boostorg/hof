@@ -17,7 +17,7 @@
 #include <fit/capture.hpp>
 #include <fit/combine.hpp>
 #include <fit/compose.hpp>
-#include <fit/compress.hpp>
+#include <fit/fold.hpp>
 #include <fit/conditional.hpp>
 #include <fit/construct.hpp>
 #include <fit/decay.hpp>
@@ -49,7 +49,7 @@
 #include <fit/result.hpp>
 #include <fit/returns.hpp>
 #include <fit/reveal.hpp>
-#include <fit/reverse_compress.hpp>
+#include <fit/reverse_fold.hpp>
 #include <fit/rotate.hpp>
 #include <fit/static.hpp>
 #include <fit/tap.hpp>

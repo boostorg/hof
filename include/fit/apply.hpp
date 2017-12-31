@@ -26,7 +26,7 @@
 /// ---------
 /// 
 ///     assert(apply(f)(xs...) == f(xs...));
-///     assert(compress(apply, f)(x, y, z) == f(x)(y)(z));
+///     assert(fold(apply, f)(x, y, z) == f(x)(y)(z));
 /// 
 /// Requirements
 /// ------------

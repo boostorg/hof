@@ -1,20 +1,20 @@
 Partial function evaluation
 ===========================
 
-Many of the adaptors(such as [partial](partial) or [pipable](pipable)) in the library supports optional partial evaluation of functions. For example, if we have `sum` function adapted with `partial` adaptor:
+Many of the adaptors(such as [partial](partial) or [pipable](pipable)) in the library supports optional partial evaluation of functions. For example, if we have the `sum` function adapted with the `partial` adaptor:
 
     auto sum = partial([](int x, int y)
     {
         return x+y;
     });
 
-So if we write `sum(1, 2)` it will return 3, however, if we write `sum(1)` it will return a new function, which when called again it will evaluate the function and return 3:
+So if we write `sum(1, 2)` it will return 3, however, if we write `sum(1)` it will return a new function, which when called again, it will evaluate the function and return 3:
 
     int i = sum(1, 2); // Returns 3
     auto f = sum(1);
     int j = f(2); // returns 3
 
-Of course due to limitations in C++, to decide whether evaluate the function or to partially evaluated it is based on callability of the function and not arity. So if we call `sum(1, 2, 3)`, it will return a function:
+Of course due to limitations in C++, deciding whether evaluate the function or to partially evaluated it, is based on the callability of the function and not arity. So if we call `sum(1, 2, 3)`, it will return a function:
 
     auto f = sum(1, 2, 3);
 

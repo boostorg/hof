@@ -160,7 +160,7 @@ constexpr R by_eval(const Projection& p, const F& f, Ts&&... xs)
 template<class Projection, class... Ts>
 constexpr FIT_ALWAYS_VOID_RETURN by_void_eval(const Projection& p, Ts&&... xs)
 {
-    return fit::apply_eval(fit::always(), detail::make_project_void_eval(FIT_FORWARD(Ts)(xs), p)...);
+    return fit::apply_eval(fit::always(), fit::detail::make_project_void_eval(FIT_FORWARD(Ts)(xs), p)...);
 }
 
 struct swallow
@@ -216,7 +216,7 @@ struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, d
     constexpr FIT_SFINAE_RESULT(const detail::callable_base<F>&, result_of<const detail::callable_base<Projection>&, id_<Ts>>...) 
     operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
-        detail::by_eval(
+        fit::detail::by_eval(
             FIT_MANGLE_CAST(const detail::callable_base<Projection>&)(FIT_CONST_THIS->base_projection(xs...)),
             FIT_MANGLE_CAST(const detail::callable_base<F>&)(FIT_CONST_THIS->base_function(xs...)),
             FIT_FORWARD(Ts)(xs)...
@@ -231,7 +231,7 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
     template<class... Ts>
     constexpr const detail::callable_base<Projection>& base_projection(Ts&&... xs) const
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     FIT_INHERIT_DEFAULT(by_adaptor, detail::callable_base<Projection>)
@@ -247,12 +247,12 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
     constexpr FIT_BY_VOID_RETURN operator()(Ts&&... xs) const 
     {
 #if FIT_NO_ORDERED_BRACE_INIT
-        return detail::by_void_eval(this->base_projection(xs...), FIT_FORWARD(Ts)(xs)...);
+        return fit::detail::by_void_eval(this->base_projection(xs...), FIT_FORWARD(Ts)(xs)...);
 #else
 #if FIT_NO_CONSTEXPR_VOID
         return
 #endif
-        detail::swallow{
+        fit::detail::swallow{
             (this->base_projection(xs...)(FIT_FORWARD(Ts)(xs)), 0)...
         };
 #endif

@@ -101,13 +101,18 @@ struct pack_base;
 template<class T>
 struct is_copyable
 : std::integral_constant<bool, (
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
-    std::is_constructible<T, typename std::add_const<T>::type>::value ||
-#else
-    std::is_copy_constructible<T>::value || 
-#endif
-    std::is_reference<T>::value
+    FIT_IS_CONSTRUCTIBLE(T, const T&)
 )>
+{};
+
+template<class T>
+struct is_copyable<T&>
+: std::true_type
+{};
+
+template<class T>
+struct is_copyable<T&&>
+: std::true_type
 {};
 
 template<class T, class Tag, class X, class... Ts, typename std::enable_if<
@@ -178,7 +183,7 @@ struct pack_base<seq<Ns...>, Ts...>
     : base(FIT_FORWARD(X1)(x1), FIT_FORWARD(X2)(x2), FIT_FORWARD(Xs)(xs)...)
     {}
 
-    template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
+    template<class X1, typename std::enable_if<(FIT_IS_CONSTRUCTIBLE(base, X1)), int>::type = 0>
     constexpr pack_base(X1&& x1)
     FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&))
     : base(FIT_FORWARD(X1)(x1))
@@ -192,7 +197,7 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
+        f(fit::detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 
     typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
@@ -209,7 +214,7 @@ struct pack_base<seq<0>, T>
 {
     typedef pack_holder_base<pack_holder<T, pack_tag<seq<0>, T>>> base;
 
-    template<class X1, typename std::enable_if<(std::is_constructible<base, X1>::value), int>::type = 0>
+    template<class X1, typename std::enable_if<(FIT_IS_CONSTRUCTIBLE(base, X1)), int>::type = 0>
     constexpr pack_base(X1&& x1) 
     FIT_NOEXCEPT(FIT_IS_NOTHROW_CONSTRUCTIBLE(base, X1&&))
     : base(FIT_FORWARD(X1)(x1))
@@ -222,7 +227,7 @@ struct pack_base<seq<0>, T>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(detail::pack_get<T, pack_tag<seq<0>, T>>(*FIT_CONST_THIS, f))
+        f(fit::detail::pack_get<T, pack_tag<seq<0>, T>>(*FIT_CONST_THIS, f))
     );
 
     typedef std::integral_constant<std::size_t, 1> fit_function_param_limit;
@@ -255,7 +260,7 @@ struct pack_base<seq<Ns...>, Ts...>
     template<class F>
     constexpr auto operator()(F&& f) const FIT_RETURNS
     (
-        f(detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
+        f(fit::detail::pack_get<Ts, pack_tag<seq<Ns>, Ts...>>(*FIT_CONST_THIS, f)...)
     );
 
     typedef std::integral_constant<std::size_t, sizeof...(Ts)> fit_function_param_limit;
@@ -303,13 +308,13 @@ struct pack_join_base<pack_base<seq<Ns1...>, Ts1...>, pack_base<seq<Ns2...>, Ts2
     static constexpr result_type call(P1&& p1, P2&& p2)
     FIT_RETURNS_DEDUCE_NOEXCEPT(
         result_type(
-            detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
-            detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...)
+            fit::detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
+            fit::detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...)
     )
     {
         return result_type(
-            detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
-            detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...);
+            fit::detail::pack_get<Ts1, pack_tag<seq<Ns1>, Ts1...>>(FIT_FORWARD(P1)(p1))..., 
+            fit::detail::pack_get<Ts2, pack_tag<seq<Ns2>, Ts2...>>(FIT_FORWARD(P2)(p2))...);
     }
 };
 

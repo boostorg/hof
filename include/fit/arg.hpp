@@ -85,7 +85,7 @@ constexpr args_at<N...> make_args_at(seq<N...>) noexcept
 template<std::size_t N, class... Ts>
 constexpr auto get_args(Ts&&... xs) FIT_RETURNS
 (
-    detail::make_args_at(typename gens<N>::type())(nullptr, FIT_RETURNS_CONSTRUCT(perfect_ref<Ts>)(xs)...)
+    fit::detail::make_args_at(typename gens<N>::type())(nullptr, FIT_RETURNS_CONSTRUCT(perfect_ref<Ts>)(xs)...)
 );
 
 template<class T, T N>
@@ -94,7 +94,7 @@ struct make_args_f
     template<class... Ts, class=typename std::enable_if<(N <= sizeof...(Ts))>::type>
     constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
     (
-        detail::get_args<N>(FIT_FORWARD(Ts)(xs)...)
+        fit::detail::get_args<N>(FIT_FORWARD(Ts)(xs)...)
     );
 };
 
@@ -115,7 +115,7 @@ FIT_STATIC_CONSTEXPR detail::make_args_f<std::size_t, N> arg_c = {};
 template<std::size_t N, class... Ts>
 constexpr auto arg_c(Ts&&... xs) FIT_RETURNS
 (
-    detail::get_args<N>(FIT_FORWARD(Ts)(xs)...)
+    fit::detail::get_args<N>(FIT_FORWARD(Ts)(xs)...)
 );
 #endif
 

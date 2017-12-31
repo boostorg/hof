@@ -151,7 +151,7 @@ struct partial_adaptor_join
     constexpr auto operator()(Ts&&... xs) const 
 #ifdef _MSC_VER
     // Workaround ICE on MSVC
-    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(F, F&&) && fit::pack_join(std::decval<const Pack&>(), fit::pack(FIT_FORWARD(Ts)(xs)...)))
+    noexcept(FIT_IS_NOTHROW_CONSTRUCTIBLE(F, F&&) && noexcept(fit::pack_join(std::declval<const Pack&>(), fit::pack(FIT_FORWARD(Ts)(xs)...))))
 #endif
     FIT_PARTIAL_RETURNS
     (

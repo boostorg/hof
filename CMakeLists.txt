@@ -20,6 +20,12 @@ if(CMAKE_HOST_APPLE)
 endif()
 
 set(ENABLE_CXXFLAGS_TO_CHECK 
+    -std=gnu++17
+    -std=c++17
+    -std=gnu++1z
+    -std=c++1z
+    -std=gnu++14
+    -std=c++14
     -std=gnu++1y 
     -std=c++1y
     -std=gnu++11 

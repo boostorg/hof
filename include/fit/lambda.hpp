@@ -61,6 +61,11 @@
 ///     }
 /// 
 
+#include <fit/config.hpp>
+
+// TODO: Move this to a detail header
+#if !FIT_HAS_CONSTEXPR_LAMBDA || !FIT_HAS_INLINE_LAMBDAS
+
 #include <type_traits>
 #include <utility>
 #include <fit/detail/result_of.hpp>
@@ -218,13 +223,22 @@ struct reveal_static_lambda_function_wrapper_factor
 
 }} // namespace fit
 
+#endif
+
+#if FIT_HAS_CONSTEXPR_LAMBDA
+#define FIT_STATIC_LAMBDA []
+#else
+#define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
+#define FIT_STATIC_LAMBDA FIT_DETAIL_MAKE_STATIC = []
+#endif
+
+#if FIT_HAS_INLINE_LAMBDAS
+#define FIT_STATIC_LAMBDA_FUNCTION FIT_STATIC_FUNCTION
+#else
 #define FIT_DETAIL_MAKE_REVEAL_STATIC(T) FIT_DETAIL_CONSTEXPR_DEDUCE_UNIQUE(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>()
 #define FIT_STATIC_LAMBDA_FUNCTION(name) \
 struct fit_private_static_function_ ## name {}; \
 FIT_STATIC_AUTO_REF name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)
-
-#define FIT_DETAIL_MAKE_STATIC FIT_DETAIL_CONSTEXPR_DEDUCE fit::detail::static_function_wrapper_factor()
-#define FIT_STATIC_LAMBDA FIT_DETAIL_MAKE_STATIC = []
-
+#endif
 
 #endif

@@ -40,14 +40,25 @@ struct is_same_template<X<Ts...>, X<Us...>>
 : std::true_type
 {};
 
+#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+
+template<class T, class U>
+struct is_related_template
+: std::false_type
+{};
+
+#else
+
 template<class T, class U>
 struct is_related_template
 : is_same_template<T, U>
 {};
 
+#endif
+
 template<class T, class U>
 struct is_related
-: std::integral_constant<bool, std::is_base_of<T, U>::value || std::is_base_of<U, T>::value || is_same_template<T, U>::value>
+: std::integral_constant<bool, std::is_base_of<T, U>::value || std::is_base_of<U, T>::value || is_related_template<T, U>::value>
 {};
 
 template<int I, class T, class U>
@@ -89,19 +100,19 @@ struct compressed_pair<First, Second>
     template<class Base, class... Xs>
     constexpr const Base& get_alias_base(Xs&&... xs) const noexcept
     {
-        return always_ref(*this)(xs...);
+        return fit::always_ref(*this)(xs...);
     }
 
     template<class... Xs>
     constexpr const First& first(Xs&&... xs) const noexcept
     {
-        return alias_value(this->get_alias_base<first_base>(xs...), xs...);
+        return fit::alias_value(this->get_alias_base<first_base>(xs...), xs...);
     }
 
     template<class... Xs>
     constexpr const Second& second(Xs&&... xs) const noexcept
     {
-        return alias_value(this->get_alias_base<second_base>(xs...), xs...);
+        return fit::alias_value(this->get_alias_base<second_base>(xs...), xs...);
     }
 
 };

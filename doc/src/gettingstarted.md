@@ -85,19 +85,16 @@ Now, this is useful for local functions. However, many times we want to write fu
 
     FIT_STATIC_FUNCTION(sum) = sum_f();
 
-The [`FIT_STATIC_FUNCTION`](/include/fit/function) declares a global variable following the best practices as outlined in [N4381](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html). This includes using `const` to avoid global state, compile-time initialization of the function object to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order), and an external address of the function object that is the same across translation units to avoid possible One-Definition-Rule(ODR) violations. In C++14, this can also be achieved by using a reference to a template variable:
+The [`FIT_STATIC_FUNCTION`](/include/fit/function) declares a global variable following the best practices as outlined in [N4381](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html). This includes using `const` to avoid global state, compile-time initialization of the function object to avoid the [static initialization order fiasco](https://isocpp.org/wiki/faq/ctors#static-init-order), and an external address of the function object that is the same across translation units to avoid possible One-Definition-Rule(ODR) violations. In C++17, this can be achieved using an `inline` variable:
 
-    template <class T>
-    constexpr T static_function{};
+    inline const constexpr auto sum = sum_f{};
 
-    static constexpr auto&& sum = static_function<sum_f>;
-
-The [`FIT_STATIC_FUNCTION`](/include/fit/function) macro provides a portable way to do this that supports C++11 and MSVC, and allows supporting inline variables(in [N4424](http://open-std.org/JTC1/SC22/WG21/docs/papers/2015/n4424.pdf)) in future versions of C++.
+The [`FIT_STATIC_FUNCTION`](/include/fit/function) macro provides a portable way to do this that supports pre-C++17 compilers and MSVC.
 
 Adaptors
 --------
 
-Now we have defined the function as a function object, we can add new "enhancements" to the function. One enhancement is to write "extension" methods. The proposal [N4165](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4165.pdf) for Unified Call Syntax(UFCS) in C++17 would have allowed a function call of `x.f(y)` to become `f(x, y)`. Without UFCS in C++, we can instead use pipable function which would transform `x | f(y)` into `f(x, y)`. To make `sum_f` function pipable using the [`pipable`](/include/fit/pipable) adaptor, we can simply write:
+Now we have defined the function as a function object, we can add new "enhancements" to the function. One enhancement is to write "extension" methods. The proposal [N4165](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4165.pdf) for Unified Call Syntax(UFCS) would have allowed a function call of `x.f(y)` to become `f(x, y)`. Without UFCS in C++, we can instead use pipable function which would transform `x | f(y)` into `f(x, y)`. To make `sum_f` function pipable using the [`pipable`](/include/fit/pipable) adaptor, we can simply write:
 
     FIT_STATIC_FUNCTION(sum) = pipable(sum_f());
 

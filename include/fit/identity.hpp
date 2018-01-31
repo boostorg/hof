@@ -24,14 +24,8 @@
 /// Synopsis
 /// --------
 /// 
-///     struct
-///     {
-///         template<class T>
-///         constexpr T operator()(T&& x) const
-///         {
-///             return fit::forward<T>(x);
-///         }
-///     } identity;
+///     template<class T>
+///     constexpr T identity(T&& x);
 /// 
 
 #include <utility>

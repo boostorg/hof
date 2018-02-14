@@ -101,7 +101,7 @@ template<class T, class Tag=void>
 struct alias
 {
     T value;
-    FIT_DELGATE_CONSTRUCTOR(alias, T, value)
+    FIT_DELEGATE_CONSTRUCTOR(alias, T, value)
 };
 
 #define FIT_DETAIL_ALIAS_GET_VALUE(ref, move) \

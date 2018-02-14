@@ -51,7 +51,7 @@ struct mutable_adaptor
 {
     mutable F f;
 
-    FIT_DELGATE_CONSTRUCTOR(mutable_adaptor, F, f);
+    FIT_DELEGATE_CONSTRUCTOR(mutable_adaptor, F, f);
 
     FIT_RETURNS_CLASS(mutable_adaptor);
 

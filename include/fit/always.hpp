@@ -84,7 +84,7 @@ struct always_base
 {
     T x;
 
-    FIT_DELGATE_CONSTRUCTOR(always_base, T, x)
+    FIT_DELEGATE_CONSTRUCTOR(always_base, T, x)
 
     typedef typename detail::unwrap_reference<T>::type result_type;
 

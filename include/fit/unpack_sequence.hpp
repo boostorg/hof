@@ -52,6 +52,7 @@
 /// --------
 /// 
 /// * [unpack](unpack)
+/// * [is_unpackable](is_unpackable)
 /// 
 
 #include <fit/config.hpp>

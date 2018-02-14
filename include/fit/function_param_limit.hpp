@@ -15,14 +15,19 @@
 /// -----------
 /// 
 /// The `function_param_limit` metafunction retrieves the maximum number of
-/// parameters for a function. This can be annotated using [`limit`](limit)
-/// decorator.
+/// parameters for a function. For function pointers it returns the number of
+/// parameters. Everything else, it returns `SIZE_MAX`, but this can be
+/// changed by annotating the function with the [`limit`](limit) decorator.
+/// 
+/// This is a type trait that inherits from `std::integral_constant`.
 /// 
 /// Synopsis
 /// --------
 /// 
 ///     template<class F>
-///     struct function_param_limit;
+///     struct function_param_limit
+///     : std::integral_constant<std::size_t, ...>
+///     {};
 /// 
 /// See Also
 /// --------

@@ -12,7 +12,9 @@
 /// ===============
 /// 
 /// How to unpack a sequence can be defined by specializing `unpack_sequence`.
-/// By default, `std::tuple` is already specialized.
+/// By default, `std::tuple` is already specialized. To implement this, one
+/// needs to provide a static `apply` function which will unpack the sequence
+/// to the parameters of the function.
 /// 
 /// Synopsis
 /// --------
@@ -26,17 +28,19 @@
 ///     #include <fit.hpp>
 ///     #include <cassert>
 /// 
-///     template<class... Ts>
-///     struct my_sequence;
-/// 
+///     struct my_sequence
+///     {
+///         int x;
+///         int y;
+///     };
+///     
 ///     namespace fit {
-///         template<class... Ts>
-///         struct unpack_sequence<my_sequence<Ts...>>
+///         struct unpack_sequence<my_sequence>
 ///         {
 ///             template<class F, class Sequence>
 ///             constexpr static auto apply(F&& f, Sequence&& s) FIT_RETURNS
 ///             (
-///                 s(std::forward<F>(f))
+///                 f(s.x, s.y)
 ///             );
 ///         };
 ///     } // namespace fit

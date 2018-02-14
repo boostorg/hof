@@ -1,12 +1,12 @@
-#include <fit/decorate.hpp>
+#include <boost/hof/decorate.hpp>
 #include "test.hpp"
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::decorate(fit::always(1))(fit::always(1))(fit::always(1))(5) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::decorate(boost::hof::always(1))(boost::hof::always(1))(boost::hof::always(1))(5) == 1);
 }
 
-#if FIT_HAS_NOEXCEPT_DEDUCTION
+#if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
 struct copy_throws 
 {
     copy_throws() {}
@@ -20,10 +20,10 @@ struct no_throw_fo
     void operator()(copy_throws) const noexcept {}
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(noexcept(fit::decorate(fit::always(1))(fit::always(1))(fit::always(1))(5)), "noexcept decorator");
-    static_assert(!noexcept(fit::decorate(fit::always(1))(fit::always(1))(fit::always(1))(copy_throws{})), "noexcept decorator");
+    static_assert(noexcept(boost::hof::decorate(boost::hof::always(1))(boost::hof::always(1))(boost::hof::always(1))(5)), "noexcept decorator");
+    static_assert(!noexcept(boost::hof::decorate(boost::hof::always(1))(boost::hof::always(1))(boost::hof::always(1))(copy_throws{})), "noexcept decorator");
 }
 
 #endif

@@ -1,8 +1,8 @@
-#include <fit/match.hpp>
-#include <fit/static.hpp>
-#include <fit/lambda.hpp>
-#include <fit/placeholders.hpp>
-#include <fit/limit.hpp>
+#include <boost/hof/match.hpp>
+#include <boost/hof/static.hpp>
+#include <boost/hof/lambda.hpp>
+#include <boost/hof/placeholders.hpp>
+#include <boost/hof/limit.hpp>
 #include "test.hpp"
 
 #include <memory>
@@ -28,7 +28,7 @@ namespace test1
         }
     };
 
-    static constexpr fit::static_<fit::match_adaptor<int_class, foo_class> > fun = {};
+    static constexpr boost::hof::static_<boost::hof::match_adaptor<int_class, foo_class> > fun = {};
 
     static_assert(std::is_same<int, decltype(fun(1))>::value, "Failed match");
     static_assert(std::is_same<foo, decltype(fun(foo()))>::value, "Failed match");
@@ -53,44 +53,44 @@ struct foo_class
     }
 };
 
-static constexpr fit::match_adaptor<int_class, foo_class> fun = {};
+static constexpr boost::hof::match_adaptor<int_class, foo_class> fun = {};
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     
-    FIT_TEST_CHECK(fun(1) == 1);
-    FIT_TEST_CHECK(fun(foo()) == 2);
+    BOOST_HOF_TEST_CHECK(fun(1) == 1);
+    BOOST_HOF_TEST_CHECK(fun(foo()) == 2);
 
-    FIT_STATIC_TEST_CHECK(fun(1) == 1);
-    FIT_STATIC_TEST_CHECK(fun(foo()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(fun(1) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(fun(foo()) == 2);
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     
-    FIT_TEST_CHECK(fit::reveal(fun)(1) == 1);
-    FIT_TEST_CHECK(fit::reveal(fun)(foo()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::reveal(fun)(1) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::reveal(fun)(foo()) == 2);
 
-    FIT_STATIC_TEST_CHECK(fit::reveal(fun)(1) == 1);
-    FIT_STATIC_TEST_CHECK(fit::reveal(fun)(foo()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::reveal(fun)(1) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::reveal(fun)(foo()) == 2);
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     
-    constexpr auto lam = fit::match(
-        FIT_STATIC_LAMBDA(int) { return 1; },
-        FIT_STATIC_LAMBDA(foo) { return 2; }
+    constexpr auto lam = boost::hof::match(
+        BOOST_HOF_STATIC_LAMBDA(int) { return 1; },
+        BOOST_HOF_STATIC_LAMBDA(foo) { return 2; }
     );
     
-    FIT_TEST_CHECK(lam(1) == 1);
-    FIT_TEST_CHECK(lam(foo()) == 2);
+    BOOST_HOF_TEST_CHECK(lam(1) == 1);
+    BOOST_HOF_TEST_CHECK(lam(foo()) == 2);
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     int i = 0;
-    auto lam = fit::match(
+    auto lam = boost::hof::match(
         [&](int) { return i+1; },
         [&](foo) { return i+2; }
     );
@@ -98,12 +98,12 @@ FIT_TEST_CASE()
 #ifndef _MSC_VER
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(lam));
 #endif
-    FIT_TEST_CHECK(lam(1) == 1);
-    FIT_TEST_CHECK(lam(foo()) == 2);
+    BOOST_HOF_TEST_CHECK(lam(1) == 1);
+    BOOST_HOF_TEST_CHECK(lam(foo()) == 2);
 };
 
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     struct not_default_constructible
     {
@@ -113,7 +113,7 @@ FIT_TEST_CASE()
     };
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(not_default_constructible);
     not_default_constructible ndc = not_default_constructible(0);
-    auto lam = fit::match(
+    auto lam = boost::hof::match(
         [&](int) { return ndc.i+1; },
         [&](foo) { return ndc.i+2; }
     );
@@ -122,8 +122,8 @@ FIT_TEST_CASE()
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(lam));
 #endif
     
-    FIT_TEST_CHECK(lam(1) == 1);
-    FIT_TEST_CHECK(lam(foo()) == 2);
+    BOOST_HOF_TEST_CHECK(lam(1) == 1);
+    BOOST_HOF_TEST_CHECK(lam(foo()) == 2);
 };
 
 
@@ -149,39 +149,39 @@ struct foo_move_class
     }
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto fun_move = fit::match(int_move_class(), foo_move_class());
-    FIT_TEST_CHECK(fun_move(1) == 1);
-    FIT_TEST_CHECK(fun_move(foo()) == 2);
+    auto fun_move = boost::hof::match(int_move_class(), foo_move_class());
+    BOOST_HOF_TEST_CHECK(fun_move(1) == 1);
+    BOOST_HOF_TEST_CHECK(fun_move(foo()) == 2);
 
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    const auto negate = (!fit::_);
-    const auto sub = (fit::_ - fit::_);
-    FIT_TEST_CHECK(fit::match(negate, sub)(0) == negate(0));
-    FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == sub(0, 1));
+    const auto negate = (!boost::hof::_);
+    const auto sub = (boost::hof::_ - boost::hof::_);
+    BOOST_HOF_TEST_CHECK(boost::hof::match(negate, sub)(0) == negate(0));
+    BOOST_HOF_TEST_CHECK(boost::hof::match(negate, sub)(0, 1) == sub(0, 1));
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    const auto negate = (!fit::_1);
-    const auto sub = (fit::_1 - fit::_2);
-    FIT_TEST_CHECK(fit::match(negate, sub)(0) == negate(0));
+    const auto negate = (!boost::hof::_1);
+    const auto sub = (boost::hof::_1 - boost::hof::_2);
+    BOOST_HOF_TEST_CHECK(boost::hof::match(negate, sub)(0) == negate(0));
     // This is test is disabled because its invalid. It is valid to give more
     // parameters than what are used by the placeholders. So negate(0, 1) is a
     // valid call, which makes the following test fail with ambigous overload.
-    // FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == sub(0, 1));
+    // BOOST_HOF_TEST_CHECK(boost::hof::match(negate, sub)(0, 1) == sub(0, 1));
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    const auto negate = fit::limit_c<1>(!fit::_1);
-    const auto sub = fit::limit_c<2>(fit::_1 - fit::_2);
-    FIT_TEST_CHECK(fit::match(negate, sub)(0) == negate(0));
+    const auto negate = boost::hof::limit_c<1>(!boost::hof::_1);
+    const auto sub = boost::hof::limit_c<2>(boost::hof::_1 - boost::hof::_2);
+    BOOST_HOF_TEST_CHECK(boost::hof::match(negate, sub)(0) == negate(0));
     // This test will pass because we have limited the number of parameters.
-    FIT_TEST_CHECK(fit::match(negate, sub)(0, 1) == sub(0, 1));
+    BOOST_HOF_TEST_CHECK(boost::hof::match(negate, sub)(0, 1) == sub(0, 1));
 }
 

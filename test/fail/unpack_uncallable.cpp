@@ -1,18 +1,18 @@
-#include <fit/unpack.hpp>
+#include <boost/hof/unpack.hpp>
 
 struct foo
 {};
 
-namespace fit {
+namespace boost { namespace hof {
 
 template<>
 struct unpack_sequence<foo>
 {
     template<class F, class S>
-    constexpr static auto apply(F&&, S&& s) FIT_RETURNS(s.bar);
+    constexpr static auto apply(F&&, S&& s) BOOST_HOF_RETURNS(s.bar);
 };
 }
 
 int main() {
-    fit::unpack(fit::always(1))(foo{});
+    boost::hof::unpack(boost::hof::always(1))(foo{});
 }

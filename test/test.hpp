@@ -7,21 +7,21 @@
 #include <functional>
 #include <vector>
 #include <memory>
-#include <fit/detail/forward.hpp>
+#include <boost/hof/detail/forward.hpp>
 
-#ifndef FIT_HAS_STATIC_TEST_CHECK
+#ifndef BOOST_HOF_HAS_STATIC_TEST_CHECK
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7) || defined(_MSC_VER)
-#define FIT_HAS_STATIC_TEST_CHECK 0
+#define BOOST_HOF_HAS_STATIC_TEST_CHECK 0
 #else
-#define FIT_HAS_STATIC_TEST_CHECK 1
+#define BOOST_HOF_HAS_STATIC_TEST_CHECK 1
 #endif
 #endif
 
 
-#define FIT_PP_CAT(x, y) FIT_PP_PRIMITIVE_CAT(x, y)
-#define FIT_PP_PRIMITIVE_CAT(x, y) x ## y
+#define BOOST_HOF_PP_CAT(x, y) BOOST_HOF_PP_PRIMITIVE_CAT(x, y)
+#define BOOST_HOF_PP_PRIMITIVE_CAT(x, y) x ## y
 
-namespace fit { namespace test {
+namespace boost { namespace hof { namespace test {
 
 typedef std::function<void()> test_case;
 static std::vector<test_case> test_cases;
@@ -34,10 +34,10 @@ struct auto_register
     }
 };
 
-#define FIT_DETAIL_TEST_CASE(name) \
+#define BOOST_HOF_DETAIL_TEST_CASE(name) \
 struct name \
 { void operator()() const; }; \
-static fit::test::auto_register FIT_PP_CAT(name, _register) = fit::test::auto_register(name()); \
+static boost::hof::test::auto_register BOOST_HOF_PP_CAT(name, _register) = boost::hof::test::auto_register(name()); \
 void name::operator()() const
 
 template<class T>
@@ -46,12 +46,12 @@ T bare(const T&);
 template<class T>
 inline void unused(T&&) {}
 
-}} // namespace fit
+}}} // namespace boost::hof
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
-#define FIT_STATIC_AUTO constexpr auto
+#define BOOST_HOF_STATIC_AUTO constexpr auto
 #else
-#define FIT_STATIC_AUTO const constexpr auto
+#define BOOST_HOF_STATIC_AUTO const constexpr auto
 #endif
 
 #define STATIC_ASSERT_SAME(...) static_assert(std::is_same<__VA_ARGS__>::value, "Types are not the same")
@@ -65,21 +65,21 @@ inline void unused(T&&) {}
 #else
 #define STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(T) static_assert(!std::is_default_constructible<T>::value, "Default constructible")
 #endif
-#define STATIC_ASSERT_EMPTY(x) static_assert(std::is_empty<decltype(fit::test::bare(x))>::value, "Not empty");
+#define STATIC_ASSERT_EMPTY(x) static_assert(std::is_empty<decltype(boost::hof::test::bare(x))>::value, "Not empty");
 
 
-#define FIT_TEST_CASE() FIT_DETAIL_TEST_CASE(FIT_PP_CAT(test_, __LINE__))
-#define FIT_STATIC_TEST_CASE() struct FIT_PP_CAT(test_, __LINE__)
+#define BOOST_HOF_TEST_CASE() BOOST_HOF_DETAIL_TEST_CASE(BOOST_HOF_PP_CAT(test_, __LINE__))
+#define BOOST_HOF_STATIC_TEST_CASE() struct BOOST_HOF_PP_CAT(test_, __LINE__)
 
-#define FIT_TEST_TEMPLATE(...) typedef std::integral_constant<int, sizeof(__VA_ARGS__)> FIT_PP_CAT(test_template_, __LINE__)
+#define BOOST_HOF_TEST_TEMPLATE(...) typedef std::integral_constant<int, sizeof(__VA_ARGS__)> BOOST_HOF_PP_CAT(test_template_, __LINE__)
 
-#define FIT_TEST_CHECK(...) if (!(__VA_ARGS__)) std::cout << "***** FAILED *****: " << #__VA_ARGS__ << "@" << __FILE__ << ": " << __LINE__ << std::endl
-#define FIT_STRINGIZE(...) #__VA_ARGS__
+#define BOOST_HOF_TEST_CHECK(...) if (!(__VA_ARGS__)) std::cout << "***** FAILED *****: " << #__VA_ARGS__ << "@" << __FILE__ << ": " << __LINE__ << std::endl
+#define BOOST_HOF_STRINGIZE(...) #__VA_ARGS__
 
-#if FIT_HAS_STATIC_TEST_CHECK
-#define FIT_STATIC_TEST_CHECK(...) static_assert(__VA_ARGS__, FIT_STRINGIZE(__VA_ARGS__))
+#if BOOST_HOF_HAS_STATIC_TEST_CHECK
+#define BOOST_HOF_STATIC_TEST_CHECK(...) static_assert(__VA_ARGS__, BOOST_HOF_STRINGIZE(__VA_ARGS__))
 #else
-#define FIT_STATIC_TEST_CHECK(...)
+#define BOOST_HOF_STATIC_TEST_CHECK(...)
 #endif
 
 struct binary_class
@@ -116,7 +116,7 @@ struct unary_class
     template<class T>
     constexpr T&& operator()(T&& x) const noexcept
     {
-        return fit::forward<T>(x);
+        return boost::hof::forward<T>(x);
     }
 
 };
@@ -173,7 +173,7 @@ struct move_class
 
 int main()
 {
-	for(const auto& tc: fit::test::test_cases) tc();
+	for(const auto& tc: boost::hof::test::test_cases) tc();
     return 0;
 }
  

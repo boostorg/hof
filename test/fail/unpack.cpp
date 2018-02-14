@@ -1,9 +1,9 @@
-#include <fit/unpack.hpp>
+#include <boost/hof/unpack.hpp>
 
 struct foo
 {};
 
-namespace fit {
+namespace boost { namespace hof {
 
 template<>
 struct unpack_sequence<foo>
@@ -17,5 +17,5 @@ struct unpack_sequence<foo>
 }
 
 int main() {
-    fit::unpack(fit::always(1))(foo{});
+    boost::hof::unpack(boost::hof::always(1))(foo{});
 }

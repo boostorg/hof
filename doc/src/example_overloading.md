@@ -36,24 +36,24 @@ or `is_detected`(see [n4502](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/
 However, with the Fit library it can simply be written like
 this:
 
-    FIT_STATIC_LAMBDA_FUNCTION(stringify) = conditional(
-        [](auto x) FIT_RETURNS(std::to_string(x)),
-        [](auto x) FIT_RETURNS(static_cast<std::ostringstream&>(std::ostringstream() << x).str())
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(stringify) = conditional(
+        [](auto x) BOOST_HOF_RETURNS(std::to_string(x)),
+        [](auto x) BOOST_HOF_RETURNS(static_cast<std::ostringstream&>(std::ostringstream() << x).str())
     );
 
-So, using [`FIT_RETURNS`](/include/fit/returns) not only deduces the return type for the function, but it also constrains the function on whether the expression is valid or not. So by writing `FIT_RETURNS(std::to_string(x))` then the first function will try to call `std::to_string` function if possible. If not, then the second function will be called. 
+So, using [`BOOST_HOF_RETURNS`](/include/boost/hof/returns) not only deduces the return type for the function, but it also constrains the function on whether the expression is valid or not. So by writing `BOOST_HOF_RETURNS(std::to_string(x))` then the first function will try to call `std::to_string` function if possible. If not, then the second function will be called. 
 
-The second function still uses [`FIT_RETURNS`](/include/fit/returns), so the function will still be constrained by whether the `<<` stream operator can be used. Although it may seem unnecessary because there is not another function, however, this makes the function composable. So we could use this to define a `serialize` function that tries to call `stringify` first, otherwise it looks for the member `.serialize()`:
+The second function still uses [`BOOST_HOF_RETURNS`](/include/boost/hof/returns), so the function will still be constrained by whether the `<<` stream operator can be used. Although it may seem unnecessary because there is not another function, however, this makes the function composable. So we could use this to define a `serialize` function that tries to call `stringify` first, otherwise it looks for the member `.serialize()`:
 
-    FIT_STATIC_LAMBDA_FUNCTION(serialize) = conditional(
-        [](auto x) FIT_RETURNS(stringify(x)),
-        [](auto x) FIT_RETURNS(x.serialize())
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(serialize) = conditional(
+        [](auto x) BOOST_HOF_RETURNS(stringify(x)),
+        [](auto x) BOOST_HOF_RETURNS(x.serialize())
     );
 
 static_if
 ---------
 
-In addition, this can be used with the [`fit::if_`](/include/fit/if) decorator to create `static_if`-like
+In addition, this can be used with the [`boost::hof::if_`](/include/boost/hof/if) decorator to create `static_if`-like
 constructs on pre-C++17 compilers. For example, Baptiste Wicht discusses how one could write `static_if` in C++ [here](http://baptiste-wicht.com/posts/2015/07/simulate-static_if-with-c11c14.html).
 
 He wants to be able to write this:
@@ -83,10 +83,10 @@ this:
         ));
     }
 
-The `id` parameter passed to the lambda is the [`identity`](/include/fit/identity) function. As explained in the article, this is used to delay the lookup of types by making it a dependent type(i.e. the type depends on a template parameter), which is necessary to avoid compile errors. The [`eval`](/include/fit/eval) function that is called will pass this `identity` function to the lambdas.
+The `id` parameter passed to the lambda is the [`identity`](/include/boost/hof/identity) function. As explained in the article, this is used to delay the lookup of types by making it a dependent type(i.e. the type depends on a template parameter), which is necessary to avoid compile errors. The [`eval`](/include/boost/hof/eval) function that is called will pass this `identity` function to the lambdas.
 
 The advantage of using the Fit library instead of the solution in Baptiste
-Wicht's blog, is that [`conditional`](/include/fit/conditional) allows more than just two conditions. So if
+Wicht's blog, is that [`conditional`](/include/boost/hof/conditional) allows more than just two conditions. So if
 there was another trait to be checked, such as `is_stack`, it could be written
 like this:
 
@@ -122,8 +122,8 @@ this:
         std::true_type{}
     );
 
-    FIT_STATIC_LAMBDA_FUNCTION(has_pointer_operators) = conditional(
-        FIT_LIFT(has_pointer_member),
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(has_pointer_operators) = conditional(
+        BOOST_HOF_LIFT(has_pointer_member),
         [](auto* x) -> bool_constant<(!std::is_void<decltype(*x)>())> { return {}; },
         always(std::false_type{})
     );

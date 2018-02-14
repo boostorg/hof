@@ -1,43 +1,43 @@
-#include <fit/limit.hpp>
-#include <fit/is_callable.hpp>
-#include <fit/pack.hpp>
+#include <boost/hof/limit.hpp>
+#include <boost/hof/is_callable.hpp>
+#include <boost/hof/pack.hpp>
 #include "test.hpp"
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto f = fit::limit(std::integral_constant<int, 2>())(binary_class());
-    FIT_TEST_CHECK(f(1, 2) == 3);
-    static_assert(fit::function_param_limit<decltype(f)>::value == 2, "Function limit is 2");
+    auto f = boost::hof::limit(std::integral_constant<int, 2>())(binary_class());
+    BOOST_HOF_TEST_CHECK(f(1, 2) == 3);
+    static_assert(boost::hof::function_param_limit<decltype(f)>::value == 2, "Function limit is 2");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto f = fit::limit_c<2>(binary_class());
-    FIT_TEST_CHECK(f(1, 2) == 3);
-    static_assert(fit::function_param_limit<decltype(f)>::value == 2, "Function limit is 2");
+    auto f = boost::hof::limit_c<2>(binary_class());
+    BOOST_HOF_TEST_CHECK(f(1, 2) == 3);
+    static_assert(boost::hof::function_param_limit<decltype(f)>::value == 2, "Function limit is 2");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto f = fit::limit_c<2>(fit::always(3));
-    FIT_TEST_CHECK(f(1, 2) == 3);
-    FIT_TEST_CHECK(f(1) == 3);
-    FIT_TEST_CHECK(f() == 3);
-    static_assert(fit::function_param_limit<decltype(f)>::value == 2, "Function limit is 2");
-    static_assert(fit::is_callable<decltype(f), int>::value, "Callable");
-    static_assert(fit::is_callable<decltype(f), int, int>::value, "Callable");
-    static_assert(!fit::is_callable<decltype(f), int, int, int>::value, "Not Callable");
+    auto f = boost::hof::limit_c<2>(boost::hof::always(3));
+    BOOST_HOF_TEST_CHECK(f(1, 2) == 3);
+    BOOST_HOF_TEST_CHECK(f(1) == 3);
+    BOOST_HOF_TEST_CHECK(f() == 3);
+    static_assert(boost::hof::function_param_limit<decltype(f)>::value == 2, "Function limit is 2");
+    static_assert(boost::hof::is_callable<decltype(f), int>::value, "Callable");
+    static_assert(boost::hof::is_callable<decltype(f), int, int>::value, "Callable");
+    static_assert(!boost::hof::is_callable<decltype(f), int, int, int>::value, "Not Callable");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(!fit::is_callable<decltype(fit::limit), int>::value, "Not integral constant");
+    static_assert(!boost::hof::is_callable<decltype(boost::hof::limit), int>::value, "Not integral constant");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(fit::function_param_limit<decltype(fit::pack())>::value == 0, "Failed limit on pack");
-    static_assert(fit::function_param_limit<decltype(fit::pack(1))>::value == 1, "Failed limit on pack");
-    static_assert(fit::function_param_limit<decltype(fit::pack(1, 2))>::value == 2, "Failed limit on pack");
+    static_assert(boost::hof::function_param_limit<decltype(boost::hof::pack())>::value == 0, "Failed limit on pack");
+    static_assert(boost::hof::function_param_limit<decltype(boost::hof::pack(1))>::value == 1, "Failed limit on pack");
+    static_assert(boost::hof::function_param_limit<decltype(boost::hof::pack(1, 2))>::value == 2, "Failed limit on pack");
 }
 

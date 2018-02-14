@@ -1,5 +1,5 @@
-#include <fit/apply_eval.hpp>
+#include <boost/hof/apply_eval.hpp>
 
 int main() {
-    (void)fit::apply_eval(fit::always(), 1, 2);
+    (void)boost::hof::apply_eval(boost::hof::always(), 1, 2);
 }

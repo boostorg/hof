@@ -1,32 +1,32 @@
-#include <fit/flip.hpp>
-#include <fit/placeholders.hpp>
+#include <boost/hof/flip.hpp>
+#include <boost/hof/placeholders.hpp>
 #include "test.hpp"
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(3 == fit::flip(fit::_ - fit::_)(2, 5));
-    FIT_STATIC_TEST_CHECK(3 == fit::flip(fit::_ - fit::_)(2, 5));
+    BOOST_HOF_TEST_CHECK(3 == boost::hof::flip(boost::hof::_ - boost::hof::_)(2, 5));
+    BOOST_HOF_STATIC_TEST_CHECK(3 == boost::hof::flip(boost::hof::_ - boost::hof::_)(2, 5));
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     typedef std::integral_constant<int, 1> one;
     typedef std::integral_constant<int, 2> two;
     typedef std::integral_constant<int, 3> three;
-    FIT_TEST_CHECK(1 == fit::arg(one{})(1, 2, 3, 4));
-    FIT_STATIC_TEST_CHECK(1 == fit::arg(one{})(1, 2, 3, 4));
-    FIT_TEST_CHECK(2 == fit::flip(fit::arg(one{}))(1, 2, 3, 4));
-    FIT_STATIC_TEST_CHECK(2 == fit::flip(fit::arg(one{}))(1, 2, 3, 4));
+    BOOST_HOF_TEST_CHECK(1 == boost::hof::arg(one{})(1, 2, 3, 4));
+    BOOST_HOF_STATIC_TEST_CHECK(1 == boost::hof::arg(one{})(1, 2, 3, 4));
+    BOOST_HOF_TEST_CHECK(2 == boost::hof::flip(boost::hof::arg(one{}))(1, 2, 3, 4));
+    BOOST_HOF_STATIC_TEST_CHECK(2 == boost::hof::flip(boost::hof::arg(one{}))(1, 2, 3, 4));
 
-    FIT_TEST_CHECK(2 == fit::arg(two{})(1, 2, 3, 4));
-    FIT_STATIC_TEST_CHECK(2 == fit::arg(two{})(1, 2, 3, 4));
-    FIT_TEST_CHECK(1 == fit::flip(fit::arg(two{}))(1, 2, 3, 4));
-    FIT_STATIC_TEST_CHECK(1 == fit::flip(fit::arg(two{}))(1, 2, 3, 4));
+    BOOST_HOF_TEST_CHECK(2 == boost::hof::arg(two{})(1, 2, 3, 4));
+    BOOST_HOF_STATIC_TEST_CHECK(2 == boost::hof::arg(two{})(1, 2, 3, 4));
+    BOOST_HOF_TEST_CHECK(1 == boost::hof::flip(boost::hof::arg(two{}))(1, 2, 3, 4));
+    BOOST_HOF_STATIC_TEST_CHECK(1 == boost::hof::flip(boost::hof::arg(two{}))(1, 2, 3, 4));
 
-    FIT_TEST_CHECK(3 == fit::arg(three{})(1, 2, 3, 4));
-    FIT_STATIC_TEST_CHECK(3 == fit::arg(three{})(1, 2, 3, 4));
-    FIT_TEST_CHECK(3 == fit::flip(fit::arg(three{}))(1, 2, 3, 4));
-    FIT_STATIC_TEST_CHECK(3 == fit::flip(fit::arg(three{}))(1, 2, 3, 4));
+    BOOST_HOF_TEST_CHECK(3 == boost::hof::arg(three{})(1, 2, 3, 4));
+    BOOST_HOF_STATIC_TEST_CHECK(3 == boost::hof::arg(three{})(1, 2, 3, 4));
+    BOOST_HOF_TEST_CHECK(3 == boost::hof::flip(boost::hof::arg(three{}))(1, 2, 3, 4));
+    BOOST_HOF_STATIC_TEST_CHECK(3 == boost::hof::flip(boost::hof::arg(three{}))(1, 2, 3, 4));
 }
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7
@@ -42,14 +42,14 @@ struct f FINAL {
     }
 };
 
-#if FIT_HAS_NOEXCEPT_DEDUCTION
-FIT_TEST_CASE()
+#if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(fit::flip(fit::_ - fit::_)(2, 5), "noexcept flip");
+    static_assert(boost::hof::flip(boost::hof::_ - boost::hof::_)(2, 5), "noexcept flip");
 }
 #endif
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::flip(f())(nullptr, 2) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::flip(f())(nullptr, 2) == 2);
 }

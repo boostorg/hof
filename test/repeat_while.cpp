@@ -1,5 +1,5 @@
-#include <fit/repeat_while.hpp>
-#include <fit/reveal.hpp>
+#include <boost/hof/repeat_while.hpp>
+#include <boost/hof/reveal.hpp>
 #include "test.hpp"
 
 // TODO: Test default construction, and static initialization
@@ -46,44 +46,44 @@ struct not_limit
     template<class T>
     constexpr bool operator()(T x) const
     {
-        return x != (FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
+        return x != (BOOST_HOF_RECURSIVE_CONSTEXPR_DEPTH+4);
     }
 };
 
-#if FIT_HAS_NOEXCEPT_DEDUCTION
-FIT_TEST_CASE()
+#if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(noexcept(fit::repeat_while(not_6())(increment())(1)), "noexcept repeat_while");
-    static_assert(noexcept(fit::repeat_while(not_6_constant())(increment_constant())(std::integral_constant<int, 1>())), "noexcept repeat_while");
+    static_assert(noexcept(boost::hof::repeat_while(not_6())(increment())(1)), "noexcept repeat_while");
+    static_assert(noexcept(boost::hof::repeat_while(not_6_constant())(increment_constant())(std::integral_constant<int, 1>())), "noexcept repeat_while");
 }
 #endif
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     static_assert
     (
         std::is_same<
             std::integral_constant<int, 6>, 
-            decltype(fit::repeat_while(not_6_constant())(increment_constant())(std::integral_constant<int, 1>()))
+            decltype(boost::hof::repeat_while(not_6_constant())(increment_constant())(std::integral_constant<int, 1>()))
         >::value,
         "Error"
     );
 
-    std::integral_constant<int, 6> x = fit::repeat_while(not_6_constant())(increment_constant())(std::integral_constant<int, 1>());
-    fit::test::unused(x);
+    std::integral_constant<int, 6> x = boost::hof::repeat_while(not_6_constant())(increment_constant())(std::integral_constant<int, 1>());
+    boost::hof::test::unused(x);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::repeat_while(not_6())(increment())(1) == 6);
-    FIT_TEST_CHECK(fit::repeat_while(not_6())(increment())(1) == 6);
-    FIT_TEST_CHECK(fit::reveal(fit::repeat_while(not_6())(increment()))(1) == 6);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::repeat_while(not_6())(increment())(1) == 6);
+    BOOST_HOF_TEST_CHECK(boost::hof::repeat_while(not_6())(increment())(1) == 6);
+    BOOST_HOF_TEST_CHECK(boost::hof::reveal(boost::hof::repeat_while(not_6())(increment()))(1) == 6);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::repeat_while(not_limit())(increment())(1) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
-#if FIT_HAS_RELAXED_CONSTEXPR
-    FIT_STATIC_TEST_CHECK(fit::repeat_while(not_limit())(increment())(1) == FIT_RECURSIVE_CONSTEXPR_DEPTH+4);
+    BOOST_HOF_TEST_CHECK(boost::hof::repeat_while(not_limit())(increment())(1) == BOOST_HOF_RECURSIVE_CONSTEXPR_DEPTH+4);
+#if BOOST_HOF_HAS_RELAXED_CONSTEXPR
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::repeat_while(not_limit())(increment())(1) == BOOST_HOF_RECURSIVE_CONSTEXPR_DEPTH+4);
 #endif
 }

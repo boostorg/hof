@@ -7,15 +7,15 @@
 
 #include "example.h"
 
-using namespace fit;
+using namespace boost::hof;
 
 #ifdef _MSC_VER
 template<class R, class T>
-auto member_find(const R& r, const T& x) FIT_RETURNS(r.find(x));
+auto member_find(const R& r, const T& x) BOOST_HOF_RETURNS(r.find(x));
 #endif
 
 // Function to find an iterator using a containers built-in find if available
-FIT_STATIC_LAMBDA_FUNCTION(find_iterator) = conditional(
+BOOST_HOF_STATIC_LAMBDA_FUNCTION(find_iterator) = conditional(
     [](const std::string& s, const auto& x)
     {
         auto index = s.find(x);
@@ -25,9 +25,9 @@ FIT_STATIC_LAMBDA_FUNCTION(find_iterator) = conditional(
 #ifdef _MSC_VER
     // On MSVC, trailing decltype doesn't work with generic lambdas, so a
     // seperate function can be used instead.
-    FIT_LIFT(member_find),
+    BOOST_HOF_LIFT(member_find),
 #else
-    [](const auto& r, const auto& x) FIT_RETURNS(r.find(x)),
+    [](const auto& r, const auto& x) BOOST_HOF_RETURNS(r.find(x)),
 #endif
     [](const auto& r, const auto& x)
     {
@@ -37,7 +37,7 @@ FIT_STATIC_LAMBDA_FUNCTION(find_iterator) = conditional(
     }
 );
 // Implement an infix `in` operator to check if a range contains an element
-FIT_STATIC_LAMBDA_FUNCTION(in) = infix(
+BOOST_HOF_STATIC_LAMBDA_FUNCTION(in) = infix(
     [](const auto& x, const auto& r)
     {
         using std::end;
@@ -45,7 +45,7 @@ FIT_STATIC_LAMBDA_FUNCTION(in) = infix(
     }
 );
 // Negate version of `in`
-FIT_STATIC_LAMBDA_FUNCTION(not_in) = infix(compose(not _, in));
+BOOST_HOF_STATIC_LAMBDA_FUNCTION(not_in) = infix(compose(not _, in));
 
 int main()
 {

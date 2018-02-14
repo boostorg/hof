@@ -1,7 +1,7 @@
-#include <fit/conditional.hpp>
-#include <fit/static.hpp>
-#include <fit/lambda.hpp>
-#include <fit/function.hpp>
+#include <boost/hof/conditional.hpp>
+#include <boost/hof/static.hpp>
+#include <boost/hof/lambda.hpp>
+#include <boost/hof/function.hpp>
 #include <memory>
 #include "test.hpp"
 
@@ -45,99 +45,99 @@ struct ff
     }
 };
 
-static constexpr fit::static_<fit::conditional_adaptor<f1, f2, f3, ff> > f = {};
+static constexpr boost::hof::static_<boost::hof::conditional_adaptor<f1, f2, f3, ff> > f = {};
 
-FIT_STATIC_FUNCTION(f_constexpr) = fit::conditional_adaptor<f1, f2, f3, ff>();
+BOOST_HOF_STATIC_FUNCTION(f_constexpr) = boost::hof::conditional_adaptor<f1, f2, f3, ff>();
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(f(t1()) == 1);
-    FIT_TEST_CHECK(f(t2()) == 2);
-    FIT_TEST_CHECK(f(t3()) == 3);
+    BOOST_HOF_TEST_CHECK(f(t1()) == 1);
+    BOOST_HOF_TEST_CHECK(f(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(f(t3()) == 3);
 
-    FIT_STATIC_TEST_CHECK(f_constexpr(t1()) == 1);
-    FIT_STATIC_TEST_CHECK(f_constexpr(t2()) == 2);
-    FIT_STATIC_TEST_CHECK(f_constexpr(t3()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(f_constexpr(t1()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(f_constexpr(t2()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(f_constexpr(t3()) == 3);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::conditional(f1{}, f2{})(t1()) == 1);
-    FIT_TEST_CHECK(fit::conditional(f1{}, f2{})(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(f1{}, f2{})(t1()) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(f1{}, f2{})(t2()) == 2);
 
-    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, f2{})(t1()) == 1);
-    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, f2{})(t2()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(f1{}, f2{})(t1()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(f1{}, f2{})(t2()) == 2);
 }
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
 #else
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f1{}, f2{}))(t1()) == 1);
-    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f1{}, f2{}))(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f1{}, f2{}))(t1()) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f1{}, f2{}))(t2()) == 2);
 
-    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f1{}, f2{}))(t1()) == 1);
-    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f1{}, f2{}))(t2()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f1{}, f2{}))(t1()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f1{}, f2{}))(t2()) == 2);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t1()) == 1);
-    FIT_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t2()) == 2);
-    FIT_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t3()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(f1{}, boost::hof::conditional(f2{}, f3{}))(t1()) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(f1{}, boost::hof::conditional(f2{}, f3{}))(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(f1{}, boost::hof::conditional(f2{}, f3{}))(t3()) == 3);
 
-    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t1()) == 1);
-    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t2()) == 2);
-    FIT_STATIC_TEST_CHECK(fit::conditional(f1{}, fit::conditional(f2{}, f3{}))(t3()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(f1{}, boost::hof::conditional(f2{}, f3{}))(t1()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(f1{}, boost::hof::conditional(f2{}, f3{}))(t2()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(f1{}, boost::hof::conditional(f2{}, f3{}))(t3()) == 3);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t1()) == 1);
-    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t2()) == 2);
-    FIT_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t3()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f2{}, f3{}))(t1()) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f2{}, f3{}))(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f2{}, f3{}))(t3()) == 3);
 
-    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t1()) == 1);
-    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t2()) == 2);
-    FIT_STATIC_TEST_CHECK(fit::conditional(fit::conditional(f1{}, f2{}), fit::conditional(f2{}, f3{}))(t3()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f2{}, f3{}))(t1()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f2{}, f3{}))(t2()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::conditional(boost::hof::conditional(f1{}, f2{}), boost::hof::conditional(f2{}, f3{}))(t3()) == 3);
 }
 
 #endif
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto f_move_local = fit::conditional(f_move1(1), f_move2(2), f_move3(3));
+    auto f_move_local = boost::hof::conditional(f_move1(1), f_move2(2), f_move3(3));
     STATIC_ASSERT_MOVE_ONLY(decltype(f_move_local));
-    FIT_TEST_CHECK(f_move_local(t_move1()) == 1);
-    FIT_TEST_CHECK(f_move_local(t_move2()) == 2);
-    FIT_TEST_CHECK(f_move_local(t_move3()) == 3);
+    BOOST_HOF_TEST_CHECK(f_move_local(t_move1()) == 1);
+    BOOST_HOF_TEST_CHECK(f_move_local(t_move2()) == 2);
+    BOOST_HOF_TEST_CHECK(f_move_local(t_move3()) == 3);
 }
 #ifndef _MSC_VER
-static constexpr auto lam = fit::conditional(
-    FIT_STATIC_LAMBDA(t1)
+static constexpr auto lam = boost::hof::conditional(
+    BOOST_HOF_STATIC_LAMBDA(t1)
     {
         return 1;
     },
-    FIT_STATIC_LAMBDA(t2)
+    BOOST_HOF_STATIC_LAMBDA(t2)
     {
         return 2;
     },
-    FIT_STATIC_LAMBDA(t3)
+    BOOST_HOF_STATIC_LAMBDA(t3)
     {
         return 3;
     }
 );
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(lam(t1()) == 1);
-    FIT_TEST_CHECK(lam(t2()) == 2);
-    FIT_TEST_CHECK(lam(t3()) == 3);
+    BOOST_HOF_TEST_CHECK(lam(t1()) == 1);
+    BOOST_HOF_TEST_CHECK(lam(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(lam(t3()) == 3);
 }
 #endif
 
-FIT_STATIC_LAMBDA_FUNCTION(static_fun) = fit::conditional(
+BOOST_HOF_STATIC_LAMBDA_FUNCTION(static_fun) = boost::hof::conditional(
     [](t1)
     {
         return 1;
@@ -152,16 +152,16 @@ FIT_STATIC_LAMBDA_FUNCTION(static_fun) = fit::conditional(
     }
 );
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(static_fun(t1()) == 1);
-    FIT_TEST_CHECK(static_fun(t2()) == 2);
-    FIT_TEST_CHECK(static_fun(t3()) == 3);
+    BOOST_HOF_TEST_CHECK(static_fun(t1()) == 1);
+    BOOST_HOF_TEST_CHECK(static_fun(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(static_fun(t3()) == 3);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::conditional(fit::identity, fit::identity)(3) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::conditional(boost::hof::identity, boost::hof::identity)(3) == 3);
 }
 
 template<class T>
@@ -175,10 +175,10 @@ struct no_throw_fo
 {
     void operator()(T) const noexcept {}
 };
-#if FIT_HAS_NOEXCEPT_DEDUCTION
-FIT_TEST_CASE()
+#if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
+BOOST_HOF_TEST_CASE()
 {
-    typedef fit::conditional_adaptor<throw_fo<t1>, no_throw_fo<t2>> fun;
+    typedef boost::hof::conditional_adaptor<throw_fo<t1>, no_throw_fo<t2>> fun;
     auto g = fun{};
     static_assert(noexcept(g(t2{})), "noexcept conditional");
     static_assert(!noexcept(g(t1{})), "noexcept conditional");
@@ -187,9 +187,9 @@ FIT_TEST_CASE()
     static_assert(!noexcept(fun{}(t1{})), "noexcept conditional");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    typedef fit::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>> fun;
+    typedef boost::hof::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>> fun;
     auto g = fun{};
     static_assert(noexcept(g(t2{})), "noexcept conditional");
     static_assert(!noexcept(g(t1{})), "noexcept conditional");
@@ -198,13 +198,13 @@ FIT_TEST_CASE()
     static_assert(!noexcept(fun{}(t1{})), "noexcept conditional");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(noexcept(fit::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>>{}(t2{})), "noexcept conditional");
-    static_assert(!noexcept(fit::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>>{}(t1{})), "noexcept conditional");
+    static_assert(noexcept(boost::hof::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>>{}(t2{})), "noexcept conditional");
+    static_assert(!noexcept(boost::hof::conditional_adaptor<no_throw_fo<t2>, throw_fo<t1>>{}(t1{})), "noexcept conditional");
 
-    static_assert(noexcept(fit::conditional(no_throw_fo<t2>{}, throw_fo<t1>{})(t2{})), "noexcept conditional");
-    static_assert(!noexcept(fit::conditional(no_throw_fo<t2>{}, throw_fo<t1>{})(t1{})), "noexcept conditional");
+    static_assert(noexcept(boost::hof::conditional(no_throw_fo<t2>{}, throw_fo<t1>{})(t2{})), "noexcept conditional");
+    static_assert(!noexcept(boost::hof::conditional(no_throw_fo<t2>{}, throw_fo<t1>{})(t1{})), "noexcept conditional");
 }
 #endif
 }

@@ -35,7 +35,7 @@ build_script:
  - cmd: cmake --version
  - cmd: mkdir build
  - cmd: cd build
- - cmd: SET CXXFLAGS=/DFIT_HAS_GENERIC_LAMBDA=1
+ - cmd: SET CXXFLAGS=/DBOOST_HOF_HAS_GENERIC_LAMBDA=1
  - cmd: cmake .. -G"%GENERATOR%" -DBUILD_EXAMPLES=On
  - cmd: cmake --build . --config %CONFIG% --target check
 

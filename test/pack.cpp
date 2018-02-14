@@ -1,25 +1,25 @@
-#include <fit/pack.hpp>
-#include <fit/always.hpp>
-#include <fit/identity.hpp>
+#include <boost/hof/pack.hpp>
+#include <boost/hof/always.hpp>
+#include <boost/hof/identity.hpp>
 #include <memory>
 #include "test.hpp"
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto p1 = fit::pack_basic(1, 2);
+    auto p1 = boost::hof::pack_basic(1, 2);
     auto p2 = p1;
-    FIT_TEST_CHECK(p2(binary_class()) == p1(binary_class()));
+    BOOST_HOF_TEST_CHECK(p2(binary_class()) == p1(binary_class()));
     
-    FIT_STATIC_TEST_CHECK(fit::pack_basic(1, 2)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_basic(1, 2)(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_basic(1, 2)(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_basic(1, 2)(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack(1, 2)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack(1, 2)(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack(1, 2)(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack(1, 2)(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_forward(1, 2)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_forward(1, 2)(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_forward(1, 2)(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_forward(1, 2)(binary_class()) == 3 );
 }
-#if FIT_HAS_NOEXCEPT_DEDUCTION
+#if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
 struct copy_throws 
 {
     copy_throws() {}
@@ -27,156 +27,156 @@ struct copy_throws
     copy_throws(copy_throws&&) noexcept {}
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     int i = 1;
     copy_throws ct{};
-    static_assert(!noexcept(fit::pack(ct, ct)(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack(1, 2)(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_forward(ct, ct)(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_forward(i, i)(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_forward(1, 2)(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_basic(ct, ct)(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_basic(i, i)(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_basic(1, 2)(fit::always())), "noexcept pack");
+    static_assert(!noexcept(boost::hof::pack(ct, ct)(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack(1, 2)(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_forward(ct, ct)(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_forward(i, i)(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_forward(1, 2)(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_basic(ct, ct)(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_basic(i, i)(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_basic(1, 2)(boost::hof::always())), "noexcept pack");
 
-    static_assert(noexcept(fit::pack()(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_forward()(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_basic()(fit::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack()(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_forward()(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_basic()(boost::hof::always())), "noexcept pack");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     copy_throws ct{};
-    static_assert(!noexcept(fit::pack_join(fit::pack(ct), fit::pack(ct))(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_join(fit::pack(1), fit::pack(1))(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_join(fit::pack(), fit::pack())(fit::always())), "noexcept pack");
-    auto p = fit::pack(1);
-    static_assert(noexcept(fit::pack_join(p, fit::pack())(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_join(fit::pack(), p)(fit::always())), "noexcept pack");
-    static_assert(noexcept(fit::pack_join(p, p)(fit::always())), "noexcept pack");
-    auto pt = fit::pack(ct);
-    static_assert(!noexcept(fit::pack_join(pt, fit::pack())(fit::always())), "noexcept pack");
-    static_assert(!noexcept(fit::pack_join(fit::pack(), pt)(fit::always())), "noexcept pack");
-    static_assert(!noexcept(fit::pack_join(pt, pt)(fit::always())), "noexcept pack");
+    static_assert(!noexcept(boost::hof::pack_join(boost::hof::pack(ct), boost::hof::pack(ct))(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_join(boost::hof::pack(1), boost::hof::pack(1))(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_join(boost::hof::pack(), boost::hof::pack())(boost::hof::always())), "noexcept pack");
+    auto p = boost::hof::pack(1);
+    static_assert(noexcept(boost::hof::pack_join(p, boost::hof::pack())(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_join(boost::hof::pack(), p)(boost::hof::always())), "noexcept pack");
+    static_assert(noexcept(boost::hof::pack_join(p, p)(boost::hof::always())), "noexcept pack");
+    auto pt = boost::hof::pack(ct);
+    static_assert(!noexcept(boost::hof::pack_join(pt, boost::hof::pack())(boost::hof::always())), "noexcept pack");
+    static_assert(!noexcept(boost::hof::pack_join(boost::hof::pack(), pt)(boost::hof::always())), "noexcept pack");
+    static_assert(!noexcept(boost::hof::pack_join(pt, pt)(boost::hof::always())), "noexcept pack");
 
 }
 #endif
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     static constexpr int x = 1;
     static constexpr int y = 2;
 
-    auto p1 = fit::pack_basic(x, y);
-    static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Pack default constructible");
+    auto p1 = boost::hof::pack_basic(x, y);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p1)>::value, "Pack default constructible");
     
-    FIT_STATIC_TEST_CHECK(fit::pack_basic(x, y)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_basic(x, y)(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_basic(x, y)(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_basic(x, y)(binary_class()) == 3 );
 
-    auto p2 = fit::pack(std::ref(x), std::ref(y));
-    static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Pack default constructible");
+    auto p2 = boost::hof::pack(std::ref(x), std::ref(y));
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p2)>::value, "Pack default constructible");
 
-    FIT_STATIC_TEST_CHECK(fit::pack(x, y)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack(std::ref(x), std::ref(y))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack(x, y)(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack(std::ref(x), std::ref(y))(binary_class()) == 3 );
 
-    auto p3 = fit::pack_forward(x, y);
-    static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Pack default constructible");
+    auto p3 = boost::hof::pack_forward(x, y);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p3)>::value, "Pack default constructible");
 
-    FIT_STATIC_TEST_CHECK(fit::pack_forward(x, y)(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_forward(x, y)(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_forward(x, y)(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_forward(x, y)(binary_class()) == 3 );
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack_basic()(fit::always(3)) == 3);
-    FIT_TEST_CHECK(fit::pack_basic()(fit::always(3)) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_basic()(boost::hof::always(3)) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_basic()(boost::hof::always(3)) == 3 );
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack_basic(3)(fit::identity) == 3);
-    FIT_TEST_CHECK(fit::pack_basic(3)(fit::identity) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_basic(3)(boost::hof::identity) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_basic(3)(boost::hof::identity) == 3 );
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto p = fit::pack(1);
-    FIT_TEST_CHECK(fit::pack_join(p, fit::pack(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(p, p)(binary_class()) == 2);
-    FIT_TEST_CHECK(fit::pack_join(p, p, fit::pack())(binary_class()) == 2);
+    auto p = boost::hof::pack(1);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(p, boost::hof::pack(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(p, p)(binary_class()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(p, p, boost::hof::pack())(binary_class()) == 2);
     
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(1), boost::hof::pack_basic(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(1), boost::hof::pack_basic(2))(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(1), boost::hof::pack(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(1), boost::hof::pack(2))(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(1), boost::hof::pack_forward(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(1), boost::hof::pack_forward(2))(binary_class()) == 3 );
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(1, 2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(1, 2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(), boost::hof::pack_basic(1, 2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(), boost::hof::pack_basic(1, 2))(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(1, 2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(1, 2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(), boost::hof::pack(1, 2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(), boost::hof::pack(1, 2))(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(1, 2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(1, 2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(), boost::hof::pack_forward(1, 2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(), boost::hof::pack_forward(1, 2))(binary_class()) == 3 );
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(1, 2), fit::pack_basic())(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(1, 2), fit::pack_basic())(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(1, 2), boost::hof::pack_basic())(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(1, 2), boost::hof::pack_basic())(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(1, 2), fit::pack())(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack(1, 2), fit::pack())(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(1, 2), boost::hof::pack())(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(1, 2), boost::hof::pack())(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(1, 2), fit::pack_forward())(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1, 2), fit::pack_forward())(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(1, 2), boost::hof::pack_forward())(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(1, 2), boost::hof::pack_forward())(binary_class()) == 3 );
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(1), boost::hof::pack_basic(), boost::hof::pack_basic(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(1), boost::hof::pack_basic(), boost::hof::pack_basic(2))(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(), fit::pack(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(), fit::pack(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(1), boost::hof::pack(), boost::hof::pack(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(1), boost::hof::pack(), boost::hof::pack(2))(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(1), boost::hof::pack_forward(), boost::hof::pack_forward(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(1), boost::hof::pack_forward(), boost::hof::pack_forward(2))(binary_class()) == 3 );
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(), boost::hof::pack_basic(1), boost::hof::pack_basic(), boost::hof::pack_basic(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(), boost::hof::pack_basic(1), boost::hof::pack_basic(), boost::hof::pack_basic(2))(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(1), fit::pack(), fit::pack(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(1), fit::pack(), fit::pack(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(), boost::hof::pack(1), boost::hof::pack(), boost::hof::pack(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(), boost::hof::pack(1), boost::hof::pack(), boost::hof::pack(2))(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2))(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2))(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(), boost::hof::pack_forward(1), boost::hof::pack_forward(), boost::hof::pack_forward(2))(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(), boost::hof::pack_forward(1), boost::hof::pack_forward(), boost::hof::pack_forward(2))(binary_class()) == 3 );
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2), fit::pack_basic())(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(1), fit::pack_basic(), fit::pack_basic(2), fit::pack_basic())(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(1), boost::hof::pack_basic(), boost::hof::pack_basic(2), boost::hof::pack_basic())(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(1), boost::hof::pack_basic(), boost::hof::pack_basic(2), boost::hof::pack_basic())(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(), fit::pack(2), fit::pack())(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack(1), fit::pack(), fit::pack(2), fit::pack())(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(1), boost::hof::pack(), boost::hof::pack(2), boost::hof::pack())(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(1), boost::hof::pack(), boost::hof::pack(2), boost::hof::pack())(binary_class()) == 3 );
 
-    FIT_STATIC_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2), fit::pack_forward())(binary_class()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(1), fit::pack_forward(), fit::pack_forward(2), fit::pack_forward())(binary_class()) == 3 );
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(1), boost::hof::pack_forward(), boost::hof::pack_forward(2), boost::hof::pack_forward())(binary_class()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(1), boost::hof::pack_forward(), boost::hof::pack_forward(2), boost::hof::pack_forward())(binary_class()) == 3 );
 }
 
 struct deref
@@ -187,20 +187,20 @@ struct deref
     }
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     std::unique_ptr<int> i(new int(3));
-    FIT_TEST_CHECK(fit::pack_basic(i)(deref()) == 3);
-    FIT_TEST_CHECK(fit::pack_basic(std::unique_ptr<int>(new int(3)))(deref()) == 3);
-    FIT_TEST_CHECK(fit::pack_forward(std::unique_ptr<int>(new int(3)))(deref()) == 3);
-    FIT_TEST_CHECK(fit::pack(std::unique_ptr<int>(new int(3)))(deref()) == 3);
-    auto p = fit::pack_basic(std::unique_ptr<int>(new int(3)));
-    FIT_TEST_CHECK(p(deref()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_basic(i)(deref()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_basic(std::unique_ptr<int>(new int(3)))(deref()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_forward(std::unique_ptr<int>(new int(3)))(deref()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack(std::unique_ptr<int>(new int(3)))(deref()) == 3);
+    auto p = boost::hof::pack_basic(std::unique_ptr<int>(new int(3)));
+    BOOST_HOF_TEST_CHECK(p(deref()) == 3);
 
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_basic(), fit::pack_basic(std::unique_ptr<int>(new int(3))))(deref()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack_forward(), fit::pack_forward(std::unique_ptr<int>(new int(3))))(deref()) == 3);
-    FIT_TEST_CHECK(fit::pack_join(fit::pack(), fit::pack(std::unique_ptr<int>(new int(3))))(deref()) == 3);
-    // FIT_TEST_CHECK(p(deref()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_basic(), boost::hof::pack_basic(std::unique_ptr<int>(new int(3))))(deref()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack_forward(), boost::hof::pack_forward(std::unique_ptr<int>(new int(3))))(deref()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::pack_join(boost::hof::pack(), boost::hof::pack(std::unique_ptr<int>(new int(3))))(deref()) == 3);
+    // BOOST_HOF_TEST_CHECK(p(deref()) == 3);
 }
 
 struct move_rvalue 
@@ -208,7 +208,7 @@ struct move_rvalue
     void operator()(std::string&& s) const 
     {
         std::string ss = std::move(s);
-        FIT_TEST_CHECK(ss == "abcdef");
+        BOOST_HOF_TEST_CHECK(ss == "abcdef");
         s = "00000";
     }
 };
@@ -217,20 +217,20 @@ struct check_rvalue
 {
     void operator()(std::string&& s) const 
     {
-        FIT_TEST_CHECK(s == "abcdef");
+        BOOST_HOF_TEST_CHECK(s == "abcdef");
     }
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto p = fit::pack_basic(std::string{"abcdef"});
+    auto p = boost::hof::pack_basic(std::string{"abcdef"});
     p(move_rvalue{});
     p(check_rvalue{});
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto p = fit::pack(std::string{"abcdef"});
+    auto p = boost::hof::pack(std::string{"abcdef"});
     p(move_rvalue{});
     p(check_rvalue{});
 }
@@ -241,76 +241,76 @@ struct empty1
 struct empty2
 {};
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(fit::detail::is_default_constructible<empty1, empty2>::value, "Not default constructible");
+    static_assert(boost::hof::detail::is_default_constructible<empty1, empty2>::value, "Not default constructible");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static constexpr auto p = fit::pack_basic(empty1());
-    FIT_TEST_CHECK(p(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+    static constexpr auto p = boost::hof::pack_basic(empty1());
+    BOOST_HOF_TEST_CHECK(p(boost::hof::always(0)) == 0);
+    BOOST_HOF_STATIC_TEST_CHECK(p(boost::hof::always(0)) == 0);
 #ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
-    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+    static_assert(boost::hof::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static constexpr auto p = fit::pack_basic(empty1(), empty2());
-    FIT_TEST_CHECK(p(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+    static constexpr auto p = boost::hof::pack_basic(empty1(), empty2());
+    BOOST_HOF_TEST_CHECK(p(boost::hof::always(0)) == 0);
+    BOOST_HOF_STATIC_TEST_CHECK(p(boost::hof::always(0)) == 0);
 #ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
-    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+    static_assert(boost::hof::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static constexpr auto p = fit::pack_basic(fit::pack_basic(), fit::pack_basic());
-    FIT_TEST_CHECK(p(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+    static constexpr auto p = boost::hof::pack_basic(boost::hof::pack_basic(), boost::hof::pack_basic());
+    BOOST_HOF_TEST_CHECK(p(boost::hof::always(0)) == 0);
+    BOOST_HOF_STATIC_TEST_CHECK(p(boost::hof::always(0)) == 0);
 #ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
-    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+    static_assert(boost::hof::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static constexpr auto p = fit::pack_basic(empty1(), empty2(), empty1());
-    FIT_TEST_CHECK(p(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+    static constexpr auto p = boost::hof::pack_basic(empty1(), empty2(), empty1());
+    BOOST_HOF_TEST_CHECK(p(boost::hof::always(0)) == 0);
+    BOOST_HOF_STATIC_TEST_CHECK(p(boost::hof::always(0)) == 0);
 #ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
-    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+    static_assert(boost::hof::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static constexpr auto p = fit::pack_basic(empty1(), fit::pack_basic(empty1(), empty2()));
-    FIT_TEST_CHECK(p(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+    static constexpr auto p = boost::hof::pack_basic(empty1(), boost::hof::pack_basic(empty1(), empty2()));
+    BOOST_HOF_TEST_CHECK(p(boost::hof::always(0)) == 0);
+    BOOST_HOF_STATIC_TEST_CHECK(p(boost::hof::always(0)) == 0);
 #ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
-    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+    static_assert(boost::hof::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static constexpr auto p = fit::pack_basic(fit::pack_basic(), fit::pack_basic(fit::pack_basic()), empty1(), fit::pack_basic(empty1(), empty2()));
-    FIT_TEST_CHECK(p(fit::always(0)) == 0);
-    FIT_STATIC_TEST_CHECK(p(fit::always(0)) == 0);
+    static constexpr auto p = boost::hof::pack_basic(boost::hof::pack_basic(), boost::hof::pack_basic(boost::hof::pack_basic()), empty1(), boost::hof::pack_basic(empty1(), empty2()));
+    BOOST_HOF_TEST_CHECK(p(boost::hof::always(0)) == 0);
+    BOOST_HOF_STATIC_TEST_CHECK(p(boost::hof::always(0)) == 0);
 #ifndef _MSC_VER
     static_assert(std::is_empty<decltype(p)>::value, "Pack not empty");
 #endif
-    static_assert(fit::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
+    static_assert(boost::hof::detail::is_default_constructible<decltype(p)>::value, "Not default constructible");
 }
 
 struct not_default_constructible
@@ -341,49 +341,49 @@ struct select_i
     } 
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
-    auto p = fit::pack_basic(not_default_constructible(3));
-    static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
-    auto p1 = fit::pack_forward(p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
-    auto p2 = fit::pack_forward(p, p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
-    auto p3 = fit::pack_forward(p, p, p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
-    FIT_TEST_CHECK(p(select_i()) == 3);
-    FIT_STATIC_TEST_CHECK(fit::pack_basic(not_default_constructible(3))(select_i()) == 3);
+    static_assert(!boost::hof::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
+    auto p = boost::hof::pack_basic(not_default_constructible(3));
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
+    auto p1 = boost::hof::pack_forward(p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
+    auto p2 = boost::hof::pack_forward(p, p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
+    auto p3 = boost::hof::pack_forward(p, p, p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
+    BOOST_HOF_TEST_CHECK(p(select_i()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_basic(not_default_constructible(3))(select_i()) == 3);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
-    auto p = fit::pack_basic(not_default_constructible(1), not_default_constructible(2));
-    static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
-    auto p1 = fit::pack_forward(p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
-    auto p2 = fit::pack_forward(p, p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
-    auto p3 = fit::pack_forward(p, p, p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
-    FIT_TEST_CHECK(p(select_i()) == 3);
-    FIT_STATIC_TEST_CHECK(fit::pack_basic(not_default_constructible(1), not_default_constructible(2))(select_i()) == 3);
+    static_assert(!boost::hof::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
+    auto p = boost::hof::pack_basic(not_default_constructible(1), not_default_constructible(2));
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
+    auto p1 = boost::hof::pack_forward(p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
+    auto p2 = boost::hof::pack_forward(p, p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
+    auto p3 = boost::hof::pack_forward(p, p, p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
+    BOOST_HOF_TEST_CHECK(p(select_i()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_basic(not_default_constructible(1), not_default_constructible(2))(select_i()) == 3);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(!fit::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
-    auto p = fit::pack_basic(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1));
-    static_assert(!fit::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
-    auto p1 = fit::pack_forward(p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
-    auto p2 = fit::pack_forward(p, p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
-    auto p3 = fit::pack_forward(p, p, p);
-    static_assert(!fit::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
-    FIT_TEST_CHECK(p(select_i()) == 3);
-    FIT_STATIC_TEST_CHECK(fit::pack_basic(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1))(select_i()) == 3);
+    static_assert(!boost::hof::detail::is_default_constructible<not_default_constructible>::value, "Default constructible");
+    auto p = boost::hof::pack_basic(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1));
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p)>::value, "Pack default constructible");
+    auto p1 = boost::hof::pack_forward(p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p1)>::value, "Packs default constructible");
+    auto p2 = boost::hof::pack_forward(p, p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p2)>::value, "Packs default constructible");
+    auto p3 = boost::hof::pack_forward(p, p, p);
+    static_assert(!boost::hof::detail::is_default_constructible<decltype(p3)>::value, "Packs default constructible");
+    BOOST_HOF_TEST_CHECK(p(select_i()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::pack_basic(not_default_constructible(1), not_default_constructible(1), not_default_constructible(1))(select_i()) == 3);
 }
 
 

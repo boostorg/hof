@@ -1,4 +1,4 @@
-#include <fit/tap.hpp>
+#include <boost/hof/tap.hpp>
 #include "test.hpp"
 
 struct sum_f
@@ -10,10 +10,10 @@ struct sum_f
     }
 };
 
-static constexpr fit::pipable_adaptor<sum_f> sum = {};
+static constexpr boost::hof::pipable_adaptor<sum_f> sum = {};
 // TODO: Test constexpr
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(3 == (1 | sum(2)));
-    FIT_TEST_CHECK(5 == (1 | sum(2) | fit::tap([](int i) { FIT_TEST_CHECK(3 == i); }) | sum(2)));
+    BOOST_HOF_TEST_CHECK(3 == (1 | sum(2)));
+    BOOST_HOF_TEST_CHECK(5 == (1 | sum(2) | boost::hof::tap([](int i) { BOOST_HOF_TEST_CHECK(3 == i); }) | sum(2)));
 }

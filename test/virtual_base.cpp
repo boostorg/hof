@@ -1,8 +1,8 @@
-#include <fit/flip.hpp>
-#include <fit/by.hpp>
-#include <fit/construct.hpp>
-#include <fit/pipable.hpp>
-#include <fit/rotate.hpp>
+#include <boost/hof/flip.hpp>
+#include <boost/hof/by.hpp>
+#include <boost/hof/construct.hpp>
+#include <boost/hof/pipable.hpp>
+#include <boost/hof/rotate.hpp>
 #include "test.hpp"
 
 struct base { 
@@ -23,9 +23,9 @@ struct derived : virtual base {
 };
 derived::~derived() {}
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::flip(derived())(nullptr, 2) == 2);
-    FIT_TEST_CHECK(fit::rotate(derived())(nullptr, 2) == 2);
-    FIT_TEST_CHECK((2 | fit::pipable(derived())(nullptr)) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::flip(derived())(nullptr, 2) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::rotate(derived())(nullptr, 2) == 2);
+    BOOST_HOF_TEST_CHECK((2 | boost::hof::pipable(derived())(nullptr)) == 2);
 }

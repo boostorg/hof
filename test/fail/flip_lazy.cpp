@@ -1,8 +1,8 @@
-#include <fit/lazy.hpp>
-#include <fit/placeholders.hpp>
-#include <fit/flip.hpp>
+#include <boost/hof/lazy.hpp>
+#include <boost/hof/placeholders.hpp>
+#include <boost/hof/flip.hpp>
 
 int main() {
-    auto i = (fit::flip(fit::_1 - fit::_2) * fit::_1)(3, 6);
+    auto i = (boost::hof::flip(boost::hof::_1 - boost::hof::_2) * boost::hof::_1)(3, 6);
     (void)i;
 }

@@ -1,4 +1,4 @@
-#include <fit/fold.hpp>
+#include <boost/hof/fold.hpp>
 #include "test.hpp"
 
 struct max_f
@@ -13,75 +13,75 @@ struct max_f
 struct sum_f
 {
     template<class T, class U>
-    constexpr T operator()(T x, U y) const FIT_RETURNS_DEDUCE_NOEXCEPT(x+y)
+    constexpr T operator()(T x, U y) const BOOST_HOF_RETURNS_DEDUCE_NOEXCEPT(x+y)
     {
         return x + y;
     }
 };
 
-#if FIT_HAS_NOEXCEPT_DEDUCTION
-FIT_TEST_CASE()
+#if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(noexcept(fit::fold(max_f(), 0)(2, 3, 4, 5)), "noexcept fold");
-    static_assert(noexcept(fit::fold(sum_f(), 0)(2, 3, 4, 5)), "noexcept fold");
-    static_assert(!noexcept(fit::fold(sum_f(), std::string())("hello", "-", "world")), "noexcept fold");
+    static_assert(noexcept(boost::hof::fold(max_f(), 0)(2, 3, 4, 5)), "noexcept fold");
+    static_assert(noexcept(boost::hof::fold(sum_f(), 0)(2, 3, 4, 5)), "noexcept fold");
+    static_assert(!noexcept(boost::hof::fold(sum_f(), std::string())("hello", "-", "world")), "noexcept fold");
 }
 #endif
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::fold(max_f(), 0)(2, 3, 4, 5) == 5);
-    FIT_TEST_CHECK(fit::fold(max_f(), 0)(5, 4, 3, 2) == 5);
-    FIT_TEST_CHECK(fit::fold(max_f(), 0)(2, 3, 5, 4) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f(), 0)(2, 3, 4, 5) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f(), 0)(5, 4, 3, 2) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f(), 0)(2, 3, 5, 4) == 5);
 
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f(), 0)(2, 3, 4, 5) == 5);
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f(), 0)(5, 4, 3, 2) == 5);
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f(), 0)(2, 3, 5, 4) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f(), 0)(2, 3, 4, 5) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f(), 0)(5, 4, 3, 2) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f(), 0)(2, 3, 5, 4) == 5);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::fold(max_f(), 0)() == 0);
-    FIT_TEST_CHECK(fit::fold(max_f(), 0)(5) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f(), 0)() == 0);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f(), 0)(5) == 5);
 
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f(), 0)() == 0);
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f(), 0)(5) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f(), 0)() == 0);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f(), 0)(5) == 5);
 }
 
 template<class... Ts>
-constexpr auto find_positive_max(Ts... xs) FIT_RETURNS
+constexpr auto find_positive_max(Ts... xs) BOOST_HOF_RETURNS
 (
-    fit::fold(max_f(), 0)(xs...)
+    boost::hof::fold(max_f(), 0)(xs...)
 );
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(find_positive_max() == 0);
-    FIT_TEST_CHECK(find_positive_max(5) == 5);
+    BOOST_HOF_TEST_CHECK(find_positive_max() == 0);
+    BOOST_HOF_TEST_CHECK(find_positive_max(5) == 5);
 
-    FIT_STATIC_TEST_CHECK(find_positive_max() == 0);
-    FIT_STATIC_TEST_CHECK(find_positive_max(5) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(find_positive_max() == 0);
+    BOOST_HOF_STATIC_TEST_CHECK(find_positive_max(5) == 5);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::fold(max_f())(5) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(5) == 5);
 
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f())(5) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(5) == 5);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::fold(max_f())(2, 3, 4, 5) == 5);
-    FIT_TEST_CHECK(fit::fold(max_f())(5, 4, 3, 2) == 5);
-    FIT_TEST_CHECK(fit::fold(max_f())(2, 3, 5, 4) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 4, 5) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(5, 4, 3, 2) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 5, 4) == 5);
 
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f())(2, 3, 4, 5) == 5);
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f())(5, 4, 3, 2) == 5);
-    FIT_STATIC_TEST_CHECK(fit::fold(max_f())(2, 3, 5, 4) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 4, 5) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(5, 4, 3, 2) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 5, 4) == 5);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::fold(sum_f(), std::string())("hello", "-", "world") == "hello-world");
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(sum_f(), std::string())("hello", "-", "world") == "hello-world");
 }

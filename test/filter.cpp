@@ -1,54 +1,54 @@
-#include <fit/if.hpp>
+#include <boost/hof/if.hpp>
 #include "test.hpp"
 
-#include <fit/by.hpp>
-#include <fit/lift.hpp>
-#include <fit/construct.hpp>
-#include <fit/conditional.hpp>
-#include <fit/unpack.hpp>
+#include <boost/hof/by.hpp>
+#include <boost/hof/lift.hpp>
+#include <boost/hof/construct.hpp>
+#include <boost/hof/conditional.hpp>
+#include <boost/hof/unpack.hpp>
 
 #include <tuple>
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
-#define FIT_HAS_CONSTEXPR_TUPLE 0
+#define BOOST_HOF_HAS_CONSTEXPR_TUPLE 0
 #else
-#define FIT_HAS_CONSTEXPR_TUPLE 1
+#define BOOST_HOF_HAS_CONSTEXPR_TUPLE 1
 #endif
 
 
-FIT_LIFT_CLASS(make_tuple_f, std::make_tuple);
+BOOST_HOF_LIFT_CLASS(make_tuple_f, std::make_tuple);
 
 struct integer_predicate
 {
     constexpr integer_predicate()
     {}
     template<class T>
-    constexpr auto operator()(T x) const FIT_RETURNS
+    constexpr auto operator()(T x) const BOOST_HOF_RETURNS
     (
-        fit::conditional(
-            fit::if_(std::is_integral<T>())(fit::pack_basic),
-            fit::always(fit::pack_basic())
-        )(fit::move(x))
+        boost::hof::conditional(
+            boost::hof::if_(std::is_integral<T>())(boost::hof::pack_basic),
+            boost::hof::always(boost::hof::pack_basic())
+        )(boost::hof::move(x))
     )
 };
 
 struct filter_integers
 {
     template<class Seq>
-    constexpr auto operator()(Seq s) const FIT_RETURNS
+    constexpr auto operator()(Seq s) const BOOST_HOF_RETURNS
     (
-        fit::unpack(
-            fit::by(integer_predicate(), fit::unpack(make_tuple_f()))
+        boost::hof::unpack(
+            boost::hof::by(integer_predicate(), boost::hof::unpack(make_tuple_f()))
         )(std::move(s))
     )
 };
 
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(filter_integers()(fit::pack_basic(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
-#if FIT_HAS_CONSTEXPR_TUPLE
-    FIT_STATIC_TEST_CHECK(filter_integers()(fit::pack_basic(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
+    BOOST_HOF_TEST_CHECK(filter_integers()(boost::hof::pack_basic(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
+#if BOOST_HOF_HAS_CONSTEXPR_TUPLE
+    BOOST_HOF_STATIC_TEST_CHECK(filter_integers()(boost::hof::pack_basic(1, 2, 2.0, 3)) == std::make_tuple(1, 2, 3));
 #endif
 }
 

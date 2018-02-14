@@ -7,7 +7,7 @@
 
 #include "example.h"
 
-using namespace fit;
+using namespace boost::hof;
 
 // static_if example taken from Baptiste Wicht:
 // http://baptiste-wicht.com/posts/2015/07/simulate-static_if-with-c11c14.html

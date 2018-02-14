@@ -1,4 +1,4 @@
-project fit/doc ;
+project boost/hof/doc ;
 
 make fit-doc :  : @make-fit-doc ;
 

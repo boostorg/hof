@@ -4,9 +4,9 @@ Functions
 .. toctree::
     :maxdepth: 1
     
-    ../../include/fit/always
-    ../../include/fit/arg
-    ../../include/fit/construct
-    ../../include/fit/decay
-    ../../include/fit/identity
-    ../../include/fit/placeholders
+    ../../include/boost/hof/always
+    ../../include/boost/hof/arg
+    ../../include/boost/hof/construct
+    ../../include/boost/hof/decay
+    ../../include/boost/hof/identity
+    ../../include/boost/hof/placeholders

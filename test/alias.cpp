@@ -1,4 +1,4 @@
-#include <fit/alias.hpp>
+#include <boost/hof/alias.hpp>
 #include "test.hpp"
 
 struct foo
@@ -8,11 +8,11 @@ struct foo
     {}
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    fit::alias<int> ai = 5;
-    FIT_TEST_CHECK(fit::alias_value(ai) == 5);
-    fit::alias_inherit<foo> af = foo{5};
-    FIT_TEST_CHECK(fit::alias_value(af).i == 5);
+    boost::hof::alias<int> ai = 5;
+    BOOST_HOF_TEST_CHECK(boost::hof::alias_value(ai) == 5);
+    boost::hof::alias_inherit<foo> af = foo{5};
+    BOOST_HOF_TEST_CHECK(boost::hof::alias_value(af).i == 5);
 }
 

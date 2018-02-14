@@ -1,6 +1,6 @@
-#include <fit/mutable.hpp>
-#include <fit/lazy.hpp>
-#include <fit/detail/move.hpp>
+#include <boost/hof/mutable.hpp>
+#include <boost/hof/lazy.hpp>
+#include <boost/hof/detail/move.hpp>
 #include <memory>
 #include "test.hpp"
 
@@ -18,24 +18,24 @@ struct mutable_fun
     }
 };
 
-#if FIT_HAS_NOEXCEPT_DEDUCTION
-FIT_TEST_CASE()
+#if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
+BOOST_HOF_TEST_CASE()
 {
-    static_assert(noexcept(fit::mutable_(mutable_fun())(3)), "noexcept mutable_");
+    static_assert(noexcept(boost::hof::mutable_(mutable_fun())(3)), "noexcept mutable_");
 }
 #endif
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::mutable_(mutable_fun())(3) == 4);
+    BOOST_HOF_TEST_CHECK(boost::hof::mutable_(mutable_fun())(3) == 4);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     auto mut_fun = mutable_fun();
-    auto by_5 = fit::lazy(fit::mutable_(std::ref(mut_fun)))(5);
-    FIT_TEST_CHECK(by_5() == 6);
-    FIT_TEST_CHECK(by_5() == 11);
+    auto by_5 = boost::hof::lazy(boost::hof::mutable_(std::ref(mut_fun)))(5);
+    BOOST_HOF_TEST_CHECK(by_5() == 6);
+    BOOST_HOF_TEST_CHECK(by_5() == 11);
 }
 
 struct mutable_move_fun
@@ -51,16 +51,16 @@ struct mutable_move_fun
     }
 };
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    FIT_TEST_CHECK(fit::mutable_(mutable_move_fun())(3) == 4);
+    BOOST_HOF_TEST_CHECK(boost::hof::mutable_(mutable_move_fun())(3) == 4);
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     auto mut_fun = mutable_move_fun();
-    auto by_5 = fit::lazy(fit::mutable_(fit::move(mut_fun)))(5);
-    FIT_TEST_CHECK(by_5() == 6);
-    FIT_TEST_CHECK(by_5() == 11);
+    auto by_5 = boost::hof::lazy(boost::hof::mutable_(boost::hof::move(mut_fun)))(5);
+    BOOST_HOF_TEST_CHECK(by_5() == 6);
+    BOOST_HOF_TEST_CHECK(by_5() == 11);
 }
 

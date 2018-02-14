@@ -1,13 +1,13 @@
-#include <fit/by.hpp>
-#include <fit/construct.hpp>
-#include <fit/unpack.hpp>
-#include <fit/function.hpp>
-#include <fit/placeholders.hpp>
-#include <fit/compose.hpp>
+#include <boost/hof/by.hpp>
+#include <boost/hof/construct.hpp>
+#include <boost/hof/unpack.hpp>
+#include <boost/hof/function.hpp>
+#include <boost/hof/placeholders.hpp>
+#include <boost/hof/compose.hpp>
 // Disable static checks for gcc 4.7
-#ifndef FIT_HAS_STATIC_TEST_CHECK
+#ifndef BOOST_HOF_HAS_STATIC_TEST_CHECK
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
-#define FIT_HAS_STATIC_TEST_CHECK 0
+#define BOOST_HOF_HAS_STATIC_TEST_CHECK 0
 #endif
 #endif
 #include "test.hpp"
@@ -15,70 +15,70 @@
 struct tuple_transform_f
 {
     template<class Sequence, class F>
-    constexpr auto operator()(Sequence&& s, F f) const FIT_RETURNS
+    constexpr auto operator()(Sequence&& s, F f) const BOOST_HOF_RETURNS
     (
-        fit::unpack(fit::by(f, fit::construct<std::tuple>()))(fit::forward<Sequence>(s))
+        boost::hof::unpack(boost::hof::by(f, boost::hof::construct<std::tuple>()))(boost::hof::forward<Sequence>(s))
     );
 };
 
 struct pack_transform_f
 {
     template<class Sequence, class F>
-    constexpr auto operator()(Sequence&& s, F f) const FIT_RETURNS
+    constexpr auto operator()(Sequence&& s, F f) const BOOST_HOF_RETURNS
     (
-        fit::unpack(fit::by(f, fit::pack()))(fit::forward<Sequence>(s))
+        boost::hof::unpack(boost::hof::by(f, boost::hof::pack()))(boost::hof::forward<Sequence>(s))
     );
 };
 
-FIT_STATIC_FUNCTION(tuple_transform) = tuple_transform_f{};
-// FIT_STATIC_FUNCTION(pack_transform) = pack_transform_f{};
+BOOST_HOF_STATIC_FUNCTION(tuple_transform) = tuple_transform_f{};
+// BOOST_HOF_STATIC_FUNCTION(pack_transform) = pack_transform_f{};
 
 #if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
 #define TUPLE_TRANSFORM_STATIC_CHECK(...)
 #else
-#define TUPLE_TRANSFORM_STATIC_CHECK FIT_STATIC_TEST_CHECK
+#define TUPLE_TRANSFORM_STATIC_CHECK BOOST_HOF_STATIC_TEST_CHECK
 
 #endif
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     auto t = std::make_tuple(1, 2);
     auto r = tuple_transform(t, [](int i) { return i*i; });
-    FIT_TEST_CHECK(r == std::make_tuple(1, 4));
+    BOOST_HOF_TEST_CHECK(r == std::make_tuple(1, 4));
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(std::make_tuple(1, 2), fit::_1 * fit::_1) == std::make_tuple(1, 4));
+    TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(std::make_tuple(1, 2), boost::hof::_1 * boost::hof::_1) == std::make_tuple(1, 4));
 }
 
 #define TUPLE_TRANSFORM_CHECK_ID(x) \
-FIT_TEST_CHECK(tuple_transform(x, fit::identity) == x); \
-TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(x, fit::identity) == x);
+BOOST_HOF_TEST_CHECK(tuple_transform(x, boost::hof::identity) == x); \
+TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(x, boost::hof::identity) == x);
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
     TUPLE_TRANSFORM_CHECK_ID(std::make_tuple(1, 2));
     TUPLE_TRANSFORM_CHECK_ID(std::make_tuple(1));
     TUPLE_TRANSFORM_CHECK_ID(std::make_tuple());
 }
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    auto x = tuple_transform(std::make_tuple(std::unique_ptr<int>(new int(3))), fit::identity);
+    auto x = tuple_transform(std::make_tuple(std::unique_ptr<int>(new int(3))), boost::hof::identity);
     auto y = std::make_tuple(std::unique_ptr<int>(new int(3)));
-    FIT_TEST_CHECK(x != y);
-    FIT_TEST_CHECK(tuple_transform(x, *fit::_1) == tuple_transform(y, *fit::_1));
+    BOOST_HOF_TEST_CHECK(x != y);
+    BOOST_HOF_TEST_CHECK(tuple_transform(x, *boost::hof::_1) == tuple_transform(y, *boost::hof::_1));
 }
 
 #define TUPLE_TRANSFORM_CHECK_COMPOSE(x, f, g) \
-FIT_TEST_CHECK(tuple_transform(x, fit::compose(f, g)) == tuple_transform(tuple_transform(x, g), f)); \
-TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(x, fit::compose(f, g)) == tuple_transform(tuple_transform(x, g), f));
+BOOST_HOF_TEST_CHECK(tuple_transform(x, boost::hof::compose(f, g)) == tuple_transform(tuple_transform(x, g), f)); \
+TUPLE_TRANSFORM_STATIC_CHECK(tuple_transform(x, boost::hof::compose(f, g)) == tuple_transform(tuple_transform(x, g), f));
 
-FIT_TEST_CASE()
+BOOST_HOF_TEST_CASE()
 {
-    TUPLE_TRANSFORM_CHECK_COMPOSE(std::make_tuple(1, 2, 3, 4), fit::_1 * fit::_1, fit::_1 + fit::_1);
-    TUPLE_TRANSFORM_CHECK_COMPOSE(std::make_tuple(1, 2, 3), fit::_1 * fit::_1, fit::_1 + fit::_1);
-    TUPLE_TRANSFORM_CHECK_COMPOSE(std::make_tuple(1), fit::_1 * fit::_1, fit::_1 + fit::_1);
-    TUPLE_TRANSFORM_CHECK_COMPOSE(std::make_tuple(), fit::_1 * fit::_1, fit::_1 + fit::_1);
+    TUPLE_TRANSFORM_CHECK_COMPOSE(std::make_tuple(1, 2, 3, 4), boost::hof::_1 * boost::hof::_1, boost::hof::_1 + boost::hof::_1);
+    TUPLE_TRANSFORM_CHECK_COMPOSE(std::make_tuple(1, 2, 3), boost::hof::_1 * boost::hof::_1, boost::hof::_1 + boost::hof::_1);
+    TUPLE_TRANSFORM_CHECK_COMPOSE(std::make_tuple(1), boost::hof::_1 * boost::hof::_1, boost::hof::_1 + boost::hof::_1);
+    TUPLE_TRANSFORM_CHECK_COMPOSE(std::make_tuple(), boost::hof::_1 * boost::hof::_1, boost::hof::_1 + boost::hof::_1);
 }

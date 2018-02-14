@@ -26,7 +26,7 @@ template<class F>
 struct non_class_function
 {
     F f;
-    FIT_DELGATE_CONSTRUCTOR(non_class_function, F, f)
+    FIT_DELEGATE_CONSTRUCTOR(non_class_function, F, f)
 
     template<class... Ts>
     constexpr FIT_SFINAE_RESULT(apply_f, id_<F>, id_<Ts>...) 

@@ -21,15 +21,17 @@
 /// Synopsis
 /// --------
 /// 
-///     placeholder<1> _1 = {};
-///     placeholder<2> _2 = {};
-///     placeholder<3> _3 = {};
-///     placeholder<4> _4 = {};
-///     placeholder<5> _5 = {};
-///     placeholder<6> _6 = {};
-///     placeholder<7> _7 = {};
-///     placeholder<8> _8 = {};
-///     placeholder<9> _9 = {};
+///     namespace placeholders {
+///         placeholder<1> _1 = {};
+///         placeholder<2> _2 = {};
+///         placeholder<3> _3 = {};
+///         placeholder<4> _4 = {};
+///         placeholder<5> _5 = {};
+///         placeholder<6> _6 = {};
+///         placeholder<7> _7 = {};
+///         placeholder<8> _8 = {};
+///         placeholder<9> _9 = {};
+///     }
 /// 
 /// Operators
 /// ---------
@@ -66,7 +68,9 @@
 /// Synopsis
 /// --------
 /// 
-///     /* unspecified */ _ = {};
+///     namespace placeholders {
+///         /* unspecified */ _ = {};
+///     }
 /// 
 /// Example
 /// -------
@@ -296,6 +300,7 @@ FIT_FOREACH_ASSIGN_OP(FIT_PLACEHOLDER_ASSIGN_OP)
 
 FIT_FOREACH_BINARY_OP(FIT_PLACEHOLDER_BINARY_OP)
 
+namespace placeholders {
 FIT_DECLARE_STATIC_VAR(_1, placeholder<1>);
 FIT_DECLARE_STATIC_VAR(_2, placeholder<2>);
 FIT_DECLARE_STATIC_VAR(_3, placeholder<3>);
@@ -305,7 +310,17 @@ FIT_DECLARE_STATIC_VAR(_6, placeholder<6>);
 FIT_DECLARE_STATIC_VAR(_7, placeholder<7>);
 FIT_DECLARE_STATIC_VAR(_8, placeholder<8>);
 FIT_DECLARE_STATIC_VAR(_9, placeholder<9>);
+}
 
+using placeholders::_1;
+using placeholders::_2;
+using placeholders::_3;
+using placeholders::_4;
+using placeholders::_5;
+using placeholders::_6;
+using placeholders::_7;
+using placeholders::_8;
+using placeholders::_9;
 
 namespace detail {
 
@@ -422,7 +437,11 @@ FIT_FOREACH_ASSIGN_OP(FIT_UNAMED_PLACEHOLDER_ASSIGN_OP)
 FIT_FOREACH_BINARY_OP(FIT_UNAMED_PLACEHOLDER_BINARY_OP)
 }
 
+namespace placeholders {
 FIT_DECLARE_STATIC_VAR(_, detail::unamed_placeholder);
+}
+
+using placeholders::_;
 
 } // namespace fit
 

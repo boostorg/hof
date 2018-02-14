@@ -30,9 +30,16 @@
 /// Requirements
 /// ------------
 /// 
-/// F must be:
+/// F must be at least:
 /// 
 /// * [BinaryCallable](BinaryCallable)
+/// 
+/// Or:
+/// 
+/// * [Callable](Callable) with more than two argurments
+/// 
+/// And:
+/// 
 /// * MoveConstructible
 /// 
 /// Example

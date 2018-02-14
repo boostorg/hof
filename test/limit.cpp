@@ -1,5 +1,6 @@
 #include <fit/limit.hpp>
 #include <fit/is_callable.hpp>
+#include <fit/pack.hpp>
 #include "test.hpp"
 
 FIT_TEST_CASE()
@@ -31,5 +32,12 @@ FIT_TEST_CASE()
 FIT_TEST_CASE()
 {
     static_assert(!fit::is_callable<decltype(fit::limit), int>::value, "Not integral constant");
+}
+
+FIT_TEST_CASE()
+{
+    static_assert(fit::function_param_limit<decltype(fit::pack())>::value == 0, "Failed limit on pack");
+    static_assert(fit::function_param_limit<decltype(fit::pack(1))>::value == 1, "Failed limit on pack");
+    static_assert(fit::function_param_limit<decltype(fit::pack(1, 2))>::value == 2, "Failed limit on pack");
 }
 

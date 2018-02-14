@@ -18,6 +18,9 @@
 /// condition is true. The `if_c` version can be used to give a boolean
 /// condition directly(instead of relying on an integral constant).
 /// 
+/// When `if_` is false, the function is not callable. It is a subtitution
+/// failure to call the function.
+/// 
 /// Synopsis
 /// --------
 /// 

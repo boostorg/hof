@@ -22,6 +22,13 @@
 /// This will preserve `constexpr` and it can be used on older compilers that
 /// don't support generic lambdas yet.
 /// 
+/// Limitation
+/// ----------
+/// 
+/// In C++14, `FIT_LIFT` doesn't support `constexpr` due to using a generic
+/// lambda. Instead, `FIT_LIFT_CLASS` can be used. In C++17, there is no such
+/// limitation.
+/// 
 /// Synopsis
 /// --------
 /// 

@@ -63,12 +63,12 @@
 
 #endif
 
-#define FIT_DELGATE_CONSTRUCTOR(C, T, var) FIT_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr, C, T, var)
+#define FIT_DELEGATE_CONSTRUCTOR(C, T, var) FIT_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr, C, T, var)
 
-// Currently its faster to use `FIT_DELGATE_CONSTRUCTOR` than `using
+// Currently its faster to use `FIT_DELEGATE_CONSTRUCTOR` than `using
 // Base::Base;`
 #if 1
-#define FIT_INHERIT_CONSTRUCTOR(Derived, Base) FIT_DELGATE_CONSTRUCTOR(Derived, Base, Base)
+#define FIT_INHERIT_CONSTRUCTOR(Derived, Base) FIT_DELEGATE_CONSTRUCTOR(Derived, Base, Base)
 #else
 #define FIT_INHERIT_CONSTRUCTOR(Derived, Base) \
     using fit_inherit_base = Base; \

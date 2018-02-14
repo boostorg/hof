@@ -18,8 +18,9 @@
 /// If the function can not be called with all the parameters, it will return
 /// another function. It will repeatedly do this until the function can
 /// finally be called. By default, `partial` captures all of its variables by
-/// value, just like bind. `std::ref` can be used to capture references
-/// instead.
+/// value, just like bind. As such all parameters must be `MoveConstructible`
+/// when the function is aprtial application. `std::ref` can be used to
+/// capture references instead.
 /// 
 /// Synopsis
 /// --------

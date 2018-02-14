@@ -22,7 +22,15 @@
 /// --------
 /// 
 ///     template<class Integral>
-///     constexpr repeat_adaptor<Integral> repeat(Integral);
+///     constexpr auto repeat(Integral);
+/// 
+/// Semantics
+/// ---------
+/// 
+///     assert(repeat(std::integral_constant<int, 0>{})(f)(xs...) == f(xs...));
+///     assert(repeat(std::integral_constant<int, 1>{})(f)(xs...) == f(f(xs...)));
+///     assert(repeat(0)(f)(xs...) == f(xs...));
+///     assert(repeat(1)(f)(xs...) == f(f(xs...)));
 /// 
 /// Requirements
 /// ------------

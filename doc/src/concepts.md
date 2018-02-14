@@ -218,15 +218,15 @@ The following expressions must be valid:
 
 where `INVOKE(f, x, xs...)` is defined as follows:
 
-* if `f` is a pointer to member function of class `T`: 
+* if `f` is a pointer to member function of class `U`: 
 
-    - If `std::is_base_of<T, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x, xs...)` is equivalent to `(x.*f)(xs...)`
+    - If `std::is_base_of<U, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x, xs...)` is equivalent to `(x.*f)(xs...)`
     - otherwise, if `std::decay_t<decltype(x)>` is a specialization of `std::reference_wrapper`, then `INVOKE(f, x, xs...)` is equivalent to `(x.get().*f)(xs...)` 
     - otherwise, if x does not satisfy the previous items, then `INVOKE(f, x, xs...)` is equivalent to `((*x).*f)(xs...)`. 
 
-* otherwise, if `f` is a pointer to data member of class `T`: 
+* otherwise, if `f` is a pointer to data member of class `U`: 
 
-    - If `std::is_base_of<T, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x)` is equivalent to `x.*f`
+    - If `std::is_base_of<U, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x)` is equivalent to `x.*f`
     - otherwise, if `std::decay_t<decltype(x)>` is a specialization of `std::reference_wrapper`, then `INVOKE(f, x)` is equivalent to `x.get().*f`
     - otherwise, if `x` does not satisfy the previous items, then `INVOKE(f, x)` is equivalent to `(*x).*f`
 
@@ -258,15 +258,15 @@ The following expressions must be valid:
 
 where `INVOKE(f, x, xs...)` is defined as follows:
 
-* if `f` is a pointer to member function of class `T`: 
+* if `f` is a pointer to member function of class `U`: 
 
-    - If `std::is_base_of<T, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x, xs...)` is equivalent to `(x.*f)(xs...)`
+    - If `std::is_base_of<U, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x, xs...)` is equivalent to `(x.*f)(xs...)`
     - otherwise, if `std::decay_t<decltype(x)>` is a specialization of `std::reference_wrapper`, then `INVOKE(f, x, xs...)` is equivalent to `(x.get().*f)(xs...)` 
     - otherwise, if x does not satisfy the previous items, then `INVOKE(f, x, xs...)` is equivalent to `((*x).*f)(xs...)`. 
 
-* otherwise, if `f` is a pointer to data member of class `T`: 
+* otherwise, if `f` is a pointer to data member of class `U`: 
 
-    - If `std::is_base_of<T, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x)` is equivalent to `x.*f`
+    - If `std::is_base_of<U, std::decay_t<decltype(x)>>()` is true, then `INVOKE(f, x)` is equivalent to `x.*f`
     - otherwise, if `std::decay_t<decltype(x)>` is a specialization of `std::reference_wrapper`, then `INVOKE(f, x)` is equivalent to `x.get().*f`
     - otherwise, if `x` does not satisfy the previous items, then `INVOKE(f, x)` is equivalent to `(*x).*f`
 

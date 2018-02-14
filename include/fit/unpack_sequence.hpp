@@ -35,6 +35,7 @@
 ///     };
 ///     
 ///     namespace fit {
+///         template<>
 ///         struct unpack_sequence<my_sequence>
 ///         {
 ///             template<class F, class Sequence>

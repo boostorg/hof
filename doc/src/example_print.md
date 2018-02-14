@@ -13,7 +13,7 @@ However, there is lot of things that don't print directly to `std::cout` such as
 Overloading
 -----------
 
-The Fit library provides several ways to do overloading. One of the ways is with the [`conditional`](/include/boost/hof/conditional) adaptor which will pick the first function that is callable. This allows ordering the functions based on which one is more important. So then the first function will print to `std::cout` if possible otherwise we will add an overload to print a range:
+Boost.HigherOrderFunctions provides several ways to do overloading. One of the ways is with the [`conditional`](/include/boost/hof/conditional) adaptor which will pick the first function that is callable. This allows ordering the functions based on which one is more important. So then the first function will print to `std::cout` if possible otherwise we will add an overload to print a range:
 
 
     BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = conditional(

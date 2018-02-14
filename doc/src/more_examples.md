@@ -1,11 +1,11 @@
 More examples
 =============
 
-As the Fit library is a collection of generic utilities
+As Boost.HigherOrderFunctions is a collection of generic utilities
 related to functions, there is many useful cases with the library, but a key
 point of many of these utilities is that they can solve these problems with
 much simpler constructs than whats traditionally been done with
-metaprogramming. Lets take look at some of the use cases for using the Fit library.
+metaprogramming. Lets take look at some of the use cases for using Boost.HigherOrderFunctions.
 
 Initialization
 --------------

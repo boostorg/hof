@@ -1,7 +1,7 @@
 Building
 ========
 
-The Fit library uses cmake to build. To configure with cmake create a build directory, and run cmake:
+Boost.HigherOrderFunctions library uses cmake to build. To configure with cmake create a build directory, and run cmake:
 
     mkdir build
     cd build

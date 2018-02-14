@@ -33,7 +33,7 @@ or `is_detected`(see [n4502](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/
         return static_cast<std::ostringstream&>(std::ostringstream() << t).str();
     }
 
-However, with the Fit library it can simply be written like
+However, with Boost.HigherOrderFunctions it can simply be written like
 this:
 
     BOOST_HOF_STATIC_LAMBDA_FUNCTION(stringify) = conditional(
@@ -67,7 +67,7 @@ He wants to be able to write this:
         }
     }
 
-However, that isn't possible before C++17. With the Fit library one can simply write
+However, that isn't possible before C++17. With Boost.HigherOrderFunctions one can simply write
 this:
 
     template<typename T>
@@ -85,7 +85,7 @@ this:
 
 The `id` parameter passed to the lambda is the [`identity`](/include/boost/hof/identity) function. As explained in the article, this is used to delay the lookup of types by making it a dependent type(i.e. the type depends on a template parameter), which is necessary to avoid compile errors. The [`eval`](/include/boost/hof/eval) function that is called will pass this `identity` function to the lambdas.
 
-The advantage of using the Fit library instead of the solution in Baptiste
+The advantage of using Boost.HigherOrderFunctions instead of the solution in Baptiste
 Wicht's blog, is that [`conditional`](/include/boost/hof/conditional) allows more than just two conditions. So if
 there was another trait to be checked, such as `is_stack`, it could be written
 like this:
@@ -111,7 +111,7 @@ Type traits
 
 Furthermore, this technique can be used to write type traits as well. Jens
 Weller was looking for a way to define a general purpose detection for pointer
-operands(such as `*` and `->`). One way to accomplish this is using Fit like
+operands(such as `*` and `->`). One way to accomplish this is like
 this:
 
     // Check that T has member function for operator* and ope

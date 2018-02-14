@@ -50,7 +50,7 @@ A function object allows the ability to encapsulate an entire overload set into 
         }
     };
 
-There are few things to note about this. First, the call operator member function is always declared `const`, which is generally required to be used with Fit.(Note: The [`mutable_`](/include/boost/hof/mutable) adaptor can be used to make a mutable function object have a `const` call operator, but this should generally be avoided). Secondly, the `sum_f` class must be constructed first before it can be called:
+There are few things to note about this. First, the call operator member function is always declared `const`, which is generally required to be used with Boost.HigherOrderFunctions.(Note: The [`mutable_`](/include/boost/hof/mutable) adaptor can be used to make a mutable function object have a `const` call operator, but this should generally be avoided). Secondly, the `sum_f` class must be constructed first before it can be called:
 
     auto sum = sum_f();
     // Call sum function
@@ -81,7 +81,7 @@ However, due to limitations in C++14 this will not preserve `constexpr`. In thos
 Declaring functions
 -------------------
 
-Now, this is useful for local functions. However, many times we want to write functions and make them available for others to use. The Fit library provides [`BOOST_HOF_STATIC_FUNCTION`](/include/boost/hof/function) to declare the function object at the global or namespace scope:
+Now, this is useful for local functions. However, many times we want to write functions and make them available for others to use. Boost.HigherOrderFunctions provides [`BOOST_HOF_STATIC_FUNCTION`](/include/boost/hof/function) to declare the function object at the global or namespace scope:
 
     BOOST_HOF_STATIC_FUNCTION(sum) = sum_f();
 

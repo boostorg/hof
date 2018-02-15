@@ -1,6 +1,6 @@
 Name: boost_higherorderfunctions
 Description: C++ function utility library
 URL: https://github.com/pfultz2/higherorderfunctions
-Version: @Fit_VERSION_MAJOR@.@Fit_VERSION_MINOR@
+Version: @boost_higherorderfunctions_VERSION_MAJOR@.@boost_higherorderfunctions_VERSION_MINOR@
 
 Cflags: -I@CMAKE_INSTALL_PREFIX@/include

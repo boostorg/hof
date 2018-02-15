@@ -1,8 +1,8 @@
 project boost/hof/doc ;
 
-make fit-doc :  : @make-fit-doc ;
+make hof-doc :  : @make-hof-doc ;
 
-actions make-fit-doc {
+actions make-hof-doc {
     sphinx-build -b html . html/
 }
 

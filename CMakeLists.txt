@@ -1,12 +1,12 @@
 cmake_minimum_required (VERSION 2.8)
-project (Fit)
+project (boost_higherorderfunctions)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 foreach(level MAJOR MINOR PATCH)
     file(STRINGS include/boost/hof/version.hpp
                  _define_${level}
                  REGEX "#define BOOST_HOF_${level}_VERSION")
-    string(REGEX MATCH "([0-9]+)" Fit_VERSION_${level} "${_define_${level}}")
+    string(REGEX MATCH "([0-9]+)" boost_higherorderfunctions_VERSION_${level} "${_define_${level}}")
 endforeach() 
 
 include(CheckCXXCompilerFlag)

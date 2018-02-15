@@ -1,0 +1,10 @@
+{
+    "key": "higherorderfunctions",
+    "name": "HigherOrderFunctions",
+    "authors": [ "Paul Fultz II" ],
+    "maintainers": [ "Paul Fultz II <pfultz2 -at- yahoo.com>" ],
+    "description": "C++ function utility library ",
+    "category": [
+        "Metaprogramming"
+    ]
+}

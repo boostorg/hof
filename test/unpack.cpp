@@ -217,7 +217,7 @@ BOOST_HOF_TEST_CASE()
 {
     auto f = boost::hof::unpack(boost::hof::always(1));
 
-    static_assert(!boost::hof::is_callable<decltype(f), not_unpackable>::value, "SFINAE for unpack failed");
+    static_assert(!boost::hof::is_invocable<decltype(f), not_unpackable>::value, "SFINAE for unpack failed");
 }
 
 struct simple_unpackable

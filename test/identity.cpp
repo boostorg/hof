@@ -1,5 +1,5 @@
 #include <boost/hof/identity.hpp>
-#include <boost/hof/is_callable.hpp>
+#include <boost/hof/is_invocable.hpp>
 #include <boost/hof/detail/move.hpp>
 #include "test.hpp"
 
@@ -32,9 +32,9 @@ BOOST_HOF_TEST_CASE()
 
 BOOST_HOF_TEST_CASE()
 {
-    static_assert(boost::hof::is_callable<decltype(boost::hof::identity), int>::value, "Identiy callable");
-    static_assert(!boost::hof::is_callable<decltype(boost::hof::identity), int, int>::value, "Identiy not callable");
-    static_assert(!boost::hof::is_callable<decltype(boost::hof::identity)>::value, "Identiy not callable");
+    static_assert(boost::hof::is_invocable<decltype(boost::hof::identity), int>::value, "Identiy callable");
+    static_assert(!boost::hof::is_invocable<decltype(boost::hof::identity), int, int>::value, "Identiy not callable");
+    static_assert(!boost::hof::is_invocable<decltype(boost::hof::identity)>::value, "Identiy not callable");
 }
 
 BOOST_HOF_TEST_CASE()

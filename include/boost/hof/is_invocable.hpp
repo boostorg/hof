@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2014 Paul Fultz II
-    is_callable.h
+    is_invocable.h
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
@@ -8,13 +8,13 @@
 #ifndef BOOST_HOF_GUARD_IS_CALLABLE_H
 #define BOOST_HOF_GUARD_IS_CALLABLE_H
 
-/// is_callable
+/// is_invocable
 /// ===========
 /// 
 /// Description
 /// -----------
 /// 
-/// The `is_callable` metafunction checks if the function is callable with
+/// The `is_invocable` metafunction checks if the function is callable with
 /// certain parameters.
 /// 
 /// Requirements
@@ -28,7 +28,7 @@
 /// --------
 /// 
 ///     template<class F, class... Ts>
-///     struct is_callable;
+///     struct is_invocable;
 /// 
 /// Example
 /// -------
@@ -42,7 +42,7 @@
 ///         {
 ///         }
 ///     };
-///     static_assert(is_callable<is_callable_class, int>(), "Not callable");
+///     static_assert(is_invocable<is_callable_class, int>(), "Not callable");
 /// 
 ///     int main() {}
 /// 
@@ -54,16 +54,16 @@
 namespace boost { namespace hof {
 
 template<class F, class... Ts>
-struct is_callable 
+struct is_invocable 
 : detail::can_be_called<detail::apply_f, F, Ts...>
 {};
 
 template<class F, class... Ts, class... Us>
-struct is_callable<F(Ts...), Us...>
+struct is_invocable<F(Ts...), Us...>
 {
     static_assert(!std::is_same<F, F>::value, 
-        "The is_callable<F(Args...)> form is not supported because it is problematic."
-        "Please use is_callable<F, Args...> instead."
+        "The is_invocable<F(Args...)> form is not supported because it is problematic."
+        "Please use is_invocable<F, Args...> instead."
     );
 };
 

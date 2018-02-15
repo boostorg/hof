@@ -32,7 +32,7 @@
 #include <boost/hof/implicit.hpp>
 #include <boost/hof/indirect.hpp>
 #include <boost/hof/infix.hpp>
-#include <boost/hof/is_callable.hpp>
+#include <boost/hof/is_invocable.hpp>
 #include <boost/hof/lambda.hpp>
 #include <boost/hof/lazy.hpp>
 #include <boost/hof/lift.hpp>

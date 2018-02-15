@@ -607,12 +607,12 @@ BOOST_HOF_TEST_CASE()
 BOOST_HOF_TEST_CASE()
 {
     auto lazy_f_1 = boost::hof::lazy(f_1())(std::placeholders::_1);
-    static_assert(boost::hof::is_callable<decltype(lazy_f_1), long>::value, "Callable");
-    static_assert(boost::hof::is_callable<decltype(lazy_f_1), long, long>::value, "Callable");
+    static_assert(boost::hof::is_invocable<decltype(lazy_f_1), long>::value, "Callable");
+    static_assert(boost::hof::is_invocable<decltype(lazy_f_1), long, long>::value, "Callable");
     
     auto lazy_f_2 = boost::hof::lazy(f_2())(std::placeholders::_1, std::placeholders::_2);
-    static_assert(boost::hof::is_callable<decltype(lazy_f_2), long, long>::value, "Callable");
-    static_assert(!boost::hof::is_callable<decltype(lazy_f_2), long>::value, "Not SFINAE-friendly");
+    static_assert(boost::hof::is_invocable<decltype(lazy_f_2), long, long>::value, "Callable");
+    static_assert(!boost::hof::is_invocable<decltype(lazy_f_2), long>::value, "Not SFINAE-friendly");
 }
 
 struct dummy_unary_fn

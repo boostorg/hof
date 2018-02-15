@@ -121,7 +121,7 @@ struct basic_first_of_adaptor : F1, F2
     struct select
     : std::conditional
     <
-        is_callable<F1, Ts...>::value, 
+        is_invocable<F1, Ts...>::value, 
         F1,
         F2
     >
@@ -160,7 +160,7 @@ struct conditional_kernel : compressed_pair<F1, F2>
     struct select
     : std::conditional
     <
-        is_callable<F1, Ts...>::value, 
+        is_invocable<F1, Ts...>::value, 
         F1,
         F2
     >
@@ -168,7 +168,7 @@ struct conditional_kernel : compressed_pair<F1, F2>
 
     BOOST_HOF_RETURNS_CLASS(conditional_kernel);
 
-    template<class... Ts, class PickFirst=is_callable<F1, Ts...>>
+    template<class... Ts, class PickFirst=is_invocable<F1, Ts...>>
     constexpr BOOST_HOF_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
     operator()(Ts && ... xs) const
     BOOST_HOF_SFINAE_RETURNS

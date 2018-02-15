@@ -78,7 +78,7 @@ BOOST_HOF_TEST_CASE()
 BOOST_HOF_TEST_CASE()
 {
     auto f = boost::hof::pipable(boost::hof::limit_c<2>(binary_class()));
-    static_assert(boost::hof::is_callable<decltype(f), int, int>::value, "Passing the limit is not callable");
-    static_assert(!boost::hof::is_callable<decltype(f), int, int, int>::value, "Passing the limit is not callable");
-    static_assert(!boost::hof::is_callable<decltype(f), int, int, int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(f), int, int>::value, "Passing the limit is not callable");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int, int>::value, "Passing the limit is not callable");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int, int, int>::value, "Passing the limit is not callable");
 }

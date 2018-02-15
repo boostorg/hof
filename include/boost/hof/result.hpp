@@ -56,7 +56,7 @@
 /// 
 
 #include <boost/hof/detail/callable_base.hpp>
-#include <boost/hof/is_callable.hpp>
+#include <boost/hof/is_invocable.hpp>
 #include <boost/hof/always.hpp>
 #include <boost/hof/reveal.hpp>
 
@@ -79,7 +79,7 @@ struct result_adaptor : detail::callable_base<F>
         return boost::hof::always_ref(*this)(xs...);
     }
 
-    template<class... Ts, class=typename std::enable_if<(boost::hof::is_callable<F, Ts...>::value)>::type>
+    template<class... Ts, class=typename std::enable_if<(boost::hof::is_invocable<F, Ts...>::value)>::type>
     constexpr result_type operator()(Ts&&... xs) const
     {
         return this->base_function(xs...)(BOOST_HOF_FORWARD(Ts)(xs)...);
@@ -99,7 +99,7 @@ struct result_adaptor<void, F> : detail::callable_base<F>
         return boost::hof::always_ref(*this)(xs...);
     }
 
-    template<class... Ts, class=typename std::enable_if<(boost::hof::is_callable<F, Ts...>::value)>::type>
+    template<class... Ts, class=typename std::enable_if<(boost::hof::is_invocable<F, Ts...>::value)>::type>
     constexpr typename detail::holder<Ts...>::type operator()(Ts&&... xs) const
     {
         return (typename detail::holder<Ts...>::type)this->base_function(xs...)(BOOST_HOF_FORWARD(Ts)(xs)...);

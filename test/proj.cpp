@@ -143,16 +143,16 @@ struct bar {};
 BOOST_HOF_TEST_CASE()
 {
     auto f = boost::hof::proj(bar{});
-    static_assert(!boost::hof::is_callable<decltype(f), int>::value, "Not sfinae friendly");
-    static_assert(!boost::hof::is_callable<decltype(f), int, int>::value, "Not sfinae friendly");
-    static_assert(!boost::hof::is_callable<decltype(f), int, int, int>::value, "Not sfinae friendly");
+    static_assert(!boost::hof::is_invocable<decltype(f), int>::value, "Not sfinae friendly");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int>::value, "Not sfinae friendly");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int, int>::value, "Not sfinae friendly");
 }
 
 BOOST_HOF_TEST_CASE()
 {
     auto f = boost::hof::proj(bar{}, bar{});
-    static_assert(!boost::hof::is_callable<decltype(f), int>::value, "Not sfinae friendly");
-    static_assert(!boost::hof::is_callable<decltype(f), int, int>::value, "Not sfinae friendly");
-    static_assert(!boost::hof::is_callable<decltype(f), int, int, int>::value, "Not sfinae friendly");
-    static_assert(!boost::hof::is_callable<decltype(f)>::value, "Not sfinae friendly");
+    static_assert(!boost::hof::is_invocable<decltype(f), int>::value, "Not sfinae friendly");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int>::value, "Not sfinae friendly");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int, int>::value, "Not sfinae friendly");
+    static_assert(!boost::hof::is_invocable<decltype(f)>::value, "Not sfinae friendly");
 }

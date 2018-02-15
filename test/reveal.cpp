@@ -31,11 +31,11 @@ BOOST_HOF_TEST_CASE()
     BOOST_HOF_TEST_CHECK(boost::hof::reveal(f)(t3()) == 3);
 
 
-    static_assert(boost::hof::is_callable<boost::hof::reveal_adaptor<f_type>, t1>::value, "Callable");
-    static_assert(boost::hof::is_callable<boost::hof::reveal_adaptor<f_type>, t2>::value, "Callable");
-    static_assert(boost::hof::is_callable<boost::hof::reveal_adaptor<f_type>, t3>::value, "Callable");
+    static_assert(boost::hof::is_invocable<boost::hof::reveal_adaptor<f_type>, t1>::value, "Callable");
+    static_assert(boost::hof::is_invocable<boost::hof::reveal_adaptor<f_type>, t2>::value, "Callable");
+    static_assert(boost::hof::is_invocable<boost::hof::reveal_adaptor<f_type>, t3>::value, "Callable");
 
-    static_assert(!boost::hof::is_callable<boost::hof::reveal_adaptor<f_type>, int>::value, "Callable");
+    static_assert(!boost::hof::is_invocable<boost::hof::reveal_adaptor<f_type>, int>::value, "Callable");
     // boost::hof::reveal(f)(1);
 }
 
@@ -142,8 +142,8 @@ BOOST_HOF_TEST_CASE()
     BOOST_HOF_TEST_CHECK(check_failure(5) == 5);
     BOOST_HOF_TEST_CHECK(check_failure(foo()) == -1);
 
-    static_assert(!boost::hof::is_callable<decltype(check_failure), dont_catch>::value, "Callable");
-    static_assert(!boost::hof::is_callable<decltype(check_failure), int, int>::value, "Callable");
+    static_assert(!boost::hof::is_invocable<decltype(check_failure), dont_catch>::value, "Callable");
+    static_assert(!boost::hof::is_invocable<decltype(check_failure), int, int>::value, "Callable");
 
     // check_failure(dont_catch());
 }

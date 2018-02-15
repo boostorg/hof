@@ -32,7 +32,7 @@
 /// 
 
 #include <boost/hof/unpack_sequence.hpp>
-#include <boost/hof/is_callable.hpp>
+#include <boost/hof/is_invocable.hpp>
 #include <boost/hof/always.hpp>
 #include <boost/hof/detail/static_const_var.hpp>
 #include <boost/hof/detail/unpack_tuple.hpp>
@@ -58,7 +58,7 @@ struct private_unpack_type {};
 template<class Sequence>
 struct unpack_impl_result
 {
-    static_assert(boost::hof::is_callable<unpack_impl_f, decltype(boost::hof::always(private_unpack_type())), Sequence>::value,
+    static_assert(boost::hof::is_invocable<unpack_impl_f, decltype(boost::hof::always(private_unpack_type())), Sequence>::value,
         "Unpack is invalid for this sequence. The function used to unpack this sequence is not callable."
     );
     typedef decltype(boost::hof::detail::unpack_impl(boost::hof::always(private_unpack_type()), std::declval<Sequence>())) type;

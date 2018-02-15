@@ -85,6 +85,6 @@ BOOST_HOF_TEST_CASE()
 BOOST_HOF_TEST_CASE()
 {
     auto f = boost::hof::capture(boost::hof::identity)(add_member{1});
-    static_assert(!boost::hof::is_callable<decltype(f), int>::value, "Not sfinae friendly");
+    static_assert(!boost::hof::is_invocable<decltype(f), int>::value, "Not sfinae friendly");
 }
 

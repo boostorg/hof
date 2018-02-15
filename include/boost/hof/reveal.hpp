@@ -165,7 +165,7 @@
 
 #include <boost/hof/always.hpp>
 #include <boost/hof/returns.hpp>
-#include <boost/hof/is_callable.hpp>
+#include <boost/hof/is_invocable.hpp>
 #include <boost/hof/identity.hpp>
 #include <boost/hof/detail/move.hpp>
 #include <boost/hof/detail/callable_base.hpp>
@@ -271,7 +271,7 @@ struct reveal_failure
     // never called
     template<
         class... Ts, 
-        class=typename std::enable_if<(!is_callable<F, Ts...>::value)>::type
+        class=typename std::enable_if<(!is_invocable<F, Ts...>::value)>::type
     >
     constexpr auto operator()(Ts&&... xs) const
 #if BOOST_HOF_REVEAL_USE_TEMPLATE_ALIAS

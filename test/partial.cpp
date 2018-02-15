@@ -74,29 +74,29 @@ BOOST_HOF_TEST_CASE()
 BOOST_HOF_TEST_CASE()
 {
     auto f = boost::hof::partial(boost::hof::limit_c<2>(binary_class()));
-    static_assert(boost::hof::is_callable<decltype(f), int>::value, "Passing the limit is not callable");
-    static_assert(boost::hof::is_callable<decltype(f), int, int>::value, "Passing the limit is not callable");
-    static_assert(!boost::hof::is_callable<decltype(f), int, int, int>::value, "Passing the limit is not callable");
-    static_assert(!boost::hof::is_callable<decltype(f), int, int, int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(f), int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(f), int, int>::value, "Passing the limit is not callable");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int, int>::value, "Passing the limit is not callable");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int, int, int>::value, "Passing the limit is not callable");
 
     auto g = f(0);
-    static_assert(boost::hof::is_callable<decltype(g), int>::value, "Passing the limit is not callable");
-    static_assert(!boost::hof::is_callable<decltype(g), int, int>::value, "Passing the limit is not callable");
-    static_assert(!boost::hof::is_callable<decltype(g), int, int, int>::value, "Passing the limit is not callable");
-    static_assert(!boost::hof::is_callable<decltype(g), int, int, int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(g), int>::value, "Passing the limit is not callable");
+    static_assert(!boost::hof::is_invocable<decltype(g), int, int>::value, "Passing the limit is not callable");
+    static_assert(!boost::hof::is_invocable<decltype(g), int, int, int>::value, "Passing the limit is not callable");
+    static_assert(!boost::hof::is_invocable<decltype(g), int, int, int, int>::value, "Passing the limit is not callable");
 }
 
 BOOST_HOF_TEST_CASE()
 {
     auto f = boost::hof::partial(binary_class());
-    static_assert(boost::hof::is_callable<decltype(f), int>::value, "Passing the limit is not callable");
-    static_assert(boost::hof::is_callable<decltype(f), int, int>::value, "Passing the limit is not callable");
-    static_assert(boost::hof::is_callable<decltype(f), int, int, int>::value, "Passing the limit is not callable");
-    static_assert(boost::hof::is_callable<decltype(f), int, int, int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(f), int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(f), int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(f), int, int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(f), int, int, int, int>::value, "Passing the limit is not callable");
 
     auto g = f(0);
-    static_assert(boost::hof::is_callable<decltype(g), int>::value, "Passing the limit is not callable");
-    static_assert(boost::hof::is_callable<decltype(g), int, int>::value, "Passing the limit is not callable");
-    static_assert(boost::hof::is_callable<decltype(g), int, int, int>::value, "Passing the limit is not callable");
-    static_assert(boost::hof::is_callable<decltype(g), int, int, int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(g), int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(g), int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(g), int, int, int>::value, "Passing the limit is not callable");
+    static_assert(boost::hof::is_invocable<decltype(g), int, int, int, int>::value, "Passing the limit is not callable");
 }

@@ -44,7 +44,6 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
 endforeach()
 
 install (DIRECTORY include/boost DESTINATION include)
-install (FILES include/boost.hpp DESTINATION include)
 configure_file(boost_higherorderfunctions.pc.in boost_higherorderfunctions.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/boost_higherorderfunctions.pc DESTINATION lib/pkgconfig)
 

@@ -24,9 +24,9 @@ BOOST_HOF_TEST_CASE()
     BOOST_HOF_TEST_CHECK(f(1) == 3);
     BOOST_HOF_TEST_CHECK(f() == 3);
     static_assert(boost::hof::function_param_limit<decltype(f)>::value == 2, "Function limit is 2");
-    static_assert(boost::hof::is_invocable<decltype(f), int>::value, "Callable");
-    static_assert(boost::hof::is_invocable<decltype(f), int, int>::value, "Callable");
-    static_assert(!boost::hof::is_invocable<decltype(f), int, int, int>::value, "Not Callable");
+    static_assert(boost::hof::is_invocable<decltype(f), int>::value, "Invocable");
+    static_assert(boost::hof::is_invocable<decltype(f), int, int>::value, "Invocable");
+    static_assert(!boost::hof::is_invocable<decltype(f), int, int, int>::value, "Not Invocable");
 }
 
 BOOST_HOF_TEST_CASE()

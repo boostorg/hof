@@ -22,7 +22,7 @@
 /// 
 /// F must be:
 /// 
-/// * [Callable](Callable)
+/// * [Invocable](Invocable)
 /// 
 /// Synopsis
 /// --------
@@ -36,13 +36,13 @@
 ///     #include <boost/hof.hpp>
 ///     using namespace boost::hof;
 /// 
-///     struct is_callable_class
+///     struct is_invocable_class
 ///     {
 ///         void operator()(int) const
 ///         {
 ///         }
 ///     };
-///     static_assert(is_invocable<is_callable_class, int>(), "Not callable");
+///     static_assert(is_invocable<is_invocable_class, int>(), "Not callable");
 /// 
 ///     int main() {}
 /// 

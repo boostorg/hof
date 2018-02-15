@@ -34,7 +34,7 @@
 /// 
 /// F and Gs must be:
 /// 
-/// * [ConstCallable](ConstCallable)
+/// * [ConstInvocable](ConstInvocable)
 /// * MoveConstructible
 /// 
 /// Example

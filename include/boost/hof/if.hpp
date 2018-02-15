@@ -39,7 +39,7 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](ConstCallable)
+/// * [ConstInvocable](ConstInvocable)
 /// * MoveConstructible
 /// 
 /// Example

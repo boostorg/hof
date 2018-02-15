@@ -30,7 +30,7 @@
 /// 
 /// F must be:
 /// 
-/// * [UnaryCallable](UnaryCallable)
+/// * [UnaryInvocable](UnaryInvocable)
 /// 
 /// Example
 /// -------

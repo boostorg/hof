@@ -34,7 +34,7 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](ConstCallable)
+/// * [ConstInvocable](ConstInvocable)
 /// 
 /// Ts must be:
 /// 

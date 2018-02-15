@@ -44,12 +44,12 @@
 /// 
 /// Projection must be:
 /// 
-/// * [UnaryCallable](UnaryCallable)
+/// * [UnaryInvocable](UnaryInvocable)
 /// * MoveConstructible
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](ConstCallable)
+/// * [ConstInvocable](ConstInvocable)
 /// * MoveConstructible
 /// 
 /// Example

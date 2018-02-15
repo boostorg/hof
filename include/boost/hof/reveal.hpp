@@ -107,7 +107,7 @@
 /// 
 /// F must be:
 /// 
-/// * [ConstCallable](ConstCallable)
+/// * [ConstInvocable](ConstInvocable)
 /// * MoveConstructible
 /// 
 /// Reporting Failures

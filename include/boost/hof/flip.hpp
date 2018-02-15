@@ -32,11 +32,11 @@
 /// 
 /// F must be at least:
 /// 
-/// * [BinaryCallable](BinaryCallable)
+/// * [BinaryInvocable](BinaryInvocable)
 /// 
 /// Or:
 /// 
-/// * [Callable](Callable) with more than two argurments
+/// * [Invocable](Invocable) with more than two argurments
 /// 
 /// And:
 /// 

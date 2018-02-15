@@ -49,7 +49,7 @@
 /// 
 /// F must be:
 /// 
-/// * [BinaryCallable](BinaryCallable)
+/// * [BinaryInvocable](BinaryInvocable)
 /// * MoveConstructible
 /// 
 /// Example

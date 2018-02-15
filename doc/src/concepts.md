@@ -192,14 +192,14 @@ Given
 +-----------------+--------------------------+
 ```
 
-Callable
---------
+Invocable
+---------
 
 Is an object for which the `INVOKE` operation can be applied.
 
 #### Requirements:
 
-The type `T` satisfies `Callable` if
+The type `T` satisfies `Invocable` if
 
 Given
 
@@ -232,14 +232,14 @@ where `INVOKE(f, x, xs...)` is defined as follows:
 
 * otherwise, `INVOKE(f, x, xs...)` is equivalent to `f(x, xs...)`
 
-ConstCallable
+ConstInvocable
 -------------
 
 Is an object for which the `INVOKE` operation can be applied.
 
 #### Requirements:
 
-The type `T` satisfies `ConstCallable` if
+The type `T` satisfies `ConstInvocable` if
 
 Given
 
@@ -272,14 +272,14 @@ where `INVOKE(f, x, xs...)` is defined as follows:
 
 * otherwise, `INVOKE(f, x, xs...)` is equivalent to `f(x, xs...)`
 
-UnaryCallable
--------------
+UnaryInvocable
+--------------
 
 Is an object for which the `INVOKE` operation can be applied with one parameter.
 
 #### Requirements:
 
-* `ConstCallable`
+* `ConstInvocable`
 
 Given
 
@@ -294,14 +294,14 @@ Given
 +----------------------------------------+-------------------------------------------------------+
 ```
 
-BinaryCallable
---------------
+BinaryInvocable
+---------------
 
 Is an object for which the `INVOKE` operation can be applied with two parameters.
 
 #### Requirements:
 
-* `ConstCallable`
+* `ConstInvocable`
 
 Given
 

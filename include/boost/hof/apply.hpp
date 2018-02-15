@@ -33,7 +33,7 @@
 /// 
 /// F must be:
 /// 
-/// * [Callable](Callable)
+/// * [Invocable](Invocable)
 /// 
 /// Example
 /// -------

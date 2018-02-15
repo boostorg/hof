@@ -29,7 +29,7 @@ Instead with point-free style, we can write this using the [`proj`](/include/boo
 
 This uses the [placeholders](/include/boost/hof/placeholders) to create a function that prints to `std::cout`. Then we can pass `simple_print` to the [`proj`](/include/boost/hof/by) adaptor:
 
-    BOOST_HOF_STATIC_FUNCTION(print) = by(simple_print);
+    BOOST_HOF_STATIC_FUNCTION(print) = proj(simple_print);
 
 As the [`proj`](/include/boost/hof/by) adaptor calls the function for each argument passed in, `b(f)(x, y)` is the equivalent of calling `f(x)` and then `f(y)`. In this case, it will call `simple_print(x)` and then `simple_print(y)`:
 
@@ -41,7 +41,7 @@ Which prints out:
 
 Of course, this puts all the output together, but we can further extend this to print a new line for each item by composing it:
 
-    BOOST_HOF_STATIC_FUNCTION(print_lines) = by(flow(simple_print, _ << std::integral_constant<char, '\n'>{}));
+    BOOST_HOF_STATIC_FUNCTION(print_lines) = proj(flow(simple_print, _ << std::integral_constant<char, '\n'>{}));
 
 The [flow](/include/boost/hof/flow) adaptor does function composition but the functions are called from left-to-right. That is `flow(f, g)(x)` is equivalent to `g(f(x))`. So in this case, it will call `simple_print` on the argument which returns `std::cout` and then pass that to the next function which calls the stream with the newline character. In the above, we write `std::integral_constant<char, '\n'>{}` instead of just `'\n'` because the function is statically defined, so all values must be defined statically.
 

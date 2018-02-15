@@ -16,7 +16,7 @@ Overloading
 Boost.HigherOrderFunctions provides several ways to do overloading. One of the ways is with the [`first_of`](/include/boost/hof/conditional) adaptor which will pick the first function that is callable. This allows ordering the functions based on which one is more important. So then the first function will print to `std::cout` if possible otherwise we will add an overload to print a range:
 
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = first_of(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -46,7 +46,7 @@ We can also constrain the second overload as well, which will be important to ad
 
 Now we can add `-> decltype(std::cout << *adl::adl_begin(range), void())` to the second function to constrain it to ranges:
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = first_of(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -76,7 +76,7 @@ We could extend this to printing tuples as well. We will need to combine a coupl
 
     BOOST_HOF_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
     {
-        return unpack(by(f))(sequence);
+        return unpack(proj(f))(sequence);
     };
 
 So now if we call:
@@ -94,7 +94,7 @@ This will print out:
 
 We can integrate this into our `print` function by adding an additional overload:
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = conditional(
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = first_of(
         [](const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -129,7 +129,7 @@ Even though this will print for ranges and tuples, if we were to nest a range in
 
 So now we add an additional arguments called `self` which is the `print` function itself. This extra argument is called by the [`fix`](/include/boost/hof/fix) adaptor, and so the user would still call this function with a single argument:
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = fix(conditional(
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = fix(first_of(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -168,7 +168,7 @@ Variadic
 
 We can also make this `print` function variadic, so it prints every argument passed into it. We can use the [`proj`](/include/boost/hof/by) adaptor, which already calls the function on every argument passed in. First, we just rename our original `print` function to `simple_print`:
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(simple_print) = fix(first_of(
         [](auto, const auto& x) -> decltype(std::cout << x, void())
         {
             std::cout << x << std::endl;
@@ -185,7 +185,7 @@ We can also make this `print` function variadic, so it prints every argument pas
 
 And then apply the [`proj`](/include/boost/hof/by) adaptor to `simple_print`:
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = proj(simple_print);
 
 Now we can call `print` with several arguments:
 

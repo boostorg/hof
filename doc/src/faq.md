@@ -24,7 +24,7 @@ struct counter
 
 
 counter c{};
-by(mutable_(c))(1,1);
+proj(mutable_(c))(1,1);
 // Prints 0, not 2
 std::cout << c.i << std::endl;
 ```
@@ -34,7 +34,7 @@ a copy of the objects. Instead, `std::ref` should be used:
 
 ```cpp
 counter c{};
-by(std::ref(c))(1,1);
+proj(std::ref(c))(1,1);
 // Prints 2
 std::cout << c.i << std::endl;
 ```

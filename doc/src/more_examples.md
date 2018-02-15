@@ -37,7 +37,7 @@ We can use the [`proj`](/include/boost/hof/by) adaptor to project `year_of_birth
 operator:
 
     std::sort(std::begin(people), std::end(people),
-            by(&Person::year_of_birth, _ < _));
+            proj(&Person::year_of_birth, _ < _));
 
 Ordering evaluation of arguments
 --------------------------------

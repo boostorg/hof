@@ -28,7 +28,7 @@
 /// --------
 /// 
 ///     template<class... Fs>
-///     constexpr conditional_adaptor<Fs...> conditional(Fs... fs);
+///     constexpr first_of_adaptor<Fs...> conditional(Fs... fs);
 /// 
 /// Requirements
 /// ------------
@@ -70,7 +70,7 @@
 /// called on floats, so it is chosen by `conditional` first, even though
 /// `for_floats` is a better match.
 /// 
-/// So, the order of the functions in the `conditional_adaptor` are very important
+/// So, the order of the functions in the `first_of_adaptor` are very important
 /// to how the function is chosen.
 /// 
 /// References
@@ -95,14 +95,14 @@ namespace boost { namespace hof {
 namespace detail {
 
 template<class F1, class F2>
-struct basic_conditional_adaptor : F1, F2
+struct basic_first_of_adaptor : F1, F2
 {
-    BOOST_HOF_INHERIT_DEFAULT(basic_conditional_adaptor, F1, F2)
+    BOOST_HOF_INHERIT_DEFAULT(basic_first_of_adaptor, F1, F2)
 
     template<class A, class B,
         BOOST_HOF_ENABLE_IF_CONVERTIBLE(A, F1),
         BOOST_HOF_ENABLE_IF_CONVERTIBLE(B, F2)>
-    constexpr basic_conditional_adaptor(A&& f1, B&& f2)
+    constexpr basic_first_of_adaptor(A&& f1, B&& f2)
     noexcept(BOOST_HOF_IS_NOTHROW_CONSTRUCTIBLE(F1, A&&) && BOOST_HOF_IS_NOTHROW_CONSTRUCTIBLE(F2, B&&))
     : F1(BOOST_HOF_FORWARD(A)(f1)), F2(BOOST_HOF_FORWARD(B)(f2))
     {}
@@ -112,7 +112,7 @@ struct basic_conditional_adaptor : F1, F2
         BOOST_HOF_IS_CONVERTIBLE(X, F1) && 
         BOOST_HOF_IS_DEFAULT_CONSTRUCTIBLE(F2)
     >::type>
-    constexpr basic_conditional_adaptor(X&& x) 
+    constexpr basic_first_of_adaptor(X&& x) 
     BOOST_HOF_NOEXCEPT_CONSTRUCTIBLE(F1, X&&)
     : F1(BOOST_HOF_FORWARD(X)(x))
     {} 
@@ -127,7 +127,7 @@ struct basic_conditional_adaptor : F1, F2
     >
     {};
 
-    BOOST_HOF_RETURNS_CLASS(basic_conditional_adaptor);
+    BOOST_HOF_RETURNS_CLASS(basic_first_of_adaptor);
 
     template<class... Ts, class F=typename select<Ts...>::type>
     constexpr BOOST_HOF_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
@@ -184,26 +184,26 @@ struct conditional_kernel : compressed_pair<F1, F2>
 }
 
 template<class F, class... Fs>
-struct conditional_adaptor 
-: detail::conditional_kernel<F, BOOST_HOF_JOIN(conditional_adaptor, Fs...) >
+struct first_of_adaptor 
+: detail::conditional_kernel<F, BOOST_HOF_JOIN(first_of_adaptor, Fs...) >
 {
-    typedef conditional_adaptor fit_rewritable_tag;
-    typedef BOOST_HOF_JOIN(conditional_adaptor, Fs...) kernel_base;
+    typedef first_of_adaptor fit_rewritable_tag;
+    typedef BOOST_HOF_JOIN(first_of_adaptor, Fs...) kernel_base;
     typedef detail::conditional_kernel<F, kernel_base > base;
 
-    BOOST_HOF_INHERIT_DEFAULT(conditional_adaptor, base)
+    BOOST_HOF_INHERIT_DEFAULT(first_of_adaptor, base)
 
     template<class X, class... Xs, 
         BOOST_HOF_ENABLE_IF_CONSTRUCTIBLE(base, X, kernel_base), 
         BOOST_HOF_ENABLE_IF_CONSTRUCTIBLE(kernel_base, Xs...)>
-    constexpr conditional_adaptor(X&& f1, Xs&& ... fs) 
+    constexpr first_of_adaptor(X&& f1, Xs&& ... fs) 
     noexcept(BOOST_HOF_IS_NOTHROW_CONSTRUCTIBLE(base, X&&, kernel_base) && BOOST_HOF_IS_NOTHROW_CONSTRUCTIBLE(kernel_base, Xs&&...))
     : base(BOOST_HOF_FORWARD(X)(f1), kernel_base(BOOST_HOF_FORWARD(Xs)(fs)...))
     {}
 
     template<class X, class... Xs, 
         BOOST_HOF_ENABLE_IF_CONSTRUCTIBLE(base, X)>
-    constexpr conditional_adaptor(X&& f1) 
+    constexpr first_of_adaptor(X&& f1) 
     BOOST_HOF_NOEXCEPT_CONSTRUCTIBLE(base, X&&)
     : base(BOOST_HOF_FORWARD(X)(f1))
     {}
@@ -214,10 +214,10 @@ struct conditional_adaptor
 };
 
 template<class F>
-struct conditional_adaptor<F> : F
+struct first_of_adaptor<F> : F
 {
-    typedef conditional_adaptor fit_rewritable_tag;
-    BOOST_HOF_INHERIT_CONSTRUCTOR(conditional_adaptor, F);
+    typedef first_of_adaptor fit_rewritable_tag;
+    BOOST_HOF_INHERIT_CONSTRUCTOR(first_of_adaptor, F);
 
     struct failure
     : failure_for<F>
@@ -225,19 +225,19 @@ struct conditional_adaptor<F> : F
 };
 
 template<class F1, class F2>
-struct conditional_adaptor<F1, F2> 
+struct first_of_adaptor<F1, F2> 
 : detail::conditional_kernel<F1, F2>
 {
     typedef detail::conditional_kernel<F1, F2> base;
-    typedef conditional_adaptor fit_rewritable_tag;
-    BOOST_HOF_INHERIT_CONSTRUCTOR(conditional_adaptor, base);
+    typedef first_of_adaptor fit_rewritable_tag;
+    BOOST_HOF_INHERIT_CONSTRUCTOR(first_of_adaptor, base);
 
     struct failure
     : failure_for<F1, F2>
     {};
 };
 
-BOOST_HOF_DECLARE_STATIC_VAR(conditional, detail::make<conditional_adaptor>);
+BOOST_HOF_DECLARE_STATIC_VAR(first_of, detail::make<first_of_adaptor>);
 
 }} // namespace boost::hof
 

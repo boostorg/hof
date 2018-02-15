@@ -4,7 +4,7 @@
 #include <boost/hof/proj.hpp>
 #include <boost/hof/lift.hpp>
 #include <boost/hof/construct.hpp>
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/unpack.hpp>
 
 #include <tuple>
@@ -25,7 +25,7 @@ struct integer_predicate
     template<class T>
     constexpr auto operator()(T x) const BOOST_HOF_RETURNS
     (
-        boost::hof::conditional(
+        boost::hof::first_of(
             boost::hof::if_(std::is_integral<T>())(boost::hof::pack_basic),
             boost::hof::always(boost::hof::pack_basic())
         )(boost::hof::move(x))

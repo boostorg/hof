@@ -1,7 +1,7 @@
 #include <boost/hof/if.hpp>
 #include "test.hpp"
 
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/placeholders.hpp>
 
 
@@ -29,7 +29,7 @@ struct test_int
     template<class T>
     constexpr bool operator()(T x) const
     {
-        return boost::hof::conditional(
+        return boost::hof::first_of(
             boost::hof::if_(std::is_integral<T>())(F()),
             boost::hof::always(true)
         )(x);
@@ -65,7 +65,7 @@ struct test_int_c
     template<class T>
     constexpr bool operator()(T x) const
     {
-        return boost::hof::conditional(
+        return boost::hof::first_of(
             boost::hof::if_c<std::is_integral<T>::value>(F()),
             boost::hof::always(true)
         )(x);
@@ -100,7 +100,7 @@ struct sum_f
     template<class T>
     constexpr int operator()(T x, T y) const
     {
-        return boost::hof::conditional(
+        return boost::hof::first_of(
             boost::hof::if_(std::is_integral<T>())(boost::hof::_ + boost::hof::_),
             boost::hof::always(0)
         )(x, y);
@@ -123,7 +123,7 @@ struct sum_f_c
     template<class T>
     constexpr int operator()(T x, T y) const
     {
-        return boost::hof::conditional(
+        return boost::hof::first_of(
             boost::hof::if_c<std::is_integral<T>::value>(boost::hof::_ + boost::hof::_),
             boost::hof::always(0)
         )(x, y);

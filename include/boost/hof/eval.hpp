@@ -54,7 +54,7 @@
 
 #include <boost/hof/always.hpp>
 #include <boost/hof/identity.hpp>
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/detail/result_of.hpp>
 
 namespace boost { namespace hof {
@@ -79,7 +79,7 @@ struct id_eval
 
 }
 
-BOOST_HOF_DECLARE_STATIC_VAR(eval, boost::hof::conditional_adaptor<detail::simple_eval, detail::id_eval>);
+BOOST_HOF_DECLARE_STATIC_VAR(eval, boost::hof::first_of_adaptor<detail::simple_eval, detail::id_eval>);
 
 }} // namespace boost::hof
 

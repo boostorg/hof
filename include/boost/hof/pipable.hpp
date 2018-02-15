@@ -66,7 +66,7 @@
 /// * [Extension methods](<Extension methods>)
 /// 
 
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/pack.hpp>
 #include <boost/hof/detail/delegate.hpp>
 #include <boost/hof/detail/move.hpp>
@@ -163,9 +163,9 @@ constexpr auto operator|(A&& a, const pipe_closure<F, Pack>& p) BOOST_HOF_RETURN
 
 template<class F>
 struct pipable_adaptor 
-: detail::basic_conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> >
+: detail::basic_first_of_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> >
 {
-    typedef detail::basic_conditional_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> > base;
+    typedef detail::basic_first_of_adaptor<detail::callable_base<F>, detail::pipe_pack<pipable_adaptor<F>, detail::callable_base<F>> > base;
     typedef pipable_adaptor fit_rewritable_tag;
 
     BOOST_HOF_INHERIT_CONSTRUCTOR(pipable_adaptor, base);

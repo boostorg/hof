@@ -68,7 +68,7 @@
 /// * [Currying](https://en.wikipedia.org/wiki/Currying)
 /// 
 
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/static.hpp>
 #include <boost/hof/pipable.hpp>
 #include <boost/hof/detail/make.hpp>
@@ -199,7 +199,7 @@ struct partial_adaptor_pack
 template<class F, class Pack>
 struct partial_adaptor_base 
 {
-    typedef basic_conditional_adaptor
+    typedef basic_first_of_adaptor
     <
         partial_adaptor_invoke<partial_adaptor<F, Pack>, F, Pack>,
         partial_adaptor_join<partial_adaptor<F, Pack>, F, Pack> 
@@ -209,7 +209,7 @@ struct partial_adaptor_base
 template<class Derived, class F>
 struct partial_adaptor_pack_base
 {
-    typedef basic_conditional_adaptor
+    typedef basic_first_of_adaptor
     <
         F,
         partial_adaptor_pack<Derived, F> 

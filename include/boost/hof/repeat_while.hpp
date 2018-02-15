@@ -73,7 +73,7 @@
 #include <boost/hof/detail/move.hpp>
 #include <boost/hof/decorate.hpp>
 #include <boost/hof/detail/static_const_var.hpp>
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/detail/recursive_constexpr_depth.hpp>
 
 namespace boost { namespace hof { namespace detail {
@@ -170,7 +170,7 @@ struct repeat_while_integral_decorator<0>
 #endif
 
 BOOST_HOF_DECLARE_STATIC_VAR(repeat_while, decorate_adaptor<
-    boost::hof::conditional_adaptor<
+    boost::hof::first_of_adaptor<
         detail::repeat_while_constant_decorator,
         detail::repeat_while_integral_decorator<BOOST_HOF_REPEAT_WHILE_CONSTEXPR_DEPTH>
     >

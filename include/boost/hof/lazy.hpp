@@ -67,7 +67,7 @@
 /// 
 
 #include <boost/hof/arg.hpp>
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/always.hpp>
 #include <boost/hof/static.hpp>
 #include <boost/hof/detail/delegate.hpp>
@@ -114,7 +114,7 @@ struct id_transformer
     BOOST_HOF_SFINAE_RETURNS(always_detail::always_base<T>(BOOST_HOF_FORWARD(T)(x)));
 };
 
-BOOST_HOF_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer>);
+BOOST_HOF_DECLARE_STATIC_VAR(pick_transformer, first_of_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer>);
 
 template<class T, class Pack>
 constexpr auto lazy_transform(T&& x, const Pack& p) BOOST_HOF_RETURNS

@@ -53,7 +53,7 @@
 ///         template<class T>
 ///         int operator()(T x, T y) const
 ///         {
-///             return boost::hof::conditional(
+///             return boost::hof::first_of(
 ///                 boost::hof::if_(std::is_integral<T>())(boost::hof::_ + boost::hof::_),
 ///                 boost::hof::always(0)
 ///             )(x, y);

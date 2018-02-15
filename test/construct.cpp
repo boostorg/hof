@@ -1,7 +1,7 @@
 #include <boost/hof/construct.hpp>
 #include "test.hpp"
 
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/proj.hpp>
 #include <boost/hof/placeholders.hpp>
 
@@ -155,7 +155,7 @@ BOOST_HOF_TEST_CASE()
 
 BOOST_HOF_TEST_CASE()
 {
-    auto f = boost::hof::conditional(boost::hof::construct<std::pair>(), boost::hof::identity);
+    auto f = boost::hof::first_of(boost::hof::construct<std::pair>(), boost::hof::identity);
     BOOST_HOF_TEST_CHECK(f(1, 2) == std::make_pair(1, 2));
     BOOST_HOF_TEST_CHECK(f(1) == 1);
 }

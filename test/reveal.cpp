@@ -1,6 +1,6 @@
 #include "test.hpp"
 #include <boost/hof/reveal.hpp>
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/static.hpp>
 #include <boost/hof/lambda.hpp>
 #include <boost/hof/fix.hpp>
@@ -21,7 +21,7 @@ CONDITIONAL_FUNCTION(1)
 CONDITIONAL_FUNCTION(2)
 CONDITIONAL_FUNCTION(3)
 
-typedef boost::hof::conditional_adaptor<f1, f2, f3> f_type;
+typedef boost::hof::first_of_adaptor<f1, f2, f3> f_type;
 static constexpr boost::hof::static_<f_type> f = {}; 
 
 BOOST_HOF_TEST_CASE()
@@ -40,7 +40,7 @@ BOOST_HOF_TEST_CASE()
 }
 
 #ifndef _MSC_VER
-static constexpr auto lam = boost::hof::conditional(
+static constexpr auto lam = boost::hof::first_of(
     BOOST_HOF_STATIC_LAMBDA(t1)
     {
         return 1;
@@ -68,7 +68,7 @@ BOOST_HOF_TEST_CASE()
 }
 #endif
 
-BOOST_HOF_STATIC_LAMBDA_FUNCTION(static_fun) = boost::hof::conditional(
+BOOST_HOF_STATIC_LAMBDA_FUNCTION(static_fun) = boost::hof::first_of(
     [](t1)
     {
         return 1;
@@ -134,7 +134,7 @@ struct catch_all
     }
 };
 
-static constexpr boost::hof::reveal_adaptor<boost::hof::conditional_adaptor<integral_type, catch_all>> check_failure = {}; 
+static constexpr boost::hof::reveal_adaptor<boost::hof::first_of_adaptor<integral_type, catch_all>> check_failure = {}; 
 
 
 BOOST_HOF_TEST_CASE()

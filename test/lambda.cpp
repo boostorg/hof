@@ -1,5 +1,5 @@
 #include <boost/hof/lambda.hpp>
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/partial.hpp>
 #include <boost/hof/infix.hpp>
 #include <boost/hof/pipable.hpp>

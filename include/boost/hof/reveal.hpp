@@ -39,7 +39,7 @@
 ///         boost::hof::unpack(boost::hof::proj(f))(sequence)
 ///     );
 /// 
-///     auto print = boost::hof::fix(boost::hof::conditional(
+///     auto print = boost::hof::fix(boost::hof::first_of(
 ///         [](auto, const auto& x) -> decltype(std::cout << x, void())
 ///         {
 ///             std::cout << x << std::endl;
@@ -64,10 +64,10 @@
 /// However, if we pass a type that can't be printed, we get an error like
 /// this:
 /// 
-///     print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::fix_adaptor<boost::hof::conditional_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> >'
+///     print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> >'
 ///         print(foo{});
 ///         ^~~~~
-///     fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const boost::hof::conditional_adaptor<(lambda at
+///     fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const boost::hof::first_of_adaptor<(lambda at
 ///           print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)>'
 ///         operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
 /// 
@@ -75,8 +75,8 @@
 /// It doesn't even show the overloads that were try. However, using the
 /// `reveal` adaptor we can get more info about the error like this:
 /// 
-///     print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::reveal_adaptor<boost::hof::fix_adaptor<boost::hof::conditional_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9),
-///           (lambda at print.cpp:37:9)> >, boost::hof::fix_adaptor<boost::hof::conditional_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> > >'
+///     print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::reveal_adaptor<boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9),
+///           (lambda at print.cpp:37:9)> >, boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> > >'
 ///         boost::hof::reveal(print)(foo{});
 ///         ^~~~~~~~~~~~~~~~~~
 ///     reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:29:9)'
@@ -88,7 +88,7 @@
 ///     reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:37:9)'
 ///         constexpr auto operator()(Ts&&... xs) const
 ///                        ^
-///     fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const boost::hof::conditional_adaptor<(lambda at
+///     fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const boost::hof::first_of_adaptor<(lambda at
 ///           print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)>'
 ///         operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
 /// 

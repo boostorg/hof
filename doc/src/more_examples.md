@@ -33,7 +33,7 @@ Instead of writing the projection multiple times in algorithms:
                 return a.year_of_birth < b.year_of_birth;
               });
 
-We can use the [`by`](/include/boost/hof/by) adaptor to project `year_of_birth` on the comparison
+We can use the [`proj`](/include/boost/hof/by) adaptor to project `year_of_birth` on the comparison
 operator:
 
     std::sort(std::begin(people), std::end(people),

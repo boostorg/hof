@@ -16,7 +16,7 @@
 /// 
 /// The `match` function adaptor combines several functions together and
 /// resolves which one should be called by using C++ overload resolution. This
-/// is different than the [`conditional`](/include/boost/hof/conditional) adaptor which resolves
+/// is different than the [`first_of`](/include/boost/hof/conditional) adaptor which resolves
 /// them based on order.
 /// 
 /// Synopsis

@@ -23,15 +23,15 @@ We would write something like the following, which would recursively iterate ove
         print(xs...);
     }
 
-Instead with point-free style, we can write this using the [`by`](/include/boost/hof/by) adaptor, which calls a function on each arguments. Of course, `std::cout` is not a function, but we can make it one by using `BOOST_HOF_LIFT`:
+Instead with point-free style, we can write this using the [`proj`](/include/boost/hof/by) adaptor, which calls a function on each arguments. Of course, `std::cout` is not a function, but we can make it one by using `BOOST_HOF_LIFT`:
 
     BOOST_HOF_STATIC_FUNCTION(simple_print) = BOOST_HOF_LIFT(std::ref(std::cout) << _);
 
-This uses the [placeholders](/include/boost/hof/placeholders) to create a function that prints to `std::cout`. Then we can pass `simple_print` to the [`by`](/include/boost/hof/by) adaptor:
+This uses the [placeholders](/include/boost/hof/placeholders) to create a function that prints to `std::cout`. Then we can pass `simple_print` to the [`proj`](/include/boost/hof/by) adaptor:
 
     BOOST_HOF_STATIC_FUNCTION(print) = by(simple_print);
 
-As the [`by`](/include/boost/hof/by) adaptor calls the function for each argument passed in, `b(f)(x, y)` is the equivalent of calling `f(x)` and then `f(y)`. In this case, it will call `simple_print(x)` and then `simple_print(y)`:
+As the [`proj`](/include/boost/hof/by) adaptor calls the function for each argument passed in, `b(f)(x, y)` is the equivalent of calling `f(x)` and then `f(y)`. In this case, it will call `simple_print(x)` and then `simple_print(y)`:
 
     print("Hello", "World");
 

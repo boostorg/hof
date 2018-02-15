@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2012 Paul Fultz II
-    conditional.h
+    first_of.h
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
@@ -8,19 +8,19 @@
 #ifndef BOOST_HOF_GUARD_FUNCTION_CONDITIONAL_H
 #define BOOST_HOF_GUARD_FUNCTION_CONDITIONAL_H
 
-/// conditional
-/// ===========
+/// first_of
+/// ========
 /// 
 /// Description
 /// -----------
 /// 
-/// The `conditional` function adaptor combines several functions together. If
+/// The `first_of` function adaptor combines several functions together. If
 /// the first function can not be called, then it will try to call the next
 /// function. This can be very useful when overloading functions using
 /// template constraints(such as with `enable_if`).
 /// 
 /// Note: This is different than the [`match`](match.md) function adaptor, which
-/// can lead to ambiguities. Instead, `conditional` will call the first function
+/// can lead to ambiguities. Instead, `first_of` will call the first function
 /// that is callable, regardless if there is another function that could be
 /// called as well.
 /// 
@@ -67,7 +67,7 @@
 /// 
 /// This will print `Int` because the `for_floats` function object won't ever be
 /// called. Due to the conversion rules in C++, the `for_ints` function can be
-/// called on floats, so it is chosen by `conditional` first, even though
+/// called on floats, so it is chosen by `first_of` first, even though
 /// `for_floats` is a better match.
 /// 
 /// So, the order of the functions in the `first_of_adaptor` are very important

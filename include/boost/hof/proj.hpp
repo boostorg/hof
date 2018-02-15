@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2014 Paul Fultz II
-    by.h
+    proj.h
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
@@ -8,13 +8,13 @@
 #ifndef BOOST_HOF_GUARD_FUNCTION_ON_H
 #define BOOST_HOF_GUARD_FUNCTION_ON_H
 
-/// by
-/// ==
+/// proj
+/// ====
 /// 
 /// Description
 /// -----------
 /// 
-/// The `by` function adaptor applies a projection onto the parameters of
+/// The `proj` function adaptor applies a projection onto the parameters of
 /// another function. This is useful, for example, to define a function for
 /// sorting such that the ordering is based off of the value of one of its
 /// member fields. 

@@ -86,7 +86,7 @@ this:
 The `id` parameter passed to the lambda is the [`identity`](/include/boost/hof/identity) function. As explained in the article, this is used to delay the lookup of types by making it a dependent type(i.e. the type depends on a template parameter), which is necessary to avoid compile errors. The [`eval`](/include/boost/hof/eval) function that is called will pass this `identity` function to the lambdas.
 
 The advantage of using Boost.HigherOrderFunctions instead of the solution in Baptiste
-Wicht's blog, is that [`conditional`](/include/boost/hof/conditional) allows more than just two conditions. So if
+Wicht's blog, is that [`first_of`](/include/boost/hof/conditional) allows more than just two conditions. So if
 there was another trait to be checked, such as `is_stack`, it could be written
 like this:
 

@@ -45,8 +45,8 @@ endforeach()
 
 install (DIRECTORY include/boost DESTINATION include)
 install (FILES include/boost.hpp DESTINATION include)
-configure_file(fit.pc.in fit.pc)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fit.pc DESTINATION lib/pkgconfig)
+configure_file(boost_higherorderfunctions.pc.in boost_higherorderfunctions.pc)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/boost_higherorderfunctions.pc DESTINATION lib/pkgconfig)
 
 include(SphinxDoc)
 
@@ -76,7 +76,7 @@ foreach(HEADER ${HEADERS})
     get_filename_component(BASE_NAME ${HEADER} NAME_WE)
     bcm_test_header(NAME ${BASE_NAME} HEADER boost/hof/${BASE_NAME}.hpp STATIC)
 endforeach()
-bcm_test_header(NAME fit HEADER fit.hpp STATIC)
+bcm_test_header(NAME hof HEADER boost/hof.hpp STATIC)
 
 function(extract_doc SOURCE OUTPUTVAR)
     file(READ ${SOURCE} CONTENT)

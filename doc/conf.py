@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Boost.HOF documentation build configuration file, created by
+# Boost.HigherOrderFunctions documentation build configuration file, created by
 # sphinx-quickstart on Thu Jun  2 00:33:55 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -58,7 +58,7 @@ source_suffix = ['.rst', '.md', '.hpp']
 master_doc = 'doc/index'
 
 # General information about the project.
-project = u'Boost.HOF'
+project = u'Boost.HigherOrderFunctions'
 copyright = u'2016, Paul Fultz II'
 author = u'Paul Fultz II'
 
@@ -115,7 +115,7 @@ exclude_patterns = [
     'README.md', 
     '**/alias.hpp',
     '**/config.hpp',
-    '**/fit.hpp',
+    '**/hof.hpp',
     '**/static_def.hpp', 
     '**/test.hpp', 
     '**/detail/*.hpp',
@@ -175,7 +175,7 @@ html_theme_path = [sphinx_boost.get_html_theme_path()]
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'Boost.HOF v1.0'
+# html_title = u'Boost.HigherOrderFunctions v1.0'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -184,7 +184,7 @@ html_theme_path = [sphinx_boost.get_html_theme_path()]
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #
-html_logo = 'boost-proposed.png'
+# html_logo = 'boost-proposed.png'
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -278,7 +278,7 @@ html_copy_source = True
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Boost.HOFdoc'
+htmlhelp_basename = 'Boost.HigherOrderFunctionsdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -304,7 +304,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Boost.HOF.tex', u'Boost.HOF Documentation',
+    (master_doc, 'Boost.HigherOrderFunctions.tex', u'Boost.HigherOrderFunctions Documentation',
      u'Paul Fultz II', 'manual'),
 ]
 
@@ -340,7 +340,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'fit', u'Boost.HOF Documentation',
+    (master_doc, 'Boost.HigherOrderFunctions', u'Boost.HigherOrderFunctions Documentation',
      [author], 1)
 ]
 
@@ -355,8 +355,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Boost.HOF', u'Boost.HOF Documentation',
-     author, 'Boost.HOF', 'One line description of project.',
+    (master_doc, 'Boost.HigherOrderFunctions', u'Boost.HigherOrderFunctions Documentation',
+     author, 'Boost.HigherOrderFunctions', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -1,7 +1,7 @@
 .. _contents:
 
-Fit
-===
+Boost.HigherOrderFunctions
+==========================
 
 **Paul Fultz II**
 

@@ -1,4 +1,4 @@
-#include <boost/hof/by.hpp>
+#include <boost/hof/proj.hpp>
 #include <boost/hof/placeholders.hpp>
 #include <boost/hof/mutable.hpp>
 #include "test.hpp"
@@ -24,11 +24,11 @@ BOOST_HOF_TEST_CASE()
     constexpr 
 #endif
     auto add = boost::hof::_ + boost::hof::_;
-    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::by(select_x(), add)(foo(1), foo(2)) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::proj(select_x(), add)(foo(1), foo(2)) == 3);
     // Using mutable_ as a workaround on libc++, since mem_fn does not meet the
     // requirements of a FunctionObject
-    BOOST_HOF_TEST_CHECK(boost::hof::by(boost::hof::mutable_(std::mem_fn(&foo::x)), add)(foo(1), foo(2)) == 3);
-    static_assert(boost::hof::detail::is_default_constructible<decltype(boost::hof::by(select_x(), add))>::value, "Not default constructible");
+    BOOST_HOF_TEST_CHECK(boost::hof::proj(boost::hof::mutable_(std::mem_fn(&foo::x)), add)(foo(1), foo(2)) == 3);
+    static_assert(boost::hof::detail::is_default_constructible<decltype(boost::hof::proj(select_x(), add))>::value, "Not default constructible");
 }
 
 BOOST_HOF_TEST_CASE()
@@ -37,14 +37,14 @@ BOOST_HOF_TEST_CASE()
     constexpr 
 #endif
     auto add = boost::hof::_ + boost::hof::_;
-    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::by(select_x(), add)(foo(1), foo(2)) == 3);
-    BOOST_HOF_TEST_CHECK(boost::hof::by(&foo::x, add)(foo(1), foo(2)) == 3);
-    static_assert(boost::hof::detail::is_default_constructible<decltype(boost::hof::by(select_x(), add))>::value, "Not default constructible");
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::proj(select_x(), add)(foo(1), foo(2)) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::proj(&foo::x, add)(foo(1), foo(2)) == 3);
+    static_assert(boost::hof::detail::is_default_constructible<decltype(boost::hof::proj(select_x(), add))>::value, "Not default constructible");
 }
 
 BOOST_HOF_TEST_CASE()
 {
-    auto indirect_add = boost::hof::by(*boost::hof::_, boost::hof::_ + boost::hof::_);
+    auto indirect_add = boost::hof::proj(*boost::hof::_, boost::hof::_ + boost::hof::_);
     BOOST_HOF_TEST_CHECK(indirect_add(std::unique_ptr<int>(new int(1)), std::unique_ptr<int>(new int(2))) == 3);
     static_assert(boost::hof::detail::is_default_constructible<decltype(indirect_add)>::value, "Not default constructible");
 }
@@ -69,7 +69,7 @@ struct sum_1
 
 BOOST_HOF_TEST_CASE()
 {
-    BOOST_HOF_TEST_CHECK(boost::hof::by(select_x_1(), sum_1())(foo(1), foo(2)) == 7);
+    BOOST_HOF_TEST_CHECK(boost::hof::proj(select_x_1(), sum_1())(foo(1), foo(2)) == 7);
 }
 
 BOOST_HOF_TEST_CASE()
@@ -79,9 +79,9 @@ BOOST_HOF_TEST_CASE()
     {
         s += x;
     };
-    boost::hof::by(f)("hello", "-", "world");
+    boost::hof::proj(f)("hello", "-", "world");
     BOOST_HOF_TEST_CHECK(s == "hello-world");
-    boost::hof::by(f)();
+    boost::hof::proj(f)();
     BOOST_HOF_TEST_CHECK(s == "hello-world");
 }
 
@@ -100,7 +100,7 @@ BOOST_HOF_TEST_CASE()
         BOOST_HOF_TEST_CHECK(z == "hello-world");
         return z;
     };
-    BOOST_HOF_TEST_CHECK(boost::hof::by(f, last)("hello", "-", "world") == "hello-world");
+    BOOST_HOF_TEST_CHECK(boost::hof::proj(f, last)("hello", "-", "world") == "hello-world");
 }
 
 template<bool B>
@@ -124,7 +124,7 @@ struct constexpr_check_each
     template<class T>
     constexpr bool operator()(T x) const
     {
-        return boost::hof::by(constexpr_check())(x, x), true;
+        return boost::hof::proj(constexpr_check())(x, x), true;
     }
 };
 
@@ -135,14 +135,14 @@ BOOST_HOF_TEST_CASE()
 
 BOOST_HOF_TEST_CASE()
 {
-    boost::hof::by(boost::hof::identity, boost::hof::identity)(0);
+    boost::hof::proj(boost::hof::identity, boost::hof::identity)(0);
 }
 
 struct bar {};
 
 BOOST_HOF_TEST_CASE()
 {
-    auto f = boost::hof::by(bar{});
+    auto f = boost::hof::proj(bar{});
     static_assert(!boost::hof::is_callable<decltype(f), int>::value, "Not sfinae friendly");
     static_assert(!boost::hof::is_callable<decltype(f), int, int>::value, "Not sfinae friendly");
     static_assert(!boost::hof::is_callable<decltype(f), int, int, int>::value, "Not sfinae friendly");
@@ -150,7 +150,7 @@ BOOST_HOF_TEST_CASE()
 
 BOOST_HOF_TEST_CASE()
 {
-    auto f = boost::hof::by(bar{}, bar{});
+    auto f = boost::hof::proj(bar{}, bar{});
     static_assert(!boost::hof::is_callable<decltype(f), int>::value, "Not sfinae friendly");
     static_assert(!boost::hof::is_callable<decltype(f), int, int>::value, "Not sfinae friendly");
     static_assert(!boost::hof::is_callable<decltype(f), int, int, int>::value, "Not sfinae friendly");

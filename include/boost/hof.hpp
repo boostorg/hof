@@ -13,7 +13,7 @@
 #include <boost/hof/apply_eval.hpp>
 #include <boost/hof/apply.hpp>
 #include <boost/hof/arg.hpp>
-#include <boost/hof/by.hpp>
+#include <boost/hof/proj.hpp>
 #include <boost/hof/capture.hpp>
 #include <boost/hof/combine.hpp>
 #include <boost/hof/compose.hpp>

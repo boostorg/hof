@@ -36,7 +36,7 @@
 /// 
 ///     BOOST_HOF_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f) BOOST_HOF_RETURNS
 ///     (
-///         boost::hof::unpack(boost::hof::by(f))(sequence)
+///         boost::hof::unpack(boost::hof::proj(f))(sequence)
 ///     );
 /// 
 ///     auto print = boost::hof::fix(boost::hof::conditional(

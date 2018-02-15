@@ -1,5 +1,5 @@
 #include <boost/hof/flip.hpp>
-#include <boost/hof/by.hpp>
+#include <boost/hof/proj.hpp>
 #include <boost/hof/construct.hpp>
 #include <boost/hof/pipable.hpp>
 #include <boost/hof/rotate.hpp>

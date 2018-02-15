@@ -1,7 +1,7 @@
 #include <boost/hof/if.hpp>
 #include "test.hpp"
 
-#include <boost/hof/by.hpp>
+#include <boost/hof/proj.hpp>
 #include <boost/hof/lift.hpp>
 #include <boost/hof/construct.hpp>
 #include <boost/hof/conditional.hpp>
@@ -38,7 +38,7 @@ struct filter_integers
     constexpr auto operator()(Seq s) const BOOST_HOF_RETURNS
     (
         boost::hof::unpack(
-            boost::hof::by(integer_predicate(), boost::hof::unpack(make_tuple_f()))
+            boost::hof::proj(integer_predicate(), boost::hof::unpack(make_tuple_f()))
         )(std::move(s))
     )
 };

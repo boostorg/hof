@@ -1,5 +1,5 @@
 #include <boost/hof/unpack.hpp>
-#include <boost/hof/by.hpp>
+#include <boost/hof/proj.hpp>
 #include <boost/hof/function.hpp>
 #include <boost/hof/reveal.hpp>
 #include "test.hpp"
@@ -9,7 +9,7 @@ struct tuple_for_each_f
     template<class Sequence, class F>
     constexpr auto operator()(Sequence&& s, F && f) const BOOST_HOF_RETURNS
     (
-        boost::hof::unpack(boost::hof::by(boost::hof::forward<F>(f)))(boost::hof::forward<Sequence>(s)), boost::hof::forward<F>(f)
+        boost::hof::unpack(boost::hof::proj(boost::hof::forward<F>(f)))(boost::hof::forward<Sequence>(s)), boost::hof::forward<F>(f)
     );
 };
 

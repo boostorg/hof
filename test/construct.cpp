@@ -2,7 +2,7 @@
 #include "test.hpp"
 
 #include <boost/hof/conditional.hpp>
-#include <boost/hof/by.hpp>
+#include <boost/hof/proj.hpp>
 #include <boost/hof/placeholders.hpp>
 
 #include <tuple>

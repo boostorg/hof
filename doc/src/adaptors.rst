@@ -4,7 +4,7 @@ Function Adaptors
 .. toctree::
     :maxdepth: 1
     
-    ../../include/boost/hof/by
+    ../../include/boost/hof/proj
     ../../include/boost/hof/compose
     ../../include/boost/hof/conditional
     ../../include/boost/hof/combine

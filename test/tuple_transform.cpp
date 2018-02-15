@@ -1,4 +1,4 @@
-#include <boost/hof/by.hpp>
+#include <boost/hof/proj.hpp>
 #include <boost/hof/construct.hpp>
 #include <boost/hof/unpack.hpp>
 #include <boost/hof/function.hpp>
@@ -17,7 +17,7 @@ struct tuple_transform_f
     template<class Sequence, class F>
     constexpr auto operator()(Sequence&& s, F f) const BOOST_HOF_RETURNS
     (
-        boost::hof::unpack(boost::hof::by(f, boost::hof::construct<std::tuple>()))(boost::hof::forward<Sequence>(s))
+        boost::hof::unpack(boost::hof::proj(f, boost::hof::construct<std::tuple>()))(boost::hof::forward<Sequence>(s))
     );
 };
 
@@ -26,7 +26,7 @@ struct pack_transform_f
     template<class Sequence, class F>
     constexpr auto operator()(Sequence&& s, F f) const BOOST_HOF_RETURNS
     (
-        boost::hof::unpack(boost::hof::by(f, boost::hof::pack()))(boost::hof::forward<Sequence>(s))
+        boost::hof::unpack(boost::hof::proj(f, boost::hof::pack()))(boost::hof::forward<Sequence>(s))
     );
 };
 

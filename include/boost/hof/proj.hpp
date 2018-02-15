@@ -28,10 +28,10 @@
 /// --------
 /// 
 ///     template<class Projection, class F>
-///     constexpr by_adaptor<Projection, F> by(Projection p, F f);
+///     constexpr proj_adaptor<Projection, F> by(Projection p, F f);
 /// 
 ///     template<class Projection>
-///     constexpr by_adaptor<Projection> by(Projection p);
+///     constexpr proj_adaptor<Projection> by(Projection p);
 /// 
 /// Semantics
 /// ---------
@@ -67,7 +67,7 @@
 ///     };
 /// 
 ///     int main() {
-///         assert(boost::hof::by(&foo::x, _ + _)(foo(1), foo(2)) == 3);
+///         assert(boost::hof::proj(&foo::x, _ + _)(foo(1), foo(2)) == 3);
 ///     }
 /// 
 /// References
@@ -173,12 +173,12 @@ struct swallow
 }
 
 template<class Projection, class F=void>
-struct by_adaptor;
+struct proj_adaptor;
 
 template<class Projection, class F>
-struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>>, detail::function_result_type<F>
+struct proj_adaptor : detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>>, detail::function_result_type<F>
 {
-    typedef by_adaptor fit_rewritable_tag;
+    typedef proj_adaptor fit_rewritable_tag;
     typedef detail::compressed_pair<detail::callable_base<Projection>, detail::callable_base<F>> base;
     template<class... Ts>
     constexpr const detail::callable_base<F>& base_function(Ts&&... xs) const
@@ -208,9 +208,9 @@ struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, d
     : failure_map<by_failure, detail::callable_base<F>>
     {};
 
-    BOOST_HOF_INHERIT_CONSTRUCTOR(by_adaptor, base)
+    BOOST_HOF_INHERIT_CONSTRUCTOR(proj_adaptor, base)
 
-    BOOST_HOF_RETURNS_CLASS(by_adaptor);
+    BOOST_HOF_RETURNS_CLASS(proj_adaptor);
 
     template<class... Ts>
     constexpr BOOST_HOF_SFINAE_RESULT(const detail::callable_base<F>&, result_of<const detail::callable_base<Projection>&, id_<Ts>>...) 
@@ -225,23 +225,23 @@ struct by_adaptor : detail::compressed_pair<detail::callable_base<Projection>, d
 };
 
 template<class Projection>
-struct by_adaptor<Projection, void> : detail::callable_base<Projection>
+struct proj_adaptor<Projection, void> : detail::callable_base<Projection>
 {
-    typedef by_adaptor fit_rewritable1_tag;
+    typedef proj_adaptor fit_rewritable1_tag;
     template<class... Ts>
     constexpr const detail::callable_base<Projection>& base_projection(Ts&&... xs) const
     {
         return boost::hof::always_ref(*this)(xs...);
     }
 
-    BOOST_HOF_INHERIT_DEFAULT(by_adaptor, detail::callable_base<Projection>)
+    BOOST_HOF_INHERIT_DEFAULT(proj_adaptor, detail::callable_base<Projection>)
 
     template<class P, BOOST_HOF_ENABLE_IF_CONVERTIBLE(P, detail::callable_base<Projection>)>
-    constexpr by_adaptor(P&& p) 
+    constexpr proj_adaptor(P&& p) 
     : detail::callable_base<Projection>(BOOST_HOF_FORWARD(P)(p))
     {}
 
-    BOOST_HOF_RETURNS_CLASS(by_adaptor);
+    BOOST_HOF_RETURNS_CLASS(proj_adaptor);
 
     template<class... Ts, class=detail::holder<decltype(std::declval<Projection>()(std::declval<Ts>()))...>>
     constexpr BOOST_HOF_BY_VOID_RETURN operator()(Ts&&... xs) const 
@@ -259,7 +259,7 @@ struct by_adaptor<Projection, void> : detail::callable_base<Projection>
     }
 };
 
-BOOST_HOF_DECLARE_STATIC_VAR(by, detail::make<by_adaptor>);
+BOOST_HOF_DECLARE_STATIC_VAR(proj, detail::make<proj_adaptor>);
 
 }} // namespace boost::hof
 #endif

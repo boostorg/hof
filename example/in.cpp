@@ -15,7 +15,7 @@ auto member_find(const R& r, const T& x) BOOST_HOF_RETURNS(r.find(x));
 #endif
 
 // Function to find an iterator using a containers built-in find if available
-BOOST_HOF_STATIC_LAMBDA_FUNCTION(find_iterator) = conditional(
+BOOST_HOF_STATIC_LAMBDA_FUNCTION(find_iterator) = first_of(
     [](const std::string& s, const auto& x)
     {
         auto index = s.find(x);

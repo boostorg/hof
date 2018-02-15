@@ -13,12 +13,12 @@
 #include <boost/hof/apply_eval.hpp>
 #include <boost/hof/apply.hpp>
 #include <boost/hof/arg.hpp>
-#include <boost/hof/by.hpp>
+#include <boost/hof/proj.hpp>
 #include <boost/hof/capture.hpp>
 #include <boost/hof/combine.hpp>
 #include <boost/hof/compose.hpp>
 #include <boost/hof/fold.hpp>
-#include <boost/hof/conditional.hpp>
+#include <boost/hof/first_of.hpp>
 #include <boost/hof/construct.hpp>
 #include <boost/hof/decay.hpp>
 #include <boost/hof/decorate.hpp>

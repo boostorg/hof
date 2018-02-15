@@ -13,12 +13,12 @@ using namespace boost::hof;
 // Transform each element of a tuple by calling f
 BOOST_HOF_STATIC_LAMBDA_FUNCTION(tuple_transform) = [](auto&& sequence, auto f)
 {
-    return unpack(by(f, construct<std::tuple>()))(std::forward<decltype(sequence)>(sequence));
+    return unpack(proj(f, construct<std::tuple>()))(std::forward<decltype(sequence)>(sequence));
 };
 // Call f on each element of tuple
 BOOST_HOF_STATIC_LAMBDA_FUNCTION(tuple_for_each) = [](auto&& sequence, auto f)
 {
-    return unpack(by(f))(std::forward<decltype(sequence)>(sequence));
+    return unpack(proj(f))(std::forward<decltype(sequence)>(sequence));
 };
 // Fold over tuple using a f as the binary operator
 BOOST_HOF_STATIC_LAMBDA_FUNCTION(tuple_fold) = [](auto&& sequence, auto f)
@@ -36,7 +36,7 @@ BOOST_HOF_STATIC_LAMBDA_FUNCTION(tuple_filter) = [](auto&& sequence, auto predic
         std::forward<decltype(sequence)>(sequence),
         [&](auto&& x)
         {
-            return conditional(
+            return first_of(
                 if_(predicate(std::forward<decltype(x)>(x)))(pack),
                 always(pack())
             )(std::forward<decltype(x)>(x));

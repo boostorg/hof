@@ -20,7 +20,7 @@
 /// Example
 /// -------
 /// 
-///     #include <fit.hpp>
+///     #include <boost/hof.hpp>
 ///     #include <cassert>
 /// 
 ///     const constexpr auto add_one = BOOST_HOF_STATIC_LAMBDA(int x)
@@ -49,7 +49,7 @@
 /// Example
 /// -------
 /// 
-///     #include <fit.hpp>
+///     #include <boost/hof.hpp>
 ///     #include <cassert>
 /// 
 ///     BOOST_HOF_STATIC_LAMBDA_FUNCTION(add_one) = [](int x)

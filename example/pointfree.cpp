@@ -10,8 +10,8 @@
 using namespace boost::hof;
 
 BOOST_HOF_STATIC_FUNCTION(simple_print) = BOOST_HOF_LIFT(std::ref(std::cout) << _);
-BOOST_HOF_STATIC_FUNCTION(print) = by(simple_print);
-BOOST_HOF_STATIC_FUNCTION(print_lines) = by(flow(simple_print, _ << std::integral_constant<char, '\n'>{}));
+BOOST_HOF_STATIC_FUNCTION(print) = proj(simple_print);
+BOOST_HOF_STATIC_FUNCTION(print_lines) = proj(flow(simple_print, _ << std::integral_constant<char, '\n'>{}));
 BOOST_HOF_STATIC_FUNCTION(max) = fold(BOOST_HOF_LIFT(std::max));
 
 int main() 

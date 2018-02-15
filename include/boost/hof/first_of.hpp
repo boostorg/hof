@@ -28,7 +28,7 @@
 /// --------
 /// 
 ///     template<class... Fs>
-///     constexpr first_of_adaptor<Fs...> conditional(Fs... fs);
+///     constexpr first_of_adaptor<Fs...> first_of(Fs... fs);
 /// 
 /// Requirements
 /// ------------
@@ -41,7 +41,7 @@
 /// Example
 /// -------
 /// 
-///     #include <fit.hpp>
+///     #include <boost/hof.hpp>
 ///     #include <iostream>
 ///     using namespace boost::hof;
 /// 
@@ -62,7 +62,7 @@
 ///     };
 /// 
 ///     int main() {
-///         conditional(for_ints(), for_floats())(3.0);
+///         first_of(for_ints(), for_floats())(3.0);
 ///     }
 /// 
 /// This will print `Int` because the `for_floats` function object won't ever be

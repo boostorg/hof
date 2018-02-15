@@ -24,7 +24,7 @@ auto adl_end(R&& r) BOOST_HOF_RETURNS(end(r));
 // Iterate over a tuple
 BOOST_HOF_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f)
 {
-    return unpack(by(f))(sequence);
+    return unpack(proj(f))(sequence);
 };
 
 #ifdef _MSC_VER
@@ -49,14 +49,14 @@ auto print_with_tuple(Self self, const T& tuple) -> decltype(for_each_tuple(tupl
 }
 
 // Recursively print everything
-BOOST_HOF_STATIC_FUNCTION(simple_print) = fix(conditional(
+BOOST_HOF_STATIC_FUNCTION(simple_print) = fix(first_of(
     BOOST_HOF_LIFT(print_with_cout),
     BOOST_HOF_LIFT(print_with_range),
     BOOST_HOF_LIFT(print_with_tuple)
 ));
 #else
 // Recursively print everything
-BOOST_HOF_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
+BOOST_HOF_STATIC_LAMBDA_FUNCTION(simple_print) = fix(first_of(
     [](auto, const auto& x) -> decltype(std::cout << x, void())
     {
         std::cout << x << std::endl;
@@ -73,7 +73,7 @@ BOOST_HOF_STATIC_LAMBDA_FUNCTION(simple_print) = fix(conditional(
 #endif
 
 // Make print function varidiac
-BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = by(simple_print);
+BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = proj(simple_print);
 
 int main()
 {

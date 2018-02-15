@@ -15,7 +15,7 @@ using namespace boost::hof;
 template<typename T>
 void decrement_kindof(T& value)
 {
-    eval(conditional(
+    eval(first_of(
         if_(std::is_same<std::string, T>())([&](auto id){
             id(value).pop_back();
         }),

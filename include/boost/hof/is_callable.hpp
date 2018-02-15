@@ -33,7 +33,7 @@
 /// Example
 /// -------
 /// 
-///     #include <fit.hpp>
+///     #include <boost/hof.hpp>
 ///     using namespace boost::hof;
 /// 
 ///     struct is_callable_class

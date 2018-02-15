@@ -36,7 +36,7 @@ or `is_detected`(see [n4502](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/
 However, with Boost.HigherOrderFunctions it can simply be written like
 this:
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(stringify) = conditional(
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(stringify) = first_of(
         [](auto x) BOOST_HOF_RETURNS(std::to_string(x)),
         [](auto x) BOOST_HOF_RETURNS(static_cast<std::ostringstream&>(std::ostringstream() << x).str())
     );
@@ -45,7 +45,7 @@ So, using [`BOOST_HOF_RETURNS`](/include/boost/hof/returns) not only deduces the
 
 The second function still uses [`BOOST_HOF_RETURNS`](/include/boost/hof/returns), so the function will still be constrained by whether the `<<` stream operator can be used. Although it may seem unnecessary because there is not another function, however, this makes the function composable. So we could use this to define a `serialize` function that tries to call `stringify` first, otherwise it looks for the member `.serialize()`:
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(serialize) = conditional(
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(serialize) = first_of(
         [](auto x) BOOST_HOF_RETURNS(stringify(x)),
         [](auto x) BOOST_HOF_RETURNS(x.serialize())
     );
@@ -73,7 +73,7 @@ this:
     template<typename T>
     void decrement_kindof(T& value)
     {
-        eval(conditional(
+        eval(first_of(
             if_(std::is_same<std::string, T>())([&](auto id){
                 id(value).pop_back();
             }),
@@ -93,7 +93,7 @@ like this:
     template<typename T>
     void decrement_kindof(T& value)
     {
-        eval(conditional(
+        eval(first_of(
             if_(is_stack<T>())([&](auto id){
                 id(value).pop();
             }),
@@ -122,7 +122,7 @@ this:
         std::true_type{}
     );
 
-    BOOST_HOF_STATIC_LAMBDA_FUNCTION(has_pointer_operators) = conditional(
+    BOOST_HOF_STATIC_LAMBDA_FUNCTION(has_pointer_operators) = first_of(
         BOOST_HOF_LIFT(has_pointer_member),
         [](auto* x) -> bool_constant<(!std::is_void<decltype(*x)>())> { return {}; },
         always(std::false_type{})

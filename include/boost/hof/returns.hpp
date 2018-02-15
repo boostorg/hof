@@ -33,7 +33,7 @@
 /// Example
 /// -------
 /// 
-///     #include <fit.hpp>
+///     #include <boost/hof.hpp>
 ///     #include <cassert>
 /// 
 ///     template<class T, class U>
@@ -70,7 +70,7 @@
 /// Example
 /// -------
 /// 
-///     #include <fit.hpp>
+///     #include <boost/hof.hpp>
 ///     #include <cassert>
 /// 
 ///     struct add_1

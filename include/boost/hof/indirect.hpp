@@ -38,7 +38,7 @@
 /// Example
 /// -------
 /// 
-///     #include <fit.hpp>
+///     #include <boost/hof.hpp>
 ///     #include <cassert>
 ///     #include <memory>
 ///     using namespace boost::hof;

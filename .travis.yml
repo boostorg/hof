@@ -224,10 +224,10 @@ script:
           rm -rf $build_dir
         done
       done
-    - pkg-config fit --cflags
+    - pkg-config boost_higherorderfunctions --cflags
     - cd include
-    - HEADERS=$(echo fit.hpp boost/hof/*.hpp)
+    - HEADERS=$(echo boost/hof.hpp boost/hof/*.hpp)
     - cd ..
-    - for file in $HEADERS; do echo -e "#include <$file>\nint main() {}" | $CXX -std=gnu++0x `pkg-config fit --cflags` -x c++ -S -; done
+    - for file in $HEADERS; do echo -e "#include <$file>\nint main() {}" | $CXX -std=gnu++0x `pkg-config boost_higherorderfunctions --cflags` -x c++ -S -; done
     - rm -rf "$INSTALL_PREFIX_PATH"
 

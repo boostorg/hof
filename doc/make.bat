@@ -1,3 +1,6 @@
+REM Copyright 2018 Paul Fultz II
+REM Distributed under the Boost Software License, Version 1.0.
+REM http://www.boost.org/LICENSE_1_0.txt
 @ECHO OFF
 
 REM Command file for Sphinx documentation

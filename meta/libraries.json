@@ -3,7 +3,7 @@
     "name": "hof",
     "authors": [ "Paul Fultz II" ],
     "maintainers": [ "Paul Fultz II <pfultz2 -at- yahoo.com>" ],
-    "description": "Higer-order functions for C++",
+    "description": "Higher-order functions for C++",
     "category": [
         "Metaprogramming"
     ]

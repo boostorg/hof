@@ -179,7 +179,7 @@ struct move_class
 
 int main()
 {
-	for(const auto& tc: boost::hof::test::test_cases) tc();
+    for(const auto& tc: boost::hof::test::test_cases) tc();
     return 0;
 }
  

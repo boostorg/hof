@@ -1,12 +1,12 @@
 cmake_minimum_required (VERSION 2.8)
-project (boost_higherorderfunctions)
+project (boost_hof)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 foreach(level MAJOR MINOR PATCH)
     file(STRINGS include/boost/hof/version.hpp
                  _define_${level}
                  REGEX "#define BOOST_HOF_${level}_VERSION")
-    string(REGEX MATCH "([0-9]+)" boost_higherorderfunctions_VERSION_${level} "${_define_${level}}")
+    string(REGEX MATCH "([0-9]+)" boost_hof_VERSION_${level} "${_define_${level}}")
 endforeach() 
 
 include(CheckCXXCompilerFlag)
@@ -44,8 +44,8 @@ foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
 endforeach()
 
 install (DIRECTORY include/boost DESTINATION include)
-configure_file(boost_higherorderfunctions.pc.in boost_higherorderfunctions.pc)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/boost_higherorderfunctions.pc DESTINATION lib/pkgconfig)
+configure_file(boost_hof.pc.in boost_hof.pc)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/boost_hof.pc DESTINATION lib/pkgconfig)
 
 include(SphinxDoc)
 

@@ -6,10 +6,12 @@
 #==============================================================================
 project boost/hof/doc ;
 
+path-constant HERE : . ;
+
 make hof-doc :  : @make-hof-doc ;
 
 actions make-hof-doc {
-    sphinx-build -b html . html/
+    sphinx-build -b html $(HERE) $(HERE)/html/
 }
 
 

@@ -17,6 +17,6 @@ actions make-hof-doc {
 
 alias boostdoc ;
 explicit boostdoc ;
-alias boostrelease ;
+alias boostrelease : hof-doc ;
 explicit boostrelease ;
 

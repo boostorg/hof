@@ -5,9 +5,10 @@
 #    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #==============================================================================
 import testing ;
+import ../../config/checks/config : requires ;
 
 project hof
-    : requirements
+    : requirements [ requires cxx11_variadic_templates ]
       <include>../include/ 
     ;
 

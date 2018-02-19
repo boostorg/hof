@@ -65,7 +65,7 @@ matrix:
           compiler: clang-3.8
           addons: *clang38
 
-        - env: CLANG_VERSION=3.8 ASAN=off LIBCXX=off BUILD_EXAMPLES=on CXX11=on
+        - env: CLANG_VERSION=3.8 ASAN=off LIBCXX=off CXX11=on
           os: linux
           compiler: clang-3.8
           addons: *clang38

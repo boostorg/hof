@@ -97,17 +97,6 @@ struct eval_helper
     template<class F, class... Ts>
     constexpr eval_helper(const F& f, Ts&&... xs) : result(boost::hof::apply(f, BOOST_HOF_FORWARD(Ts)(xs)...))
     {}
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wconstexpr-not-const"
-#endif
-    constexpr R get_result()
-    {
-        return (R&&)result;
-    }
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
 };
 
 template<>
@@ -135,7 +124,7 @@ struct apply_eval_f
             (f, boost::hof::pack(), BOOST_HOF_FORWARD(Ts)(xs)...);
 #else
         boost::hof::detail::eval_helper<R>
-            {f, boost::hof::eval(BOOST_HOF_FORWARD(Ts)(xs))...}.get_result();
+            {f, boost::hof::eval(BOOST_HOF_FORWARD(Ts)(xs))...}.result;
 #endif
     }
 

@@ -50,3 +50,14 @@ BOOST_HOF_TEST_CASE()
             []{ return std::unique_ptr<int>(new int(2)); })
         == 3);
 }
+
+std::unique_ptr<int> moveable(int i)
+{
+    return std::unique_ptr<int>{new int(i)};
+}
+
+BOOST_HOF_TEST_CASE()
+{    
+    BOOST_HOF_TEST_CHECK(*boost::hof::apply_eval(&moveable, boost::hof::always(1)) == 1);
+    BOOST_HOF_TEST_CHECK(*boost::hof::apply_eval(&moveable, boost::hof::always(3)) == 3);
+}

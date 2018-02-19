@@ -15,13 +15,6 @@
 
 #include <tuple>
 
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
-#define BOOST_HOF_HAS_CONSTEXPR_TUPLE 0
-#else
-#define BOOST_HOF_HAS_CONSTEXPR_TUPLE 1
-#endif
-
-
 BOOST_HOF_LIFT_CLASS(make_tuple_f, std::make_tuple);
 
 struct integer_predicate

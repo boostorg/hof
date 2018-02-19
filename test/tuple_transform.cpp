@@ -39,7 +39,7 @@ struct pack_transform_f
 BOOST_HOF_STATIC_FUNCTION(tuple_transform) = tuple_transform_f{};
 // BOOST_HOF_STATIC_FUNCTION(pack_transform) = pack_transform_f{};
 
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+#if !BOOST_HOF_HAS_CONSTEXPR_TUPLE
 #define TUPLE_TRANSFORM_STATIC_CHECK(...)
 #else
 #define TUPLE_TRANSFORM_STATIC_CHECK BOOST_HOF_STATIC_TEST_CHECK

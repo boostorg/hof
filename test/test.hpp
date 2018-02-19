@@ -88,6 +88,10 @@ inline void unused(T&&) {}
 #define BOOST_HOF_STATIC_TEST_CHECK(...)
 #endif
 
+#ifndef BOOST_HOF_HAS_CONSTEXPR_TUPLE
+#define BOOST_HOF_HAS_CONSTEXPR_TUPLE BOOST_HOF_HAS_STD_14
+#endif
+
 struct binary_class
 {
     template<class T, class U>
@@ -129,8 +133,8 @@ struct unary_class
 
 struct void_class
 {
-    template<class T>
-    constexpr void operator()(T) const
+    template<class T> 
+    void operator()(T) const
     {
     }
 };

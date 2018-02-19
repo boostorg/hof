@@ -4,8 +4,8 @@
 
 .. _contents:
 
-Boost.HigherOrderFunctions
-==========================
+Boost.HOF
+=========
 
 **Paul Fultz II**
 

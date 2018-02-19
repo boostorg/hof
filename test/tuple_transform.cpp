@@ -1,3 +1,9 @@
+/*=============================================================================
+    Copyright (c) 2017 Paul Fultz II
+    tuple_transform.cpp
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 #include <boost/hof/proj.hpp>
 #include <boost/hof/construct.hpp>
 #include <boost/hof/unpack.hpp>
@@ -33,7 +39,7 @@ struct pack_transform_f
 BOOST_HOF_STATIC_FUNCTION(tuple_transform) = tuple_transform_f{};
 // BOOST_HOF_STATIC_FUNCTION(pack_transform) = pack_transform_f{};
 
-#if defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+#if !BOOST_HOF_HAS_CONSTEXPR_TUPLE
 #define TUPLE_TRANSFORM_STATIC_CHECK(...)
 #else
 #define TUPLE_TRANSFORM_STATIC_CHECK BOOST_HOF_STATIC_TEST_CHECK

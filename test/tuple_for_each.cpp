@@ -1,3 +1,9 @@
+/*=============================================================================
+    Copyright (c) 2017 Paul Fultz II
+    tuple_for_each.cpp
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 #include <boost/hof/unpack.hpp>
 #include <boost/hof/proj.hpp>
 #include <boost/hof/function.hpp>
@@ -222,7 +228,7 @@ struct assert_is_integral
 
 BOOST_HOF_TEST_CASE()
 {
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+#if !BOOST_HOF_HAS_CONSTEXPR_TUPLE
     auto r = tuple_for_each( std::tuple<int, short, char>{1, 2, 3}, assert_is_integral() );
 #else
     constexpr auto r = tuple_for_each( std::tuple<int, short, char>{1, 2, 3}, assert_is_integral() );
@@ -232,7 +238,7 @@ BOOST_HOF_TEST_CASE()
 
 BOOST_HOF_TEST_CASE()
 {
-#if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)
+#if !BOOST_HOF_HAS_CONSTEXPR_TUPLE
     auto r = tuple_for_each( boost::hof::pack(1, 2, 3), assert_is_integral() );
 #else
     constexpr auto r = tuple_for_each( boost::hof::pack(1, 2, 3), assert_is_integral() );

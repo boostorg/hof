@@ -114,7 +114,7 @@ struct result_f
     template<class F>
     constexpr result_adaptor<Result, F> operator()(F f) const
     {
-        return result_adaptor<Result, F>(std::move(f));
+        return result_adaptor<Result, F>(boost::hof::move(f));
     }
 };
 
@@ -126,7 +126,7 @@ static constexpr auto result = result_detail::result_f<Result>{};
 template<class Result, class F>
 constexpr result_adaptor<Result, F> result(F f)
 {
-    return result_adaptor<Result, F>(std::move(f));
+    return result_adaptor<Result, F>(boost::hof::move(f));
 }
 #endif
 

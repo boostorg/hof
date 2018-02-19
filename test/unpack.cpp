@@ -1,3 +1,9 @@
+/*=============================================================================
+    Copyright (c) 2017 Paul Fultz II
+    unpack.cpp
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 #include <boost/hof/unpack.hpp>
 #include <boost/hof/static.hpp>
 #include <boost/hof/lambda.hpp>
@@ -31,9 +37,11 @@ BOOST_HOF_TEST_CASE()
     int ifu = 3;
     BOOST_HOF_TEST_CHECK(3 == unary_unpack(std::tuple<int&>(ifu)));
 
+#if BOOST_HOF_HAS_CONSTEXPR_TUPLE
     BOOST_HOF_STATIC_TEST_CHECK(3 == boost::hof::unpack(unary_class())(std::make_tuple(3)));
     BOOST_HOF_STATIC_TEST_CHECK(3 == unary_unpack_constexpr(std::make_tuple(3)));
     BOOST_HOF_STATIC_TEST_CHECK(3 == unary_unpack_reveal(std::make_tuple(3)));
+#endif
 }
 
 BOOST_HOF_TEST_CASE()
@@ -71,6 +79,7 @@ BOOST_HOF_TEST_CASE()
     BOOST_HOF_TEST_CHECK(3 == binary_unpack(std::make_tuple(1), std::make_tuple(), std::make_tuple(2), std::make_tuple()));
     BOOST_HOF_TEST_CHECK(3 == binary_unpack_reveal(std::make_tuple(1), std::make_tuple(), std::make_tuple(2), std::make_tuple()));
 
+#if BOOST_HOF_HAS_CONSTEXPR_TUPLE
     BOOST_HOF_STATIC_TEST_CHECK(3 == boost::hof::unpack(binary_class())(std::make_tuple(1, 2)));
     BOOST_HOF_STATIC_TEST_CHECK(3 == binary_unpack_constexpr(std::make_tuple(1, 2)));
     BOOST_HOF_STATIC_TEST_CHECK(3 == binary_unpack_reveal(std::make_tuple(1, 2)));
@@ -90,6 +99,7 @@ BOOST_HOF_TEST_CASE()
     BOOST_HOF_STATIC_TEST_CHECK(3 == boost::hof::unpack(binary_class())(std::make_tuple(1), std::make_tuple(), std::make_tuple(2), std::make_tuple()));
     BOOST_HOF_STATIC_TEST_CHECK(3 == binary_unpack_constexpr(std::make_tuple(1), std::make_tuple(), std::make_tuple(2), std::make_tuple()));
     BOOST_HOF_STATIC_TEST_CHECK(3 == binary_unpack_reveal(std::make_tuple(1), std::make_tuple(), std::make_tuple(2), std::make_tuple()));
+#endif
 }
 
 BOOST_HOF_TEST_CASE()

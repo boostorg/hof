@@ -1,3 +1,9 @@
+#=============================================================================
+#    Copyright (c) 2017 Paul Fultz II
+#    CMakeLists.txt
+#    Distributed under the Boost Software License, Version 1.0. (See accompanying
+#    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
 cmake_minimum_required (VERSION 2.8)
 project (boost_hof)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -12,36 +18,40 @@ endforeach()
 include(CheckCXXCompilerFlag)
 enable_language(CXX)
 
-if(CMAKE_HOST_APPLE)
-  check_cxx_compiler_flag("-stdlib=libc++" COMPILER_HAS_CXX_FLAG_libcxx)
-  if(COMPILER_HAS_CXX_FLAG_libcxx)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-  endif()
-endif()
+if(NOT CMAKE_CXX_FLAGS MATCHES "-std=")
 
-set(ENABLE_CXXFLAGS_TO_CHECK 
-    -std=gnu++17
-    -std=c++17
-    -std=gnu++1z
-    -std=c++1z
-    -std=gnu++14
-    -std=c++14
-    -std=gnu++1y 
-    -std=c++1y
-    -std=gnu++11 
-    -std=c++11
-    -std=gnu++0x 
-    -std=c++0x)
-
-foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
-    string(REPLACE "-std=" "_" flag_var ${flag})
-    string(REPLACE "+" "x" flag_var ${flag_var})
-    check_cxx_compiler_flag("${flag}" COMPILER_HAS_CXX_FLAG${flag_var})
-    if(COMPILER_HAS_CXX_FLAG${flag_var})
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-        break()
+    if(CMAKE_HOST_APPLE)
+      check_cxx_compiler_flag("-stdlib=libc++" COMPILER_HAS_CXX_FLAG_libcxx)
+      if(COMPILER_HAS_CXX_FLAG_libcxx)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+      endif()
     endif()
-endforeach()
+
+    set(ENABLE_CXXFLAGS_TO_CHECK 
+        -std=gnu++17
+        -std=c++17
+        -std=gnu++1z
+        -std=c++1z
+        -std=gnu++14
+        -std=c++14
+        -std=gnu++1y 
+        -std=c++1y
+        -std=gnu++11 
+        -std=c++11
+        -std=gnu++0x 
+        -std=c++0x)
+
+    foreach(flag ${ENABLE_CXXFLAGS_TO_CHECK})
+        string(REPLACE "-std=" "_" flag_var ${flag})
+        string(REPLACE "+" "x" flag_var ${flag_var})
+        check_cxx_compiler_flag("${flag}" COMPILER_HAS_CXX_FLAG${flag_var})
+        if(COMPILER_HAS_CXX_FLAG${flag_var})
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+            break()
+        endif()
+    endforeach()
+
+endif()
 
 install (DIRECTORY include/boost DESTINATION include)
 configure_file(boost_hof.pc.in boost_hof.pc)

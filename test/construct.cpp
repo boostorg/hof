@@ -1,3 +1,9 @@
+/*=============================================================================
+    Copyright (c) 2017 Paul Fultz II
+    construct.cpp
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 #include <boost/hof/construct.hpp>
 #include "test.hpp"
 
@@ -137,7 +143,7 @@ BOOST_HOF_TEST_CASE()
     static_assert(std::is_same<std::tuple<int, int, int>, decltype(t)>::value, "");
     BOOST_HOF_TEST_CHECK(t == std::make_tuple(1, 2, 3));
 // GCC 4.7 doesn't have fully constexpr tuple
-#if defined (__clang__) || !(defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#if BOOST_HOF_HAS_CONSTEXPR_TUPLE
     BOOST_HOF_STATIC_TEST_CHECK(std::make_tuple(1, 2, 3) == boost::hof::construct<std::tuple>()(1, 2, 3));
 #endif
 }
@@ -148,7 +154,7 @@ BOOST_HOF_TEST_CASE()
     static_assert(std::is_same<std::pair<int, int>, decltype(t)>::value, "");
     BOOST_HOF_TEST_CHECK(t == std::make_pair(1, 2));
 // GCC 4.7 doesn't have fully constexpr pair
-#if defined (__clang__) || !(defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#if BOOST_HOF_HAS_CONSTEXPR_TUPLE
     BOOST_HOF_STATIC_TEST_CHECK(std::make_pair(1, 2) == boost::hof::construct<std::pair>()(1, 2));
 #endif
 }
@@ -198,7 +204,7 @@ BOOST_HOF_TEST_CASE()
     static_assert(std::is_same<std::tuple<int, int, int>, decltype(t)>::value, "");
     BOOST_HOF_TEST_CHECK(t == std::make_tuple(1, 2, 3));
 // GCC 4.7 doesn't have fully constexpr tuple
-#if defined (__clang__) || !(defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#if BOOST_HOF_HAS_CONSTEXPR_TUPLE
     BOOST_HOF_STATIC_TEST_CHECK(std::make_tuple(1, 2, 3) == boost::hof::construct_meta<tuple_meta>()(1, 2, 3));
 #endif
 }
@@ -209,7 +215,7 @@ BOOST_HOF_TEST_CASE()
     static_assert(std::is_same<std::tuple<int, int, int>, decltype(t)>::value, "");
     BOOST_HOF_TEST_CHECK(t == std::make_tuple(1, 2, 3));
 // GCC 4.7 doesn't have fully constexpr tuple
-#if defined (__clang__) || !(defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#if BOOST_HOF_HAS_CONSTEXPR_TUPLE
     BOOST_HOF_STATIC_TEST_CHECK(std::make_tuple(1, 2, 3) == boost::hof::construct_meta<tuple_meta_class>()(1, 2, 3));
 #endif
 }

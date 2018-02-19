@@ -1,3 +1,9 @@
+/*=============================================================================
+    Copyright (c) 2017 Paul Fultz II
+    apply_eval.cpp
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 #include <boost/hof/apply_eval.hpp>
 #include <boost/hof/always.hpp>
 #include <boost/hof/placeholders.hpp>
@@ -43,4 +49,15 @@ BOOST_HOF_TEST_CASE()
             []{ return std::unique_ptr<int>(new int(1)); }, 
             []{ return std::unique_ptr<int>(new int(2)); })
         == 3);
+}
+
+std::unique_ptr<int> moveable(int i)
+{
+    return std::unique_ptr<int>{new int(i)};
+}
+
+BOOST_HOF_TEST_CASE()
+{    
+    BOOST_HOF_TEST_CHECK(*boost::hof::apply_eval(&moveable, boost::hof::always(1)) == 1);
+    BOOST_HOF_TEST_CHECK(*boost::hof::apply_eval(&moveable, boost::hof::always(3)) == 3);
 }

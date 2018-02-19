@@ -1,3 +1,9 @@
+#=============================================================================
+#    Copyright (c) 2017 Paul Fultz II
+#    conf.py
+#    Distributed under the Boost Software License, Version 1.0. (See accompanying
+#    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
 # -*- coding: utf-8 -*-
 #
 # Boost.HigherOrderFunctions documentation build configuration file, created by
@@ -31,7 +37,7 @@ import sphinx_boost
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
+    # 'sphinx.ext.autodoc',
     # 'sphinx.ext.githubpages',
     'sphinx.ext.autosectionlabel',
 ]

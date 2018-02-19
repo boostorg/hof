@@ -1,3 +1,9 @@
+/*=============================================================================
+    Copyright (c) 2017 Paul Fultz II
+    test.hpp
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 #ifndef GUARD_TEST_H
 #define GUARD_TEST_H
 
@@ -82,6 +88,10 @@ inline void unused(T&&) {}
 #define BOOST_HOF_STATIC_TEST_CHECK(...)
 #endif
 
+#ifndef BOOST_HOF_HAS_CONSTEXPR_TUPLE
+#define BOOST_HOF_HAS_CONSTEXPR_TUPLE BOOST_HOF_HAS_STD_14
+#endif
+
 struct binary_class
 {
     template<class T, class U>
@@ -123,8 +133,8 @@ struct unary_class
 
 struct void_class
 {
-    template<class T>
-    constexpr void operator()(T) const
+    template<class T> 
+    void operator()(T) const
     {
     }
 };
@@ -173,7 +183,7 @@ struct move_class
 
 int main()
 {
-	for(const auto& tc: boost::hof::test::test_cases) tc();
+    for(const auto& tc: boost::hof::test::test_cases) tc();
     return 0;
 }
  

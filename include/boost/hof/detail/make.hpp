@@ -17,8 +17,8 @@ namespace boost { namespace hof { namespace detail {
 template<template<class...> class Adaptor>
 struct make
 {
-	constexpr make() noexcept
-	{}
+    constexpr make() noexcept
+    {}
     template<class... Fs, class Result=BOOST_HOF_JOIN(Adaptor, Fs...)>
     constexpr Result operator()(Fs... fs) const BOOST_HOF_NOEXCEPT_CONSTRUCTIBLE(Result, Fs&&...)
     {

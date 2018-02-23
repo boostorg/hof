@@ -21,11 +21,27 @@ struct f ## n \
     { \
         return n; \
     } \
+    template<class T> \
+    constexpr int operator()(t ## n, T) const \
+    { \
+        return n; \
+    } \
+    template<class T, class U> \
+    constexpr int operator()(t ## n, T, U) const \
+    { \
+        return n; \
+    } \
 };
 
 CONDITIONAL_FUNCTION(1)
 CONDITIONAL_FUNCTION(2)
 CONDITIONAL_FUNCTION(3)
+CONDITIONAL_FUNCTION(4)
+CONDITIONAL_FUNCTION(5)
+CONDITIONAL_FUNCTION(6)
+CONDITIONAL_FUNCTION(7)
+CONDITIONAL_FUNCTION(8)
+CONDITIONAL_FUNCTION(9)
 
 #define CONDITIONAL_MOVE_FUNCTION(n) \
 struct t_move ## n {}; \
@@ -68,11 +84,89 @@ BOOST_HOF_TEST_CASE()
 
 BOOST_HOF_TEST_CASE()
 {
-    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{})(t1()) == 1);
-    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{})(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t1()) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t2()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t3()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t4()) == 4);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t5()) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t6()) == 6);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t7()) == 7);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t8()) == 8);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t9()) == 9);
 
-    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{})(t1()) == 1);
-    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{})(t2()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t1()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t2()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t3()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t4()) == 4);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t5()) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t6()) == 6);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t7()) == 7);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t8()) == 8);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t9()) == 9);
+}
+
+BOOST_HOF_TEST_CASE()
+{
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t1(), t2()) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t2(), t2()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t3(), t2()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t4(), t2()) == 4);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t5(), t2()) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t6(), t2()) == 6);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t7(), t2()) == 7);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t8(), t2()) == 8);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t9(), t2()) == 9);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t1(), t1()) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t2(), t1()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t3(), t1()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t4(), t1()) == 4);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t5(), t1()) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t6(), t1()) == 6);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t7(), t1()) == 7);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t8(), t1()) == 8);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t9(), t1()) == 9);
+
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t1(), t2()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t2(), t2()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t3(), t2()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t4(), t2()) == 4);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t5(), t2()) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t6(), t2()) == 6);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t7(), t2()) == 7);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t8(), t2()) == 8);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t9(), t2()) == 9);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t1(), t1()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t2(), t1()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t3(), t1()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t4(), t1()) == 4);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t5(), t1()) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t6(), t1()) == 6);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t7(), t1()) == 7);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t8(), t1()) == 8);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t9(), t1()) == 9);
+}
+
+BOOST_HOF_TEST_CASE()
+{
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t1(), t2(), t4()) == 1);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t2(), t2(), t4()) == 2);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t3(), t2(), t4()) == 3);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t4(), t2(), t4()) == 4);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t5(), t2(), t4()) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t6(), t2(), t4()) == 6);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t7(), t2(), t4()) == 7);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t8(), t2(), t4()) == 8);
+    BOOST_HOF_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t9(), t2(), t4()) == 9);
+
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t1(), t2(), t4()) == 1);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t2(), t2(), t4()) == 2);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t3(), t2(), t4()) == 3);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t4(), t2(), t4()) == 4);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t5(), t2(), t4()) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t6(), t2(), t4()) == 6);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t7(), t2(), t4()) == 7);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t8(), t2(), t4()) == 8);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::first_of(f1{}, f2{}, f3{}, f4{}, f5{}, f6{}, f7{}, f8{}, f9{})(t9(), t2(), t4()) == 9);
 }
 
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 7)

@@ -115,7 +115,7 @@ constexpr auto unpack_joiner(Sequence&& s) noexcept
 template<class Sequence, class... Sequences>
 constexpr auto unpack_joiner(Sequence&& s, Sequences&&... ss) noexcept
 {
-    return detail::unpack_impl([&](auto&&... xs)  noexcept{
+    return detail::unpack_impl([&](auto&&... xs)  noexcept {
         return [&](auto f) noexcept {
             return unpack_joiner(BOOST_HOF_FORWARD(Sequences)(ss)...)([&](auto&&... ys)
                 BOOST_HOF_RETURNS(f(BOOST_HOF_AUTO_FORWARD(xs)..., BOOST_HOF_AUTO_FORWARD(ys)...))

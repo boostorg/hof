@@ -7,6 +7,7 @@
 #include <boost/hof/unpack.hpp>
 #include <boost/hof/static.hpp>
 #include <boost/hof/lambda.hpp>
+#include <boost/hof/fold.hpp>
 #include "test.hpp"
 
 #include <memory>
@@ -100,6 +101,49 @@ BOOST_HOF_TEST_CASE()
     BOOST_HOF_STATIC_TEST_CHECK(3 == binary_unpack_constexpr(std::make_tuple(1), std::make_tuple(), std::make_tuple(2), std::make_tuple()));
     BOOST_HOF_STATIC_TEST_CHECK(3 == binary_unpack_reveal(std::make_tuple(1), std::make_tuple(), std::make_tuple(2), std::make_tuple()));
 #endif
+}
+
+BOOST_HOF_TEST_CASE()
+{
+    BOOST_HOF_TEST_CHECK(3 == boost::hof::unpack(binary_class())(boost::hof::pack(1), boost::hof::pack(2)));
+    BOOST_HOF_TEST_CHECK(3 == boost::hof::unpack(boost::hof::fold(binary_class()))(boost::hof::pack(1), boost::hof::pack(1), boost::hof::pack(1)));
+    BOOST_HOF_TEST_CHECK(50 == boost::hof::unpack(boost::hof::fold(binary_class()))(
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4)));
+    BOOST_HOF_TEST_CHECK(100 == boost::hof::unpack(boost::hof::fold(binary_class()))(
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4)));
+
+    BOOST_HOF_STATIC_TEST_CHECK(3 == boost::hof::unpack(binary_class())(boost::hof::pack(1), boost::hof::pack(2)));
+    BOOST_HOF_STATIC_TEST_CHECK(3 == boost::hof::unpack(boost::hof::fold(binary_class()))(boost::hof::pack(1), boost::hof::pack(1), boost::hof::pack(1)));
+    BOOST_HOF_STATIC_TEST_CHECK(50 == boost::hof::unpack(boost::hof::fold(binary_class()))(
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4)));
+    BOOST_HOF_STATIC_TEST_CHECK(100 == boost::hof::unpack(boost::hof::fold(binary_class()))(
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4), 
+        boost::hof::pack(1, 2, 3, 4)));
 }
 
 BOOST_HOF_TEST_CASE()

@@ -122,7 +122,7 @@ struct unpack_adaptor : detail::callable_base<F>
             static auto deduce(T&& x)
             BOOST_HOF_RETURNS
             (
-                boost::hof::detail::unpack_simple(deducer(), BOOST_HOF_FORWARD(T)(x))
+                boost::hof::detail::unpack_impl(deducer(), BOOST_HOF_FORWARD(T)(x))
             );
 
             template<class T, class... Ts, class=typename std::enable_if<(
@@ -162,7 +162,7 @@ struct unpack_adaptor : detail::callable_base<F>
     constexpr auto operator()(T&& x) const
     BOOST_HOF_RETURNS
     (
-        boost::hof::detail::unpack_simple(BOOST_HOF_MANGLE_CAST(const detail::callable_base<F>&)(BOOST_HOF_CONST_THIS->base_function(x)), BOOST_HOF_FORWARD(T)(x))
+        boost::hof::detail::unpack_impl(BOOST_HOF_MANGLE_CAST(const detail::callable_base<F>&)(BOOST_HOF_CONST_THIS->base_function(x)), BOOST_HOF_FORWARD(T)(x))
     );
 
     template<class T, class... Ts, class=typename std::enable_if<(

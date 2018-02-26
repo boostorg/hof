@@ -8,7 +8,7 @@ import testing ;
 import ../../config/checks/config : requires ;
 
 project hof
-    : requirements [ requires cxx11_variadic_templates ]
+    : requirements [ requires cxx11_variadic_templates constexpr ]
       <include>../include/ 
     ;
 

@@ -89,7 +89,6 @@ struct generic_pack
     }
 };
 
-
 template<class Sequence>
 constexpr auto unpack_joiner(Sequence&& s) noexcept
 {

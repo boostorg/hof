@@ -15,7 +15,9 @@ static constexpr boost::hof::static_<boost::hof::unpack_adaptor<unary_class> > u
 static constexpr boost::hof::static_<boost::hof::unpack_adaptor<binary_class> > binary_unpack = {};
 
 BOOST_HOF_STATIC_AUTO unary_unpack_constexpr = boost::hof::unpack_adaptor<unary_class>();
+#if BOOST_HOF_HAS_CONSTEXPR_TUPLE
 BOOST_HOF_STATIC_AUTO binary_unpack_constexpr = boost::hof::unpack_adaptor<binary_class>();
+#endif
 
 BOOST_HOF_STATIC_AUTO unary_unpack_reveal = boost::hof::reveal_adaptor<boost::hof::unpack_adaptor<unary_class>>();
 BOOST_HOF_STATIC_AUTO binary_unpack_reveal = boost::hof::reveal_adaptor<boost::hof::unpack_adaptor<binary_class>>();

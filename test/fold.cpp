@@ -25,6 +25,16 @@ struct sum_f
     }
 };
 
+struct integral_sum_f
+{
+    template<class T, class U>
+    constexpr std::integral_constant<typename T::value_type, T::value + U::value> 
+    operator()(T x, U y) const noexcept
+    {
+        return {};
+    }
+};
+
 #if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
 BOOST_HOF_TEST_CASE()
 {
@@ -85,6 +95,104 @@ BOOST_HOF_TEST_CASE()
     BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 4, 5) == 5);
     BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(5, 4, 3, 2) == 5);
     BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 5, 4) == 5);
+}
+
+BOOST_HOF_TEST_CASE()
+{
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 2, 3, 4, 5) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 5, 4, 3, 2) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 2, 3, 5, 4) == 5);
+
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 4, 5, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(5, 4, 3, 2, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 5, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4) == 5);
+
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 2, 3, 4, 5) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 5, 4, 3, 2) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 2, 3, 5, 4) == 5);
+
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 4, 5, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(5, 4, 3, 2, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(max_f())(2, 3, 5, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4) == 5);
+}
+
+BOOST_HOF_TEST_CASE()
+{
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(sum_f())(1, 1, 1, 1, 1) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(sum_f())(0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0) == 5);
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(sum_f())(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) == 5);
+
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(sum_f())(1, 1, 1, 1, 1) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(sum_f())(0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0) == 5);
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(sum_f())(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) == 5);
+}
+
+BOOST_HOF_TEST_CASE()
+{
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(integral_sum_f())(
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 1>{}) == 5);
+
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(integral_sum_f())(
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}) == 5);
+
+    BOOST_HOF_TEST_CHECK(boost::hof::fold(integral_sum_f())(
+        std::integral_constant<int, -1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 2>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}) == 5);
+
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(integral_sum_f())(
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 1>{}) == 5);
+
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(integral_sum_f())(
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}) == 5);
+
+    BOOST_HOF_STATIC_TEST_CHECK(boost::hof::fold(integral_sum_f())(
+        std::integral_constant<int, -1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 2>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}, 
+        std::integral_constant<int, 0>{}, 
+        std::integral_constant<int, 1>{}) == 5);
+
 }
 
 BOOST_HOF_TEST_CASE()

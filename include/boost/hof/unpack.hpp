@@ -79,20 +79,7 @@ namespace boost { namespace hof {
 
 namespace detail {
 
-#if 0
-template<class F, class Sequence>
-constexpr auto unpack_simple(F&& f, Sequence&& s) BOOST_HOF_RETURNS
-(
-    detail::unpack_impl(BOOST_HOF_FORWARD(F)(f), BOOST_HOF_FORWARD(Sequence)(s))
-)
-
-template<class F, class... Sequences>
-constexpr auto unpack_join(F&& f, Sequences&&... s) BOOST_HOF_RETURNS
-(
-    boost::hof::pack_join(unpack_simple(boost::hof::pack_forward, BOOST_HOF_FORWARD(Sequences)(s))...)(BOOST_HOF_FORWARD(F)(f))
-);
-
-#else
+#if BOOST_HOF_HAS_CONSTEXPR_LAMBDA
 struct generic_pack 
 {
     template<class... Xs>
@@ -128,6 +115,18 @@ template<class F, class... Sequences>
 constexpr auto unpack_join(F&& f, Sequences&&... s) BOOST_HOF_RETURNS
 (
     unpack_joiner(BOOST_HOF_FORWARD(Sequences)(s)...)(BOOST_HOF_FORWARD(F)(f))
+);
+#else
+template<class F, class Sequence>
+constexpr auto unpack_simple(F&& f, Sequence&& s) BOOST_HOF_RETURNS
+(
+    detail::unpack_impl(BOOST_HOF_FORWARD(F)(f), BOOST_HOF_FORWARD(Sequence)(s))
+)
+
+template<class F, class... Sequences>
+constexpr auto unpack_join(F&& f, Sequences&&... s) BOOST_HOF_RETURNS
+(
+    boost::hof::pack_join(unpack_simple(boost::hof::pack_forward, BOOST_HOF_FORWARD(Sequences)(s))...)(BOOST_HOF_FORWARD(F)(f))
 );
 #endif
 

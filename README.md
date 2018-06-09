@@ -1,3 +1,4 @@
+# Boost.Hof <a target="_blank" href="https://travis-ci.org/boostorg/hof">![Travis status][badge.Travis]</a> <a target="_blank" href="https://ci.appveyor.com/project/pfultz2/hof">![Appveyor status][badge.Appveyor]</a>
 
 About
 =====
@@ -84,3 +85,6 @@ Then html documentation can be generated using `sphinx-build`:
 
 The final docs will be in the `doc/html` folder.
 
+<!-- Links -->
+[badge.Travis]: https://travis-ci.org/boostorg/hof.svg?branch=master
+[badge.Appveyor]: https://ci.appveyor.com/api/projects/status/bjj27h3v3bxbgpsp/branch/develop

@@ -28,16 +28,16 @@
 /// --------
 /// 
 ///     template<class Projection, class F>
-///     constexpr proj_adaptor<Projection, F> by(Projection p, F f);
+///     constexpr proj_adaptor<Projection, F> proj(Projection p, F f);
 /// 
 ///     template<class Projection>
-///     constexpr proj_adaptor<Projection> by(Projection p);
+///     constexpr proj_adaptor<Projection> proj(Projection p);
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(by(p, f)(xs...) == f(p(xs)...));
-///     assert(by(p)(xs...) == p(xs)...);
+///     assert(proj(p, f)(xs...) == f(p(xs)...));
+///     assert(proj(p)(xs...) == p(xs)...);
 /// 
 /// Requirements
 /// ------------

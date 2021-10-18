@@ -21,7 +21,7 @@ jobs:
             buildtype: "boost"
             packages: "util-linux g++-4.9 clang-3.5 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
             container: "ubuntu:14.04"
             cxx: "clang-3.5"
             sources: ""
@@ -34,7 +34,7 @@ jobs:
             buildtype: "boost"
             packages: "util-linux g++-4.9 clang-3.5 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
             container: "ubuntu:14.04"
             cxx: "clang-3.5"
             sources: ""
@@ -47,7 +47,7 @@ jobs:
             buildtype: "boost"
             packages: "util-linux g++-4.9 clang-3.8 valgrind python"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
             container: "ubuntu:14.04"
             cxx: "clang-3.8"
             sources: ""
@@ -61,7 +61,7 @@ jobs:
             buildtype: "boost"
             packages: "util-linux g++-4.9 clang-3.8 valgrind python"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
             container: "ubuntu:14.04"
             cxx: "clang-3.8"
             sources: ""
@@ -75,7 +75,7 @@ jobs:
             buildtype: "boost"
             packages: "util-linux g++-4.9 clang-3.8 valgrind python"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
             container: "ubuntu:14.04"
             cxx: "clang-3.8"
             sources: ""
@@ -89,7 +89,8 @@ jobs:
             buildtype: "boost"
             packages: "g++-7 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
+            container: "ubuntu:16.04"
             cxx: "gcc-7"
             sources: ""
             llvm_os: ""
@@ -101,7 +102,7 @@ jobs:
             buildtype: "boost"
             packages: "g++-6 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
             container: "ubuntu:14.04"
             cxx: "gcc-6"
             sources: ""
@@ -114,7 +115,8 @@ jobs:
             buildtype: "boost"
             packages: "g++-5 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
+            container: "ubuntu:16.04"
             cxx: "gcc-5"
             sources: ""
             llvm_os: ""
@@ -126,7 +128,8 @@ jobs:
             buildtype: "boost"
             packages: "g++-4.9 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
+            container: "ubuntu:16.04"
             cxx: "gcc-4.9"
             sources: ""
             llvm_os: ""
@@ -138,7 +141,7 @@ jobs:
             buildtype: "boost"
             packages: "g++-4.8 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
             container: "ubuntu:14.04"
             cxx: "gcc-4.8"
             sources: ""
@@ -151,7 +154,7 @@ jobs:
             buildtype: "boost"
             packages: "g++-4.7 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
             container: "ubuntu:14.04"
             cxx: "gcc-4.7"
             sources: ""
@@ -164,7 +167,8 @@ jobs:
             buildtype: "boost"
             packages: "g++-4.6 valgrind"
             packages_to_remove: ""
-            os: "ubuntu-16.04"
+            os: "ubuntu-20.04"
+            container: "ubuntu:16.04"
             cxx: "gcc-4.6"
             sources: ""
             llvm_os: ""
@@ -183,10 +187,12 @@ jobs:
       - name: If running in container, upgrade packages
         if: matrix.container != ''
         run: |
-            sudo apt-get -o Acquire::Retries=3 update && DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata && apt-get -o Acquire::Retries=3 install -y sudo software-properties-common wget curl apt-transport-https make apt-file sudo unzip libssl-dev build-essential autotools-dev autoconf automake g++ libc++-helpers python python-pip ruby cpio gcc-multilib g++-multilib pkgconf python3 python3-pip ccache libpython-dev
+            apt-get -o Acquire::Retries=3 update && DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata && apt-get -o Acquire::Retries=3 install -y sudo software-properties-common wget curl apt-transport-https make apt-file sudo unzip libssl-dev build-essential autotools-dev autoconf automake g++ libc++-helpers python ruby cpio gcc-multilib g++-multilib pkgconf python3 ccache libpython-dev
             sudo apt-add-repository ppa:git-core/ppa
             sudo apt-get -o Acquire::Retries=3 update && apt-get -o Acquire::Retries=3 -y install git
-            sudo python -m pip install --upgrade pip==20.3.4
+            python_version=$(python3 -c 'import sys; print("{0.major}.{0.minor}".format(sys.version_info))')
+            sudo wget https://bootstrap.pypa.io/pip/$python_version/get-pip.py
+            sudo python3 get-pip.py
             sudo /usr/local/bin/pip install cmake
 
       - uses: actions/checkout@v2

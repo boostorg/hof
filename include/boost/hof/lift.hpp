@@ -86,15 +86,15 @@ constexpr lift_noexcept<F, NoExcept> make_lift_noexcept(F f, NoExcept)
 
 #define BOOST_HOF_LIFT_IS_NOEXCEPT(...) std::integral_constant<bool, noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))>{}
 
-#if defined (__clang__)
+#if defined (_MSC_VER) && _MSC_VER < 1920 && !defined(__clang__)
+#define BOOST_HOF_LIFT(...) (BOOST_HOF_STATIC_LAMBDA { BOOST_HOF_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }())
+#elif defined (__clang__) || defined(_MSC_VER)
 #define BOOST_HOF_LIFT(...) (boost::hof::detail::make_lift_noexcept( \
     BOOST_HOF_STATIC_LAMBDA(auto&&... xs) \
     -> decltype((__VA_ARGS__)(BOOST_HOF_FORWARD(decltype(xs))(xs)...)) \
     { return (__VA_ARGS__)(BOOST_HOF_FORWARD(decltype(xs))(xs)...); }, \
     BOOST_HOF_STATIC_LAMBDA(auto&&... xs) { return BOOST_HOF_LIFT_IS_NOEXCEPT((__VA_ARGS__)(BOOST_HOF_FORWARD(decltype(xs))(xs)...)); } \
 ))
-#elif defined (_MSC_VER) && _MSC_VER < 1920
-#define BOOST_HOF_LIFT(...) (BOOST_HOF_STATIC_LAMBDA { BOOST_HOF_LIFT_CLASS(fit_local_lift_t, __VA_ARGS__); return fit_local_lift_t(); }())
 #else
 #define BOOST_HOF_LIFT(...) (BOOST_HOF_STATIC_LAMBDA(auto&&... xs) BOOST_HOF_RETURNS((__VA_ARGS__)(BOOST_HOF_FORWARD(decltype(xs))(xs)...)))
 #endif

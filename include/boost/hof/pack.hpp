@@ -22,51 +22,56 @@
 /// Synopsis
 /// --------
 /// 
-///     // Decay everything before capturing
-///     template<class... Ts>
-///     constexpr auto pack(Ts&&... xs);
+/// ```cpp
+/// // Decay everything before capturing
+/// template<class... Ts>
+/// constexpr auto pack(Ts&&... xs);
 /// 
-///     // Capture lvalues by reference and rvalue reference by reference
-///     template<class... Ts>
-///     constexpr auto pack_forward(Ts&&... xs);
+/// // Capture lvalues by reference and rvalue reference by reference
+/// template<class... Ts>
+/// constexpr auto pack_forward(Ts&&... xs);
 /// 
-///     // Capture lvalues by reference and rvalues by value.
-///     template<class... Ts>
-///     constexpr auto pack_basic(Ts&&... xs);
+/// // Capture lvalues by reference and rvalues by value.
+/// template<class... Ts>
+/// constexpr auto pack_basic(Ts&&... xs);
 /// 
-///     // Join multiple packs together
-///     template<class... Ts>
-///     constexpr auto pack_join(Ts&&... xs);
+/// // Join multiple packs together
+/// template<class... Ts>
+/// constexpr auto pack_join(Ts&&... xs);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(pack(xs...)(f) == f(xs...));
-///     assert(unpack(f)(pack(xs...)) == f(xs...));
+/// ```cpp
+/// assert(pack(xs...)(f) == f(xs...));
+/// assert(unpack(f)(pack(xs...)) == f(xs...));
 /// 
-///     assert(pack_join(pack(xs...), pack(ys...)) == pack(xs..., ys...));
-/// 
+/// assert(pack_join(pack(xs...), pack(ys...)) == pack(xs..., ys...));
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct sum
+/// struct sum
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     int main() {
-///         int r = pack(3, 2)(sum());
-///         assert(r == 5);
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     int r = pack(3, 2)(sum());
+///     assert(r == 5);
+/// }
+/// ```
 /// 
 /// See Also
 /// --------

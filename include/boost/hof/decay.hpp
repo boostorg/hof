@@ -19,14 +19,16 @@
 /// Synopsis
 /// --------
 /// 
-///     struct
+/// ```cpp
+/// struct
+/// {
+///     template<class T>
+///     constexpr typename decay<T>::type operator()(T&& x) const
 ///     {
-///         template<class T>
-///         constexpr typename decay<T>::type operator()(T&& x) const
-///         {
-///             return boost::hof::forward<T>(x);
-///         }
-///     } decay;
+///         return boost::hof::forward<T>(x);
+///     }
+/// } decay;
+/// ```
 /// 
 /// References
 /// ----------

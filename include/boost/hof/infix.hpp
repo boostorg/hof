@@ -21,13 +21,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     constexpr infix_adaptor<F> infix(F f);
+/// ```cpp
+/// template<class F>
+/// constexpr infix_adaptor<F> infix(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(x <infix(f)> y == f(x, y));
+/// ```cpp
+/// assert(x <infix(f)> y == f(x, y));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -43,39 +47,47 @@
 /// Infix operators have the precedence of relational operators. This means
 /// operators such as `+` or `*` have higher precedence:
 /// 
-///     assert((x + y <infix(f)> z) == ((x + y) <infix(f)> z));
-///     assert((x * y <infix(f)> z) == ((x * y) <infix(f)> z));
+/// ```cpp
+/// assert((x + y <infix(f)> z) == ((x + y) <infix(f)> z));
+/// assert((x * y <infix(f)> z) == ((x * y) <infix(f)> z));
+/// ```
 /// 
 /// However, operators such as `|` or `==` have lower precedence::
 /// 
-///     assert((x | y <infix(f)> z) == (x | (y <infix(f)> z)));
-///     assert((x == y <infix(f)> z) == (x == (y <infix(f)> z)));
+/// ```cpp
+/// assert((x | y <infix(f)> z) == (x | (y <infix(f)> z)));
+/// assert((x == y <infix(f)> z) == (x == (y <infix(f)> z)));
+/// ```
 /// 
 /// Also, infix operators have left-to-right associativity:
 /// 
-///     assert(x <infix(f)> y <infix(g)> z == ((x <infix(f)> y) <infix(g)> z));
+/// ```cpp
+/// assert(x <infix(f)> y <infix(g)> z == ((x <infix(f)> y) <infix(g)> z));
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct plus_f
+/// struct plus_f
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-///     
-///     int main() {
-///         constexpr infix_adaptor<plus_f> plus = {};
-///         int r = 3 <plus> 2;
-///         assert(r == 5);
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     constexpr infix_adaptor<plus_f> plus = {};
+///     int r = 3 <plus> 2;
+///     assert(r == 5);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/delegate.hpp>

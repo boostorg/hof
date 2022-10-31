@@ -28,17 +28,20 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class T>
-///     constexpr auto always(T value);
+/// ```cpp
+/// template<class T>
+/// constexpr auto always(T value);
 /// 
-///     template<class T>
-///     constexpr auto always(void);
-/// 
+/// template<class T>
+/// constexpr auto always(void);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(always(x)(xs...) == x);
+/// ```cpp
+/// assert(always(x)(xs...) == x);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -50,24 +53,25 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <algorithm>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <algorithm>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     int main() {
-///         int ten = 10;
-///         assert( always(ten)(1,2,3,4,5) == 10 );
-///     }
+/// int main() {
+///     int ten = 10;
+///     assert( always(ten)(1,2,3,4,5) == 10 );
+/// }
 /// 
-///     // Count all
-///     template<class Iterator, class T>
-///     auto count(Iterator first, Iterator last)
-///     {
-///         return std::count_if(first, last, always(true));
-///     }
+/// // Count all
+/// template<class Iterator, class T>
+/// auto count(Iterator first, Iterator last)
+/// {
+///     return std::count_if(first, last, always(true));
+/// }
+/// ```
 /// 
-
 
 #ifndef BOOST_HOF_NO_CONSTEXPR_VOID
 #if defined(__clang__) && BOOST_HOF_HAS_RELAXED_CONSTEXPR

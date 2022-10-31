@@ -23,8 +23,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     unpack_adaptor<F> unpack(F f);
+/// ```cpp
+/// template<class F>
+/// unpack_adaptor<F> unpack(F f);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -37,23 +39,25 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct sum
+/// struct sum
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     int main() {
-///         int r = unpack(sum())(std::make_tuple(3,2));
-///         assert(r == 5);
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     int r = unpack(sum())(std::make_tuple(3,2));
+///     assert(r == 5);
+/// }
+/// ```
 /// 
 /// References
 /// ----------

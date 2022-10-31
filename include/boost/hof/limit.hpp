@@ -24,11 +24,13 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class IntegralConstant>
-///     constexpr auto limit(IntegralConstant);
+/// ```cpp
+/// template<class IntegralConstant>
+/// constexpr auto limit(IntegralConstant);
 /// 
-///     template<std::size_t N, class F>
-///     constexpr auto limit_c(F);
+/// template<std::size_t N, class F>
+/// constexpr auto limit_c(F);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -45,23 +47,25 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct sum_f
+/// struct sum_f
+/// {
+///     template<class T>
+///     int operator()(T x, T y) const
 ///     {
-///         template<class T>
-///         int operator()(T x, T y) const
-///         {
-///             return x+y;
-///         }
-///     };
-///     BOOST_HOF_STATIC_FUNCTION(sum) = limit_c<2>(sum_f());
-/// 
-///     int main() {
-///         assert(3 == sum(1, 2));
+///         return x+y;
 ///     }
+/// };
+/// BOOST_HOF_STATIC_FUNCTION(sum) = limit_c<2>(sum_f());
+/// 
+/// int main() {
+///     assert(3 == sum(1, 2));
+/// }
+/// ```
 /// 
 /// See Also
 /// --------

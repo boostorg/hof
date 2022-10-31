@@ -28,16 +28,20 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     constexpr lazy_adaptor<F> lazy(F f);
+/// ```cpp
+/// template<class F>
+/// constexpr lazy_adaptor<F> lazy(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(lazy(f)(xs...) == std::bind(f, xs...))
-///     assert(lazy(f)(xs...)() == f(xs...))
-///     assert(lazy(f)(_1)(x) == f(x))
-///     assert(lazy(f)(lazy(g)(_1))(x) == f(g(x)))
+/// ```cpp
+/// assert(lazy(f)(xs...) == std::bind(f, xs...))
+/// assert(lazy(f)(xs...)() == f(xs...))
+/// assert(lazy(f)(_1)(x) == f(x))
+/// assert(lazy(f)(lazy(g)(_1))(x) == f(g(x)))
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -50,15 +54,17 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     int main() {
-///         auto add = [](auto x, auto y) { return x+y; };
-///         auto increment = lazy(add)(_1, 1);
-///         assert(increment(5) == 6);
-///     }
+/// int main() {
+///     auto add = [](auto x, auto y) { return x+y; };
+///     auto increment = lazy(add)(_1, 1);
+///     assert(increment(5) == 6);
+/// }
+/// ```
 /// 
 /// References
 /// ----------

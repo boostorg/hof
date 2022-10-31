@@ -26,23 +26,26 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class IntegralConstant>
-///     constexpr auto arg(IntegralConstant);
+/// ```cpp
+/// template<class IntegralConstant>
+/// constexpr auto arg(IntegralConstant);
 /// 
-///     template<std::size_t N, class... Ts>
-///     constexpr auto arg_c(Ts&&...);
-/// 
+/// template<std::size_t N, class... Ts>
+/// constexpr auto arg_c(Ts&&...);
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     int main() {
-///         assert(arg(std::integral_constant<int, 3>())(1,2,3,4,5) == 3);
-///     }
+/// int main() {
+///     assert(arg(std::integral_constant<int, 3>())(1,2,3,4,5) == 3);
+/// }
+/// ```
 /// 
 
 namespace boost { namespace hof {

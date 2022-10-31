@@ -27,22 +27,24 @@
 /// Synopsis
 /// --------
 /// 
-///     #define BOOST_HOF_RETURNS(...) 
-/// 
+/// ```cpp
+/// #define BOOST_HOF_RETURNS(...)
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     template<class T, class U>
-///     auto sum(T x, U y) BOOST_HOF_RETURNS(x+y);
+/// template<class T, class U>
+/// auto sum(T x, U y) BOOST_HOF_RETURNS(x+y);
 /// 
-///     int main() {
-///         assert(3 == sum(1, 2));
-///     }
-/// 
+/// int main() {
+///     assert(3 == sum(1, 2));
+/// }
+/// ```
 /// 
 /// Incomplete this
 /// ---------------
@@ -59,36 +61,38 @@
 /// Synopsis
 /// --------
 /// 
-///     // Declares the type of the `this` variable
-///     #define BOOST_HOF_RETURNS_CLASS(...) 
-///     // Used to refer to the `this` variable in the BOOST_HOF_RETURNS macro
-///     #define BOOST_HOF_THIS
-///     // Used to refer to the const `this` variable in the BOOST_HOF_RETURNS macro
-///     #define BOOST_HOF_CONST_THIS
-/// 
+/// ```cpp
+/// // Declares the type of the `this` variable
+/// #define BOOST_HOF_RETURNS_CLASS(...) 
+/// // Used to refer to the `this` variable in the BOOST_HOF_RETURNS macro
+/// #define BOOST_HOF_THIS
+/// // Used to refer to the const `this` variable in the BOOST_HOF_RETURNS macro
+/// #define BOOST_HOF_CONST_THIS
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct add_1
-///     {
-///         int a;
-///         add_1() : a(1) {}
-///         
-///         BOOST_HOF_RETURNS_CLASS(add_1);
-///         
-///         template<class T>
-///         auto operator()(T x) const 
-///         BOOST_HOF_RETURNS(x+BOOST_HOF_CONST_THIS->a);
-///     };
+/// struct add_1
+/// {
+///     int a;
+///     add_1() : a(1) {}
+///     
+///     BOOST_HOF_RETURNS_CLASS(add_1);
+///     
+///     template<class T>
+///     auto operator()(T x) const 
+///     BOOST_HOF_RETURNS(x+BOOST_HOF_CONST_THIS->a);
+/// };
 /// 
-///     int main() {
-///         assert(3 == add_1()(2));
-///     }
-/// 
+/// int main() {
+///     assert(3 == add_1()(2));
+/// }
+/// ```
 /// 
 /// Mangling overloads
 /// ------------------
@@ -104,18 +108,19 @@
 /// Synopsis
 /// --------
 /// 
-///     // Explicitly defines the type for name mangling
-///     #define BOOST_HOF_MANGLE_CAST(...) 
-///     // C cast for name mangling
-///     #define BOOST_HOF_RETURNS_C_CAST(...) 
-///     // Reinterpret cast for name mangling
-///     #define BOOST_HOF_RETURNS_REINTERPRET_CAST(...) 
-///     // Static cast for name mangling
-///     #define BOOST_HOF_RETURNS_STATIC_CAST(...) 
-///     // Construction for name mangling
-///     #define BOOST_HOF_RETURNS_CONSTRUCT(...) 
+/// ```cpp
+/// // Explicitly defines the type for name mangling
+/// #define BOOST_HOF_MANGLE_CAST(...) 
+/// // C cast for name mangling
+/// #define BOOST_HOF_RETURNS_C_CAST(...) 
+/// // Reinterpret cast for name mangling
+/// #define BOOST_HOF_RETURNS_REINTERPRET_CAST(...) 
+/// // Static cast for name mangling
+/// #define BOOST_HOF_RETURNS_STATIC_CAST(...) 
+/// // Construction for name mangling
+/// #define BOOST_HOF_RETURNS_CONSTRUCT(...)
+/// ```
 /// 
-
 
 #include <boost/hof/config.hpp>
 #include <utility>

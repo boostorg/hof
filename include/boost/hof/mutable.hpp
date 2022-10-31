@@ -26,8 +26,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     mutable_adaptor<F> mutable_(F f)
+/// ```cpp
+/// template<class F>
+/// mutable_adaptor<F> mutable_(F f)
+/// ```
 /// 
 /// Requirements
 /// ------------

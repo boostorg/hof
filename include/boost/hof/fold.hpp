@@ -26,19 +26,23 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class State>
-///     constexpr fold_adaptor<F, State> fold(F f, State s);
+/// ```cpp
+/// template<class F, class State>
+/// constexpr fold_adaptor<F, State> fold(F f, State s);
 /// 
-///     template<class F>
-///     constexpr fold_adaptor<F> fold(F f);
+/// template<class F>
+/// constexpr fold_adaptor<F> fold(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(fold(f, z)() == z);
-///     assert(fold(f, z)(x, xs...) == fold(f, f(z, x))(xs...));
-///     assert(fold(f)(x) == x);
-///     assert(fold(f)(x, y, xs...) == fold(f)(f(x, y), xs...));
+/// ```cpp
+/// assert(fold(f, z)() == z);
+/// assert(fold(f, z)(x, xs...) == fold(f, f(z, x))(xs...));
+/// assert(fold(f)(x) == x);
+/// assert(fold(f)(x, y, xs...) == fold(f)(f(x, y), xs...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -55,20 +59,22 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct max_f
+/// struct max_f
+/// {
+///     template<class T, class U>
+///     constexpr T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         constexpr T operator()(T x, U y) const
-///         {
-///             return x > y ? x : y;
-///         }
-///     };
-///     int main() {
-///         assert(boost::hof::fold(max_f())(2, 3, 4, 5) == 5);
+///         return x > y ? x : y;
 ///     }
+/// };
+/// int main() {
+///     assert(boost::hof::fold(max_f())(2, 3, 4, 5) == 5);
+/// }
+/// ```
 /// 
 /// References
 /// ----------

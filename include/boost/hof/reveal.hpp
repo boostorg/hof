@@ -26,71 +26,79 @@
 /// 
 /// If we take the `print` example from the quick start guide like this:
 /// 
-///     namespace adl {
+/// ```cpp
+/// namespace adl {
 /// 
-///     using std::begin;
+/// using std::begin;
 /// 
-///     template<class R>
-///     auto adl_begin(R&& r) BOOST_HOF_RETURNS(begin(r));
+/// template<class R>
+/// auto adl_begin(R&& r) BOOST_HOF_RETURNS(begin(r));
+/// }
+/// 
+/// BOOST_HOF_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f) BOOST_HOF_RETURNS
+/// (
+///     boost::hof::unpack(boost::hof::proj(f))(sequence)
+/// );
+/// 
+/// auto print = boost::hof::fix(boost::hof::first_of(
+///     [](auto, const auto& x) -> decltype(std::cout << x, void())
+///     {
+///         std::cout << x << std::endl;
+///     },
+///     [](auto self, const auto& range) -> decltype(self(*adl::adl_begin(range)), void())
+///     {
+///         for(const auto& x:range) self(x);
+///     },
+///     [](auto self, const auto& tuple) -> decltype(for_each_tuple(tuple, self), void())
+///     {
+///         return for_each_tuple(tuple, self);
 ///     }
-/// 
-///     BOOST_HOF_STATIC_LAMBDA_FUNCTION(for_each_tuple) = [](const auto& sequence, auto f) BOOST_HOF_RETURNS
-///     (
-///         boost::hof::unpack(boost::hof::proj(f))(sequence)
-///     );
-/// 
-///     auto print = boost::hof::fix(boost::hof::first_of(
-///         [](auto, const auto& x) -> decltype(std::cout << x, void())
-///         {
-///             std::cout << x << std::endl;
-///         },
-///         [](auto self, const auto& range) -> decltype(self(*adl::adl_begin(range)), void())
-///         {
-///             for(const auto& x:range) self(x);
-///         },
-///         [](auto self, const auto& tuple) -> decltype(for_each_tuple(tuple, self), void())
-///         {
-///             return for_each_tuple(tuple, self);
-///         }
-///     ));
+/// ));
+/// ```
 /// 
 /// Which prints numbers and vectors:
 /// 
-///     print(5);
+/// ```cpp
+/// print(5);
 /// 
-///     std::vector<int> v = { 1, 2, 3, 4 };
-///     print(v);
+/// std::vector<int> v = { 1, 2, 3, 4 };
+/// print(v);
+/// ```
 /// 
 /// However, if we pass a type that can't be printed, we get an error like
 /// this:
 /// 
-///     print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> >'
-///         print(foo{});
-///         ^~~~~
-///     fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const boost::hof::first_of_adaptor<(lambda at
-///           print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)>'
-///         operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
+/// ```cpp
+/// print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> >'
+///     print(foo{});
+///     ^~~~~
+/// fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const boost::hof::first_of_adaptor<(lambda at
+///       print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)>'
+///     operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
+/// ```
 /// 
 /// Which is short and gives very little information why it can't be called.
 /// It doesn't even show the overloads that were try. However, using the
 /// `reveal` adaptor we can get more info about the error like this:
 /// 
-///     print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::reveal_adaptor<boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9),
-///           (lambda at print.cpp:37:9)> >, boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> > >'
-///         boost::hof::reveal(print)(foo{});
-///         ^~~~~~~~~~~~~~~~~~
-///     reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:29:9)'
-///         constexpr auto operator()(Ts&&... xs) const
-///                        ^
-///     reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:33:9)'
-///         constexpr auto operator()(Ts&&... xs) const
-///                        ^
-///     reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:37:9)'
-///         constexpr auto operator()(Ts&&... xs) const
-///                        ^
-///     fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const boost::hof::first_of_adaptor<(lambda at
-///           print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)>'
-///         operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
+/// ```cpp
+/// print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::reveal_adaptor<boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9),
+///       (lambda at print.cpp:37:9)> >, boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)> > >'
+///     boost::hof::reveal(print)(foo{});
+///     ^~~~~~~~~~~~~~~~~~
+/// reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:29:9)'
+///     constexpr auto operator()(Ts&&... xs) const
+///                    ^
+/// reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:33:9)'
+///     constexpr auto operator()(Ts&&... xs) const
+///                    ^
+/// reveal.hpp:149:20: note: candidate template ignored: substitution failure [with Ts = <foo>, $1 = void]: no matching function for call to object of type '(lambda at print.cpp:37:9)'
+///     constexpr auto operator()(Ts&&... xs) const
+///                    ^
+/// fix.hpp:158:5: note: candidate template ignored: substitution failure [with Ts = <foo>]: no matching function for call to object of type 'const boost::hof::first_of_adaptor<(lambda at
+///       print.cpp:29:9), (lambda at print.cpp:33:9), (lambda at print.cpp:37:9)>'
+///     operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
+/// ```
 /// 
 /// So now the error has a note for each of the lambda overloads it tried. Of
 /// course this can be improved even further by providing custom reporting of
@@ -99,8 +107,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     reveal_adaptor<F> reveal(F f);
+/// ```cpp
+/// template<class F>
+/// reveal_adaptor<F> reveal(F f);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -123,44 +133,48 @@
 /// Synopsis
 /// --------
 /// 
-///     // Report failure by instantiating the Template
-///     template<template<class...> class Template>
-///     struct as_failure;
+/// ```cpp
+/// // Report failure by instantiating the Template
+/// template<template<class...> class Template>
+/// struct as_failure;
 /// 
-///     // Report multiple falures
-///     template<class... Failures>
-///     struct with_failures;
+/// // Report multiple falures
+/// template<class... Failures>
+/// struct with_failures;
 /// 
-///     // Report the failure for each function
-///     template<class... Fs>
-///     struct failure_for;
+/// // Report the failure for each function
+/// template<class... Fs>
+/// struct failure_for;
 /// 
-///     // Get the failure of a function
-///     template<class F>
-///     struct get_failure;
+/// // Get the failure of a function
+/// template<class F>
+/// struct get_failure;
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct sum_f
-///     {
-///         template<class T, class U>
-///         using sum_failure = decltype(std::declval<T>()+std::declval<U>());
+/// struct sum_f
+/// {
+///     template<class T, class U>
+///     using sum_failure = decltype(std::declval<T>()+std::declval<U>());
 /// 
-///         struct failure
-///         : boost::hof::as_failure<sum_failure>
-///         {};
+///     struct failure
+///     : boost::hof::as_failure<sum_failure>
+///     {};
 /// 
-///         template<class T, class U>
-///         auto operator()(T x, U y) const BOOST_HOF_RETURNS(x+y);
-///     };
+///     template<class T, class U>
+///     auto operator()(T x, U y) const BOOST_HOF_RETURNS(x+y);
+/// };
 /// 
-///     int main() {
-///         assert(sum_f()(1, 2) == 3);
-///     }
+/// int main() {
+///     assert(sum_f()(1, 2) == 3);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/always.hpp>

@@ -23,13 +23,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class... Fs>
-///     constexpr flow_adaptor<Fs...> flow(Fs... fs);
+/// ```cpp
+/// template<class... Fs>
+/// constexpr flow_adaptor<Fs...> flow(Fs... fs);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(flow(f, g)(xs...) == g(f(xs...)));
+/// ```cpp
+/// assert(flow(f, g)(xs...) == g(f(xs...)));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -42,32 +46,34 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct increment
+/// struct increment
+/// {
+///     template<class T>
+///     T operator()(T x) const
 ///     {
-///         template<class T>
-///         T operator()(T x) const
-///         {
-///             return x + 1;
-///         }
-///     };
-/// 
-///     struct decrement
-///     {
-///         template<class T>
-///         T operator()(T x) const
-///         {
-///             return x - 1;
-///         }
-///     };
-/// 
-///     int main() {
-///         int r = flow(increment(), decrement(), increment())(3);
-///         assert(r == 4);
+///         return x + 1;
 ///     }
+/// };
+/// 
+/// struct decrement
+/// {
+///     template<class T>
+///     T operator()(T x) const
+///     {
+///         return x - 1;
+///     }
+/// };
+/// 
+/// int main() {
+///     int r = flow(increment(), decrement(), increment())(3);
+///     assert(r == 4);
+/// }
+/// ```
 /// 
 /// References
 /// ----------

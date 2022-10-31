@@ -23,13 +23,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     constexpr pipable_adaptor<F> pipable(F f);
+/// ```cpp
+/// template<class F>
+/// constexpr pipable_adaptor<F> pipable(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(x | pipable(f)(ys...) == f(x, ys...));
+/// ```cpp
+/// assert(x | pipable(f)(ys...) == f(x, ys...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -42,23 +46,25 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct sum
+/// struct sum
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     int main() {
-///         assert(3 == (1 | pipable(sum())(2)));
-///         assert(3 == pipable(sum())(1, 2));
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     assert(3 == (1 | pipable(sum())(2)));
+///     assert(3 == pipable(sum())(1, 2));
+/// }
+/// ```
 /// 
 /// References
 /// ----------

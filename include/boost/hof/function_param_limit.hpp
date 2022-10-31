@@ -24,10 +24,12 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     struct function_param_limit
-///     : std::integral_constant<std::size_t, ...>
-///     {};
+/// ```cpp
+/// template<class F>
+/// struct function_param_limit
+/// : std::integral_constant<std::size_t, ...>
+/// {};
+/// ```
 /// 
 /// See Also
 /// --------

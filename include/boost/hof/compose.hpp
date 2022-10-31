@@ -23,13 +23,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class... Fs>
-///     constexpr compose_adaptor<Fs...> compose(Fs... fs);
+/// ```cpp
+/// template<class... Fs>
+/// constexpr compose_adaptor<Fs...> compose(Fs... fs);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(compose(f, g)(xs...) == f(g(xs...)));
+/// ```cpp
+/// assert(compose(f, g)(xs...) == f(g(xs...)));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -42,38 +46,39 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct increment
+/// struct increment
+/// {
+///     template<class T>
+///     T operator()(T x) const
 ///     {
-///         template<class T>
-///         T operator()(T x) const
-///         {
-///             return x + 1;
-///         }
-///     };
-/// 
-///     struct decrement
-///     {
-///         template<class T>
-///         T operator()(T x) const
-///         {
-///             return x - 1;
-///         }
-///     };
-/// 
-///     int main() {
-///         int r = compose(increment(), decrement(), increment())(3);
-///         assert(r == 4);
+///         return x + 1;
 ///     }
+/// };
+/// 
+/// struct decrement
+/// {
+///     template<class T>
+///     T operator()(T x) const
+///     {
+///         return x - 1;
+///     }
+/// };
+/// 
+/// int main() {
+///     int r = compose(increment(), decrement(), increment())(3);
+///     assert(r == 4);
+/// }
+/// ```
 /// 
 /// References
 /// ----------
 /// 
 /// * [Function composition](https://en.wikipedia.org/wiki/Function_composition)
-/// 
 /// 
 
 #include <boost/hof/detail/callable_base.hpp>

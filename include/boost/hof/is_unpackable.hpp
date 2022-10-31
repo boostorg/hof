@@ -17,18 +17,22 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class T>
-///     struct is_unpackable;
+/// ```cpp
+/// template<class T>
+/// struct is_unpackable;
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     int main() {
-///         static_assert(boost::hof::is_unpackable<std::tuple<int>>::value, "Failed");
-///     }
+/// int main() {
+///     static_assert(boost::hof::is_unpackable<std::tuple<int>>::value, "Failed");
+/// }
+/// ```
 /// 
 
 #include <boost/hof/unpack_sequence.hpp>

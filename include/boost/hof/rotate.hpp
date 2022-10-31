@@ -20,13 +20,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     rotate_adaptor<F> rotate(F f);
+/// ```cpp
+/// template<class F>
+/// rotate_adaptor<F> rotate(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(rotate(f)(x, xs...) == f(xs..., x));
+/// ```cpp
+/// assert(rotate(f)(x, xs...) == f(xs..., x));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -39,13 +43,15 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     int main() {
-///         int r = boost::hof::rotate(boost::hof::_ - boost::hof::_)(2, 5);
-///         assert(r == 3);
-///     }
+/// int main() {
+///     int r = boost::hof::rotate(boost::hof::_ - boost::hof::_)(2, 5);
+///     assert(r == 3);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/result_of.hpp>

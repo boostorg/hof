@@ -22,8 +22,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class... Fs>
-///     constexpr match_adaptor<Fs...> match(Fs...fs);
+/// ```cpp
+/// template<class... Fs>
+/// constexpr match_adaptor<Fs...> match(Fs...fs);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -36,34 +38,36 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// using namespace boost::hof;
 /// 
-///     struct int_class
+/// struct int_class
+/// {
+///     int operator()(int) const
 ///     {
-///         int operator()(int) const
-///         {
-///             return 1;
-///         }
-///     };
+///         return 1;
+///     }
+/// };
 /// 
-///     struct foo
-///     {};
+/// struct foo
+/// {};
 /// 
-///     struct foo_class
+/// struct foo_class
+/// {
+///     foo operator()(foo) const
 ///     {
-///         foo operator()(foo) const
-///         {
-///             return foo();
-///         }
-///     };
+///         return foo();
+///     }
+/// };
 /// 
-///     typedef match_adaptor<int_class, foo_class> fun;
+/// typedef match_adaptor<int_class, foo_class> fun;
 /// 
-///     static_assert(std::is_same<int, decltype(fun()(1))>::value, "Failed match");
-///     static_assert(std::is_same<foo, decltype(fun()(foo()))>::value, "Failed match");
+/// static_assert(std::is_same<int, decltype(fun()(1))>::value, "Failed match");
+/// static_assert(std::is_same<foo, decltype(fun()(foo()))>::value, "Failed match");
 /// 
-///     int main() {}
+/// int main() {}
+/// ```
 /// 
 /// References
 /// ----------

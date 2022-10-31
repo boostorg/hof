@@ -27,8 +27,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class... Fs>
-///     constexpr first_of_adaptor<Fs...> first_of(Fs... fs);
+/// ```cpp
+/// template<class... Fs>
+/// constexpr first_of_adaptor<Fs...> first_of(Fs... fs);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -41,29 +43,31 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <iostream>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <iostream>
+/// using namespace boost::hof;
 /// 
-///     struct for_ints
+/// struct for_ints
+/// {
+///     void operator()(int) const
 ///     {
-///         void operator()(int) const
-///         {
-///             printf("Int\n");
-///         }
-///     };
-/// 
-///     struct for_floats
-///     {
-///         void operator()(float) const
-///         {
-///             printf("Float\n");
-///         }
-///     };
-/// 
-///     int main() {
-///         first_of(for_ints(), for_floats())(3.0);
+///         printf("Int\n");
 ///     }
+/// };
+/// 
+/// struct for_floats
+/// {
+///     void operator()(float) const
+///     {
+///         printf("Float\n");
+///     }
+/// };
+/// 
+/// int main() {
+///     first_of(for_ints(), for_floats())(3.0);
+/// }
+/// ```
 /// 
 /// This will print `Int` because the `for_floats` function object won't ever be
 /// called. Due to the conversion rules in C++, the `for_ints` function can be

@@ -23,8 +23,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class... Ts>
-///     constexpr auto eval(F&& f, Ts&&...);
+/// ```cpp
+/// template<class F, class... Ts>
+/// constexpr auto eval(F&& f, Ts&&...);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -36,12 +38,14 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     int main() {
-///         assert(boost::hof::eval([]{ return 3; }) == 3);
-///     }
+/// int main() {
+///     assert(boost::hof::eval([]{ return 3; }) == 3);
+/// }
+/// ```
 /// 
 /// References
 /// ----------

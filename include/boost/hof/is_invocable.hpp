@@ -27,26 +27,29 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class... Ts>
-///     struct is_invocable;
+/// ```cpp
+/// template<class F, class... Ts>
+/// struct is_invocable;
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// using namespace boost::hof;
 /// 
-///     struct is_invocable_class
+/// struct is_invocable_class
+/// {
+///     void operator()(int) const
 ///     {
-///         void operator()(int) const
-///         {
-///         }
-///     };
-///     static_assert(is_invocable<is_invocable_class, int>(), "Not callable");
+///     }
+/// };
+/// static_assert(is_invocable<is_invocable_class, int>(), "Not callable");
 /// 
-///     int main() {}
+/// int main() {}
+/// ```
 /// 
-
 
 #include <boost/hof/detail/can_be_called.hpp>
 #include <boost/hof/apply.hpp>

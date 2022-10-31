@@ -19,13 +19,17 @@
 /// Semantics
 /// ---------
 /// 
-///     assert(identity(x) == x);
+/// ```cpp
+/// assert(identity(x) == x);
+/// ```
 /// 
 /// Synopsis
 /// --------
 /// 
-///     template<class T>
-///     constexpr T identity(T&& x);
+/// ```cpp
+/// template<class T>
+/// constexpr T identity(T&& x);
+/// ```
 /// 
 
 #include <utility>

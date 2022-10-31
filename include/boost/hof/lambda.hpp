@@ -20,17 +20,19 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     const constexpr auto add_one = BOOST_HOF_STATIC_LAMBDA(int x)
-///     {
-///         return x + 1;
-///     };
+/// const constexpr auto add_one = BOOST_HOF_STATIC_LAMBDA(int x)
+/// {
+///     return x + 1;
+/// };
 /// 
-///     int main() {
-///         assert(3 == add_one(2));
-///     }
+/// int main() {
+///     assert(3 == add_one(2));
+/// }
+/// ```
 /// 
 /// BOOST_HOF_STATIC_LAMBDA_FUNCTION
 /// ==========================
@@ -42,7 +44,7 @@
 /// function object that contains non-capturing lambdas. It also ensures that
 /// the global function object has a unique address across translation units.
 /// This helps prevent possible ODR-violations.
-///
+/// 
 /// By default, all functions defined with `BOOST_HOF_STATIC_LAMBDA_FUNCTION` use
 /// the `boost::hof::reveal` adaptor to improve error messages.
 /// 
@@ -53,16 +55,18 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     BOOST_HOF_STATIC_LAMBDA_FUNCTION(add_one) = [](int x)
-///     {
-///         return x + 1;
-///     };
-///     int main() {
-///         assert(3 == add_one(2));
-///     }
+/// BOOST_HOF_STATIC_LAMBDA_FUNCTION(add_one) = [](int x)
+/// {
+///     return x + 1;
+/// };
+/// int main() {
+///     assert(3 == add_one(2));
+/// }
+/// ```
 /// 
 
 #include <boost/hof/config.hpp>

@@ -22,8 +22,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class T, class F>
-///     pipable constexpr T tap(T&& x, const F& f);
+/// ```cpp
+/// template<class T, class F>
+/// pipable constexpr T tap(T&& x, const F& f);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -35,26 +37,28 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     #include <iostream>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// #include <iostream>
+/// using namespace boost::hof;
 /// 
-///     struct sum_f
+/// struct sum_f
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     const pipable_adaptor<sum_f> sum = {};
-///     int main() {
-///         // Prints 3
-///         int r = 1 | sum(2) | tap([](int i) { std::cout << i; }) | sum(2);
-///         assert(r == 5);
+///         return x+y;
 ///     }
+/// };
+/// 
+/// const pipable_adaptor<sum_f> sum = {};
+/// int main() {
+///     // Prints 3
+///     int r = 1 | sum(2) | tap([](int i) { std::cout << i; }) | sum(2);
+///     assert(r == 5);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/pipable.hpp>

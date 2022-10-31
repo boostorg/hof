@@ -24,11 +24,13 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class IntegralConstant>
-///     constexpr auto if_(IntegralConstant);
+/// ```cpp
+/// template<class IntegralConstant>
+/// constexpr auto if_(IntegralConstant);
 /// 
-///     template<bool B, class F>
-///     constexpr auto if_c(F);
+/// template<bool B, class F>
+/// constexpr auto if_c(F);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -45,25 +47,27 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct sum_f
+/// struct sum_f
+/// {
+///     template<class T>
+///     int operator()(T x, T y) const
 ///     {
-///         template<class T>
-///         int operator()(T x, T y) const
-///         {
-///             return boost::hof::first_of(
-///                 boost::hof::if_(std::is_integral<T>())(boost::hof::_ + boost::hof::_),
-///                 boost::hof::always(0)
-///             )(x, y);
-///         }
-///     };
-/// 
-///     int main() {
-///         assert(sum_f()(1, 2) == 3);
-///         assert(sum_f()("", "") == 0);
+///         return boost::hof::first_of(
+///             boost::hof::if_(std::is_integral<T>())(boost::hof::_ + boost::hof::_),
+///             boost::hof::always(0)
+///         )(x, y);
 ///     }
+/// };
+/// 
+/// int main() {
+///     assert(sum_f()(1, 2) == 3);
+///     assert(sum_f()("", "") == 0);
+/// }
+/// ```
 /// 
 /// References
 /// ----------

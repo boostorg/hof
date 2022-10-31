@@ -29,29 +29,31 @@
 /// Synopsis
 /// --------
 /// 
-///     // Alias the type using a member variable
-///     template<class T, class Tag=void>
-///     class alias;
+/// ```cpp
+/// // Alias the type using a member variable
+/// template<class T, class Tag=void>
+/// class alias;
 /// 
-///     // Alias the type by inheriting
-///     template<class T, class Tag=void>
-///     class alias_inherit;
+/// // Alias the type by inheriting
+/// template<class T, class Tag=void>
+/// class alias_inherit;
 /// 
-///     // Alias the type using a static variable
-///     template<class T, class Tag=void>
-///     class alias_static;
+/// // Alias the type using a static variable
+/// template<class T, class Tag=void>
+/// class alias_static;
 /// 
-///     // Retrieve tag from alias
-///     template<class Alias>
-///     class alias_tag;
+/// // Retrieve tag from alias
+/// template<class Alias>
+/// class alias_tag;
 /// 
-///     // Check if type has a certian tag
-///     template<class T, class Tag>
-///     class has_tag;
+/// // Check if type has a certian tag
+/// template<class T, class Tag>
+/// class has_tag;
 /// 
-///     // Retrieve value from alias
-///     template<class Alias>
-///     constexpr auto alias_value(Alias&&);
+/// // Retrieve value from alias
+/// template<class Alias>
+/// constexpr auto alias_value(Alias&&);
+/// ```
 /// 
 
 #ifdef _MSC_VER

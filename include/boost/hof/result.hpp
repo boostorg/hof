@@ -23,8 +23,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class Result, class F>
-///     constexpr result_adaptor<Result, F> result(F f);
+/// ```cpp
+/// template<class Result, class F>
+/// constexpr result_adaptor<Result, F> result(F f);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -37,22 +39,24 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct id
+/// struct id
+/// {
+///     template<class T>
+///     T operator()(T x) const
 ///     {
-///         template<class T>
-///         T operator()(T x) const
-///         {
-///             return x;
-///         }
-///     };
-/// 
-///     int main() {
-///         auto int_result = boost::hof::result<int>(id());
-///         static_assert(std::is_same<decltype(int_result(true)), int>::value, "Not the same type");
+///         return x;
 ///     }
+/// };
+/// 
+/// int main() {
+///     auto int_result = boost::hof::result<int>(id());
+///     static_assert(std::is_same<decltype(int_result(true)), int>::value, "Not the same type");
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/callable_base.hpp>

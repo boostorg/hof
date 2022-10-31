@@ -24,13 +24,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<template <class...> class F>
-///     class implicit<F>;
+/// ```cpp
+/// template<template <class...> class F>
+/// class implicit<F>;
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(T(implicit<F>()(xs...)) == F<T>()(xs...));
+/// ```cpp
+/// assert(T(implicit<F>()(xs...)) == F<T>()(xs...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -43,36 +47,38 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     template<class T>
-///     struct auto_caster
+/// template<class T>
+/// struct auto_caster
+/// {
+///     template<class U>
+///     T operator()(U x)
 ///     {
-///         template<class U>
-///         T operator()(U x)
-///         {
-///             return T(x);
-///         }
-///     };
-/// 
-///     static constexpr implicit<auto_caster> auto_cast = {};
-/// 
-///     struct auto_caster_foo
-///     {
-///         int i;
-///         explicit auto_caster_foo(int i_) : i(i_) {}
-/// 
-///     };
-/// 
-///     int main() {
-///         float f = 1.5;
-///         int i = auto_cast(f);
-///         auto_caster_foo x = auto_cast(1);
-///         assert(1 == i);
-///         assert(1 == x.i);
+///         return T(x);
 ///     }
+/// };
+/// 
+/// static constexpr implicit<auto_caster> auto_cast = {};
+/// 
+/// struct auto_caster_foo
+/// {
+///     int i;
+///     explicit auto_caster_foo(int i_) : i(i_) {}
+/// 
+/// };
+/// 
+/// int main() {
+///     float f = 1.5;
+///     int i = auto_cast(f);
+///     auto_caster_foo x = auto_cast(1);
+///     assert(1 == i);
+///     assert(1 == x.i);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/pack.hpp>

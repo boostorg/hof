@@ -31,43 +31,48 @@
 /// Synopsis
 /// --------
 /// 
-///     // Capture by decaying each value
-///     template<class... Ts>
-///     constexpr auto capture(Ts&&... xs);
+/// ```cpp
+/// // Capture by decaying each value
+/// template<class... Ts>
+/// constexpr auto capture(Ts&&... xs);
 /// 
-///     // Capture lvalues by reference and rvalue reference by reference
-///     template<class... Ts>
-///     constexpr auto capture_forward(Ts&&... xs);
+/// // Capture lvalues by reference and rvalue reference by reference
+/// template<class... Ts>
+/// constexpr auto capture_forward(Ts&&... xs);
 /// 
-///     // Capture lvalues by reference and rvalues by value.
-///     template<class... Ts>
-///     constexpr auto capture_basic(Ts&&... xs);
+/// // Capture lvalues by reference and rvalues by value.
+/// template<class... Ts>
+/// constexpr auto capture_basic(Ts&&... xs);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(capture(xs...)(f)(ys...) == f(xs..., ys...));
-/// 
+/// ```cpp
+/// assert(capture(xs...)(f)(ys...) == f(xs..., ys...));
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct sum_f
+/// struct sum_f
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     int main() {
-///         auto add_one = boost::hof::capture(1)(sum_f());
-///         assert(add_one(2) == 3);
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     auto add_one = boost::hof::capture(1)(sum_f());
+///     assert(add_one(2) == 3);
+/// }
+/// ```
 /// 
 
 namespace boost { namespace hof {

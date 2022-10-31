@@ -32,27 +32,31 @@
 /// Synopsis
 /// --------
 /// 
-///     // Wrap the function in a generic lambda
-///     #define BOOST_HOF_LIFT(...)
+/// ```cpp
+/// // Wrap the function in a generic lambda
+/// #define BOOST_HOF_LIFT(...)
 /// 
-///     // Declare a class named `name` that will forward to the function
-///     #define BOOST_HOF_LIFT_CLASS(name, ...)
+/// // Declare a class named `name` that will forward to the function
+/// #define BOOST_HOF_LIFT_CLASS(name, ...)
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     #include <algorithm>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// #include <algorithm>
 /// 
-///     // Declare the class `max_f`
-///     BOOST_HOF_LIFT_CLASS(max_f, std::max);
+/// // Declare the class `max_f`
+/// BOOST_HOF_LIFT_CLASS(max_f, std::max);
 /// 
-///     int main() {
-///         auto my_max = BOOST_HOF_LIFT(std::max);
-///         assert(my_max(3, 4) == std::max(3, 4));
-///         assert(max_f()(3, 4) == std::max(3, 4));
-///     }
+/// int main() {
+///     auto my_max = BOOST_HOF_LIFT(std::max);
+///     assert(my_max(3, 4) == std::max(3, 4));
+///     assert(max_f()(3, 4) == std::max(3, 4));
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/delegate.hpp>

@@ -24,13 +24,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     constexpr protect_adaptor<F> protect(F f);
+/// ```cpp
+/// template<class F>
+/// constexpr protect_adaptor<F> protect(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(lazy(f)(protect(lazy(g)(_1)))() == f(lazy(g)(_1)))
+/// ```cpp
+/// assert(lazy(f)(protect(lazy(g)(_1)))() == f(lazy(g)(_1)))
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -43,15 +47,17 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     int main() {
-///         auto lazy_id = lazy(identity)(_1);
-///         auto lazy_apply = lazy(apply)(protect(lazy_id), _1);
-///         assert(lazy_apply(3) == 3);
-///     }
+/// int main() {
+///     auto lazy_id = lazy(identity)(_1);
+///     auto lazy_apply = lazy(apply)(protect(lazy_id), _1);
+///     assert(lazy_apply(3) == 3);
+/// }
+/// ```
 /// 
 /// See Also
 /// --------

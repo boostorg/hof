@@ -21,13 +21,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class... Gs>
-///     constexpr combine_adaptor<F, Gs...> combine(F f, Gs... gs);
+/// ```cpp
+/// template<class F, class... Gs>
+/// constexpr combine_adaptor<F, Gs...> combine(F f, Gs... gs);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(combine(f, gs...)(xs...) == f(gs(xs)...));
+/// ```cpp
+/// assert(combine(f, gs...)(xs...) == f(gs(xs)...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -40,18 +44,20 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     #include <tuple>
-///     #include <utility>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// #include <tuple>
+/// #include <utility>
 /// 
-///     int main() {
-///         auto f = boost::hof::combine(
-///             boost::hof::construct<std::tuple>(),
-///             boost::hof::capture(1)(boost::hof::construct<std::pair>()),
-///             boost::hof::capture(2)(boost::hof::construct<std::pair>()));
-///         assert(f(3, 7) == std::make_tuple(std::make_pair(1, 3), std::make_pair(2, 7)));
-///     }
+/// int main() {
+///     auto f = boost::hof::combine(
+///         boost::hof::construct<std::tuple>(),
+///         boost::hof::capture(1)(boost::hof::construct<std::pair>()),
+///         boost::hof::capture(2)(boost::hof::construct<std::pair>()));
+///     assert(f(3, 7) == std::make_tuple(std::make_pair(1, 3), std::make_pair(2, 7)));
+/// }
+/// ```
 /// 
 
 #include <boost/hof/pack.hpp>

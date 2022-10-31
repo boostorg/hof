@@ -24,8 +24,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     class static_;
+/// ```cpp
+/// template<class F>
+/// class static_;
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -38,29 +40,31 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     // In C++ this class can't be static-initialized, because of the non-
-///     // trivial default constructor.
-///     struct times_function
+/// // In C++ this class can't be static-initialized, because of the non-
+/// // trivial default constructor.
+/// struct times_function
+/// {
+///     double factor;
+///     times_function() : factor(2)
+///     {}
+///     template<class T>
+///     T operator()(T x) const
 ///     {
-///         double factor;
-///         times_function() : factor(2)
-///         {}
-///         template<class T>
-///         T operator()(T x) const
-///         {
-///             return x*factor;
-///         }
-///     };
-/// 
-///     static constexpr static_<times_function> times2 = {};
-/// 
-///     int main() {
-///         assert(6 == times2(3));
+///         return x*factor;
 ///     }
+/// };
+/// 
+/// static constexpr static_<times_function> times2 = {};
+/// 
+/// int main() {
+///     assert(6 == times2(3));
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/result_of.hpp>

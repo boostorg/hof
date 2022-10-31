@@ -21,16 +21,20 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class Integral>
-///     constexpr auto repeat(Integral);
+/// ```cpp
+/// template<class Integral>
+/// constexpr auto repeat(Integral);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(repeat(std::integral_constant<int, 0>{})(f)(xs...) == f(xs...));
-///     assert(repeat(std::integral_constant<int, 1>{})(f)(xs...) == f(f(xs...)));
-///     assert(repeat(0)(f)(xs...) == f(xs...));
-///     assert(repeat(1)(f)(xs...) == f(f(xs...)));
+/// ```cpp
+/// assert(repeat(std::integral_constant<int, 0>{})(f)(xs...) == f(xs...));
+/// assert(repeat(std::integral_constant<int, 1>{})(f)(xs...) == f(f(xs...)));
+/// assert(repeat(0)(f)(xs...) == f(xs...));
+/// assert(repeat(1)(f)(xs...) == f(f(xs...)));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -46,22 +50,24 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct increment
+/// struct increment
+/// {
+///     template<class T>
+///     constexpr T operator()(T x) const
 ///     {
-///         template<class T>
-///         constexpr T operator()(T x) const
-///         {
-///             return x + 1;
-///         }
-///     };
-/// 
-///     int main() {
-///         auto increment_by_5 = boost::hof::repeat(std::integral_constant<int, 5>())(increment());
-///         assert(increment_by_5(1) == 6);
+///         return x + 1;
 ///     }
+/// };
+/// 
+/// int main() {
+///     auto increment_by_5 = boost::hof::repeat(std::integral_constant<int, 5>())(increment());
+///     assert(increment_by_5(1) == 6);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/always.hpp>

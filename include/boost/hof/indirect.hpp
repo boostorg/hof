@@ -19,13 +19,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     constexpr indirect_adaptor<F> indirect(F f);
+/// ```cpp
+/// template<class F>
+/// constexpr indirect_adaptor<F> indirect(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(indirect(f)(xs...) == (*f)(xs...));
+/// ```cpp
+/// assert(indirect(f)(xs...) == (*f)(xs...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -38,24 +42,26 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     #include <memory>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// #include <memory>
+/// using namespace boost::hof;
 /// 
-///     struct sum
+/// struct sum
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     int main() {
-///         int r = indirect(std::make_unique<sum>())(3,2);
-///         assert(r == 5);
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     int r = indirect(std::make_unique<sum>())(3,2);
+///     assert(r == 5);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/delegate.hpp>

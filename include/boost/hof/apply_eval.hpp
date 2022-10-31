@@ -21,13 +21,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class... Ts>
-///     constexpr auto apply_eval(F&& f, Ts&&... xs);
+/// ```cpp
+/// template<class F, class... Ts>
+/// constexpr auto apply_eval(F&& f, Ts&&... xs);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(apply_eval(f)(xs...) == f(eval(xs)...));
+/// ```cpp
+/// assert(apply_eval(f)(xs...) == f(eval(xs)...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -43,21 +47,23 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct sum_f
+/// struct sum_f
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     int main() {
-///         assert(boost::hof::apply_eval(sum_f(), []{ return 1; }, []{ return 2; }) == 3);
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     assert(boost::hof::apply_eval(sum_f(), []{ return 1; }, []{ return 2; }) == 3);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/config.hpp>

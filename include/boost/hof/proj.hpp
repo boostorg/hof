@@ -27,17 +27,21 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class Projection, class F>
-///     constexpr proj_adaptor<Projection, F> proj(Projection p, F f);
+/// ```cpp
+/// template<class Projection, class F>
+/// constexpr proj_adaptor<Projection, F> proj(Projection p, F f);
 /// 
-///     template<class Projection>
-///     constexpr proj_adaptor<Projection> proj(Projection p);
+/// template<class Projection>
+/// constexpr proj_adaptor<Projection> proj(Projection p);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(proj(p, f)(xs...) == f(p(xs)...));
-///     assert(proj(p)(xs...) == p(xs)...);
+/// ```cpp
+/// assert(proj(p, f)(xs...) == f(p(xs)...));
+/// assert(proj(p)(xs...) == p(xs)...);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -55,20 +59,22 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct foo
-///     {
-///         foo(int x_) : x(x_)
-///         {}
-///         int x;
-///     };
+/// struct foo
+/// {
+///     foo(int x_) : x(x_)
+///     {}
+///     int x;
+/// };
 /// 
-///     int main() {
-///         assert(boost::hof::proj(&foo::x, _ + _)(foo(1), foo(2)) == 3);
-///     }
+/// int main() {
+///     assert(boost::hof::proj(&foo::x, _ + _)(foo(1), foo(2)) == 3);
+/// }
+/// ```
 /// 
 /// References
 /// ----------
@@ -76,8 +82,6 @@
 /// * [Projections](Projections)
 /// * [Variadic print](<Variadic print>)
 /// 
-
-
 
 #include <utility>
 #include <boost/hof/always.hpp>

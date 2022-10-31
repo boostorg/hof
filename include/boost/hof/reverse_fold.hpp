@@ -27,19 +27,23 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class State>
-///     constexpr reverse_fold_adaptor<F, State> reverse_fold(F f, State s);
+/// ```cpp
+/// template<class F, class State>
+/// constexpr reverse_fold_adaptor<F, State> reverse_fold(F f, State s);
 /// 
-///     template<class F>
-///     constexpr reverse_fold_adaptor<F> reverse_fold(F f);
+/// template<class F>
+/// constexpr reverse_fold_adaptor<F> reverse_fold(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(reverse_fold(f, z)() == z);
-///     assert(reverse_fold(f, z)(x, xs...) == f(reverse_fold(f, z)(xs...), x));
-///     assert(reverse_fold(f)(x) == x);
-///     assert(reverse_fold(f)(x, xs...) == f(reverse_fold(f)(xs...), x));
+/// ```cpp
+/// assert(reverse_fold(f, z)() == z);
+/// assert(reverse_fold(f, z)(x, xs...) == f(reverse_fold(f, z)(xs...), x));
+/// assert(reverse_fold(f)(x) == x);
+/// assert(reverse_fold(f)(x, xs...) == f(reverse_fold(f)(xs...), x));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -56,21 +60,23 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct max_f
+/// struct max_f
+/// {
+///     template<class T, class U>
+///     constexpr T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         constexpr T operator()(T x, U y) const
-///         {
-///             return x > y ? x : y;
-///         }
-///     };
-/// 
-///     int main() {
-///         assert(boost::hof::reverse_fold(max_f())(2, 3, 4, 5) == 5);
+///         return x > y ? x : y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     assert(boost::hof::reverse_fold(max_f())(2, 3, 4, 5) == 5);
+/// }
+/// ```
 /// 
 /// References
 /// ----------

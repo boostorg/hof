@@ -19,13 +19,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     flip_adaptor<F> flip(F f);
+/// ```cpp
+/// template<class F>
+/// flip_adaptor<F> flip(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(flip(f)(x, y, xs...) == f(y, x, xs...));
+/// ```cpp
+/// assert(flip(f)(x, y, xs...) == f(y, x, xs...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -45,13 +49,15 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     int main() {
-///         int r = boost::hof::flip(boost::hof::_ - boost::hof::_)(2, 5);
-///         assert(r == 3);
-///     }
+/// int main() {
+///     int r = boost::hof::flip(boost::hof::_ - boost::hof::_)(2, 5);
+///     assert(r == 3);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/callable_base.hpp>

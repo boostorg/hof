@@ -22,8 +22,10 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class Predicate>
-///     constexpr auto repeat_while(Predicate predicate);
+/// ```cpp
+/// template<class Predicate>
+/// constexpr auto repeat_while(Predicate predicate);
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -36,35 +38,37 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct increment
+/// struct increment
+/// {
+///     template<class T>
+///     constexpr std::integral_constant<int, T::value + 1> operator()(T) const
 ///     {
-///         template<class T>
-///         constexpr std::integral_constant<int, T::value + 1> operator()(T) const
-///         {
-///             return std::integral_constant<int, T::value + 1>();
-///         }
-///     };
-/// 
-///     struct not_6
-///     {
-///         template<class T>
-///         constexpr std::integral_constant<bool, (T::value != 6)> 
-///         operator()(T) const
-///         {
-///             return std::integral_constant<bool, (T::value != 6)>();
-///         }
-///     };
-/// 
-///     typedef std::integral_constant<int, 1> one;
-///     typedef std::integral_constant<int, 6> six;
-/// 
-///     int main() {
-///         auto increment_until_6 = boost::hof::repeat_while(not_6())(increment());
-///         static_assert(std::is_same<six, decltype(increment_until_6(one()))>::value, "Error");
+///         return std::integral_constant<int, T::value + 1>();
 ///     }
+/// };
+/// 
+/// struct not_6
+/// {
+///     template<class T>
+///     constexpr std::integral_constant<bool, (T::value != 6)> 
+///     operator()(T) const
+///     {
+///         return std::integral_constant<bool, (T::value != 6)>();
+///     }
+/// };
+/// 
+/// typedef std::integral_constant<int, 1> one;
+/// typedef std::integral_constant<int, 6> six;
+/// 
+/// int main() {
+///     auto increment_until_6 = boost::hof::repeat_while(not_6())(increment());
+///     static_assert(std::is_same<six, decltype(increment_until_6(one()))>::value, "Error");
+/// }
+/// ```
 /// 
 
 #include <boost/hof/always.hpp>

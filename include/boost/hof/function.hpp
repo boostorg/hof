@@ -14,7 +14,7 @@
 /// Description
 /// -----------
 /// 
-
+/// 
 /// The `BOOST_HOF_STATIC_FUNCTION` macro allows initializing a function object from a
 /// `constexpr` expression. It uses the best practices as outlined in
 /// [N4381](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4381.html).
@@ -35,24 +35,26 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct sum_f
+/// struct sum_f
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     BOOST_HOF_STATIC_FUNCTION(sum) = sum_f();
-///     BOOST_HOF_STATIC_FUNCTION(partial_sum) = boost::hof::partial(sum_f());
-/// 
-///     int main() {
-///         assert(sum(1, 2) == partial_sum(1)(2));
+///         return x+y;
 ///     }
+/// };
+/// 
+/// BOOST_HOF_STATIC_FUNCTION(sum) = sum_f();
+/// BOOST_HOF_STATIC_FUNCTION(partial_sum) = boost::hof::partial(sum_f());
+/// 
+/// int main() {
+///     assert(sum(1, 2) == partial_sum(1)(2));
+/// }
+/// ```
 /// 
 
 #include <boost/hof/reveal.hpp>

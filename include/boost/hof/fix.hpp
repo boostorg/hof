@@ -25,18 +25,24 @@
 /// recursion limits of the compiler. This can be accomplished using
 /// [`boost::hof::result`](/include/boost/hof/result):
 /// 
-///     int r = boost::hof::result<int>(factorial)(5);
+/// ```cpp
+/// int r = boost::hof::result<int>(factorial)(5);
+/// ```
 /// 
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     constexpr fix_adaptor<F> fix(F f);
+/// ```cpp
+/// template<class F>
+/// constexpr fix_adaptor<F> fix(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(fix(f)(xs...) == f(fix(f), xs...));
+/// ```cpp
+/// assert(fix(f)(xs...) == f(fix(f), xs...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -49,18 +55,20 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     int main() {
-///         auto factorial = boost::hof::fix(
-///             [](auto recurse, auto x) -> decltype(x) { 
-///                 return x == 0 ? 1 : x * recurse(x-1); 
-///             }
-///         );
-///         int r = boost::hof::result<int>(factorial)(5);
-///         assert(r == 5*4*3*2*1);
-///     }
+/// int main() {
+///     auto factorial = boost::hof::fix(
+///         [](auto recurse, auto x) -> decltype(x) { 
+///             return x == 0 ? 1 : x * recurse(x-1); 
+///         }
+///     );
+///     int r = boost::hof::result<int>(factorial)(5);
+///     assert(r == 5*4*3*2*1);
+/// }
+/// ```
 /// 
 /// References
 /// ----------

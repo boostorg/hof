@@ -25,13 +25,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     constexpr partial_adaptor<F> partial(F f);
+/// ```cpp
+/// template<class F>
+/// constexpr partial_adaptor<F> partial(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(partial(f)(xs...)(ys...) == f(xs..., ys...));
+/// ```cpp
+/// assert(partial(f)(xs...)(ys...) == f(xs..., ys...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -44,22 +48,24 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     struct sum
+/// struct sum
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     int main() {
-///         assert(3 == partial(sum())(1)(2));
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     assert(3 == partial(sum())(1)(2));
+/// }
+/// ```
 /// 
 /// References
 /// ----------

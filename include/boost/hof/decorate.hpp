@@ -25,13 +25,17 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F>
-///     constexpr decorate_adaptor<F> decorate(F f);
+/// ```cpp
+/// template<class F>
+/// constexpr decorate_adaptor<F> decorate(F f);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(decorate(f)(x)(g)(xs...) == f(x, g, xs...));
+/// ```cpp
+/// assert(decorate(f)(x)(g)(xs...) == f(x, g, xs...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -44,41 +48,43 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     #include <iostream>
-///     #include <string>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// #include <iostream>
+/// #include <string>
+/// using namespace boost::hof;
 /// 
-///     struct logger_f
+/// struct logger_f
+/// {
+///     template<class F, class... Ts>
+///     auto operator()(const std::string& message, F&& f, Ts&&... xs) const 
+///         -> decltype(f(std::forward<Ts>(xs)...))
 ///     {
-///         template<class F, class... Ts>
-///         auto operator()(const std::string& message, F&& f, Ts&&... xs) const 
-///             -> decltype(f(std::forward<Ts>(xs)...))
-///         {
-///             // Message to print out when the function is called
-///             std::cout << message << std::endl;
-///             // Call the function
-///             return f(std::forward<Ts>(xs)...);
-///         }
-///     };
-///     // The logger decorator
-///     BOOST_HOF_STATIC_FUNCTION(logger) = boost::hof::decorate(logger_f());
-///     
-///     struct sum_f
-///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-///     
-///     BOOST_HOF_STATIC_FUNCTION(sum) = sum_f();
-///     int main() {
-///         // Use the logger decorator to print "Calling sum" when the function is called
-///         assert(3 == logger("Calling sum")(sum)(1, 2));
+///         // Message to print out when the function is called
+///         std::cout << message << std::endl;
+///         // Call the function
+///         return f(std::forward<Ts>(xs)...);
 ///     }
+/// };
+/// // The logger decorator
+/// BOOST_HOF_STATIC_FUNCTION(logger) = boost::hof::decorate(logger_f());
+/// 
+/// struct sum_f
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
+///     {
+///         return x+y;
+///     }
+/// };
+/// 
+/// BOOST_HOF_STATIC_FUNCTION(sum) = sum_f();
+/// int main() {
+///     // Use the logger decorator to print "Calling sum" when the function is called
+///     assert(3 == logger("Calling sum")(sum)(1, 2));
+/// }
+/// ```
 /// 
 
 #include <boost/hof/reveal.hpp>

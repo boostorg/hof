@@ -22,41 +22,45 @@
 /// Synopsis
 /// --------
 /// 
-///     // Construct by decaying each value
-///     template<class T>
-///     constexpr auto construct();
+/// ```cpp
+/// // Construct by decaying each value
+/// template<class T>
+/// constexpr auto construct();
 /// 
-///     template<template<class...> class Template>
-///     constexpr auto construct();
+/// template<template<class...> class Template>
+/// constexpr auto construct();
 /// 
-///     // Construct by deducing lvalues by reference and rvalue reference by reference
-///     template<class T>
-///     constexpr auto construct_forward();
+/// // Construct by deducing lvalues by reference and rvalue reference by reference
+/// template<class T>
+/// constexpr auto construct_forward();
 /// 
-///     template<template<class...> class Template>
-///     constexpr auto construct_forward();
+/// template<template<class...> class Template>
+/// constexpr auto construct_forward();
 /// 
-///     // Construct by deducing lvalues by reference and rvalues by value.
-///     template<class T>
-///     constexpr auto construct_basic();
+/// // Construct by deducing lvalues by reference and rvalues by value.
+/// template<class T>
+/// constexpr auto construct_basic();
 /// 
-///     template<template<class...> class Template>
-///     constexpr auto construct_basic();
+/// template<template<class...> class Template>
+/// constexpr auto construct_basic();
 /// 
-///     // Construct by deducing the object from a metafunction
-///     template<class MetafunctionClass>
-///     constexpr auto construct_meta();
+/// // Construct by deducing the object from a metafunction
+/// template<class MetafunctionClass>
+/// constexpr auto construct_meta();
 /// 
-///     template<template<class...> class MetafunctionTemplate>
-///     constexpr auto construct_meta();
+/// template<template<class...> class MetafunctionTemplate>
+/// constexpr auto construct_meta();
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(construct<T>()(xs...) == T(xs...));
-///     assert(construct<Template>()(xs...) == Template<decltype(xs)...>(xs...));
-///     assert(construct_meta<MetafunctionClass>()(xs...) == MetafunctionClass::apply<decltype(xs)...>(xs...));
-///     assert(construct_meta<MetafunctionTemplate>()(xs...) == MetafunctionTemplate<decltype(xs)...>::type(xs...));
+/// ```cpp
+/// assert(construct<T>()(xs...) == T(xs...));
+/// assert(construct<Template>()(xs...) == Template<decltype(xs)...>(xs...));
+/// assert(construct_meta<MetafunctionClass>()(xs...) == MetafunctionClass::apply<decltype(xs)...>(xs...));
+/// assert(construct_meta<MetafunctionTemplate>()(xs...) == MetafunctionTemplate<decltype(xs)...>::type(xs...));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -77,14 +81,16 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     #include <vector>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// #include <vector>
 /// 
-///     int main() {
-///         auto v = boost::hof::construct<std::vector<int>>()(5, 5);
-///         assert(v.size() == 5);
-///     }
+/// int main() {
+///     auto v = boost::hof::construct<std::vector<int>>()(5, 5);
+///     assert(v.size() == 5);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/forward.hpp>

@@ -21,17 +21,19 @@
 /// Synopsis
 /// --------
 /// 
-///     namespace placeholders {
-///         placeholder<1> _1 = {};
-///         placeholder<2> _2 = {};
-///         placeholder<3> _3 = {};
-///         placeholder<4> _4 = {};
-///         placeholder<5> _5 = {};
-///         placeholder<6> _6 = {};
-///         placeholder<7> _7 = {};
-///         placeholder<8> _8 = {};
-///         placeholder<9> _9 = {};
-///     }
+/// ```cpp
+/// namespace placeholders {
+///     placeholder<1> _1 = {};
+///     placeholder<2> _2 = {};
+///     placeholder<3> _3 = {};
+///     placeholder<4> _4 = {};
+///     placeholder<5> _5 = {};
+///     placeholder<6> _6 = {};
+///     placeholder<7> _7 = {};
+///     placeholder<8> _8 = {};
+///     placeholder<9> _9 = {};
+/// }
+/// ```
 /// 
 /// Operators
 /// ---------
@@ -44,15 +46,16 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     int main() {
-///         auto sum = _1 + _2;
-///         assert(3 == sum(1, 2));
-///     }
-/// 
+/// int main() {
+///     auto sum = _1 + _2;
+///     assert(3 == sum(1, 2));
+/// }
+/// ```
 /// 
 /// unamed placeholder
 /// ==================
@@ -68,21 +71,25 @@
 /// Synopsis
 /// --------
 /// 
-///     namespace placeholders {
-///         /* unspecified */ _ = {};
-///     }
+/// ```cpp
+/// namespace placeholders {
+///     /* unspecified */ _ = {};
+/// }
+/// ```
 /// 
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
-///     using namespace boost::hof;
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
+/// using namespace boost::hof;
 /// 
-///     int main() {
-///         auto sum = _ + _;
-///         assert(3 == sum(1, 2));
-///     }
+/// int main() {
+///     auto sum = _ + _;
+///     assert(3 == sum(1, 2));
+/// }
+/// ```
 /// 
 
 #include <boost/hof/returns.hpp>

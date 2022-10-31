@@ -19,14 +19,18 @@
 /// Synopsis
 /// --------
 /// 
-///     template<class F, class... Ts>
-///     constexpr auto apply(F&& f, Ts&&... xs);
+/// ```cpp
+/// template<class F, class... Ts>
+/// constexpr auto apply(F&& f, Ts&&... xs);
+/// ```
 /// 
 /// Semantics
 /// ---------
 /// 
-///     assert(apply(f)(xs...) == f(xs...));
-///     assert(fold(apply, f)(x, y, z) == f(x)(y)(z));
+/// ```cpp
+/// assert(apply(f)(xs...) == f(xs...));
+/// assert(fold(apply, f)(x, y, z) == f(x)(y)(z));
+/// ```
 /// 
 /// Requirements
 /// ------------
@@ -38,21 +42,23 @@
 /// Example
 /// -------
 /// 
-///     #include <boost/hof.hpp>
-///     #include <cassert>
+/// ```cpp
+/// #include <boost/hof.hpp>
+/// #include <cassert>
 /// 
-///     struct sum_f
+/// struct sum_f
+/// {
+///     template<class T, class U>
+///     T operator()(T x, U y) const
 ///     {
-///         template<class T, class U>
-///         T operator()(T x, U y) const
-///         {
-///             return x+y;
-///         }
-///     };
-/// 
-///     int main() {
-///         assert(boost::hof::apply(sum_f(), 1, 2) == 3);
+///         return x+y;
 ///     }
+/// };
+/// 
+/// int main() {
+///     assert(boost::hof::apply(sum_f(), 1, 2) == 3);
+/// }
+/// ```
 /// 
 
 #include <boost/hof/detail/result_of.hpp>

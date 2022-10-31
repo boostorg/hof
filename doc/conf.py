@@ -422,6 +422,8 @@ extract_prefix = '/// '
 include_dir = os.path.abspath('../include/')
 def extract_doc(app, docname, source):
     path = app.env.doc2path(docname)
+    if sphinxversion != "1":
+        source[0] = source[0].replace('```eval_rst', '```{eval-rst}')
     if path.endswith('.hpp'):
         lines = source[0].split('\n')
         md = [line[len(extract_prefix):] for line in lines if line.startswith(extract_prefix)]

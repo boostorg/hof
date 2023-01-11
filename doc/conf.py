@@ -407,6 +407,39 @@ texinfo_documents = [
 
 nitpicky = True
 
+def convert_to_code_fences(lines, fence='```'):
+    output = []
+    incode = False
+    isempty = False
+    for line in lines:
+        iscode = (isempty or incode) and line.startswith('    ')
+        isempty = not line.strip()
+        if incode:
+            if isempty:
+                output.append(line)
+            elif iscode:
+                output.append(line[4:])
+            else:
+                output.append(fence)
+                output.append('\n\n')
+                output.append(line)
+                incode = False
+        else:
+            if iscode:
+                x = line[4:]
+                if x.startswith('!'):
+                    output.append('{fence}{language}'.format(
+                        fence=fence, language=x[1:].strip()))
+                    output.append('\n')
+                else:
+                    output.append(fence+'cpp')
+                    output.append('\n')
+                    output.append(x)
+                incode = True
+            else:
+                output.append(line)
+    return '\n'.join(output)
+
 def insert_header(lines, f):
     for line in lines:
         yield line
@@ -428,6 +461,9 @@ def extract_doc(app, docname, source):
         lines = source[0].split('\n')
         md = [line[len(extract_prefix):] for line in lines if line.startswith(extract_prefix)]
         source[0] = '\n'.join(insert_header(md, os.path.relpath(path, include_dir)))
+    if path.endswith(('.hpp', '.md')):
+        lines = source[0].split('\n')
+        source[0] = convert_to_code_fences(lines)
 
 # app setup hook
 def setup(app):

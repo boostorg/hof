@@ -411,10 +411,17 @@ def convert_to_code_fences(lines, fence='```'):
     output = []
     incode = False
     isempty = False
+    infence = False
     for line in lines:
-        iscode = (isempty or incode) and line.startswith('    ')
-        isempty = not line.strip()
-        if incode:
+        sline = line.strip()
+        iscode = (isempty or incode) and line.startswith('    ') and not infence
+        isempty = not sline
+        isfence = line.startswith('```')
+        if infence:
+            if isfence:
+                infence = False
+            output.append(line)
+        elif incode:
             if isempty:
                 output.append(line)
             elif iscode:
@@ -426,8 +433,11 @@ def convert_to_code_fences(lines, fence='```'):
                 incode = False
         else:
             if iscode:
+                nested_list = sline.startswith(('-', '*', '+')) or sline[0].isdigit()
                 x = line[4:]
-                if x.startswith('!'):
+                if nested_list:
+                    output.append(line)
+                elif x.startswith('!'):
                     output.append('{fence}{language}'.format(
                         fence=fence, language=x[1:].strip()))
                     output.append('\n')
@@ -435,7 +445,11 @@ def convert_to_code_fences(lines, fence='```'):
                     output.append(fence+'cpp')
                     output.append('\n')
                     output.append(x)
-                incode = True
+                incode = not nested_list
+            elif isfence:
+                infence = True
+                incode = False
+                output.append(line)
             else:
                 output.append(line)
     return '\n'.join(output)

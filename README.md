@@ -3,11 +3,11 @@
 About
 =====
 
-HigherOrderFunctions is a header-only C++11/C++14 library that provides utilities for functions and function objects, which can solve many problems with much simpler constructs than whats traditionally been done with metaprogramming.
+HigherOrderFunctions is a header-only C++11/C++14 library that provides utilities for functions and function objects, which can solve many problems with much simpler constructs than what's traditionally been done with metaprogramming.
 
 HigherOrderFunctions is:
 
-- Modern: HigherOrderFunctions takes advantages of modern C++11/C++14 features. It support both `constexpr` initialization and `constexpr` evaluation of functions. It takes advantage of type deduction, variadic templates, and perfect forwarding to provide a simple and modern interface. 
+- Modern: HigherOrderFunctions takes advantages of modern C++11/C++14 features. It supports both `constexpr` initialization and `constexpr` evaluation of functions. It takes advantage of type deduction, variadic templates, and perfect forwarding to provide a simple and modern interface. 
 - Relevant: HigherOrderFunctions provides utilities for functions and does not try to implement a functional language in C++. As such, HigherOrderFunctions solves many problems relevant to C++ programmers, including initialization of function objects and lambdas, overloading with ordering, improved return type deduction, and much more.
 - Lightweight: HigherOrderFunctions builds simple lightweight abstraction on top of function objects. It does not require subscribing to an entire framework. Just use the parts you need.
 
@@ -17,7 +17,7 @@ HigherOrderFunctions is divided into three components:
 * Functions: These return functions that achieve a specific purpose.
 * Utilities: These are general utilities that are useful when defining or using functions
 
-Github: [https://github.com/boostorg/hof/](https://github.com/boostorg/hof/)
+GitHub: [https://github.com/boostorg/hof/](https://github.com/boostorg/hof/)
 
 Documentation: [http://boost-hof.readthedocs.io/](http://boost-hof.readthedocs.io/)
 
@@ -34,7 +34,7 @@ Requirements
 
 This requires a C++11 compiler. There are no third-party dependencies. This has been tested on clang 3.5-3.8, gcc 4.6-7, and Visual Studio 2015 and 2017.
 
-Contexpr support
+Constexpr support
 ----------------
 
 Both MSVC and gcc 4.6 have limited constexpr support due to many bugs in the implementation of constexpr. However, constexpr initialization of functions is supported when using the [`BOOST_HOF_STATIC_FUNCTION`](BOOST_HOF_STATIC_FUNCTION) and [`BOOST_HOF_STATIC_LAMBDA_FUNCTION`](BOOST_HOF_STATIC_LAMBDA_FUNCTION) constructs.
@@ -67,7 +67,7 @@ The tests can be built and run by using the `check` target:
 
     cmake --build . --target check
 
-The tests can also be ran using Boost.Build, just copy library to the boost source tree, and then:
+The tests can also be run using Boost.Build, just copy library to the boost source tree, and then:
 
     cd test
     b2

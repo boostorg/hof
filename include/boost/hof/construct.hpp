@@ -254,7 +254,7 @@ constexpr detail::construct_f<T> construct() noexcept
 {
     return {};
 }
-// These overloads are provide for consistency
+// These overloads are provided for consistency
 template<class T>
 constexpr detail::construct_f<T> construct_forward() noexcept
 {

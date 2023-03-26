@@ -23,7 +23,7 @@ Of course due to limitations in C++, deciding whether evaluate the function or t
 
     auto f = sum(1, 2, 3);
 
-However, this can get out of hande as the function `f` will never be evaluated. Plus, it would be nice to produce an error at the point of calling the function rather than a confusing error of trying to use a partial function. The [limit](limit) decorator lets us annotate the function with the max arity:
+However, this can get out of hand as the function `f` will never be evaluated. Plus, it would be nice to produce an error at the point of calling the function rather than a confusing error of trying to use a partial function. The [limit](limit) decorator lets us annotate the function with the max arity:
 
     auto sum = partial(limit_c<2>([](int x, int y)
     {

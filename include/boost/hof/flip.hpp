@@ -36,7 +36,7 @@
 /// 
 /// Or:
 /// 
-/// * [Invocable](Invocable) with more than two argurments
+/// * [Invocable](Invocable) with more than two arguments
 /// 
 /// And:
 /// 

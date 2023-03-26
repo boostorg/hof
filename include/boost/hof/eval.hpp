@@ -18,7 +18,7 @@
 /// function or it can be a unary function that takes the identity function as
 /// the first parameter(which is helpful to delay compile-time checking).
 /// Also, additional parameters can be passed to `eval` to delay
-/// compiliation(so that result can depend on template parameters).
+/// compilation(so that result can depend on template parameters).
 /// 
 /// Synopsis
 /// --------

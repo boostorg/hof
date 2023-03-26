@@ -65,7 +65,7 @@
 
 #define BOOST_HOF_DELEGATE_CONSTRUCTOR(C, T, var) BOOST_HOF_DELGATE_PRIMITIVE_CONSTRUCTOR(constexpr, C, T, var)
 
-// Currently its faster to use `BOOST_HOF_DELEGATE_CONSTRUCTOR` than `using
+// Currently it's faster to use `BOOST_HOF_DELEGATE_CONSTRUCTOR` than `using
 // Base::Base;`
 #if 1
 #define BOOST_HOF_INHERIT_CONSTRUCTOR(Derived, Base) BOOST_HOF_DELEGATE_CONSTRUCTOR(Derived, Base, Base)

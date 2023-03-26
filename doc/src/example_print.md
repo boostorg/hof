@@ -13,7 +13,7 @@ Say, for example, we would like to write a print function. We could start by wri
         std::cout << x << std::endl;
     };
 
-However, there is lot of things that don't print directly to `std::cout` such as `std::vector` or `std::tuple`. Instead, we want to iterate over these data structures and print each element in them.
+However, there are a lot of things that don't print directly to `std::cout` such as `std::vector` or `std::tuple`. Instead, we want to iterate over these data structures and print each element in them.
 
 Overloading
 -----------
@@ -132,7 +132,7 @@ Recursive
 
 Even though this will print for ranges and tuples, if we were to nest a range into a tuple this would not work. What we need to do is make the function call itself recursively. Even though we are using lambdas, we can easily make this recursive using the [`fix`](/include/boost/hof/fix) adaptor. This implements a fix point combinator, which passes the function(i.e. itself) in as the first argument. 
 
-So now we add an additional arguments called `self` which is the `print` function itself. This extra argument is called by the [`fix`](/include/boost/hof/fix) adaptor, and so the user would still call this function with a single argument:
+So now we add an additional argument called `self` which is the `print` function itself. This extra argument is called by the [`fix`](/include/boost/hof/fix) adaptor, and so the user would still call this function with a single argument:
 
     BOOST_HOF_STATIC_LAMBDA_FUNCTION(print) = fix(first_of(
         [](auto, const auto& x) -> decltype(std::cout << x, void())

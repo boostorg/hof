@@ -64,7 +64,7 @@ There are few things to note about this. First, the call operator member functio
     std::vector<int> v = { 1, 2, 3 };
     int total = std::accumulate(v.begin(), v.end(), 0, sum);
 
-Because the function is templated, it can be called on any type that has the plus `+` operator, not just integers. Futhermore, the `sum` variable can be used to refer to the entire overload set.
+Because the function is templated, it can be called on any type that has the plus `+` operator, not just integers. Furthermore, the `sum` variable can be used to refer to the entire overload set.
 
 Lifting functions
 -----------------
@@ -81,7 +81,7 @@ Another alternative to defining a function object, is to lift the templated func
     std::vector<int> v = { 1, 2, 3 };
     int total = std::accumulate(v.begin(), v.end(), 0, BOOST_HOF_LIFT(sum));
 
-However, due to limitations in C++14 this will not preserve `constexpr`. In those cases, its better to use a function object.
+However, due to limitations in C++14 this will not preserve `constexpr`. In those cases, it's better to use a function object.
 
 Declaring functions
 -------------------
@@ -107,7 +107,7 @@ Then the parameters can be piped into it, like this:
 
     auto three = 1 | sum(2);
 
-Pipable function can be chained mutliple times just like the `.` operator:
+Pipable function can be chained multiple times just like the `.` operator:
 
     auto four = 1 | sum(2) | sum(1);
 

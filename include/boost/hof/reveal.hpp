@@ -72,7 +72,7 @@
 ///         operator()(Ts&&... xs) const BOOST_HOF_SFINAE_RETURNS
 /// 
 /// Which is short and gives very little information why it can't be called.
-/// It doesn't even show the overloads that were try. However, using the
+/// It doesn't even show the overloads that were tried. However, using the
 /// `reveal` adaptor we can get more info about the error like this:
 /// 
 ///     print.cpp:49:5: error: no matching function for call to object of type 'boost::hof::reveal_adaptor<boost::hof::fix_adaptor<boost::hof::first_of_adaptor<(lambda at print.cpp:29:9), (lambda at print.cpp:33:9),
@@ -114,7 +114,7 @@
 /// ------------------
 /// 
 /// By default, `reveal` reports the substitution failure by trying to call
-/// the function. However, more detail expressions can be be reported from a
+/// the function. However, more detail expressions can be reported from a
 /// template alias by using `as_failure`. This is done by defining a nested
 /// `failure` struct in the function object and then inheriting from
 /// `as_failure`. Also multiple failures can be reported by using
@@ -127,7 +127,7 @@
 ///     template<template<class...> class Template>
 ///     struct as_failure;
 /// 
-///     // Report multiple falures
+///     // Report multiple failures
 ///     template<class... Failures>
 ///     struct with_failures;
 /// 

@@ -14,7 +14,7 @@
 /// Description
 /// -----------
 /// 
-/// The `identity` function is an unary function object that returns whats given to it. 
+/// The `identity` function is a unary function object that returns what's given to it. 
 /// 
 /// Semantics
 /// ---------

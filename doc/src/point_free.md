@@ -6,7 +6,7 @@
 Point-free style programming
 ============================
 
-[Point-free style](https://en.wikipedia.org/wiki/Tacit_programming) programing(or tacit programming) is a style where the arguments to the function are not explicity defined. Rather, the function is defined as the composition of other functions where function adaptors manipulate the function arguments. The advantage of using point-free style in C++ is the template machinery involved with function arguments can be avoided.
+[Point-free style](https://en.wikipedia.org/wiki/Tacit_programming) programming(or tacit programming) is a style where the arguments to the function are not explicitly defined. Rather, the function is defined as the composition of other functions where function adaptors manipulate the function arguments. The advantage of using point-free style in C++ is the template machinery involved with function arguments can be avoided.
 
 Variadic print
 --------------
@@ -15,7 +15,7 @@ For example, if we want to write a variadic print function that prints each argu
 
     print("Hello", "World");
 
-We would write something like the following, which would recursively iterate over the arguments using varidiac templates:
+We would write something like the following, which would recursively iterate over the arguments using variadic templates:
 
     // Base case
     void print()
@@ -28,7 +28,7 @@ We would write something like the following, which would recursively iterate ove
         print(xs...);
     }
 
-Instead with point-free style, we can write this using the [`proj`](/include/boost/hof/by) adaptor, which calls a function on each arguments. Of course, `std::cout` is not a function, but we can make it one by using `BOOST_HOF_LIFT`:
+Instead with point-free style, we can write this using the [`proj`](/include/boost/hof/by) adaptor, which calls a function on each argument. Of course, `std::cout` is not a function, but we can make it one by using `BOOST_HOF_LIFT`:
 
     BOOST_HOF_STATIC_FUNCTION(simple_print) = BOOST_HOF_LIFT(std::ref(std::cout) << _);
 
@@ -64,7 +64,7 @@ With each argument on its own line.
 Variadic sum
 ------------
 
-Another example, say we would like to write a varidiac version of `max`. We could implement it like this:
+Another example, say we would like to write a variadic version of `max`. We could implement it like this:
 
     // Base case
     template<class T>

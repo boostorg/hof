@@ -94,7 +94,7 @@ Given
 BinaryFunctionObject
 --------------------
 
-Is an object with a `const` call operator that accepts two parameter:
+Is an object with a `const` call operator that accepts two parameters:
 
 ```cpp
 concept UnaryFunctionObject

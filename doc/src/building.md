@@ -26,7 +26,7 @@ The tests can be built and run by using the `check` target:
 
     cmake --build . --target check
 
-The tests can also be ran using Boost.Build, just copy library to the boost source tree, and then:
+The tests can also be run using Boost.Build, just copy library to the boost source tree, and then:
 
     cd test
     b2

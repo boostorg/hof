@@ -15,7 +15,7 @@
 /// -----------
 /// 
 /// The placeholders provide `std::bind` compatible placeholders that
-/// additionally provide basic C++ operators that creates bind expressions.
+/// additionally provide basic C++ operators that create bind expressions.
 /// Each bind expression supports `constexpr` function evaluation.
 /// 
 /// Synopsis
@@ -168,7 +168,7 @@ struct call
     (f(BOOST_HOF_FORWARD(Ts)(xs)...));
 };
 
-// MSVC 2017 ICEs on && and || in conxtexpr, so we fallback on bitwise operators
+// MSVC 2017 ICEs on && and || in constexpr, so we fall back on bitwise operators
 #if defined(_MSC_VER) && _MSC_VER >= 1910
 #define BOOST_HOF_BINARY_OP_SKIP_and_ ()
 #define BOOST_HOF_BINARY_OP_SKIP_or_ ()

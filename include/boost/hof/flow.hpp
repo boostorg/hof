@@ -16,7 +16,7 @@
 /// 
 /// The `flow` function adaptor provides function composition. It is useful as
 /// an alternative to using the pipe operator `|` when chaining functions. It is
-/// similiar to [`compose`](compose.md) except the evaluation order is
+/// similar to [`compose`](compose.md) except the evaluation order is
 /// reversed. So, `flow(f, g)(0)` is equivalent to `g(f(0))`.
 /// 
 /// 

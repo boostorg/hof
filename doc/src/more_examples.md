@@ -7,10 +7,10 @@ More examples
 =============
 
 As Boost.HigherOrderFunctions is a collection of generic utilities
-related to functions, there is many useful cases with the library, but a key
+related to functions, there are many useful cases with the library, but a key
 point of many of these utilities is that they can solve these problems with
-much simpler constructs than whats traditionally been done with
-metaprogramming. Lets take look at some of the use cases for using Boost.HigherOrderFunctions.
+much simpler constructs than what's traditionally been done with
+metaprogramming. Let's take look at some of the use cases for using Boost.HigherOrderFunctions.
 
 Initialization
 --------------
@@ -75,7 +75,7 @@ It would be nice to write this:
 
 The proposal [N4165](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4165.pdf) 
 for Unified Call Syntax(UFCS) would have allowed a function call of `x.f(y)` to become
-`f(x, y)`. However, this was rejected by the comittee. So instead pipable functions can be
+`f(x, y)`. However, this was rejected by the committee. So instead pipable functions can be
 used to achieve extension methods. So it can be written like this:
 
     auto r = numbers

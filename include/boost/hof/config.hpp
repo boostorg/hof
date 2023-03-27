@@ -35,8 +35,8 @@
 #endif
 
 
-// This determines if it safe to use inheritance for EBO. On every platform
-// except clang, compilers have problems with ambigous base conversion. So
+// This determines if it's safe to use inheritance for EBO. On every platform
+// except clang, compilers have problems with ambiguous base conversion. So
 // this configures the library to use a different technique to achieve empty
 // optimization.
 #ifndef BOOST_HOF_HAS_EBO
@@ -58,7 +58,7 @@
 #endif
 
 // This configures the library to use manual type deduction in a few places
-// where it problematic on a few platforms.
+// where it's problematic on a few platforms.
 #ifndef BOOST_HOF_HAS_MANUAL_DEDUCTION
 #if (defined(__GNUC__) && !defined (__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8)
 #define BOOST_HOF_HAS_MANUAL_DEDUCTION 1

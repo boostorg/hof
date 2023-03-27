@@ -15,7 +15,7 @@
 /// -----------
 /// 
 /// The `mutable` function adaptor allows using a non-const function object
-/// inside of a const-function object. In Fit, all the function adaptors use
+/// inside of a const function object. In Fit, all the function adaptors use
 /// `const` call overloads, so if there is a function that has a non-const
 /// call operator, it couldn't be used directly. So, `mutable_` allows the
 /// function to be used inside of the call operator.

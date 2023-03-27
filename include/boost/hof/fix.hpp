@@ -18,7 +18,7 @@
 /// used to write recursive functions. 
 /// 
 /// When using `constexpr`, a function can recurse to a depth that is defined by
-/// `BOOST_HOF_RECURSIVE_CONSTEXPR_DEPTH`(default is 16). There is no limitiation on
+/// `BOOST_HOF_RECURSIVE_CONSTEXPR_DEPTH`(default is 16). There is no limitation on
 /// recursion depth for non-constexpr functions. In addition, due to the
 /// eagerness of `constexpr` to instantiation templates, in some cases, an
 /// explicit return type must be specified in order to avoid reaching the

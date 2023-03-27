@@ -16,7 +16,7 @@
 /// 
 /// The `protect` function adaptor can be used to make a bind expression be
 /// treated as a normal function instead. Both `bind` and
-/// [`lazy`](/include/boost/hof/lazy) eargerly evaluates nested bind expressions.
+/// [`lazy`](/include/boost/hof/lazy) eagerly evaluate nested bind expressions.
 /// The `protect` adaptor masks the type so `bind` or
 /// [`lazy`](/include/boost/hof/lazy) no longer recognizes the function as bind
 /// expression and evaluates it.

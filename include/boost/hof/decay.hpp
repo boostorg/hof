@@ -14,7 +14,7 @@
 /// Description
 /// -----------
 /// 
-/// The `decay` function is a unary function object that returns whats given to it after decaying its type.
+/// The `decay` function is a unary function object that returns what's given to it after decaying its type.
 /// 
 /// Synopsis
 /// --------

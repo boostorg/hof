@@ -24,7 +24,7 @@
 /// user. This allows defining extra attributes about the type outside of the
 /// type itself. There are three different ways the value can be stored: as a
 /// member variable, by inheritance, or as a static member variable. The value
-/// can be retrieved uniformily using the `alias_value` function.
+/// can be retrieved uniformly using the `alias_value` function.
 /// 
 /// Synopsis
 /// --------
@@ -45,7 +45,7 @@
 ///     template<class Alias>
 ///     class alias_tag;
 /// 
-///     // Check if type has a certian tag
+///     // Check if type has a certain tag
 ///     template<class T, class Tag>
 ///     class has_tag;
 /// 
@@ -144,7 +144,7 @@ struct alias_static_storage
 {
 #ifdef _MSC_VER
     // Since we disable the error for 4579 on MSVC, which leaves the static
-    // member unitialized at runtime, it is, therefore, only safe to use this
+    // member uninitialized at runtime, it is, therefore, only safe to use this
     // class on types that are empty with constructors that have no possible
     // side effects.
     static_assert(BOOST_HOF_IS_EMPTY(T) && 

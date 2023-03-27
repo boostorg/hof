@@ -41,12 +41,12 @@ FunctionAdaptor Decorator(Ts...);
 Semantics
 ---------
 
-Some parts of the documentation provides the meaning(or equivalence) of an expression. Here is a guide of those symbols:
+Some parts of the documentation provide the meaning(or equivalence) of an expression. Here is a guide of those symbols:
 
 * `f`, `g`, `fs`, `gs`, `p` are functions
 * `x`, `y`, `xs`, `ys` are parameters to a function
 * `T` represents some type
-* `...` are parameter packs and represent varidiac parameters
+* `...` are parameter packs and represent variadic parameters
 
 Signatures
 ----------

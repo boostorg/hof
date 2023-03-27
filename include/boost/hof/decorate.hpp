@@ -16,7 +16,7 @@
 /// 
 /// The `decorate` function adaptor helps create simple function decorators. 
 /// 
-/// A function adaptor takes a function and returns a new functions whereas a
+/// A function adaptor takes a function and returns a new function whereas a
 /// decorator takes some parameters and returns a function adaptor. The
 /// `decorate` function adaptor will return a decorator that returns a
 /// function adaptor. Eventually, it will invoke the function with the user-

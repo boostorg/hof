@@ -10,7 +10,7 @@ FAQ
 
 Mutable function objects are not prohibited, they just need to be explicit by
 using the adaptor [`mutable_`](/include/boost/hof/mutable). The main reason for this, is that it can lead to
-many suprising behaviours. Many times function objects are copied by value
+many surprising behaviours. Many times function objects are copied by value
 everywhere. For example,
 
 ```cpp

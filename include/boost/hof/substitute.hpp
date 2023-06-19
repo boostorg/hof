@@ -129,7 +129,6 @@ struct substitute_adaptor<F> : detail::callable_base<F>
     BOOST_HOF_NOEXCEPT_CONSTRUCTIBLE(detail::callable_base<F>, X&&)
     : detail::callable_base<F>(BOOST_HOF_FORWARD(X)(f1))
     {}
-
 };
 
 template<class F1, class F2>

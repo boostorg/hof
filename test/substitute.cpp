@@ -15,7 +15,7 @@ struct fx_x_add_n {
     int n;
     constexpr fx_x_add_n(int n) : n(n) {}
     template<class T>
-    constexpr T operator()(T x) const
+    constexpr T operator()(T x) const noexcept
     {
         return x + n;
     }
@@ -25,7 +25,7 @@ struct fx_x_times_n {
     int n;
     constexpr fx_x_times_n(int n) : n(n) {}
     template<class T>
-    constexpr T operator()(T x) const
+    constexpr T operator()(T x) const noexcept
     {
         return x * n;
     }
@@ -35,7 +35,7 @@ struct fx_n_sub_x {
     int n;
     constexpr fx_n_sub_x(int n) : n(n) {}
     template<class T>
-    constexpr T operator()(T x) const
+    constexpr T operator()(T x) const noexcept
     {
         return n - x;
     }
@@ -55,7 +55,7 @@ struct fx_ptr {
 template<class T>
 struct make {
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const
+    constexpr auto operator()(Ts&&... xs) const noexcept
     {
         return T(xs...);
     }
@@ -73,8 +73,8 @@ struct make_ptr {
 #if BOOST_HOF_HAS_NOEXCEPT_DEDUCTION
 BOOST_HOF_TEST_CASE()
 {
-    static_assert(boost::hof::substitute(
-        make<fx_x_add_n>(), make<fx_x_add_n>(), boost::hof::identity)(3), "noexcept substitute");
+    static_assert(noexcept(boost::hof::substitute(
+        make<fx_x_add_n>(), make<fx_x_add_n>(), boost::hof::identity)(3)), "noexcept substitute");
 }
 #endif 
 

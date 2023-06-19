@@ -52,6 +52,7 @@
 #include <boost/hof/reverse_fold.hpp>
 #include <boost/hof/rotate.hpp>
 #include <boost/hof/static.hpp>
+#include <boost/hof/substitute.hpp>
 #include <boost/hof/tap.hpp>
 #include <boost/hof/unpack.hpp>
 

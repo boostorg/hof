@@ -8,7 +8,7 @@
 # As the yaml syntax for Drone CI is rather limited.
 #
 #
-globalenv={}
+globalenv={'ADD_UBUNTU_TOOLCHAIN_PPA': 'true'}
 linuxglobalimage="cppalliance/droneubuntu1404:1"
 windowsglobalimage="cppalliance/dronevs2019"
 

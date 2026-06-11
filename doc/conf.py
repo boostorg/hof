@@ -24,7 +24,7 @@
 #
 import os
 import sphinx as sphinxversioncheck
-from pkg_resources import parse_version
+from packaging.version import parse as parse_version
 sphinxversion=""
 if parse_version(sphinxversioncheck.__version__) < parse_version("2.0.0"):
     sphinxversion="1"
